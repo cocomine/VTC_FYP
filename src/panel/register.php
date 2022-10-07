@@ -100,7 +100,7 @@ function register_form(string $email = null, string $name = null) {
             <div class="row no-gutters">
                 <div class="col-xl-4 offset-xl-8 col-lg-6 offset-lg-6">
                     <div class="login-box-s2 ptb--100">
-                        <form class="" novalidate>
+                        <form class="needs-validation" novalidate>
                             <div class="login-form-head">
                                 <h4>{$Text['Register']}</h4>
                                 <p>{$Text['welcome']}</p>

@@ -12,12 +12,6 @@ use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\TwoFactorAuthException;
 
-/**
- * @deprecated
- * 表單印出 function
- * 手動改
- */
-define('AUTH_LOGIN_FORM_FUNC', 'login_form');
 /* @deprecated */
 define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
 /* @deprecated */
@@ -33,6 +27,7 @@ define('AUTH_2FA_DUE', 103);
 define('AUTH_BLOCK_10', 104);
 define('AUTH_BLOCK_30', 105);
 define('AUTH_GOOGLE_ERROR', 106);
+define('AUTH_OK', 107);
 
 define('AUTH_REGISTER_PASS_NOT_MATCH', 200);
 define('AUTH_REGISTER_EMAIL_FAIL', 201);
@@ -279,117 +274,97 @@ class MyAuth {
      *
      * @param string $email 電郵
      * @param string $password 密碼
-     * @param bool $RSAon 是否使用了RSA加密
+     * @param bool $remember_me 記住我
+     * @param string|null $RSAkey RSA加密
+     * @return int 狀態
      */
-    function login(string $email, string $password, bool $RSAon = true) {
-        if (!empty($email) && !empty($password)) { //不能留空
+    function login(string $email, string $password, bool $remember_me, string $RSAkey = null) {
 
-            /* 消毒 */
-            $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+        //不能留空
+        if (empty($email) || empty($password)) return AUTH_WRONG_PASS;
 
-            /* 防爆破 */
-            $IPCheck = $this->Check_Block_ip($_SERVER['REMOTE_ADDR']);
-            if ($IPCheck === true) {
+        /* 消毒 */
+        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
 
-                /* 加密 */
-                $pi_key = @openssl_pkey_get_private($_SESSION['pvKey']);
-                if (@openssl_private_decrypt(base64_decode($password), $password, $pi_key) || !$RSAon) { //解密
-                    $password = filter_var(trim($password), FILTER_SANITIZE_STRING); //消毒
+        /* 防爆破 */
+        $IPCheck = $this->Check_Block_ip($_SERVER['REMOTE_ADDR']);
+        if ($IPCheck === AUTH_BLOCK_10) return AUTH_BLOCK_10;
+        if ($IPCheck === AUTH_BLOCK_30) return AUTH_BLOCK_30;
 
-                    $password = 'Gblacklist' . $password;
-                    $password = hash('sha512', md5($password));
-
-                    /* 查詢 */
-                    $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
-                    $stmt->bind_param("s", $email);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
-
-                    /* 分析結果 */
-                    $result = $stmt->get_result();
-                    $userdata = $result->fetch_assoc();
-                    $stmt->close();
-
-                    /* 檢查登入資訊 */
-                    if (mysqli_num_rows($result) < 1) {
-                        call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_WRONG_PASS, $email);
-                        $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-                    } else if ($userdata[$this->sqlsetting_User['Email_col']] == $email && $userdata[$this->sqlsetting_User['Password_col']] == $password) {
-                        if ($userdata[$this->sqlsetting_User['activated_col']] == true) {
-                            $toke = md5((Generate_Code() . time()));  //產生toke
-
-                            /* 更新最後時間 */
-                            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
-                            $stmt->bind_param("s", $_SERVER['REMOTE_ADDR']);
-                            if (!$stmt->execute()) {
-                                ob_clean();
-                                header('HTTP/1.1 500 Internal Server Error');
-                                require_once($this->ErrorFile);
-                                exit();
-                            }
-                            $stmt->close();
-
-                            /* 2FA */
-                            unset($_SESSION['pvKey']);
-                            if ($userdata[$this->sqlsetting_User['2FA_col']] == 1) {
-                                $_SESSION['2FA']['Doing_2FA'] = true;
-                                $_SESSION['2FA']['toke'] = $toke;
-                                $_SESSION['2FA']['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
-                                $_SESSION['2FA']['userdata'] = $userdata;
-                                if (@$_POST['Remember_ME'] == 'on') $_SESSION['2FA']['Remember_ME'] = true;
-
-                                call_user_func(AUTH_2FA_FORM_FUNC); //output form
-
-                            } else {
-                                /* 插入toke資料 */
-                                $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
-                                $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
-                                if (!$stmt->execute()) {
-                                    ob_clean();
-                                    header('HTTP/1.1 500 Internal Server Error');
-                                    require_once($this->ErrorFile);
-                                    exit();
-                                }
-                                $stmt->close();
-
-                                /* 儲存 session */
-                                $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
-                                $_SESSION['toke'] = $toke;
-
-                                $this->islogin = true; //login
-                                setcookie('Lang', $userdata[$this->sqlsetting_User['Language_col']], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-
-                                /* 記住我*/
-                                if (@$_POST['Remember_ME'] == 'on') {
-                                    setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                                    setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                                }
-
-                                $this->Check_NewIP($userdata, $toke);
-                            }
-
-                        } else {
-                            call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_NOT_DONE, $email);
-                        }
-                    } else {
-                        call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_WRONG_PASS, $email);
-                        $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-                    }
-                } else {
-                    call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_WRONG_PASS, $email);
-                    $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-                    unset($_SESSION['2FA']);
-                }
-            } else {
-                call_user_func(AUTH_LOGIN_FORM_FUNC, $IPCheck, $email); //輸出限制訊息
+        /* 解密RSA */
+        if ($RSAkey != null) {
+            $pi_key = openssl_pkey_get_private($RSAkey);
+            $dePass = openssl_private_decrypt(base64_decode($password), $password, $pi_key);
+            if (!$dePass) {
+                $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+                return AUTH_WRONG_PASS;
             }
-        } else {
-            call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_WRONG_PASS, null);
         }
+
+        /* 加密 */
+        $password = filter_var(trim($password), FILTER_SANITIZE_STRING); //消毒
+        $password = 'Gblacklist' . $password;
+        $password = hash('sha512', md5($password));
+
+        /* 查詢 */
+        $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
+        $stmt->bind_param("s", $email);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $userdata = $result->fetch_assoc();
+        $stmt->close();
+
+        /* 檢查登入資訊 */
+        //檢查用戶存在
+        if (mysqli_num_rows($result) < 1) {
+            $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            return AUTH_WRONG_PASS;
+        }
+        //檢查資料匹配
+        if ($userdata[$this->sqlsetting_User['Email_col']] != $email || $userdata[$this->sqlsetting_User['Password_col']] != $password) {
+            $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            return AUTH_WRONG_PASS;
+        }
+        //檢查帳號啟動
+        if (!$userdata[$this->sqlsetting_User['activated_col']]) return AUTH_NOT_DONE;
+
+        $toke = md5((Generate_Code() . time()));  //產生toke
+
+        /* 更新最後時間 */
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
+        $stmt->bind_param("s", $_SERVER['REMOTE_ADDR']);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+        $stmt->close();
+
+        /* 2FA */
+        /*if ($userdata[$this->sqlsetting_User['2FA_col']]) {
+            $_SESSION['2FA']['Doing_2FA'] = true;
+            $_SESSION['2FA']['toke'] = $toke;
+            $_SESSION['2FA']['userdata'] = $userdata;
+            $_SESSION['2FA']['Remember_ME'] = $_POST['Remember_ME'] ? true : false;
+        }*/
+
+        /* 插入toke資料 */
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
+        $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+        $stmt->close();
+
+        /* 儲存 session */
+        $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
+        $_SESSION['toke'] = $toke;
+
+        $this->islogin = true; //login
+
+        /* 記住我*/
+        if ($remember_me) {
+            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+            setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+        }
+
+        return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
     }
 
     /**
@@ -450,28 +425,23 @@ class MyAuth {
      * 檢查最後登入ip
      * @param array $userdata User data
      * @param $toke string 用戶Toke
+     * @return bool 是否檢查成功
      */
-    private function Check_NewIP(array $userdata, string $toke) {
+    private function Check_NewIP(array $userdata, string $toke): bool {
         /* 檢查最後登入ip */
         if ($userdata[$this->sqlsetting_User['Last_IP_col']] != $_SERVER['REMOTE_ADDR']) {
             /* 創建連接 */
             $code = md5((Generate_Code() . time()));
             $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Block_login_code['table']} ({$this->sqlsetting_Block_login_code['Toke']}, {$this->sqlsetting_Block_login_code['code']}, {$this->sqlsetting_Block_login_code['time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
             $stmt->bind_param("ss", $toke, $code);
-            if (!$stmt->execute()) {
-                ob_clean();
-                echo $stmt->error;
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
-                exit();
-            }
+            if (!$stmt->execute()) return false;
             $stmt->close();
 
             $this->run_Hook('acc_Check_NewIP', true, $userdata, $code, $this->sqlcon);  //執行掛鉤
         } else {
             $this->run_Hook('acc_Check_NewIP', false); //執行掛鉤
         }
-
+        return true;
     }
 
     /**
@@ -812,7 +782,9 @@ class MyAuth {
      * @param $Pass String 密碼
      * @param $Email String 電郵地址
      * @param $localCode String 語言代號
-     * @param bool $RSAon 是否使用了RSA加密
+     * @param string $recaptcha 防止機械人
+     * @param string $recaptcha_key 防止機械人API KEY
+     * @param string|null $RSAKey RSA加密
      * @return int 處理狀態
      */
     function register(string $Name, string $Cpass, string $Pass, string $Email, string $localCode, string $recaptcha, string $recaptcha_key, string $RSAKey = null): int {
@@ -826,7 +798,7 @@ class MyAuth {
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=".$recaptcha_key."&response={$recaptcha}"); //will add ip
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=" . $recaptcha_key . "&response={$recaptcha}"); //will add ip
         $output = curl_exec($curl);
         $json = json_decode($output);
         //print_r($json);
@@ -893,49 +865,36 @@ class MyAuth {
      *
      * @param string $code 啟動碼
      */
-    function activated(string $code) {
-        if (!empty($code)) { //不能留空
-            /* 解碼 */
-            $code = base64_decode($code);
-            $code = filter_var($code, FILTER_SANITIZE_STRING);
-            $code = mb_split("@", $code);
+    function activated(string $code): int {
+        //不能留空
+        if (empty($code)) return AUTH_REGISTER_CODE_WRONG;
 
-            /* 查詢 */
-            $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['activated_code_col']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_User['Last_Login_col']}) AS {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['activated_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ? LIMIT 1;");
-            $stmt->bind_param('s', $code[0]);
-            if (!$stmt->execute()) {
-                $stmt->close();
-                call_user_func(AUTH_LOGIN_FORM_FUNC);
-            } else {
-                /* 分析結果 */
-                $result = $stmt->get_result();
-                $activated_code = $result->fetch_assoc();
-                $stmt->close();
+        /* 解碼 */
+        $code = base64_decode($code);
+        $code = filter_var($code, FILTER_SANITIZE_STRING);
+        $code = mb_split("@", $code);
 
-                /* 檢查 */
-                if (mysqli_num_rows($result) < 1) {
-                    call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_REGISTER_CODE_WRONG, null);
-                } else
-                    if ($activated_code[$this->sqlsetting_User['activated_code_col']] === $code[1] && $activated_code[$this->sqlsetting_User['Last_Login_col']] <= 86400 && $activated_code[$this->sqlsetting_User['activated_col']] == false) {
-                        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['activated_col']} = true, {$this->sqlsetting_User['activated_code_col']} = null WHERE {$this->sqlsetting_User['UUID_col']} = ? LIMIT 1;");
-                        $stmt->bind_param('s', $code[0]);
-                        if (!$stmt->execute()) {
-                            ob_clean();
-                            header('HTTP/1.1 500 Internal Server Error');
-                            require_once($this->ErrorFile);
-                            exit();
-                        }
+        /* 查詢 */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['activated_code_col']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_User['Last_Login_col']}) AS {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['activated_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ? LIMIT 1;");
+        $stmt->bind_param('s', $code[0]);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
-                        call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_REGISTER_COMPLETE, null);
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $activated_code = $result->fetch_assoc();
+        $stmt->close();
 
-                        $this->run_Hook('acc_activated', $code[0], $this->sqlcon); //執行掛鉤
-                    } else {
-                        call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_REGISTER_CODE_WRONG, null);
-                    }
-            }
-        } else {
-            call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_REGISTER_CODE_WRONG, null);
-        }
+        /* 檢查 */
+        if (mysqli_num_rows($result) < 1) return AUTH_REGISTER_CODE_WRONG;
+        if ($activated_code[$this->sqlsetting_User['activated_code_col']] !== $code[1] || $activated_code[$this->sqlsetting_User['Last_Login_col']] > 86400) return AUTH_REGISTER_CODE_WRONG;
+
+        /* 更新資料 */
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['activated_col']} = true, {$this->sqlsetting_User['activated_code_col']} = null WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+        $stmt->bind_param('s', $code[0]);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+
+        $this->run_Hook('acc_activated', $code[0], $this->sqlcon); //執行掛鉤
+        return AUTH_REGISTER_COMPLETE;
     }
 
     /**
