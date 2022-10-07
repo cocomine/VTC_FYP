@@ -71,21 +71,22 @@ function Generate_Code(int $length = 32): string {
  * @return bool 是否已經放入
  */
 function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_queue, mysqli $sqlcon): bool {
+
     switch ($type) {
         case AUTH_MAIL_RESET:
             $subject = showText('Email.forgetPass.subject');
-            $From = 'auth@cocopixelmc.com;Global blacklist';
-            $Reply_To = 'support@cocopixelmc.com;Global blacklist Support';
+            $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
+            $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
         case AUTH_MAIL_ACTIVATE:
             $subject = showText('Email.activated.subject');
-            $From = 'auth@cocopixelmc.com;Global blacklist';
-            $Reply_To = 'support@cocopixelmc.com;Global blacklist Support';
+            $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
+            $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
         case AUTH_MAIL_WONG_NEWIP:
             $subject = showText('Email.Wong-newIP.subject');
-            $From = 'auth@cocopixelmc.com;Global blacklist';
-            $Reply_To = 'support@cocopixelmc.com;Global blacklist Support';
+            $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
+            $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
         default:
             return false;
@@ -93,12 +94,11 @@ function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_qu
     }
 
     /* 放入隊列 */
-    $stmt = $sqlcon->prepare("INSERT INTO {$sqlsetting_Mail_queue['table']} ({$sqlsetting_Mail_queue['Send_To']}, {$sqlsetting_Mail_queue['Send_From']}, {$sqlsetting_Mail_queue['Subject']}, {$sqlsetting_Mail_queue['Reply_To']}, {$sqlsetting_Mail_queue['Body']}) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $sqlcon->prepare("INSERT INTO Mail_queue (Send_To, Send_From, Subject, Reply_To, Body) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $To, $From, $subject, $Reply_To, $html);
     if ($stmt->execute()) {
         return true;
     }
-
     return false;
 }
 
@@ -555,7 +555,7 @@ function acc_Activated_Mail_Hook(string $uuid, string $email, string $ActivatedC
     /* 訊息覆蓋 */
     $count = 2;
     $html = str_replace('%localCode%', $localCode ?? '', $html);
-    $html = str_replace('%URL%', "https://gblacklist.cocopixelmc.com/panel/login?code=" . urlencode(base64_encode($uuid . "@" . $ActivatedCode)), $html, $count);
+    $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/login?code=" . urlencode(base64_encode($uuid . "@" . $ActivatedCode)), $html, $count);
     $html = str_replace('%NAME%', $name, $html);
 
     SendMail($email, $html, AUTH_MAIL_ACTIVATE, $sqlsetting_Mail_queue, $sqlcon);

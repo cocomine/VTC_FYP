@@ -417,6 +417,7 @@ img {
 
 :root {
     --primary-color: #ff7112;
+    --bs-primary: #ff9d22;
 }
 
 #preloader {

@@ -2,6 +2,23 @@
 (function($) {
     "use strict";
 
+    /* 表單轉 JSON */
+    $.fn.serializeObject = function() {
+        let o = {};
+        let a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
     /*================================
     Preloader
     ==================================*/
@@ -73,20 +90,22 @@
     //$('[data-toggle="popover"]').popover()
 
     /*------------- Start form Validation -------------*/
-    window.addEventListener('load', function() {
+    $(document).ready(() => {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
+        const forms = document.querySelectorAll('.needs-validation')
+
         // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
                 }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })
 
     /*================================
     datatable active

@@ -20,5 +20,6 @@
     <orderEntry type="library" name="api" level="application" />
     <orderEntry type="library" name="zxcvbn" level="application" />
     <orderEntry type="library" name="Generated files" level="project" />
+    <orderEntry type="library" name="api" level="application" />
   </component>
 </module>

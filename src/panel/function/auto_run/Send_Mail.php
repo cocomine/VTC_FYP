@@ -10,13 +10,14 @@ use PHPMailer\PHPMailer\Exception;
 ini_set('error_log', '/volume1/web/error_log/Send_Mail.log');
 
 require(__DIR__."/../../vendor/autoload.php");
+require(__DIR__."/../../function/config.inc.php");
 
 /* SQL */
 //SQL config
-$SQL_Config['dbServer'] = "192.168.0.100";                     // SQL Server ip address
-$SQL_Config['$dbUser'] = "gblacklist";                     // Login username
-$SQL_Config['$dbPass'] = 'wD9[-w@Ask';               // Login user password
-$SQL_Config['$dbName'] = "gblacklist";                     // Databases name
+$SQL_Config['dbServer'] = Cfg_Sql_Host;                     // SQL Server ip address
+$SQL_Config['$dbUser'] = Cfg_Sql_dbUser;                     // Login username
+$SQL_Config['$dbPass'] = Cfg_Sql_dbPass;               // Login user password
+$SQL_Config['$dbName'] = Cfg_Sql_dbName;                     // Databases name
 //Connect to SQL
 $sqlcon = new mysqli($SQL_Config['dbServer'], $SQL_Config['$dbUser'], $SQL_Config['$dbPass'], $SQL_Config['$dbName'], 3306);
 if ($sqlcon->connect_errno) {
@@ -30,10 +31,10 @@ $mail = new PHPMailer(true);
 //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                    // Enable verbose debug output
 $mail->CharSet    = 'UTF-8';
 $mail->isSMTP();                                            // Send using SMTP
-$mail->Host       = 'smtp-relay.gmail.com';                 // Set the SMTP server to send through
+$mail->Host       = Cfg_mail_host;                 // Set the SMTP server to send through
 $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-$mail->Username   = 'support@cocopixelmc.com';             // SMTP username
-$mail->Password   = 'sakwkxnwewnjcdko';                         // SMTP password
+$mail->Username   = Cfg_mail_Username;             // SMTP username
+$mail->Password   = Cfg_mail_Password;                         // SMTP password
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
 $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 $mail->SMTPDebug = 3;

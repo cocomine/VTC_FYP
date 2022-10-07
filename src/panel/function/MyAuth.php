@@ -13,15 +13,17 @@ use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\TwoFactorAuthException;
 
 /**
+ * @deprecated
  * 表單印出 function
  * 手動改
  */
 define('AUTH_LOGIN_FORM_FUNC', 'login_form');
+/* @deprecated */
 define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
-define('AUTH_REGISTER_FORM_FUNC', 'register_form');
+/* @deprecated */
 define('AUTH_FORGETPASS_FORM_FUNC', 'ForgetPass_from');
+/* @deprecated */
 define('AUTH_FORGETPASS_SET_FORM_FUNC', 'ForgetPassSet_from');
-
 define('AUTH_SERVER_ERROR', 0);
 
 define('AUTH_NOT_DONE', 100);
@@ -40,10 +42,8 @@ define('AUTH_REGISTER_EMAIL_WRONG_FORMAT', 205);
 define('AUTH_REGISTER_LAST_STEP', 206);
 define('AUTH_REGISTER_COMPLETE', 207);
 define('AUTH_REGISTER_NAME_TOO_LONG', 208);
-define('AUTH_REGISTER_NEED_AGREE', 209);
 define('AUTH_REGISTER_YOUR_BOT', 210);
 define('AUTH_REGISTER_CODE_WRONG', 211);
-define('AUTH_REGISTER_FIRST_GOOGLE', 212);
 
 define('AUTH_MAIL_RESET', 300);
 define('AUTH_MAIL_ACTIVATE', 301);
@@ -89,11 +89,11 @@ define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 505.20);
  */
 class MyAuth {
 
-    public $ErrorFile = "";
-    public $CookiesPath = '/';
-    public $islogin = false; //is login?
+    public string $ErrorFile = "";
+    public string $CookiesPath = '/';
+    public bool $islogin = false; //is login?
     //sql setting
-    public $sqlsetting_User = array(
+    public array $sqlsetting_User = array(
         'table' => 'User',
         'Email_col' => 'Email',
         'UUID_col' => 'UUID',
@@ -108,40 +108,40 @@ class MyAuth {
         'Language_col' => 'Language',
         'role_col' => 'role'
     );
-    public $sqlsetting_IPBlock = array(
+    public array $sqlsetting_IPBlock = array(
         'Last_time' => 'Last_time',
         'IP' => 'IP',
         'table' => 'Block_ip'
     );
-    public $sqlsetting_Forgetpass = array(
+    public array $sqlsetting_Forgetpass = array(
         'table' => 'ForgetPass',
         'UUID' => 'UUID',
         'Code' => 'Code',
         'Last_time' => 'Last_time'
     );
-    public $sqlsetting_TokeList = array(
+    public array $sqlsetting_TokeList = array(
         'table' => 'Toke_list',
         'Time' => 'Time',
         'UUID' => 'UUID',
         'Toke' => 'Toke',
         'IP' => 'IP'
     );
-    public $sqlcon = null;
-    public $userdata = null;
-    public $sqlsetting_2FA_BackupCode = array(
+    public ?mysqli $sqlcon = null;
+    public ?array $userdata = null;
+    public array $sqlsetting_2FA_BackupCode = array(
         'table' => '2FA_BackupCode',
         'UUID' => 'UUID',
         'Code' => 'Code',
         'used' => 'used'
     );
-    public $sqlsetting_Block_login_code = array(
+    public array $sqlsetting_Block_login_code = array(
         'table' => 'Block_login_code',
         'code' => 'code',
         'Toke' => 'Toke',
         'time' => 'time'
     );
     /* @deprecated */
-    public $sqlsetting_Mail_queue = array(
+    public array $sqlsetting_Mail_queue = array(
         'table' => 'Mail_queue',
         'ID' => 'ID',
         'Send_To' => 'Send_To',
@@ -154,7 +154,7 @@ class MyAuth {
         'Send_Time' => 'Send_Time',
         'Create_Time' => 'Create_Time'
     );
-    private $Hook_func = array();
+    private array $Hook_func = array();
 
     /**
      * Auth class 初始化
@@ -397,7 +397,7 @@ class MyAuth {
      * @param $code string 代碼
      * @return bool 是否成功
      */
-    function Block_login(string $code) {
+    function Block_login(string $code): bool {
         /* 空值檢查 */
         if (empty($code)) {
             return false;
@@ -811,96 +811,80 @@ class MyAuth {
      * @param $Cpass String 確認密碼
      * @param $Pass String 密碼
      * @param $Email String 電郵地址
-     * @param $Agree_Service bool 同意服務條款
-     * @param $Agree_privacy bool 同意私隱政策
      * @param $localCode String 語言代號
      * @param bool $RSAon 是否使用了RSA加密
+     * @return int 處理狀態
      */
-    function register(string $Name, string $Cpass, string $Pass, string $Email, bool $Agree_Service, bool $Agree_privacy, string $localCode, bool $RSAon = true) {
-        if ((!empty($Cpass) && !empty($Name)) && (!empty($Pass) && !empty($Email)) && (!empty($Agree_Service) && !empty($Agree_privacy))) { ////不能留空
+    function register(string $Name, string $Cpass, string $Pass, string $Email, string $localCode, string $recaptcha, string $recaptcha_key, string $RSAKey = null): int {
 
-            /* 檢查是否機械人 */
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=6Le90ykTAAAAANkngosBOnWgBD0pLMXXYsharFNN&response={$_POST['g-recaptcha-response']}"); //will add ip
-            $output = curl_exec($curl);
-            $json = json_decode($output);
-            //rint_r($json);
+        //不能留空
+        if (empty($Cpass) || empty($Name) || empty($Pass) || empty($Email) || empty($recaptcha)) return AUTH_REGISTER_EMPTY;
 
-            /* 解密 */
-            $pi_key = openssl_pkey_get_private($_SESSION['pvKey']);
-            if (openssl_private_decrypt(base64_decode($Pass), $Pass, $pi_key) && //解密
-                openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key) && $RSAon) {  //解密
+        /* 檢查是否機械人 */
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=".$recaptcha_key."&response={$recaptcha}"); //will add ip
+        $output = curl_exec($curl);
+        $json = json_decode($output);
+        //print_r($json);
 
-                /* 消毒 */
-                $email = filter_var(trim($Email), FILTER_SANITIZE_EMAIL);
-                $name = filter_var(trim($Name), FILTER_SANITIZE_STRING);
-                $Cpass = filter_var(trim($Cpass), FILTER_SANITIZE_STRING);
-                $Pass = filter_var(trim($Pass), FILTER_SANITIZE_STRING);
+        /* 解密 */
+        if ($RSAKey != null) {
+            $pi_key = openssl_pkey_get_private($RSAKey);
+            $dePass = openssl_private_decrypt(base64_decode($Pass), $Pass, $pi_key);
+            $deCpass = openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
+            //解密失敗
+            if (!($dePass && $deCpass)) return AUTH_REGISTER_PASS_NOT_MATCH;
+        }
 
-                /* 進入判斷程序 */
-                if ($json->success == true && $json->hostname == $_SERVER['SERVER_NAME']) {
-                    if (strlen($Name) <= 16) { //檢查名稱是否少於16字
-                        if ($Pass === $Cpass) { //檢查密碼是否一樣
-                            if (@$Agree_Service == 'on' && @$Agree_privacy == 'on') { //檢查是否要同意政策
-                                /* 判斷密碼強度 */
-                                if (preg_match("/(?=.*?[A-Z])(?=.*?[a-z])/", $Cpass) && strlen($Cpass) >= 8 && $Name !== $Cpass && $Email !== $Cpass) {
+        /* 消毒 */
+        $email = filter_var(trim($Email), FILTER_SANITIZE_EMAIL);
+        $name = filter_var(trim($Name), FILTER_SANITIZE_STRING);
+        $Cpass = filter_var(trim($Cpass), FILTER_SANITIZE_STRING);
+        $Pass = filter_var(trim($Pass), FILTER_SANITIZE_STRING);
 
-                                    /* 加密 */
-                                    $password = 'Gblacklist' . $Cpass;
-                                    $password = hash('sha512', md5($password));
+        /* 進入判斷程序 */
+        //是否機械人
+        if (!($json->success && $json->hostname == $_SERVER['SERVER_NAME'])) return AUTH_REGISTER_YOUR_BOT;
+        //檢查名稱是否少於16字
+        if (strlen($Name) > 16) return AUTH_REGISTER_NAME_TOO_LONG;
+        //檢查密碼是否一樣
+        if ($Pass != $Cpass) return AUTH_REGISTER_PASS_NOT_MATCH;
 
-                                    if (preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) { //檢查電郵格式
+        /* 判斷密碼強度 */
+        if (!(preg_match("/(?=.*?[A-Z])(?=.*?[a-z]).{8,}/", $Cpass) && $Name != $Cpass && $Email != $Cpass)) return AUTH_REGISTER_PASS_NOT_STRONG;
 
-                                        /* 產生啟動序號 */
-                                        $ActivatedCode = Generate_Code(16);
+        /* 加密 */
+        $password = 'Gblacklist' . $Cpass;
+        $password = hash('sha512', md5($password));
 
+        //檢查電郵格式
+        if (!preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_REGISTER_EMAIL_WRONG_FORMAT;
 
-                                        /* 增值資料 & 檢查電郵衝突 & 取得UUID*/
-                                        $stmt = $this->sqlcon->prepare("SET @uuid = UUID();"); //設置UUID
-                                        $stmt->execute();
-                                        $stmt->prepare("INSERT INTO {$this->sqlsetting_User['table']} ({$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Email_col']}, {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Password_col']}, {$this->sqlsetting_User['activated_code_col']}, {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Last_IP_col']}, {$this->sqlsetting_User['Language_col']}) VALUES (@uuid, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)"); //加入資料
-                                        $stmt->bind_param("ssssss", $email, $name, $password, $ActivatedCode, $_SERVER['REMOTE_ADDR'], $localCode);
-                                        if ($stmt->execute()) {
-                                            $stmt->prepare("SELECT @uuid AS UUID"); //取得UUID
-                                            $stmt->execute();
-                                            $result = $stmt->get_result();
-                                            $row = $result->fetch_assoc();
-                                            $uuid = $row['UUID'];
-                                            $stmt->close();
+        /* 產生啟動序號 */
+        $ActivatedCode = Generate_Code(16);
 
-                                            $this->run_Hook('acc_register', $uuid, $email, $ActivatedCode, $name, $this->sqlcon); //執行Hook
-                                            call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_LAST_STEP); //Done
-                                        } else {
-                                            $stmt->close();
-                                            call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_EMAIL_FAIL);
-                                        }
-                                    } else {
-                                        call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_EMAIL_WRONG_FORMAT);
-                                    }
-                                } else {
-                                    call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_PASS_NOT_STRONG);
-                                }
-                            } else {
-                                call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_NEED_AGREE);
-                            }
-                        } else {
-                            call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_PASS_NOT_MATCH);
-                        }
-                    } else {
-                        call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_NAME_TOO_LONG);
-                    }
-                } else {
-                    call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_YOUR_BOT);
-                }
-            } else {
-                call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_PASS_NOT_MATCH);
-            }
+        /* 增值資料 & 檢查電郵衝突 & 取得UUID*/
+        $stmt = $this->sqlcon->prepare("SET @uuid = UUID();"); //設置UUID
+        $stmt->execute();
+        $stmt->prepare("INSERT INTO {$this->sqlsetting_User['table']} ({$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Email_col']}, {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Password_col']}, {$this->sqlsetting_User['activated_code_col']}, {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Last_IP_col']}, {$this->sqlsetting_User['Language_col']}) VALUES (@uuid, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)"); //加入資料
+        $stmt->bind_param("ssssss", $email, $name, $password, $ActivatedCode, $_SERVER['REMOTE_ADDR'], $localCode);
+        if ($stmt->execute()) {
+            $stmt->prepare("SELECT @uuid AS UUID"); //取得UUID
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $uuid = $row['UUID'];
+            $stmt->close();
+
+            $this->run_Hook('acc_register', $uuid, $email, $ActivatedCode, $name, $this->sqlcon); //執行Hook
+            return AUTH_REGISTER_LAST_STEP; //Done
         } else {
-            call_user_func(AUTH_REGISTER_FORM_FUNC, AUTH_REGISTER_EMPTY);
+            $stmt->close();
+            return AUTH_REGISTER_EMAIL_FAIL;
         }
     }
 
@@ -1377,7 +1361,8 @@ class MyAuth {
      * @param string $Hook_name 掛勾名
      * @param string $func_name 執行的程式名
      */
-    public function add_Hook(string $Hook_name, string $func_name) {
+    public
+    function add_Hook(string $Hook_name, string $func_name) {
         $a = array();
         array_push($a, $func_name);
         $this->Hook_func[$Hook_name] = $a;
@@ -1388,10 +1373,11 @@ class MyAuth {
      * @param string|null $Hook_name 掛勾名
      * @param mixed ...$parameter 參數
      */
-    private function run_Hook(string $Hook_name, ...$parameter) {
+    private
+    function run_Hook(string $Hook_name, ...$parameter) {
         if (isset($this->Hook_func[$Hook_name])) {
             foreach ($this->Hook_func[$Hook_name] as $func_name) {
-                call_user_func_array($func_name, $parameter);
+                call_user_func($func_name, ...$parameter);
             }
         }
     }

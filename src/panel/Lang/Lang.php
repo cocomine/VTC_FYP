@@ -36,9 +36,9 @@ $default = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/
  *
  * @param string $Path 路徑
  * @param bool $localCode 語言代碼
- * @return string 輸出文字
+ * @return string|array 輸出文字
  */
-function showText(string $Path, bool $localCode = false): string {
+function showText(string $Path, bool $localCode = false) {
     global $Lang, $default;
     $PathStr = $Path;
     $Path = explode(".",$Path);

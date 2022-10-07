@@ -2,6 +2,7 @@
   "Lang": "zh",
   "Last_Update": "6/9/2020",
   "Translate": {
+    "Error": "發生未知錯誤!!",
     "header": {
       "browserupgrade": "我知道你對<b>IE</b>有一份特別的<b>忠誠</b>, 但是他實在有點太舊... 你至少也要把它<a href=\"http://browsehappy.com/\">升級成IE 11</a>吧!",
       "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
@@ -14,13 +15,13 @@
       ]
     },
     "index": {
-      "title": "首頁 | Global blacklist",
+      "title": "首頁 | IVE airline",
       "Console": "控制台",
       "home": "首頁",
       "Logout": "登出"
     },
     "ChangeSetting": {
-      "title": "設定 | Global blacklist",
+      "title": "設定 | IVE airline",
       "setting": "帳號設定",
       "ChangeData": "個人檔案",
       "Gravatar": "前往Gravatar修改",
@@ -142,7 +143,7 @@
       ]
     },
     "Login": {
-      "title": "登入 | Global blacklist",
+      "title": "登入 | IVE airline",
       "Login": "登入",
       "welcome": "<b>Hello!</b> 登入就可以了",
       "email": "電郵地址",
@@ -176,7 +177,7 @@
       "Can't_use_phone": "手機用不了?<br>你可以直接輸入12個安全代碼的其中1個 （づ￣3￣）づ╭❤～"
     },
     "Register": {
-      "title": "註冊 | Global blacklist",
+      "title": "註冊 | IVE airline",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
       "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
@@ -186,13 +187,13 @@
       "LAST_STEP": "<b>最後一步!</b> 快點到你的郵箱查看吧!",
       "NEED_AGREE": "<b>Hey!</b> 你需要同意<b>服務條款</b>和<b>私隱權政策</b>才能註冊哦!",
       "YOUR_BOT": "<b>Ah Oh!</b> 你是機械人不能註冊哦! (或者你沒有驗證)",
+      "First_use": "<b>你是第一次使用!</b> 註冊了之後就可以直接使用google登入啦",
       "Register": "註冊",
       "welcome": "想用的話就註冊吧",
       "Name": "名稱",
       "email": "電郵地址",
       "password": "密碼",
       "confirmPass": "確認密碼",
-      "Not_Match_Wrong": "兩次密碼輸入不對喔~~",
       "passStrength": "密碼強度:",
       "condition": [
         "條件",
@@ -203,10 +204,24 @@
       ],
       "Agree-Service": "我同意<a href=\"#\">服務條款</a>",
       "Agree-privacy": "我同意<a href=\"#\">私隱權政策</a>",
-      "go_login": "已經註冊過了? <a href=\"login\">去登入吧!!</a>"
+      "go_login": "已經註冊過了? <a href=\"login\">去登入吧!!</a>",
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Not_checked": "你不剔選, 我們就無法繼續了",
+        "Check_bot": "我需要知道你是誰",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ]
     },
     "ForgotPass": {
-      "title": "忘記密碼 | Global blacklist",
+      "title": "忘記密碼 | IVE airline",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "LASTSTEP": "<b>最後兩步!</b> 快點到你的郵箱查看吧!",
       "CODE_WRONG": "<b>Hey!</b> 失效啦!",
@@ -236,11 +251,11 @@
       "Change_Pass": "更換密碼"
     },
     "Error_Page": {
-      "403_title": "停!停! | Global blacklist",
+      "403_title": "停!停! | IVE airline",
       "Dont_Come": "喂喂喂! 你不應該來這裏!",
-      "404_title": "你去哪裏了! | Global blacklist",
+      "404_title": "你去哪裏了! | IVE airline",
       "Where_you_go": "等等! 你去哪裏了!",
-      "500_title": "死火啦! | Global blacklist",
+      "500_title": "死火啦! | IVE airline",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧"
     },
@@ -308,15 +323,6 @@
     }
   },
   "JS": {
-    "meter": {
-      "strength": [
-        "太弱了!",
-        "有點弱..",
-        "中規中矩",
-        "嗯! 好點了~~",
-        "非常強大!!"
-      ]
-    },
     "Form": {
       "Cant_EMPTY": "這裏是不能留空喔",
       "Error_format": "電郵格式應該不是這樣的吧",

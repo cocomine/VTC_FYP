@@ -10,6 +10,7 @@
  * Date: 11/12/2018
  * Time: 下午 5:32
  */
+
 use cocopixelmc\Auth\MyAuth;
 
 /* header */
@@ -19,112 +20,78 @@ require_once('./stable/header.php'); //head
 $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
 $auth->checkAuth(); //start auth
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if(!$auth->islogin){
-        /* 傳送註冊 */
-        $auth->add_Hook('acc_register', 'acc_Activated_Mail_Hook');
-        $auth->register($_POST['Name'] ?? "", $_POST['confirm_pass'] ?? "", $_POST['password'] ?? "", $_POST['Email'] ?? "", $_POST['Agree-Service'] ?? "", $_POST['Agree-privacy'] ?? "", $localCode ?? 'en');
-    }else{
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    /* post 請求 */
+    ob_clean();
+    header("content-type: text/json; charset=UTF-8"); //is json
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    //已經登入
+    if ($auth->islogin) {
+        ob_clean();
+        echo json_encode(array(
+            'code' => AUTH_REGISTER_COMPLETE,
+            'Message' => ResultMsg(AUTH_REGISTER_COMPLETE)
+        ));
+        exit();
+    }
+
+    //無法解釋json
+    if ($data == null) {
+        http_response_code(500);
+        echo json_encode(array(
+            'code' => 500,
+            'Message' => showText('Error')
+        ));
+        exit();
+    }
+
+    /* 傳送註冊 */
+    $auth->add_Hook('acc_register', 'acc_Activated_Mail_Hook');
+    $status = $auth->register($data['name'], $data['password2'], $data['password'], $data['email'],
+        $localCode ?? 'en', $data["g-recaptcha-response"], Cfg_recaptcha_key, $_SESSION['pvKey']);
+    echo json_encode(array(
+        'code' => $status,
+        'Message' => ResultMsg($status),
+    ));
+    exit();
+} else {
+    /* get 請求 */
+    //已經登入
+    if ($auth->islogin) {
         ob_clean();
         header("Location: /panel");
         exit();
     }
-}else{
-    if($auth->islogin) {
-        ob_clean();
-        header("Location: /panel");
-        exit();
-    }else{
-        if(isset($_GET['email']) && isset($_GET['name'])){
-            $email = filter_var(trim($_GET['email'] ?? ""), FILTER_SANITIZE_EMAIL);
-            $name = filter_var(trim($_GET['name'] ?? ""), FILTER_SANITIZE_STRING);
-            register_form(AUTH_REGISTER_FIRST_GOOGLE, $email, $name);//Auto Fill
-        }else{
-            register_form();//預設
-        }
+
+    //未登入
+    if (isset($_GET['email']) && isset($_GET['name'])) {
+        $email = filter_var(trim($_GET['email'] ?? ""), FILTER_SANITIZE_EMAIL);
+        $name = filter_var(trim($_GET['name'] ?? ""), FILTER_SANITIZE_STRING);
+        register_form($email, $name);//Auto Fill
+    } else {
+        register_form();//預設
     }
 }
 
 /**
  *註冊表
  *
- * @param int|null $status register status
  * @param string|null $email 電郵地址
  * @param string|null $name 名稱
  */
-function register_form(int $status = null, string $email = null, string $name = null) {
-    switch ($status) {
-        case AUTH_REGISTER_EMAIL_FAIL:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.EMAIL_FAIL") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_PASS_NOT_MATCH:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.PASS_NOT_MATCH") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_PASS_NOT_STRONG:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.PASS_NOT_STRONG") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_EMAIL_WRONG_FORMAT:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.EMAIL_WRONG_FORMAT") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_EMPTY:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.EMPTY") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_NAME_TOO_LONG:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.NAME_TOO_LONG") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_LAST_STEP:
-            $msg = '<div class="alert alert-primary" role="alert">
-                        ' . showText("Register.LAST_STEP") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_NEED_AGREE:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.NEED_AGREE") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_YOUR_BOT:
-            $msg = '<div class="alert alert-danger" role="alert">
-                        ' . showText("Register.YOUR_BOT") . '
-                    </div>';
-            break;
-        case AUTH_REGISTER_FIRST_GOOGLE:
-            $msg = '<div class="alert alert-info" role="alert"><b>你是第一次使用!</b> 註冊了之後就可以直接使用google登入啦</div>';
-            break;
-        default:
-            $msg = '';
-            break;
-    }
+function register_form(string $email = null, string $name = null) {
 
-    $Text = array( //指引文字
-        "Register" => showText("Register.Register"),
-        "welcome" => showText("Register.welcome"),
-        "Name" => showText("Register.Name"),
-        "email" => showText("Register.email"),
-        "password" => showText("Register.password"),
-        "confirmPass" => showText("Register.confirmPass"),
-        "Not_Match_Wrong" => showText("Register.Not_Match_Wrong"),
-        "passStrength" => showText("Register.passStrength"),
-        "condition0" => showText("Register.condition.0"),
-        "condition1" => showText("Register.condition.1"),
-        "condition2" => showText("Register.condition.2"),
-        "condition3" => showText("Register.condition.3"),
-        "condition4" => showText("Register.condition.4"),
-        "Agree-Service" => showText("Register.Agree-Service"),
-        "Agree-privacy" => showText("Register.Agree-privacy"),
-        "go_login" => showText("Register.go_login")
-    );
+    //首次使用google
+    $msg = $email != null ? '<div class="alert alert-info" role="alert">' . showText("Register.First_use") . '</div>' : '';
+
+    //語言
+    $Text = showText("Register");
+
+    //js使用
+    $LangJson = json_encode(array(
+        'strength' => showText("Register.strength")
+    ));
 
     echo <<<REGISTER_FROM
     <!-- login area start -->
@@ -133,56 +100,69 @@ function register_form(int $status = null, string $email = null, string $name = 
             <div class="row no-gutters">
                 <div class="col-xl-4 offset-xl-8 col-lg-6 offset-lg-6">
                     <div class="login-box-s2 ptb--100">
-                        <form action="/panel/register" method="post">
+                        <form class="" novalidate>
                             <div class="login-form-head">
                                 <h4>{$Text['Register']}</h4>
                                 <p>{$Text['welcome']}</p>
                             </div>
-                            {$msg}
+                            <div id="ResultMsg">
+                                {$msg}
+                            </div>
                             <div class="login-form-body">
                                 <div class="form-gp focused">
                                     <label for="Name">{$Text['Name']}</label>
-                                    <input type="text" name="Name" required="required" id="Name" autocomplete='nickname' autofocus value='{$name}' maxlength="16">
+                                    <input type="text" class="form-control" name="name" id="Name" required="required" autocomplete='nickname' autofocus value='{$name}' maxlength="16">
                                     <i class="ti-user"></i>
+                                    <div class="invalid-feedback">
+                                        {$Text['Form']['Cant_EMPTY']}
+                                    </div>
                                 </div>
                                 <div class="form-gp">
                                     <label for="Email">{$Text['email']}</label>
-                                    <input type="email" autocomplete="username" name="Email" required="required" id="Email" value="{$email}" inputmode="email">
+                                    <input type="email" class="form-control" autocomplete="username" id="Email" name="email" required="required" value="{$email}" inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
                                     <i class="ti-email"></i>
+                                    <div class="invalid-feedback">
+                                        {$Text['Form']['Error_format']}
+                                    </div>
                                 </div>
                                 <div class="form-gp">
                                     <label for="Password">{$Text['password']}</label>
-                                    <input type="password" autocomplete="new-password" id="Password" pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' required="required">
+                                    <input type="password" class="form-control" autocomplete="new-password" id="Password" pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' required="required" name="password">
                                     <i class="ti-lock"></i>
+                                    <div class="invalid-feedback">
+                                        {$Text['Form']['Cant_EMPTY']}
+                                    </div>
                                 </div>
                                 <div class="form-gp">
                                     <label for="Password2">{$Text['confirmPass']}</label>
-                                    <input type="password" autocomplete="new-password" required="required" id="Password2" pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' data-placement="auto" data-toggle="popover" data-html="true" data-trigger="manual" data-content="<i class='ti-alert' style='color:red;'></i> {$Text['Not_Match_Wrong']}">
+                                    <input type="password" class="form-control" autocomplete="new-password" required="required" id="Password2" pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name="password2">
                                     <i class="ti-lock"></i>
+                                    <div class="invalid-feedback">
+                                        {$Text['Form']['Not_Match_Wrong']}
+                                    </div>
                                 </div>
                                 <div class="form-gp">
                                     <p>
-                                        {$Text['passStrength']} <span id='password-strength-text'>--</span> <br> 
-                                        <meter max='5' value='1' id='password-strength-meter'></meter>
+                                        {$Text['passStrength']} 
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 0%" id="passStrength"></div>
+                                        </div>
                                     </p>
                                     <p>
-                                        <b>{$Text['condition0']}</b><br>
-                                        1. {$Text['condition1']}<br>
-                                        2. {$Text['condition2']}<br>
-                                        3. {$Text['condition3']}<br>
-                                        4. {$Text['condition4']}
+                                        <b>{$Text['condition'][0]}</b>
+                                        <ol id="passStrength-list">
+                                            <li>{$Text['condition'][1]}</li>
+                                            <li>{$Text['condition'][2]}</li>
+                                            <li>{$Text['condition'][3]}</li>
+                                            <li>{$Text['condition'][4]}</li>
+                                        </ol>
                                     </p>
                                 </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="Agree-Service" name="Agree-Service" required="required">
-                                    <label class="custom-control-label" for="Agree-Service">{$Text['Agree-Service']}</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="Agree-privacy" name="Agree-privacy" required="required">
-                                    <label class="custom-control-label" for="Agree-privacy">{$Text['Agree-privacy']}</label>
-                                </div>
                                 <br>
-                                <div id="g-recaptcha" class="g-recaptcha" data-sitekey="6Le90ykTAAAAAOgxgMUBE-hW7OivFZs1ebR5btuu" data-callback="recaptchacall"></div>
+                                <div id="g-recaptcha" class="g-recaptcha form-control" data-sitekey="6Le90ykTAAAAAOgxgMUBE-hW7OivFZs1ebR5btuu" data-callback="recaptchacall"></div>
+                                <div class="invalid-feedback">
+                                        {$Text['Form']['Check_bot']}
+                                </div>
                                 <br><br>
                                 <div class="submit-btn-area">
                                     <button id="form_submit" type="submit">{$Text['Register']} <i class="ti-arrow-right"></i></button>
@@ -198,7 +178,38 @@ function register_form(int $status = null, string $email = null, string $name = 
         </div>
     </div>
     <!-- login area end -->
+    <pre style="display: none" id="langJson">
+        {$LangJson}
+    </pre>
 REGISTER_FROM;
+}
+
+/**
+ * 狀態結果訊息
+ * @param int $type 類型
+ * @return string 訊息
+ */
+function ResultMsg(int $type): string {
+    switch ($type) {
+        case AUTH_REGISTER_EMAIL_FAIL:
+            return showText("Register.EMAIL_FAIL");
+        case AUTH_REGISTER_PASS_NOT_MATCH:
+            return showText("Register.PASS_NOT_MATCH");
+        case AUTH_REGISTER_PASS_NOT_STRONG:
+            return showText("Register.PASS_NOT_STRONG");
+        case AUTH_REGISTER_EMAIL_WRONG_FORMAT:
+            return showText("Register.EMAIL_WRONG_FORMAT");
+        case AUTH_REGISTER_EMPTY:
+            return showText("Register.EMPTY");
+        case AUTH_REGISTER_NAME_TOO_LONG:
+            return showText('Register.NAME_TOO_LONG');
+        case AUTH_REGISTER_LAST_STEP:
+            return showText("Register.LAST_STEP");
+        case AUTH_REGISTER_YOUR_BOT:
+            return showText("Register.YOUR_BOT");
+        default:
+            return '';
+    }
 }
 
 echo <<<Foot
@@ -210,9 +221,14 @@ require.config({
         paths:{
             jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",
             bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min",
-            zxcvbn: "https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn"
+            zxcvbn: "https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn",
+            grecaptcha: "https://www.google.com/recaptcha/api",
+            forge: "https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min"
         },
         shim:{
+            "owl.carousel.min":{
+                deps:["jquery"]
+            },
             "jquery.slimscroll.min":{
                 deps:["jquery"]
             },
@@ -223,11 +239,13 @@ require.config({
                 deps: ["jquery"]
             },
             "scripts":{
-                deps: ["jquery"]
+                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
             }
         }
 });
 require([
+    "myself/register",
+    "grecaptcha",
     "jquery", 
     "bootstrap", 
     "owl.carousel.min",
@@ -236,15 +254,11 @@ require([
     "jquery.slicknav.min",
     "plugins",
     "scripts",
-    "zxcvbn"])
+    "zxcvbn",
+    "forge"
+    ], (register) => window.recaptchacall = register.recaptchacall)
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
-<!--others js-->
-<script src="/panel/assets/js/myself/password-strength-meter.min.js"></script>
-<script src="/panel/assets/js/jsencrypt.min.js"></script>
-<script src="/panel/assets/js/myself/pass-encrypt.min.js"></script>
-<script src="/panel/assets/js/myself/Form-submit-loadicon.min.js"></script>
-<script src="/panel/assets/js/myself/js-Lang.min.js"></script>
 </body>
 </html>
 Foot;

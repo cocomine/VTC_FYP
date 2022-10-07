@@ -55,6 +55,7 @@
     text-align: center;
     width: 100%!important;
 }
+
 /*------------------------- 1. Core Css -------------------*/
 
 .page-container {
@@ -2368,6 +2369,7 @@ table.dataTable thead td {
     height: 30px;
     border: none;
     border-bottom: 1px solid #e6e6e6;
+    border-radius: inherit;
 }
 
 .form-gp input::-webkit-input-placeholder {
@@ -2388,8 +2390,8 @@ table.dataTable thead td {
 
 .form-gp i {
     position: absolute;
-    right: 5px;
-    bottom: 15px;
+    right: 28px;
+    top: 6px;
     color: #ff9c5e;
     font-size: 16px;
 }
