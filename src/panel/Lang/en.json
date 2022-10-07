@@ -1,0 +1,341 @@
+{
+  "Lang": "zh-TW",
+  "Last_Update": "10/9/2020",
+  "Translate": {
+    "header": {
+      "browserupgrade": "I know that you have a special <b>loyalty</b> to <b>IE</b>, but he is a bit too old... you should at least upgrade it to <a href=\"http://browsehappy.com/\">IE 11</a>!",
+      "noscript": "You blocked <b>javascript</b>! If you do this, we will not be able to send the package to you!"
+    },
+    "footer": {
+      "privacy": [
+        "<a href=\"\">Privacy Policy</a> & <a href=\"\">Terms of Service</a>",
+        "Created by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation.",
+        "This product is not affiliated with the game Minecraft, Mojang AB or Microsoft."
+      ]
+    },
+    "index": {
+      "title": "Home | Global blacklist",
+      "Console": "Console",
+      "home": "Home",
+      "Logout": "Logout"
+    },
+    "ChangeSetting": {
+      "title": "Account Settings | Global blacklist",
+      "setting": "Account Setting",
+      "ChangeData": "Profile",
+      "Gravatar": "Go to Gravatar and modify",
+      "Name": {
+        "Name": "Name",
+        "limit": "Up to 16 words"
+      },
+      "Email": {
+        "Email": "Email Address",
+        "addMSG": "<b>The email address needs to be reconfirmed for the modification</b>. If you log out before you confirm, you will not be able to log in again. You need to confirm before you can log in (you can still modify it again without logging out)"
+      },
+      "Lang": {
+        "Lang": "Language",
+        "en": "English",
+        "zh": "Chinese (Traditional)",
+        "zh-CN": "Chinese (Simplified)"
+      },
+      "Submit": "Submit Changes",
+      "Pass": {
+        "Pass": "Change Password",
+        "OldPass": "Old Password",
+        "NewPass": "New Password",
+        "NewConfirmPass": "Confirm Password",
+        "NotMach": "The password was entered incorrectly twice~~",
+        "passStrength": "Password strength:",
+        "condition": [
+          "Condition",
+          "At least one English capital letter",
+          "At least one English small letter",
+          "At least 8 words or more",
+          "Cannot be the same as the email address or name"
+        ]
+      },
+      "2FA": {
+        "title": "Two-Factor Authentication (2FA)",
+        "Enable": "Click to enable",
+        "is_not_Enable": "Enable two-factor authentication! Add an extra layer of protection to your account, one less annoyance~ (～￣▽￣)～",
+        "is_Enable": [
+          "Two-factor authentication is on!",
+          "Note down the security code so you can use it if you lose your phone. Keep it safe. ╰ (￣ω￣o)",
+          "The account will not be used without a security code, you will need to contact customer service to retrieve the account. <(_ _)>"
+        ],
+        "show_BackupCode": "View Security Code",
+        "reset": "Reset 2FA",
+        "2FA_register_modal": {
+          "body": [
+            "Scan the QR Code below with the <b> Two-Factor Authentication Program </b> on your phone (such as Google Authenticator)!! (｡A｡)",
+            "Failure? Can't scan? You can try to enter the code below! (๑•̀ㅂ•́)و✧"
+          ],
+          "Enter_code": "Enter the mysterious code generated",
+          "No": "No need~",
+          "Enable": "Enable"
+        },
+        "TwoFA_confirm_off_modal": {
+          "title": "Serious?",
+          "body": "After reset, your account there will be less protection and more trouble. Do you really want to do this? (⊙﹏⊙)",
+          "NO": "Forget it~",
+          "YES": "Yes! I'm serious!"
+        },
+        "TwoFA_BackupCode_modal": {
+          "title": "Security Code",
+          "body": "These are your security code, please keep it in a safe place. Of course it is best to encrypt it! （￣︶￣）↗　",
+          "download": "Save Security Code"
+        }
+      },
+      "AUTH_CHANGESETTING_2FA_OFF_OK": "Reset successfully ヾ(^▽^*)))",
+      "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
+        "Reset failed (┬┬﹏┬┬) Please try again~~",
+        "If the situation persists, please contact customer service"
+      ],
+      "AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL": [
+        "Mysterious code is wrong~~",
+        "Re-scan and enter again~ or you entered it wrong (If the situation persists, please contact customer service staff)"
+      ],
+      "AUTH_CHANGESETTING_2FA_CHECK_CODE_OK": [
+        "Successfully Enable! ヾ(^▽^*)))",
+        "The next time you log in, you need to enter this mysterious code!"
+      ],
+      "AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL": [
+        "An error!! (┬┬﹏┬┬)",
+        "If the situation persists, please contact customer service"
+      ],
+      "AUTH_CHANGESETTING_DATA_OK_EMAIL": [
+        "Successfully modified ヾ(^▽^*)))",
+        "<b>Last step!</ b> Hurry up and check in your email!"
+      ],
+      "AUTH_CHANGESETTING_DATA_OK": "Successfully modified ヾ(^▽^*)))",
+      "AUTH_CHANGESETTING_DATA_FAIL": [
+        "Modification failed (┬┬﹏┬┬) Please try again ~~",
+        "If the situation persists, please contact customer service"
+      ],
+      "AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH": [
+        "Modification failed (┬┬﹏┬┬) Please try again ~~",
+        "The name is too long or the email format is incorrect..."
+      ],
+      "AUTH_CHANGESETTING_PASS_OK": [
+        "Successfully modified ヾ(^▽^*)))",
+        "Remember to sign in with your new password!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL": [
+        "Modification failed (┬┬﹏┬┬) Please try again ~~",
+        "If the situation persists, please contact customer service"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG": [
+        "Modification failed (┬┬﹏┬┬)",
+        "The password is not too strong!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH": [
+        "Modification failed (┬┬﹏┬┬)",
+        "The passwords you enter are not the same!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_EMPTY": [
+        "Modification failed (┬┬﹏┬┬)",
+        "You haven't hit anything!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG": [
+        "Modification failed (┬┬﹏┬┬)",
+        "Your old password is wrong ~~"
+      ]
+    },
+    "Login": {
+      "title": "Login | Global blacklist",
+      "Login": "Login",
+      "welcome": "<b>Hello!</b> Login is fine",
+      "email": "Email address",
+      "password": "Password",
+      "Remember_ME": "Remember me",
+      "forgotpass": "Forgot password?",
+      "go_register": "You don't have an account and want to use it? <a href=\"register\">Register now</a>",
+      "WRONG_PASS": "<b>Oh Nooooo!</b> Email or password is wrong!",
+      "NOT_DOEN": "<b>Hey!</b> It’s not okay to be so anxious! Go check the mailbox!",
+      "REGISTER_COMPLETE": "<b>Yes!</b> You are done! Go and login now!",
+      "REGISTER_CODE_WRONG": "<b>Hey!</b> is invalid!",
+      "AUTH_GOOGLE_ERROR": "An error occurred! (っ°Д°;)っ",
+      "Login_with_google": "Login with <i class=\"fa fa-google\"></i>",
+      "BLOCK_10": [
+        "<b>Sorry~~</b> You have failed too many times! Wait 10 minutes and try again~~",
+        "If you forget your password, you can try <a href=\"forgotpass\">retrieve your password</a>"
+      ],
+      "BLOCK_30": [
+        "<b>Sorry~~</b> You have failed too many times! Wait for 30 minutes and try again~~ <br> ",
+        "If you forget your password, you can try <a href=\"forgotpass\">retrieve your password</a>"
+      ]
+    },
+    "TwoFA": {
+      "2FA_WRONG": "<b>Ah Oh!</b> Mystery code is wrong!",
+      "2FA_DUE": "<b>Time Up!</b> Login again!",
+      "2FA": "Double Verification (2FA)",
+      "welcome": "<b>Hello!</b> Get the mysterious code from your mobile app",
+      "2FACode": "2FA code",
+      "Login": "Login",
+      "ReDo": "Is the account entered incorrectly? <a href=\"login\">Re-enter</a>",
+      "Can't_use_phone": "Can’t use the phone? <br> You can directly enter 1 of the 12 security codes （づ￣3￣）づ╭❤～"
+    },
+    "Register": {
+      "title": "Register | Global blacklist",
+      "EMAIL_FAIL": "<b>Ah Oh!</b> Email can't be sent! Check if you have made a mistake~~",
+      "PASS_NOT_MATCH": "<b>Ah Oh!</b> The password entered twice is not the same!",
+      "PASS_NOT_STRONG": "<b>Umm..</b> The password is not too strong!",
+      "EMAIL_WRONG_FORMAT": "<b>Umm..</b> The email address should not be like this!",
+      "EMPTY": "<b>Hey!</b> You haven't enter anything!",
+      "NAME_TOO_LONG": "<b>Ah Oh!</b> The name is too long to remember!",
+      "LAST_STEP": "<b>The last step!</b> Come to your mailbox and check it out!",
+      "NEED_AGREE": "<b>Sorry~~</b> You need to agree <b>Terms of Service</b> and <b>Privacy Policy</b> to register.",
+      "YOUR_BOT": "<b>Ah Oh!</b> You are a robot! Can't register! (or you didn't verify it)",
+      "Register": "Register",
+      "welcome": "If you want to use it, register it",
+      "Name": "Name",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPass": "Confirm password",
+      "Not_Match_Wrong": "Two passwords are incorrectly entered~~",
+      "passStrength": "Password strength:",
+      "condition": [
+        "Condition",
+        "At least one English capital letter",
+        "At least one English small letter",
+        "At least 8 words or more",
+        "Cannot be the same as the email address or name"
+      ],
+      "Agree-Service": "I agree <a href=\"#\">Terms of Service</a>",
+      "Agree-privacy": "I agree <a href=\"#\">Privacy Policy</a>",
+      "go_login": "Already registered? <a href=\"login\">Go to login!!</a>"
+    },
+    "ForgotPass": {
+      "title": "Forgot password | Global blacklist",
+      "EMAIL_FAIL": "<b>Ah Oh!</b> Email can't be sent! Check if you have made a mistake~~",
+      "LASTSTEP": "<b>The last two steps!</b> Come to your mailbox and check it out!",
+      "CODE_WRONG": "<b>Hey!</b> is invalid!",
+      "COMPLETE": "<b>Yes!</b> You are done! Log in with your new password now!",
+      "YOUR_BOT": "<b>Ah Oh!</b> You are a robot! Can't register! (or you didn't verify it)",
+      "ForgotPass": "Forgot Password",
+      "welcome": "Forgot your password? Come and get him back!",
+      "Email": "Email address",
+      "Email_Tips": "The email address you used to sign up for your account",
+      "FindPass": "Retrieve password",
+      "go_login": "Not needed? <a href=\"login\">Return to login</a>",
+      "EMPTY": "<b>Hey!</b> You haven't played anything!",
+      "PASS_NOT_MATCH": "<b>Ah Oh!</b> The password entered twice is not the same!",
+      "PASS_NOT_STRONG": "<b>Umm..</b> The password is not too strong!",
+      "welcome2": "Come on! Enter a new password!",
+      "NewPass": "New Password",
+      "ConfirmNewPass": "Confirm password",
+      "Not_Match_Wrong": "Two passwords are incorrectly entered~~",
+      "passStrength": "Password strength:",
+      "condition": [
+        "condition",
+        "At least one English capital letter",
+        "At least one English small letter",
+        "At least 8 words or more",
+        "Cannot be the same as the email address or name"
+      ],
+      "Change_Pass": "Change Password"
+    },
+    "Error_Page": {
+      "403_title": "Stop! Stop! | Global blacklist",
+      "Dont_Come": "Hey! You shouldn't come here!",
+      "404_title": "Where have you been! | Global blacklist",
+      "Where_you_go": "Wait! Where have you been!",
+      "500_title": "Dead fire! | Global blacklist",
+      "something_happened": "Ohh Noo! Dead fire! It something happened!",
+      "GoBack": "Go back"
+    },
+    "Block_login": {
+      "title": "Login Blocked!!",
+      "status": "Successful blockade!!",
+      "detailed": "You have quickly blocked this login!!<br>Hurry up and change your password as soon as possible before the other party responds!! (๑•̀ᄇ•́)و✧",
+      "go_login": "I will change now!!"
+    },
+    "Email": {
+      "activated": {
+        "subject": "Last step! Just fine!",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "Last step! Click down! That's it!",
+          "The link is only valid for 1 day! Grasp the time!",
+          "Click me to verify",
+          "If the button doesn't respond, just move the link below to the browser!",
+          "If you have any questions, please send an email to"
+        ],
+        "privacy": [
+          "<a href=\"\">Privacy Policy</a> & <a href=\"\">Terms of Service</a>",
+          "Created by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation.",
+          "This product is not affiliated with the game Minecraft, Mojang AB or Microsoft."
+        ]
+      },
+      "forgetPass": {
+        "subject": "The reset password you requested, is sent!",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "Last step! Click down! Change your password! That's it!",
+          "The link is only valid for 1 hour! Grasp the time!",
+          "Click me to change password",
+          "If the button doesn't respond, just move the link below to the browser!",
+          "If you have any questions, please send an email to"
+        ],
+        "privacy": [
+          "<a href=\"\">Privacy Policy</a> & <a href=\"\">Terms of Service</a>",
+          "Created by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation.",
+          "This product is not affiliated with the game Minecraft, Mojang AB or Microsoft."
+        ]
+      },
+      "Wong-newIP": {
+        "subject": "Someone is logged in to your account! Σ(っ °Д °;)っ",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "Someone has logged into your account in a different place!",
+          "We recommend that you check the following information to see is doesn't your own login",
+          "IP: %IP%",
+          "Region: %COUNTRY%",
+          "Telecom: %ISP%",
+          "Platform: %BROWSER%",
+          "If you are logged in, you don't need to pay attention. Otherwise, please block this login immediately!ヽ(≧□≦)ノ",
+          "Click me to block this login",
+          "If the button doesn't respond, just move the link below to the browser!"
+        ],
+        "Unknown_Location": "The location is unknown",
+        "Äny-question": "If you have any questions, please send an email to",
+        "privacy": [
+          "<a href=\"\">Privacy Policy</a> and <a href=\"\">Terms of Service</a>",
+          "Created by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a> provides translations.",
+          "This product is not part of Minecraft, Mojang AB or Microsoft Games."
+        ]
+      }
+    }
+  },
+  "JS": {
+    "meter": {
+      "strength": [
+        "Too weak!",
+        "Slightly weak..",
+        "Middle",
+        "Yeah! Better~~",
+        "Very powerful!!"
+      ]
+    },
+    "Form": {
+      "Cant_EMPTY": "This is not to be left empty",
+      "Error_format": "The email format should not be like this",
+      "Not_checked": "If you don't pick, we can't continue.",
+      "Check_bot": "I need to know who you are"
+    },
+    "2FA": {
+      "isUsed": "Used✔",
+      "content": "This is your security code, please keep it in a safe place. Of course it is best to encrypt it! (￣︶￣) ↗",
+      "BackupCode": "Security code"
+    },
+    "notify": {
+      "just_now": "Just Now",
+      "few_seconds": "A few seconds",
+      "minutes_ago": "minutes ago",
+      "hour_ago": "hours ago",
+      "day_ago": "day ago",
+      "week_ago": "week ago",
+      "month_ago": "month ago"
+    }
+  }
+}
