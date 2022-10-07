@@ -1,0 +1,14 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+out
+gen
+.SynologyWorkingDirectory/
+/.idea/
+/src/panel/vendor/
+/src/panel/function/secret/
+/src/panel/function/config.inc.php
+/template/
+/node_modules/

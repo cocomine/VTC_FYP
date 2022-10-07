@@ -1,0 +1,54 @@
+Options +FollowSymlinks
+Options -MultiViews
+
+ErrorDocument 500 /panel/stable/500.php
+ErrorDocument 404 /panel/stable/404.php
+ErrorDocument 403 /panel/stable/403.php
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ /$1.php [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^panel/(.+)$ panel/index.php?p=$1 [L,QSA,NC]
+
+#RewriteCond %{SERVER_PORT} 80t
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R,L]
+
+#deny json files
+<FilesMatch "\.(json)$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "manifest.json">
+    Require all granted
+</FilesMatch>
+
+<IfModule expires_module>
+    ExpiresActive On
+    <FilesMatch "\.(webm|ogg|mp4|webp|gif|png|jpg|jpeg|ico|svg|woff|otf|eot|ttf|woff2)$">
+        ExpiresDefault A10368000
+    </FilesMatch>
+    <FilesMatch "\.(css|xml|js|html|json)$">
+        ExpiresDefault M604800
+    </FilesMatch>
+</IfModule>
+
+# BEGIN HttpHeaders
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  <FilesMatch "\.(php)$">
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Powered-By "Cocopixelmc"
+    Header set X-XSS-Protection "1"
+    Header set X-Download-Options "noopen"
+    Header set Cache-Control "no-cache, max-age=64000"
+  </FilesMatch>
+  <FilesMatch "sw.min.js">
+    Header set Service-Worker-Allowed "/panel"
+  </FilesMatch>
+</IfModule>
+# END HttpHeaders

@@ -1,0 +1,25 @@
+{
+  "name" : "Global blacklist",
+  "display" : "minimal-ui",
+  "start_url" : "/panel/",
+  "short_name" : "Gblacklist",
+  "theme_color" : "#ff7112",
+  "description" : "拒絕不良玩家",
+  "background_color" : "#ff9e5b",
+  "icons" : [
+    {
+      "src": "https://gblacklist.cocopixelmc.com/panel/assets/images/icon/favicon192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://gblacklist.cocopixelmc.com/panel/assets/images/icon/favicon.png",
+      "type": "image/png",
+      "sizes": "200x200"
+    },
+    {
+      "src": "https://gblacklist.cocopixelmc.com/panel/assets/images/icon/favicon512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]}
