@@ -207,6 +207,8 @@ function ResultMsg(int $type): string {
             return showText("Register.LAST_STEP");
         case AUTH_REGISTER_YOUR_BOT:
             return showText("Register.YOUR_BOT");
+        case AUTH_SERVER_ERROR:
+            return showText("Error");
         default:
             return '';
     }

@@ -59,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     /*if (isset($_POST['TwoFA_Code']) && $_SESSION['2FA']['Doing_2FA']) {
         $auth->TwoFA_check($_POST['TwoFA_Code'] ?? "");
     }*/
+
     $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
     $status = $auth->login($data['email'], $data['password'], $data['remember_me'] == 'on', $_SESSION['pvKey']);
     echo json_encode(array(
@@ -115,8 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* 激活 */
     if (isset($_GET['code']) && !isset($_GET['login'])) {
-        $auth->activated($_GET['code'] ?? "");
-        login_form(false, true);
+        $status = $auth->activated($_GET['code'] ?? "");
+        login_form(false, $status);
     }
 }
 
@@ -124,11 +125,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  * 登錄表
  *
  * @param bool $isGoogleError google登入是否錯誤
+ * @param int|null $activatedStatus 啟動狀態
  */
-function login_form(bool $isGoogleError = false, bool $isActivated = false) {
+function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
 
+    /* alert for GET method */
     $msg = $isGoogleError ? '<div class="alert alert-danger" role="alert">' . showText("Login.AUTH_GOOGLE_ERROR") . '</div>' : '';
-    $msg = $isGoogleError ? '<div class="alert alert-success" role="alert">' . showText("Login.REGISTER_COMPLETE") . '</div>' : '';
+    if($activatedStatus == AUTH_REGISTER_CODE_WRONG) $msg = '<div class="alert alert-danger" role="alert">' . showText("Login.REGISTER_CODE_WRONG") . '</div>';
+    if($activatedStatus == AUTH_SERVER_ERROR) $msg = '<div class="alert alert-danger" role="alert">' . showText("Error") . '</div>';
+    if($activatedStatus == AUTH_REGISTER_COMPLETE) $msg = '<div class="alert alert-success" role="alert">' . showText("Login.REGISTER_COMPLETE") . '</div>';
 
     //指引文字
     $Text = showText("Login");
@@ -201,12 +206,12 @@ function ResultMsg(int $type): string {
             return showText("Login.WRONG_PASS");
         case AUTH_NOT_DONE:
             return showText("Login.NOT_DOEN");
-        case AUTH_REGISTER_CODE_WRONG:
-            return showText("Login.REGISTER_CODE_WRONG");
         case AUTH_BLOCK_10:
             return showText("Login.BLOCK_10.0") . '<br>' . showText("Login.BLOCK_10.1");
         case AUTH_BLOCK_30:
             return showText("Login.BLOCK_30.0") . '<br>' . showText("Login.BLOCK_30.1");
+        case AUTH_SERVER_ERROR:
+            return showText("Error");
         default:
             return '';
     }

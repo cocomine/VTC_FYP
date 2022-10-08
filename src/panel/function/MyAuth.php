@@ -278,7 +278,7 @@ class MyAuth {
      * @param string|null $RSAkey RSA加密
      * @return int 狀態
      */
-    function login(string $email, string $password, bool $remember_me, string $RSAkey = null) {
+    function login(string $email, string $password, bool $remember_me, string $RSAkey = null): int {
 
         //不能留空
         if (empty($email) || empty($password)) return AUTH_WRONG_PASS;
@@ -374,9 +374,7 @@ class MyAuth {
      */
     function Block_login(string $code): bool {
         /* 空值檢查 */
-        if (empty($code)) {
-            return false;
-        }
+        if (empty($code)) return false;
 
         $code = filter_var(trim($code), FILTER_SANITIZE_STRING);
 
@@ -396,29 +394,27 @@ class MyAuth {
         $stmt->close();
 
         /* 移除Toke */
-        if (mysqli_num_rows($result) < 1) {
-            return false; //不存在
-        } else {
-            $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Block_login_code['table']} WHERE {$this->sqlsetting_Block_login_code['code']} = ?");
-            $stmt->bind_param("s", $code);
-            if (!$stmt->execute()) {
-                ob_clean();
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
-                exit();
-            }
-            $stmt->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
-            $stmt->bind_param("s", $data[$this->sqlsetting_Block_login_code['Toke']]);
-            if (!$stmt->execute()) {
-                ob_clean();
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
-                exit();
-            }
-            $stmt->close();
+        if (mysqli_num_rows($result) < 1) return false; //不存在else
 
-            return true; //存在
+        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Block_login_code['table']} WHERE {$this->sqlsetting_Block_login_code['code']} = ?");
+        $stmt->bind_param("s", $code);
+        if (!$stmt->execute()) {
+            ob_clean();
+            header('HTTP/1.1 500 Internal Server Error');
+            require_once($this->ErrorFile);
+            exit();
         }
+        $stmt->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
+        $stmt->bind_param("s", $data[$this->sqlsetting_Block_login_code['Toke']]);
+        if (!$stmt->execute()) {
+            ob_clean();
+            header('HTTP/1.1 500 Internal Server Error');
+            require_once($this->ErrorFile);
+            exit();
+        }
+        $stmt->close();
+
+        return true; //存在
     }
 
     /**
@@ -630,23 +626,23 @@ class MyAuth {
      * 登出帳號
      */
     function logout() {
-        @session_start();
-        if (@$_SESSION['UUID']) {
+        if (empty($_SESSION['UUID'])) return;
 
-            /* 移除toke紀錄 */
-            $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
-            $stmt->bind_param("s", $_SESSION['toke']);
-            if (!$stmt->execute()) {
-                ob_clean();
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
-                exit();
-            }
-            $stmt->close();
-
-            unset($_SESSION['UUID']);
-            unset($_SESSION['toke']);
+        /* 移除toke紀錄 */
+        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
+        $stmt->bind_param("s", $_SESSION['toke']);
+        if (!$stmt->execute()) {
+            ob_clean();
+            http_response_code(500);
+            require_once($this->ErrorFile);
+            exit();
         }
+        $stmt->close();
+
+        unset($_SESSION['UUID']);
+        unset($_SESSION['toke']);
+
+        /* 使用了記住我 */
         if ($_COOKIE['_ID'] || $_COOKIE['_tk']) {
             setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
             setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
@@ -656,11 +652,9 @@ class MyAuth {
     /**
      * 檢查登入狀態
      */
-    function checkAuth() {
+    function checkAuth(): void {
         /* 如果Doing_2FA處於true的時候不進行登入動作 */
-        if (@$_SESSION['2FA']['Doing_2FA']) {
-            return;
-        }
+        if (@$_SESSION['2FA']['Doing_2FA']) return;
 
         /* 查詢 SQL
          * SELECT User.*, IF(Toke_list.Toke = ?, TRUE , FALSE) AS 'TrueToke'
@@ -679,7 +673,7 @@ class MyAuth {
             $stmt->bind_param("ss", $_SESSION['toke'], $_SESSION['toke']);
             if (!$stmt->execute()) {
                 ob_clean();
-                header('HTTP/1.1 500 Internal Server Error');
+                http_response_code(500);
                 require_once($this->ErrorFile);
                 exit();
             }
@@ -700,78 +694,65 @@ class MyAuth {
             $stmt->close();
 
             /* 檢查登入資訊 */
-            if (mysqli_num_rows($result) < 1) {
-                $this->islogin = false;
-            } else if ($_SESSION['UUID'] == $this->userdata['UUID'] && $this->userdata['TrueToke'] == true) {
-                //Login!
-                $this->islogin = true;
-                if (!@$_COOKIE['Lang']) {
-                    setLang($this->userdata['Language']);
-                }
-                setcookie('Lang', $this->userdata['Language'], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-            }
-        } else
+            if (mysqli_num_rows($result) < 1) return;
+
+            if (!($_SESSION['UUID'] == $this->userdata['UUID'] && $this->userdata['TrueToke'])) return;
+
+            //Login!
+            $this->islogin = true;
+            if (!@$_COOKIE['Lang']) setLang($this->userdata['Language']);
+            setcookie('Lang', $this->userdata['Language'], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
+        } else {
 
             /* 記住我登入 */
-            if (isset($_COOKIE['_ID'])) {
-                /* 消毒/解密 */
-                $uuid = base64_decode($_COOKIE['_ID']);
-                $uuid = filter_var($uuid, FILTER_SANITIZE_STRING);
-                $toke = base64_decode($_COOKIE['_tk']);
-                $toke = filter_var($toke, FILTER_SANITIZE_STRING);
+            if (!isset($_COOKIE['_ID'])) return;
 
-                /* 查詢 */
-                $stmt = $this->sqlcon->prepare($query);
-                $stmt->bind_param("ss", $toke, $toke);
-                if (!$stmt->execute()) {
-                    ob_clean();
-                    header('HTTP/1.1 500 Internal Server Error');
-                    require_once($this->ErrorFile);
-                    exit();
-                }
+            /* 消毒/解密 */
+            $uuid = base64_decode($_COOKIE['_ID']);
+            $uuid = filter_var($uuid, FILTER_SANITIZE_STRING);
+            $toke = base64_decode($_COOKIE['_tk']);
+            $toke = filter_var($toke, FILTER_SANITIZE_STRING);
 
-                /* 分析結果 */
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
-                $this->userdata = array(
-                    'UUID' => $row[$this->sqlsetting_User['UUID_col']],
-                    'Email' => $row[$this->sqlsetting_User['Email_col']],
-                    'Activated' => $row[$this->sqlsetting_User['activated_col']],
-                    'Name' => $row[$this->sqlsetting_User['Name_col']],
-                    'Role' => $row[$this->sqlsetting_User['role_col']],
-                    'Language' => $row[$this->sqlsetting_User['Language_col']],
-                    'TrueToke' => $row['TrueToke'],
-                    'ALLData' => $row
-                );
-                $stmt->close();
-
-                /* 檢查登入資訊 */
-                if (mysqli_num_rows($result) < 1) {
-                    setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    $this->islogin = false;
-                } else if ($uuid == $this->userdata['UUID'] && $this->userdata['TrueToke'] == true) {
-                    if ($this->userdata['Activated'] == 1) {
-                        //Login!
-                        $_SESSION['UUID'] = $this->userdata['UUID'];
-                        $_SESSION['toke'] = $toke;
-
-                        $this->islogin = true;
-                        if (!@$_COOKIE['Lang']) {
-                            setLang($this->userdata['Language']);
-                        }
-                        setcookie('Lang', $this->userdata['Language'], time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-                    } else {
-                        setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                        setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                        $this->islogin = false;
-                    }
-                } else {
-                    setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    $this->islogin = false;
-                }
+            /* 查詢 */
+            $stmt = $this->sqlcon->prepare($query);
+            $stmt->bind_param("ss", $toke, $toke);
+            if (!$stmt->execute()) {
+                ob_clean();
+                http_response_code(500);
+                require_once($this->ErrorFile);
+                exit();
             }
+
+            /* 分析結果 */
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $this->userdata = array(
+                'UUID' => $row[$this->sqlsetting_User['UUID_col']],
+                'Email' => $row[$this->sqlsetting_User['Email_col']],
+                'Activated' => $row[$this->sqlsetting_User['activated_col']],
+                'Name' => $row[$this->sqlsetting_User['Name_col']],
+                'Role' => $row[$this->sqlsetting_User['role_col']],
+                'Language' => $row[$this->sqlsetting_User['Language_col']],
+                'TrueToke' => $row['TrueToke'],
+                'ALLData' => $row
+            );
+            $stmt->close();
+
+            /* 檢查登入資訊 */
+            if (mysqli_num_rows($result) < 1 || !($uuid == $this->userdata['UUID'] && $this->userdata['TrueToke'] && $this->userdata['Activated'])) {
+                setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+                setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+                return;
+            }
+
+            //Login!
+            $_SESSION['UUID'] = $this->userdata['UUID'];
+            $_SESSION['toke'] = $toke;
+
+            $this->islogin = true;
+            if (!@$_COOKIE['Lang']) setLang($this->userdata['Language']);
+            setcookie('Lang', $this->userdata['Language'], time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
+        }
     }
 
     /**
