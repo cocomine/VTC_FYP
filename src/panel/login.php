@@ -22,7 +22,7 @@ $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass,
 $auth->checkAuth(); //start auth
 
 /* 登出 */
-if (@$_GET['logout'] == '1') {
+if (isset($_GET['logout'])) {
     ob_clean();
     $auth->logout(); //logout
     header("Location: /panel/login");
@@ -84,9 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* Google 登入 */
     if (isset($_GET['login']) && $_GET['login'] === 'google') {
-        $gclient = load_google_client();
+        try {
+            $gclient = load_google_client();
+        } catch (\Google\Exception $e) {
+            login_form(true);
+            return;
+        }
 
-        if (isset($_GET['code']) && !empty($_GET['code'])) {
+        if (!empty($_GET['code'])) {
             try {
                 $token = $gclient->fetchAccessTokenWithAuthCode($_GET['code']);
                 $gclient->setAccessToken($token);
@@ -102,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } catch (RequestException $e) {
                 login_form(true);
             }
-
         } else {
             if (isset($_GET['error'])) {
                 login_form(true);
@@ -263,7 +267,12 @@ require([
 </html>
 Foot;
 
-function load_google_client() {
+/**
+ * 載入google客户端
+ * @return Google_Client google客户端
+ * @throws \Google\Exception
+ */
+function load_google_client(): Google_Client {
     //require_once('vendor/autoload.php');
 
     $gclient = new Google_Client();
@@ -271,7 +280,7 @@ function load_google_client() {
     $gclient->setAccessType('offline'); // offline access
     $gclient->setIncludeGrantedScopes(true); // incremental auth
     $gclient->addScope([Google_Service_Oauth2::USERINFO_EMAIL, Google_Service_Oauth2::USERINFO_PROFILE]);
-    $gclient->setRedirectUri('https://gblacklist.cocopixelmc.com/panel/login?login=google');
+    $gclient->setRedirectUri('https://itp4506.cocopixelmc.com/panel/login?login=google');
 
     return $gclient;
 }

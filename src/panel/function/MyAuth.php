@@ -18,7 +18,7 @@ define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
 define('AUTH_FORGETPASS_FORM_FUNC', 'ForgetPass_from');
 /* @deprecated */
 define('AUTH_FORGETPASS_SET_FORM_FUNC', 'ForgetPassSet_from');
-define('AUTH_SERVER_ERROR', 0);
+define('AUTH_SERVER_ERROR', 2);
 
 define('AUTH_NOT_DONE', 100);
 define('AUTH_WRONG_PASS', 101);
