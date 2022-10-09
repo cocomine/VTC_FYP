@@ -14,44 +14,71 @@
 <footer>
     <div class="footer-area">
         <!-- footer content -->
-        <p><?php echo showText("footer.privacy.0")?></p>
-        <p>© <?php echo date('Y'); ?> Global blacklist. <?php echo showText("footer.privacy.1")?></p>
-        <p><?php echo showText("footer.privacy.2")?></p>
+        <p><?php echo date('Y') . ' ' . showText("footer.privacy") ?></p>
     </div>
 </footer>
 <!-- footer area end-->
 </div>
 <!-- page container area end -->
 <!-- script load start-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-<script src="/panel/assets/js/owl.carousel.min.js"></script>
-<script src="/panel/assets/js/metisMenu.min.js"></script>
-<script src="/panel/assets/js/jquery.slimscroll.min.js"></script>
-<script src="/panel/assets/js/jquery.slicknav.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="/panel/assets/js/plugins.js"></script>
-<script src="/panel/assets/js/scripts.js"></script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<!-- require js -->
 <script src="/panel/assets/js/require.js"></script>
 <script>
     require.config({
-        baseUrl : "/panel/assets/js"
+        baseUrl: "/panel/assets/js",
+        paths: {
+            jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",
+            bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min",
+            toastr: "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min"
+        },
+        shim: {
+            "owl.carousel.min": {
+                deps: ["jquery"]
+            },
+            "jquery.slimscroll.min": {
+                deps: ["jquery"]
+            },
+            "jquery.slicknav.min": {
+                deps: ["jquery"]
+            },
+            "plugins": {
+                deps: ["jquery"]
+            },
+            "scripts": {
+                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
+            }
+        }
     });
-    toastr.options = {
-        "progressBar": true,
-        "positionClass": "toast-bottom-right",
-        "showDuration": "400",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "easeOutQuint",
-        "hideEasing": "easeInQuint",
-        "showMethod": "slideDown",
-        "hideMethod": "slideUp"
-    };
-    AJAX('<?php echo $_SERVER['REQUEST_URI'] ?>', 'GET');
+    require([
+        "toastr",
+        "jquery",
+        "bootstrap",
+        "owl.carousel.min",
+        "metisMenu.min",
+        "jquery.slimscroll.min",
+        "jquery.slicknav.min",
+        "plugins",
+        "scripts"
+    ], (toastr) => {
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "showDuration": "400",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "easeOutQuint",
+            "hideEasing": "easeInQuint",
+            "showMethod": "slideDown",
+            "hideMethod": "slideUp"
+        };
+    })
 </script>
+<script src="/panel/assets/js/sw-register.min.js"></script>
+
+<!--<script>
+    AJAX('<?php /*echo $_SERVER['REQUEST_URI'] */ ?>', 'GET');
+</script>-->
 <!-- script load end -->
 </body>
 </html>

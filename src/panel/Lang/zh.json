@@ -8,11 +8,7 @@
       "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
     },
     "footer": {
-      "privacy": [
-        "<a href=\"\">隱私政策</a> 和 <a href=\"\">服務條款</a>",
-        "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。",
-        "此產品不屬於Minecraft，Mojang AB或Microsoft遊戲。"
-      ]
+      "privacy": "© Chu Ho Ching &。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
       "title": "首頁 | IVE airline",
@@ -293,11 +289,7 @@
           "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!",
           "如有任何問題請寄電郵至"
         ],
-        "privacy": [
-          "<a href=\"\">隱私政策</a> 和 <a href=\"\">服務條款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。",
-          "此產品不屬於Minecraft，Mojang AB或Microsoft遊戲。"
-        ]
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
       },
       "forgetPass": {
         "subject": "你請求的密碼重設, 已送到!",
@@ -309,11 +301,7 @@
           "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!",
           "如有任何問題請寄電郵至"
         ],
-        "privacy": [
-          "<a href=\"\">隱私政策</a> 和 <a href=\"\">服務條款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。",
-          "此產品不屬於Minecraft，Mojang AB或Microsoft遊戲。"
-        ]
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
       },
       "Wong-newIP": {
         "subject": "有人登入你的帳號! Σ(っ °Д °;)っ",
@@ -331,11 +319,8 @@
         ],
         "Unknown_Location": "地點不明",
         "Äny-question": "如有任何問題請寄電郵至",
-        "privacy": [
-          "<a href=\"\">隱私政策</a> 和 <a href=\"\">服務條款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。",
-          "此產品不屬於Minecraft，Mojang AB或Microsoft遊戲。"
-        ]
+        "privacy":
+          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
       }
     }
   },

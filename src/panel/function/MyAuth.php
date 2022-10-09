@@ -88,6 +88,9 @@ class MyAuth {
     public string $ErrorFile = "";
     public string $CookiesPath = '/';
     public bool $islogin = false; //is login?
+    public ?mysqli $sqlcon = null;
+    public ?array $userdata = null;
+
     //sql setting
     public array $sqlsetting_User = array(
         'table' => 'User',
@@ -122,8 +125,6 @@ class MyAuth {
         'Toke' => 'Toke',
         'IP' => 'IP'
     );
-    public ?mysqli $sqlcon = null;
-    public ?array $userdata = null;
     public array $sqlsetting_2FA_BackupCode = array(
         'table' => '2FA_BackupCode',
         'UUID' => 'UUID',
@@ -135,20 +136,6 @@ class MyAuth {
         'code' => 'code',
         'Toke' => 'Toke',
         'time' => 'time'
-    );
-    /* @deprecated */
-    public array $sqlsetting_Mail_queue = array(
-        'table' => 'Mail_queue',
-        'ID' => 'ID',
-        'Send_To' => 'Send_To',
-        'Send_From' => 'Send_From',
-        'Subject' => 'Subject',
-        'Reply_To' => 'Reply_To',
-        'Body' => 'Body',
-        'Fail' => 'Fail',
-        'Sending' => 'Sending',
-        'Send_Time' => 'Send_Time',
-        'Create_Time' => 'Create_Time'
     );
     private array $Hook_func = array();
 
@@ -1199,7 +1186,7 @@ class MyAuth {
         if ($pass != $Cpass) return AUTH_FORGETPASS_PASS_NOT_MATCH;
 
         /* 先取得資料 */
-        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->$sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
         $stmt->bind_param('s', $_SESSION['Auth']['uuid']);
         if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
