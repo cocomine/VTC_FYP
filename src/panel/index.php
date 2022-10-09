@@ -22,7 +22,9 @@ require_once('./stable/header.php');
 static $auth;
 $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
 $auth->checkAuth(); //start auth
+$_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
 
+//todo: 無需登入的確進入頁面
 //check auth
 if (!$auth->islogin) {
     ob_clean();
@@ -53,8 +55,7 @@ if (!$auth->islogin) {
 //}
 
 /* AJAX內容 */
-$_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
-if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'xmlhttprequest' & !empty($_GET['p'])) {
+if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     ob_clean();
     header("content-type: text/json; charset=utf-8");
 
@@ -103,8 +104,8 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'xmlhttprequest' & !empty($_GET['p']))
             /* create sql conect */
             $sqlcon = new mysqli(Cfg_Sql_Host, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Sql_dbName);
             if ($this->sqlcon->connect_errno) {
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
+                http_response_code(500);
+                echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
                 exit();
             }
 
@@ -125,7 +126,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'xmlhttprequest' & !empty($_GET['p']))
             } else {
                 //沒有權限
                 http_response_code(403);
-                echo json_encode(array('code' => 403, 'Message' => showText("Dont_Come")));
+                echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
             }
             exit(); //存在即停止
         }
@@ -157,10 +158,10 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'xmlhttprequest' & !empty($_GET['p']))
 
                             <!-- sidebar content -->
                             <li>
-                                <a href="javascript:void(0)" aria-expanded="false">
+                                <a href="javascript:void(0)" aria-expanded="false" class="has-arrow">
                                     <i class="ti-dashboard"></i><span><?php echo showText("index.Console") ?></span>
                                 </a>
-                                <ul class="collapse">
+                                <ul class="mm-collapse">
                                     <li>
                                         <a href="/panel/">
                                             <i class='fa fa-home'></i><span><?php echo showText("index.home") ?></span>
@@ -317,6 +318,24 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'xmlhttprequest' & !empty($_GET['p']))
 
                 <!-- Main content-->
                 <div class="row" id="content">
+
+                    <div class='col-12 mt-4'>
+                        <div class="row gy-4 gx-0 m-0">
+                            <div class='col-12'>
+                                <div class="card">
+                                    <div class='card-body'>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_kcsr6fcp.json"  background="transparent"  speed="1"  style="width: 500px; height: 250px;"  loop  autoplay></lottie-player>
+                                            </div>
+                                            <div class="w-100"></div>
+                                            <h2 class="col-auto">dfsdf</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Loading Card-->
                     <div class='col-8 mt-4'>

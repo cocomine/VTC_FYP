@@ -45,12 +45,13 @@
                 deps: ["jquery"]
             },
             "scripts": {
-                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
+                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min", "metisMenu.min"]
             }
         }
     });
     require([
         "toastr",
+        "myself/ajex",
         "jquery",
         "bootstrap",
         "owl.carousel.min",
@@ -59,7 +60,7 @@
         "jquery.slicknav.min",
         "plugins",
         "scripts"
-    ], (toastr) => {
+    ], (toastr, ajex) => {
         toastr.options = {
             "progressBar": true,
             "positionClass": "toast-bottom-right",
@@ -72,13 +73,11 @@
             "showMethod": "slideDown",
             "hideMethod": "slideUp"
         };
+        ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+        window.ajexLoad = ajex.ajexLoad;
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
-
-<!--<script>
-    AJAX('<?php /*echo $_SERVER['REQUEST_URI'] */ ?>', 'GET');
-</script>-->
 <!-- script load end -->
 </body>
 </html>

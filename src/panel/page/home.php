@@ -25,6 +25,14 @@ class home
     }
 
     /**
+     * @param int $role
+     * @return bool
+     */
+    function is_access(int $role): bool{
+        return true;
+    }
+
+    /**
      * 輸出頁面
      * @return string 輸出頁面內容
      */
