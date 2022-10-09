@@ -134,6 +134,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     //不存在
     http_response_code(404);
     echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
+    exit();
 }
 ?>
 
