@@ -252,7 +252,20 @@
         "至少需要八隻字以上",
         "不可和電郵地址或名稱相同"
       ],
-      "Change_Pass": "更換密碼"
+      "Change_Pass": "更換密碼",
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Check_bot": "我需要知道你是誰",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ]
     },
     "Error_Page": {
       "403_title": "停!停! | IVE airline",

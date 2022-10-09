@@ -52,6 +52,7 @@ define('AUTH_FORGETPASS_EMPTY', 404);
 define('AUTH_FORGETPASS_COMPLETE', 405);
 define('AUTH_FORGETPASS_CODE_WRONG', 406);
 define('AUTH_FORGETPASS_YOUR_BOT', 407);
+define('AUTH_FORGETPASS_CODE_OK', 408);
 
 define('AUTH_CHANGESETTING_DATA', 500);
 define('AUTH_CHANGESETTING_DATA_FAIL', 500.10);
@@ -625,12 +626,10 @@ class MyAuth {
 
         unset($_SESSION['UUID']);
         unset($_SESSION['toke']);
+        setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         /* 使用了記住我 */
-        if ($_COOKIE['_ID'] || $_COOKIE['_tk']) {
-            setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-            setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-        }
+        if (!empty($_COOKIE['_tk'])) setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
     }
 
     /**
@@ -763,7 +762,7 @@ class MyAuth {
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=" . $recaptcha_key . "&response={$recaptcha}"); //will add ip
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret={$recaptcha_key}&response={$recaptcha}"); //will add ip
         $output = curl_exec($curl);
         $json = json_decode($output);
         //print_r($json);
@@ -1081,119 +1080,95 @@ class MyAuth {
     }
 
     /**
-     * 忘記密碼
-     * @param string|null $email 電郵地址
-     * @param string|null $code 確認代碼
+     * 確認代碼修改密碼
+     * @param string $code
+     * @return int 狀態
      */
-    function ForgetPass(string $email, string $code = null) {
-        if (empty($code)) {
-            if (!empty($email)) { //不能留空
-                /* 輸入電郵尋找 */
+    function ForgetPass_Confirm(string $code): int {
+        /* 解碼 */
+        $code = base64_decode($code);
+        $code = filter_var($code, FILTER_SANITIZE_STRING);
+        $code = mb_split("@", $code);
 
-                /* 檢查是否機械人 */
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=6Le90ykTAAAAANkngosBOnWgBD0pLMXXYsharFNN&response={$_POST['g-recaptcha-response']}"); //will add ip
-                $output = curl_exec($curl);
-                $json = json_decode($output);
-                //rint_r($json);
+        /* 查詢 */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_Forgetpass['Code']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_Forgetpass['Last_time']}) AS {$this->sqlsetting_Forgetpass['Last_time']} FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ? LIMIT 1;");
+        $stmt->bind_param('s', $code[0]);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
-                if ($json->success == true && $json->hostname == $_SERVER['SERVER_NAME']) {
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $userdata = $result->fetch_assoc();
+        $stmt->close();
 
-                    /* 消毒 */
-                    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        /* 檢查 */
+        if (mysqli_num_rows($result) < 1) return AUTH_FORGETPASS_CODE_WRONG;
 
-                    /* 查詢 */
-                    $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Language_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ? LIMIT 1");
-                    $stmt->bind_param("s", $email);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
+        if ($userdata[$this->sqlsetting_Forgetpass['Code']] != $code[1] || $userdata[$this->sqlsetting_Forgetpass['Last_time']] > 3600) return AUTH_FORGETPASS_CODE_WRONG;
 
-                    /* 分析結果 */
-                    $result = $stmt->get_result();
-                    $userdata = $result->fetch_assoc();
-                    $stmt->close();
+        /* 移除條目 */
+        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
+        $stmt->bind_param('s', $code[0]);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
-                    /* 檢查資訊 */
-                    if (mysqli_num_rows($result) < 1) {
-                        call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_EMAIL_FAIL);
-                    } else {
-                        /* 寄送確認 */
-                        $code = Generate_Code();
+        /* 回饋成功 */
+        $_SESSION['Auth']['uuid'] = $code[0];
+        return AUTH_FORGETPASS_CODE_OK;
 
-                        /* 插入數據 */
-                        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Forgetpass['table']} ({$this->sqlsetting_Forgetpass['UUID']}, {$this->sqlsetting_Forgetpass['Code']}, {$this->sqlsetting_Forgetpass['Last_time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
-                        $stmt->bind_param("ss", $userdata[$this->sqlsetting_User['UUID_col']], $code);
-                        if ($stmt->execute()) {
-                            $stmt->close();
+    }
 
-                            $this->run_Hook('acc_ForgetPass', $userdata, $email, $code, $this->sqlcon); //執行Hook
+    /**
+     * 忘記密碼, 輸入電郵尋找
+     * @param string $email 電郵地址
+     * @param string $recaptcha 防止機械人
+     * @param string $recaptcha_key 防止機械人API KEY
+     */
+    function ForgetPass(string $email, string $recaptcha, string $recaptcha_key): int {
+        //不能留空
+        if (empty($email) || empty($recaptcha)) return AUTH_FORGETPASS_EMPTY;
 
-                            call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_LASTSTEP); //Done
-                        } else {
-                            $stmt->close();
-                            call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_EMAIL_FAIL);
-                        }
-                    }
-                } else {
-                    call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_YOUR_BOT);
-                }
-            } else {
-                call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_EMAIL_FAIL);
-            }
-        } else {
-            /* 確認代碼修改密碼 */
-            /* 解碼 */
-            $code = base64_decode($code);
-            $code = filter_var($code, FILTER_SANITIZE_STRING);
-            $code = mb_split("@", $code);
+        /* 檢查是否機械人 */
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret={$recaptcha_key}&response={$recaptcha}"); //will add ip
+        $output = curl_exec($curl);
+        $json = json_decode($output);
+        //print_r($json);
 
-            /* 查詢 */
-            $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_Forgetpass['Code']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_Forgetpass['Last_time']}) AS {$this->sqlsetting_Forgetpass['Last_time']} FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ? LIMIT 1;");
-            $stmt->bind_param('s', $code[0]);
-            if (!$stmt->execute()) {
-                $stmt->close();
-                call_user_func(AUTH_FORGETPASS_FORM_FUNC);
-            } else {
-                /* 分析結果 */
-                $result = $stmt->get_result();
-                $userdata = $result->fetch_assoc();
-                $stmt->close();
+        if (!($json->success && $json->hostname == $_SERVER['SERVER_NAME'])) return AUTH_FORGETPASS_YOUR_BOT;
 
-                /* 檢查 */
-                if (mysqli_num_rows($result) < 1) {
-                    call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_CODE_WRONG);
-                    unset($_SESSION['Auth']['uuid']);
-                    unset($_SESSION['Doing_Reset']);
+        /* 消毒 */
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-                } else if ($userdata[$this->sqlsetting_Forgetpass['Code']] === $code[1] && $userdata[$this->sqlsetting_Forgetpass['Last_time']] <= 3600) { //確認代碼正確&沒有過期
-                    /* 移除條目 */
-                    $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
-                    $stmt->bind_param('s', $code[0]);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
+        /* 查詢 */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Language_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
+        $stmt->bind_param("s", $email);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
-                    /* 回饋成功 */
-                    $_SESSION['Auth']['uuid'] = $code[0];
-                    $_SESSION['Doing_Reset'] = true;
-                    call_user_func(AUTH_FORGETPASS_SET_FORM_FUNC);
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $userdata = $result->fetch_assoc();
+        $stmt->close();
 
-                } else {
-                    call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_CODE_WRONG);
-                }
-            }
+        /* 檢查資訊 */
+        if (mysqli_num_rows($result) < 1) return AUTH_FORGETPASS_EMAIL_FAIL;
+
+        /* 寄送確認 */
+        $code = Generate_Code();
+
+        /* 插入數據 */
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Forgetpass['table']} ({$this->sqlsetting_Forgetpass['UUID']}, {$this->sqlsetting_Forgetpass['Code']}, {$this->sqlsetting_Forgetpass['Last_time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
+        $stmt->bind_param("ss", $userdata[$this->sqlsetting_User['UUID_col']], $code);
+        if (!$stmt->execute()) {
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_Forgetpass['table']} SET {$this->sqlsetting_Forgetpass['Code']} = ?, {$this->sqlsetting_Forgetpass['Last_time']} = UNIX_TIMESTAMP() WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?");
+            $stmt->bind_param("ss", $code, $userdata[$this->sqlsetting_User['UUID_col']]);
         }
+        $stmt->close();
+
+        $this->run_Hook('acc_ForgetPass', $userdata, $email, $code, $this->sqlcon); //執行Hook
+        return AUTH_FORGETPASS_LASTSTEP; //Done
     }
 
     /**
@@ -1202,76 +1177,53 @@ class MyAuth {
      * @param string $Cpass 確認密碼
      * @param bool $RSAon 是否使用了RSA加密
      */
-    function ForgetPass_set(string $pass, string $Cpass, bool $RSAon = true) {
-        if ($_SESSION['Doing_Reset']) {
-            /* 進入判斷程序 */
-            if (!empty($Cpass) && !empty($pass)) { //不能留空
+    function ForgetPass_set(string $pass, string $Cpass, bool $RSAon = false): int {
+        /* 進入判斷程序 */
 
-                /* 解密 */
-                $pi_key = openssl_pkey_get_private($_SESSION['pvKey']);
-                if ((openssl_private_decrypt(base64_decode($pass), $pass, $pi_key) && //解密
-                        openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key)) || !$RSAon) {  //解密
+        //不能留空
+        if (empty($Cpass) || empty($pass)) return AUTH_FORGETPASS_EMPTY;
 
-                    /* 消毒 */
-                    $pass = filter_var(trim($pass), FILTER_SANITIZE_STRING);
-                    $Cpass = filter_var(trim($Cpass), FILTER_SANITIZE_STRING);
-
-                    if ($pass === $Cpass) { //檢查密碼是否一樣
-
-                        /* 先取得資料 */
-                        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
-                        $stmt->bind_param('s', $_SESSION['Auth']['uuid']);
-                        if (!$stmt->execute()) {
-                            ob_clean();
-                            header('HTTP/1.1 500 Internal Server Error');
-                            require_once($this->ErrorFile);
-                            exit();
-                        }
-
-                        /* 分析結果 */
-                        $result = $stmt->get_result();
-                        $userdata = $result->fetch_assoc();
-                        $stmt->close();
-
-                        /* 判斷密碼強度 */
-                        if (preg_match("/(?=.*?[A-Z])(?=.*?[a-z])/", $Cpass) && strlen($Cpass) >= 8 && $userdata[$this->sqlsetting_User['Email_col']] !== $Cpass && $userdata[$this->sqlsetting_User['Name_col']] !== $Cpass) {
-
-                            /* 消毒/加密 */
-                            $Cpass = 'Gblacklist' . $Cpass;
-                            $Cpass = hash('sha512', md5($Cpass));
-
-                            /* 寫入資料 */
-                            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
-                            $stmt->bind_param('ss', $Cpass, $_SESSION['Auth']['uuid']);
-                            if (!$stmt->execute()) {
-                                ob_clean();
-                                header('HTTP/1.1 500 Internal Server Error');
-                                require_once($this->ErrorFile);
-                                exit();
-                            }
-
-                            /* 回饋成功 */
-                            call_user_func(AUTH_FORGETPASS_FORM_FUNC, AUTH_FORGETPASS_COMPLETE);
-                            unset($_SESSION['Auth']['uuid']);
-                            unset($_SESSION['Doing_Reset']);
-
-                        } else {
-                            call_user_func(AUTH_FORGETPASS_SET_FORM_FUNC, AUTH_FORGETPASS_PASS_NOT_STRONG);
-                        }
-                    } else {
-                        call_user_func(AUTH_FORGETPASS_SET_FORM_FUNC, AUTH_FORGETPASS_PASS_NOT_MATCH);
-                    }
-                } else {
-                    call_user_func(AUTH_FORGETPASS_SET_FORM_FUNC, AUTH_FORGETPASS_PASS_NOT_MATCH);
-                }
-            } else {
-                call_user_func(AUTH_FORGETPASS_SET_FORM_FUNC, AUTH_FORGETPASS_EMPTY);
-            }
-        } else {
-            call_user_func(AUTH_FORGETPASS_FORM_FUNC);
-            unset($_SESSION['Auth']['uuid']);
-            unset($_SESSION['Doing_Reset']);
+        /* 解密 */
+        if ($RSAon) {
+            $pi_key = openssl_pkey_get_private($_SESSION['pvKey']);
+            $dePass = openssl_private_decrypt(base64_decode($pass), $pass, $pi_key);
+            $deCpass = openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
+            if (!($dePass && $deCpass)) return AUTH_FORGETPASS_PASS_NOT_MATCH;
         }
+
+        /* 消毒 */
+        $pass = filter_var(trim($pass), FILTER_SANITIZE_STRING);
+        $Cpass = filter_var(trim($Cpass), FILTER_SANITIZE_STRING);
+
+        //檢查密碼是否一樣
+        if ($pass != $Cpass) return AUTH_FORGETPASS_PASS_NOT_MATCH;
+
+        /* 先取得資料 */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
+        $stmt->bind_param('s', $_SESSION['Auth']['uuid']);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $userdata = $result->fetch_assoc();
+        $stmt->close();
+
+        /* 判斷密碼強度 */
+        if (!preg_match("/(?=.*?[A-Z])(?=.*?[a-z])/", $Cpass) || strlen($Cpass) < 8 ||
+            $userdata[$this->sqlsetting_User['Email_col']] == $Cpass || $userdata[$this->sqlsetting_User['Name_col']] == $Cpass) return AUTH_FORGETPASS_PASS_NOT_STRONG;
+
+        /* 消毒/加密 */
+        $Cpass = 'Gblacklist' . $Cpass;
+        $Cpass = hash('sha512', md5($Cpass));
+
+        /* 寫入資料 */
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
+        $stmt->bind_param('ss', $Cpass, $_SESSION['Auth']['uuid']);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+
+        /* 回饋成功 */
+        unset($_SESSION['Auth']['uuid']);
+        return AUTH_FORGETPASS_COMPLETE;
     }
 
     /**
@@ -1288,7 +1240,7 @@ class MyAuth {
     public
     function add_Hook(string $Hook_name, string $func_name) {
         $a = array();
-        array_push($a, $func_name);
+        $a[] = $func_name;
         $this->Hook_func[$Hook_name] = $a;
     }
 

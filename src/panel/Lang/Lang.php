@@ -6,7 +6,7 @@
 $Http_header = filter_var($_SERVER['HTTP_ACCEPT_LANGUAGE'], FILTER_SANITIZE_STRING); //消毒
 
 /* 取cookie語言 */
-if(@$_COOKIE['Lang']){
+if(!empty($_COOKIE['Lang'])){
     $first_local[0] = filter_var($_COOKIE['Lang'], FILTER_SANITIZE_STRING);
 }else{
     $first_local = explode(",", $Http_header); //取優先語言
@@ -38,15 +38,15 @@ $default = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/
  * @param bool $localCode 語言代碼
  * @return string|array 輸出文字
  */
-function showText(string $Path, bool $localCode = false) {
+function showText(string $Path, string $localCode = null) {
     global $Lang, $default;
     $PathStr = $Path;
     $Path = explode(".",$Path);
     $lang = $Lang;
 
-    if($localCode !== false){
+    if($localCode !== null){
         $lang = @json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/".$localCode.".json"), true);
-        if(!$Lang){
+        if(empty($lang)){
             $lang = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/en.json"), true);
         }
     }
@@ -66,11 +66,11 @@ function showText(string $Path, bool $localCode = false) {
  *
  * @param string $localCode 語言代碼
  */
-function setLang($localCode){
+function setLang(string $localCode){
     global $Lang;
 
     $Lang = @json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/".$localCode.".json"), true);
-    if(!$Lang){
+    if(empty($Lang)){
         $Lang = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/en.json"), true);
     }
 }
@@ -79,7 +79,7 @@ function setLang($localCode){
  * 取得語言代碼
  * @return string 語言代碼
  */
-function getLocalCode(){
+function getLocalCode(): string {
     global $localCode;
     return $localCode;
 }

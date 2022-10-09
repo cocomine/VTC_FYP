@@ -70,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($auth->islogin) {
         ob_clean();
         echo json_encode(array(
-            'code' => AUTH_REGISTER_COMPLETE,
-            'Message' => ResultMsg(AUTH_REGISTER_COMPLETE)
+            'code' => AUTH_OK,
+            'Message' => ResultMsg(AUTH_OK)
         ));
         exit();
     }
@@ -177,7 +177,7 @@ function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
 <div class="login-area login-bg">
     <div class="container">
         <div class="login-box ptb--100">
-            <form class="" novalidate>
+            <form class="needs-validation" novalidate>
                 <div class="login-form-head">
                     <h4>{$Text['Login']}</h4>
                     <p>{$Text['welcome']}</p>

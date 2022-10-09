@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2022. 
+ * Copyright (c) 2022.
  * Create by cocomine
  */
 
-define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn) {
+define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
     "use strict";
 
     let Lang = $('#langJson').text();
     Lang = JSON.parse(Lang);
 
     /* 遞交表單 */
-    $('form').submit(async function (e) {
+    $('#EmailStep').submit(function (e) {
         if (!e.isDefaultPrevented()) {
             e.preventDefault();
             e.stopPropagation();
@@ -23,26 +23,13 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn) {
                 return;
             }
 
-            /* 密碼必須一樣 */
-            if(data.password !== data.password2){
-                $('#Password2').removeClass('is-valid').addClass('is-invalid');
-                return;
-            }
-
             /* 封鎖按鈕 */
             const bt = $('#form_submit');
             const html = bt.html();
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
-            /* 加密 */
-            const KeyResponse = await fetch('/panel/key.php')
-            const key = await KeyResponse.text();
-            const pk = forge.pki.publicKeyFromPem(key);
-            data.password = forge.util.encode64(pk.encrypt(data.password))
-            data.password2 = forge.util.encode64(pk.encrypt(data.password2))
-
             /* send */
-            fetch('/panel/register', {
+            fetch('/panel/forgotpass', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -57,11 +44,8 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn) {
                     if(json.code === 107) {
                         location.replace('.');
                     }else
-                    if(json.code === 206) {
+                    if(json.code === 401) {
                         ResultMsg.html('<div class="alert alert-info" role="alert">' + json.Message +'</div>')
-                    }else
-                    if(json.code === 206){
-                        ResultMsg.html('<div class="alert alert-success" role="alert">' + json.Message +'</div>')
                     }else{
                         ResultMsg.html('<div class="alert alert-danger" role="alert">' + json.Message +'</div>')
                     }
@@ -75,11 +59,63 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn) {
         }
     })
 
+    /* 遞交表單 */
+    $('#PasswordStep').submit(async function (e) {
+        if (!e.isDefaultPrevented()) {
+            e.preventDefault();
+            e.stopPropagation();
+            const data = $(this).serializeObject();
+
+            /* 密碼必須一樣 */
+            /*if(data.password !== data.password2){
+                $('#Password2').removeClass('is-valid').addClass('is-invalid');
+                return;
+            }*/
+
+            /* 封鎖按鈕 */
+            const bt = $('#form_submit');
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* 加密 */
+            const KeyResponse = await fetch('/panel/key.php')
+            const key = await KeyResponse.text();
+            const pk = forge.pki.publicKeyFromPem(key);
+            data.password = forge.util.encode64(pk.encrypt(data.password))
+            data.password2 = forge.util.encode64(pk.encrypt(data.password2))
+
+            /* send */
+            fetch('/panel/forgotpass', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(data)
+            }).then((response) => {
+                response.json().then((json) => {
+                    console.log(json) //debug
+                    const ResultMsg = $('#ResultMsg');
+
+                    if(json.code === 405){
+                        ResultMsg.html('<div class="alert alert-success" role="alert">' + json.Message +'</div>');
+                        setTimeout(() => location.replace('./login'),3000);
+                    }else {
+                        ResultMsg.html('<div class="alert alert-danger" role="alert">' + json.Message +'</div>')
+                    }
+                })
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    })
+
     /* 密碼強度 */
-    $('#Password, #Name, #Email').on("input focus ready", function () {
+    $('#Password').on("input focus ready", function () {
         const val = $('#Password').val();
-        const input = [$('#Name').val(), $('#Email').val()];
-        const result = zxcvbn(val, input).score;
+        const result = zxcvbn(val).score;
         const pass = $('#passStrength');
         const list = $('#passStrength-list li');
 
@@ -99,11 +135,13 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn) {
         if (/[a-z]+/.test(val)) $(list[1]).addClass('text-success');
         else $(list[1]).removeClass('text-success');
 
-        if (val.length >= 8) $(list[2]).addClass('text-success');
-        else $(list[2]).removeClass('text-success');
-
-        if (!input.includes(val)) $(list[3]).addClass('text-success');
-        else $(list[3]).removeClass('text-success');
+        if (val.length >= 8) {
+            $(list[2]).addClass('text-success');
+            $(list[3]).addClass('text-success');
+        } else {
+            $(list[2]).removeClass('text-success');
+            $(list[3]).removeClass('text-success');
+        };
     });
 
     /* 外傳function */

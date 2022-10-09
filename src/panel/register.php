@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* 傳送註冊 */
     $auth->add_Hook('acc_register', 'acc_Activated_Mail_Hook');
-    $status = $auth->register($data['name'], $data['password2'], $data['password'], $data['email'],
-        $localCode ?? 'en', $data["g-recaptcha-response"], Cfg_recaptcha_key, $_SESSION['pvKey']);
+    $status = $auth->register($data['name'] ?? '', $data['password2'] ?? '', $data['password'] ?? '',
+        $data['email'] ?? '', $localCode ?? 'en', $data["g-recaptcha-response"] ?? '', Cfg_recaptcha_key, $_SESSION['pvKey']);
     echo json_encode(array(
         'code' => $status,
         'Message' => ResultMsg($status),

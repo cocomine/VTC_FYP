@@ -4,6 +4,7 @@
  */
 
 define(['forge', 'jquery'], function (forge) {
+    "use strict";
 
     /* 遞交表單 */
     $('form').submit(async function (e) {

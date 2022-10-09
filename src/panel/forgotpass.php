@@ -10,78 +10,274 @@
  * Date: 24/3/2019
  * Time: 下午 8:32
  */
+
 use cocopixelmc\Auth\MyAuth;
 
 /* header */
-$title = showText("ForgotPass.title");
+const title = "ForgotPass.title";
 require_once('./stable/header.php'); //head
 
 $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
 $auth->checkAuth(); //start auth
-$OutputScript = null;
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if(!$auth->islogin){
-        if(isset($_SESSION['Doing_Reset'])){
-            //error_log("Work");
-            $auth->ForgetPass_set($_POST['password'] ?? "", $_POST['confirm_pass'] ?? "");//傳送新密碼
-            OutputScript();
-        }else{
-            $auth->add_Hook('acc_ForgetPass', 'acc_ForgetPass_Hook');
-            $auth->ForgetPass($_POST['Email'] ?? "");//傳送電郵
-        }
-    }else{
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    /* POST 請求 */
+    ob_clean();
+    header("content-type: text/json; charset=UTF-8"); //is json
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    //已經登入
+    if ($auth->islogin) {
+        ob_clean();
+        echo json_encode(array(
+            'code' => AUTH_OK,
+            'Message' => ResultMsg(AUTH_OK)
+        ));
+    }
+
+    //無法解釋json
+    if ($data == null) {
+        http_response_code(500);
+        echo json_encode(array(
+            'code' => 500,
+            'Message' => showText('Error')
+        ));
+        exit();
+    }
+
+    if (isset($_SESSION['Doing_Reset'])) {
+        $status = $auth->ForgetPass_set($data['password'] ?? "", $data['password2'] ?? "", true);//傳送新密碼
+        echo json_encode(array(
+            'code' => $status,
+            'Message' => ResultMsg($status)
+        ));
+    } else {
+        $auth->add_Hook('acc_ForgetPass', 'acc_ForgetPass_Hook');
+        $status = $auth->ForgetPass($data['email'] ?? "", $data['g-recaptcha-response'], Cfg_recaptcha_key);//傳送電郵
+        var_dump($status);
+        echo json_encode(array(
+            'code' => $status,
+            'Message' => ResultMsg($status)
+        ));
+    }
+    exit();
+} else {
+    /* GET 請求 */
+
+    /* 確認登入 */
+    if ($auth->islogin) {
         ob_clean();
         header("Location: /panel");
         exit();
     }
+
+    /* 修改密碼 */
+    if (!empty($_GET['code'])) {
+        $status = $auth->ForgetPass_Confirm($_GET['code']);
+        if ($status == AUTH_FORGETPASS_CODE_OK) {
+            $_SESSION['Doing_Reset'] = true;
+            ForgetPassSet_from();
+        } else {
+            unset($_SESSION['Doing_Reset']);
+            ForgetPass_from(true);
+        }
+    }
+
+    /* 正常訪問 */
+    if (empty($_GET['code'])) {
+        ForgetPass_from();
+        unset($_SESSION['Doing_Reset']);
+    }
 }
 
-/* 確認登入 */
-if ($auth->islogin) {
-    ob_clean();
-    header("Location: /panel");
-    exit();
+/**
+ * 忘記密碼表
+ *
+ */
+function ForgetPass_from(bool $isCodeWong = false) {
+
+    $msg = $isCodeWong ? '<div class="alert alert-info" role="alert">' . showText("ForgotPass.CODE_WRONG") . '</div>' : '';
+
+    //指引文字
+    $Text = showText("ForgotPass");
+
+    echo <<<FORGETPASS_FROM
+<div class="login-area login-bg">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form class="needs-validation" novalidate id="EmailStep">
+                    <div class="login-form-head">
+                        <h4>{$Text['ForgotPass']}</h4>
+                        <p>{$Text['welcome']}</p>
+                    </div>
+                    <div id="ResultMsg">{$msg}</div>
+                    <div class="login-form-body">
+                        <div class="form-gp focused">
+                            <label for="Email">{$Text['Email']}</label>
+                            <input type="email" class="form-control" autocomplete="username" required="required" name="email" title="{$Text['Email_Tips']}" autofocus inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+                            <i class="ti-email"></i>
+                            <div class="invalid-feedback">{$Text['Form']['Error_format']}</div>
+                        </div>
+                        <div id="g-recaptcha" class="g-recaptcha form-control" data-sitekey="6Le90ykTAAAAAOgxgMUBE-hW7OivFZs1ebR5btuu" data-callback="recaptchacall"></div>
+                        <div class="invalid-feedback">{$Text['Form']['Check_bot']}</div>
+                        <div class="submit-btn-area mt-5">
+                            <button id="form_submit" type="submit">{$Text['FindPass']} <i class="ti-arrow-right"></i></button>
+                        </div>
+                        <div class="form-footer text-center mt-5">
+                            <p class="text-muted">{$Text['go_login']}</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <pre style="display: none" id="langJson">
+        {}
+    </pre>
+FORGETPASS_FROM;
 }
 
-/* 修改密碼 */
-if(isset($_GET['code'])){
-    $auth->ForgetPass("", $_GET['code']);
-    OutputScript();
+/**
+ * 忘記密碼修改密碼表
+ */
+function ForgetPassSet_from() {
+
+    $Text = showText("ForgotPass");
+
+    //js使用
+    $LangJson = json_encode(array(
+        'strength' => showText("Register.strength")
+    ));
+
+    echo <<<FORGETPASSSET_FROM
+    <div class="login-area login-bg">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form class="" novalidate id="PasswordStep">
+                    <div class="login-form-head">
+                        <h4>{$Text['ForgotPass']}</h4>
+                        <p>{$Text['welcome2']}</p>
+                    </div>
+                    <div id="ResultMsg">{$msg}</div>
+                    <div class="login-form-body">
+                        <div class="form-gp focused">
+                            <label for="Password">{$Text['NewPass']}</label>
+                            <input type="password" class="form-control" autocomplete="new-password" id="Password" required="required" autofocus name="password">
+                            <i class="ti-lock"></i>
+                            <div class="invalid-feedback">{$Text['Form']['Cant_EMPTY']}</div>
+                        </div>
+                        <div class="form-gp">
+                            <label for="Password2">{$Text['ConfirmNewPass']}</label>
+                            <input type="password" class="form-control" autocomplete="new-password" required="required" id="Password2" name="password2">
+                            <i class="ti-lock"></i>
+                            <div class="invalid-feedback">{$Text['Form']['Not_Match_Wrong']}</div>
+                        </div>
+                        <div class="form-gp">
+                            <p>
+                                {$Text['passStrength']} 
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%" id="passStrength"></div>
+                                </div>
+                            </p>
+                            <p>
+                                <b>{$Text['condition'][0]}</b>
+                                <ol id="passStrength-list">
+                                    <li>{$Text['condition'][1]}</li>
+                                    <li>{$Text['condition'][2]}</li>
+                                    <li>{$Text['condition'][3]}</li>
+                                    <li>{$Text['condition'][4]}</li>
+                                </ol>
+                            </p>
+                        </div>
+                        <div class="submit-btn-area mt-5">
+                            <button id="form_submit" type="submit">{$Text['Change_Pass']} <i class="ti-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <pre style="display: none" id="langJson">
+        {$LangJson}
+    </pre>
+FORGETPASSSET_FROM;
+
 }
 
-/* 正常訪問 */
-if($_SERVER['REQUEST_METHOD'] != 'POST' && !isset($_GET['code'])){
-    ForgetPass_from();
-    unset($_SESSION['uuid']);
-    unset($_SESSION['Doing_Reset']);
+/**
+ * 結果訊息
+ * @param int $type 類型
+ * @return string 訊息
+ */
+function ResultMsg(int $type): string {
+    switch ($type) {
+        case AUTH_FORGETPASS_EMAIL_FAIL:
+            return showText("ForgotPass.EMAIL_FAIL");
+        case AUTH_FORGETPASS_LASTSTEP:
+            return showText("ForgotPass.LASTSTEP");
+        case AUTH_FORGETPASS_CODE_WRONG:
+            return showText("ForgotPass.CODE_WRONG");
+        case AUTH_FORGETPASS_COMPLETE:
+            return showText("ForgotPass.COMPLETE");
+        case AUTH_FORGETPASS_YOUR_BOT:
+            return showText("ForgotPass.YOUR_BOT");
+        case AUTH_FORGETPASS_EMPTY:
+            return showText('ForgotPass.EMPTY');
+        case AUTH_FORGETPASS_PASS_NOT_MATCH:
+            return showText("ForgotPass.PASS_NOT_MATCH");
+        case AUTH_FORGETPASS_PASS_NOT_STRONG:
+            return showText("ForgotPass.PASS_NOT_STRONG");
+        default:
+            return '';
+    }
 }
 
 echo <<<Foot
-<!-- jquery latest version -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script
-<!-- bootstrap 5 js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-<script src="/panel/assets/js/owl.carousel.min.js"></script>
-<script src="/panel/assets/js/metisMenu.min.js"></script>
-<script src="/panel/assets/js/jquery.slimscroll.min.js"></script>
-<script src="/panel/assets/js/jquery.slicknav.min.js"></script>
-{$OutputScript}
-<!-- others plugins -->
-<script src="/panel/assets/js/plugins.js"></script>
-<script src="/panel/assets/js/scripts.js"></script>
+<script src="/panel/assets/js/require.js"></script>
+<script>
+require.config({
+        baseUrl : "/panel/assets/js",
+        paths:{
+            jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",
+            bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min",
+            zxcvbn: "https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn",
+            grecaptcha: "https://www.google.com/recaptcha/api",
+            forge: "https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min"
+        },
+        shim:{
+            "owl.carousel.min":{
+                deps:["jquery"]
+            },
+            "jquery.slimscroll.min":{
+                deps:["jquery"]
+            },
+            "jquery.slicknav.min":{
+                deps: ["jquery"]
+            },
+            "plugins":{
+                deps: ["jquery"]
+            },
+            "scripts":{
+                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
+            }
+        }
+});
+require([
+    "myself/forgotpass",
+    "grecaptcha",
+    "jquery", 
+    "bootstrap", 
+    "owl.carousel.min",
+    "metisMenu.min",
+    "jquery.slimscroll.min",
+    "jquery.slicknav.min",
+    "plugins",
+    "scripts",
+    "zxcvbn",
+    "forge"
+    ], (forgotpass) => window.recaptchacall = forgotpass.recaptchacall)
+</script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
 </body>
 </html>
 Foot;
-
-function OutputScript(){
-    global $OutputScript;
-    $OutputScript = "
-    <link rel=\"stylesheet\" href=\"/panel/assets/css/myself/meter.min.css\">
-    <script async src=\"/panel/assets/js/myself/password-strength-meter.min.js\"></script>
-    <script async src=\"https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js\"></script>
-    <script async src=\"/panel/assets/js/jsencrypt.min.js\"></script>
-    <script async src=\"/panel/assets/js/myself/pass-encrypt.min.js\"></script>
-    ";
-}
