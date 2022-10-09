@@ -4,17 +4,10 @@
  * Create by cocomine
  */
 
-ob_start();
-require_once('./vendor/autoload.php');
-require_once('./function/Functions.php');
-require_once('./function/config.inc.php');
-require_once('./Lang/Lang.php');
-require_once('./function/MyAuth.php');
-
-/* header */
-header('Content-Type:text/html; charset=utf-8');
-
-/* read API */
+/* Cloudflare 環境下ip支援 */
+if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]) || $_SERVER['REMOTE_ADDR'] = '45.86.168.203') {
+    $_SERVER['REMOTE_ADDR'] = filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_SANITIZE_STRING);
+}
 
 /* 判斷結尾 */
 if (strpos($_SERVER['REQUEST_URI'], '.php') !== false) {
@@ -23,9 +16,19 @@ if (strpos($_SERVER['REQUEST_URI'], '.php') !== false) {
     exit();
 }
 
+/* header */
+ob_start();
+session_start();
+require_once('./vendor/autoload.php');
+require_once('./function/Functions.php');
+require_once('./function/config.inc.php');
+require_once('./Lang/Lang.php');
+require_once('./function/MyAuth.php');
+
+header('Content-Type:text/html; charset=utf-8');
+
 /* IP Block */
 //IP_Block();
-session_start();
 
 ?>
     <!DOCTYPE html>
@@ -59,12 +62,13 @@ session_start();
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
         <script async src="/panel/assets/js/vendor/modernizr-custom.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
     </head>
 <body>
 <!-- head start -->
 <!--[if lt IE 8]>
     <p class="browserupgrade"><?php echo showText("header.browserupgrade"); ?></p>
-    <![endif]-->
+<![endif]-->
 <noscript><p id="noscript"><?php echo showText("header.noscript"); ?></noscript>
 <!-- preloader area start -->
 <div id="preloader">
@@ -74,14 +78,17 @@ session_start();
     </div>
 </div>
 <!-- preloader area end -->
-<!-- head end -->
-
+<!--google one tap -->
 <?php
+if(empty($_COOKIE['_ID'])){
+    echo '<div id="g_id_onload"
+     data-client_id="415107965516-cv5638cgsp5hcau4i5ts1ub9otktu3sp.apps.googleusercontent.com"
+     data-login_uri="https://itp4506.cocopixelmc.com/panel/login"
+     data-login="google">
+     </div>';
+}
+
 function IP_Block($dbServer = Cfg_Sql_Host, $dbName = Cfg_Sql_dbName, $dbUser = Cfg_Sql_dbUser, $dbPass = Cfg_Sql_dbPass) {
-    /* Cloudflare 環境下ip支援 */
-    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]) || $_SERVER['REMOTE_ADDR'] = '45.86.168.203') {
-        $_SERVER['REMOTE_ADDR'] = filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_SANITIZE_STRING);
-    }
     $ip = $_SERVER['REMOTE_ADDR'];
 
     /* 連結sql */

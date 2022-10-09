@@ -32,6 +32,36 @@ if (isset($_GET['logout'])) {
 /* 登入 */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     /* post 請求 */
+    /* Google one tap 登入 */
+    if (isset($_POST['login']) && $_POST['login'] == 'google') {
+        try {
+            $gclient = load_google_client();
+        } catch (\Google\Exception $e) {
+            header("Location: /panel/login");
+            return;
+        }
+
+        if (!empty($_POST['credential'])) {
+            try {
+                /*$token = $gclient->fetchAccessTokenWithAuthCode($_GET['code']);
+                $gclient->setAccessToken($token);
+
+                $oauth = new Google_Service_Oauth2($gclient);
+                $profile = $oauth->userinfo->get();*/
+
+                $payload = $gclient->verifyIdToken($_POST['credential']);
+                $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
+                if ($auth->google_login($payload['email'])) header("Location: /panel");
+                else header('Location: /panel/register?email=' . $payload['email'].'&name='.$payload['name']);
+            } catch (RequestException $e) {
+                header("Location: /panel/login");
+            }
+        }else{
+            header("Location: /panel/login");
+        }
+        exit();
+    }
+
     ob_clean();
     header("content-type: text/json; charset=UTF-8"); //is json
     $data = json_decode(file_get_contents("php://input"), true);
@@ -77,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     /* 正常訪問 */
-    if (!isset($_GET['code']) && !isset($_GET['login'])) {
+    if (empty($_GET['code']) && empty($_GET['login'])) {
         login_form();
         //unset($_SESSION['2FA']);
     }
@@ -88,7 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $gclient = load_google_client();
         } catch (\Google\Exception $e) {
             login_form(true);
-            return;
         }
 
         if (!empty($_GET['code'])) {
@@ -100,8 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $profile = $oauth->userinfo->get();
 
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
-                if (!$auth->google_login($profile->getEmail())) {
-                    header('Location: /panel/register?email=' . urlencode($profile->getEmail()) . '&name=' . urlencode($profile->getName()));
+                if ($auth->google_login($profile->getEmail())) header("Location: /panel");
+                else {
+                    header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . $profile->getName());
                     exit();
                 }
             } catch (RequestException $e) {

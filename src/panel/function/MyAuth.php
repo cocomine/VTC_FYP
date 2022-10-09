@@ -181,91 +181,77 @@ class MyAuth {
      * @return bool 註冊與否
      */
     function google_login(string $email): bool {
-        if (!empty($email)) { //不能留空
-            /* 消毒 */
-            $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+        //不能留空
+        if (empty($email)) return false;
 
-            /* 查詢 */
-            $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
-            $stmt->bind_param("s", $email);
-            if (!$stmt->execute()) {
-                ob_clean();
-                header('HTTP/1.1 500 Internal Server Error');
-                require_once($this->ErrorFile);
-                exit();
-            }
+        /* 消毒 */
+        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
 
-            /* 分析結果 */
-            $result = $stmt->get_result();
-            $userdata = $result->fetch_assoc();
-            $stmt->close();
-
-            /* 檢查登入資訊 */
-            if (mysqli_num_rows($result) < 1) {
-                return false;
-            } elseif ($userdata[$this->sqlsetting_User['Email_col']] == $email) {
-                if ($userdata[$this->sqlsetting_User['activated_col']]) {
-                    $toke = md5((Generate_Code() . time()));  //產生toke
-
-                    /* 更新最後時間 */
-                    $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
-                    $stmt->bind_param("s", $_SERVER['REMOTE_ADDR']);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
-                    $stmt->close();
-
-                    /* 2FA */
-                    unset($_SESSION['pvKey']);
-                    /*if($userdata[$this -> sqlsetting_User['2FA_col']] == 1){
-                        $_SESSION['2FA']['Doing_2FA'] = true;
-                        $_SESSION['2FA']['toke'] = $toke;
-                        $_SESSION['2FA']['UUID'] = $userdata[$this -> sqlsetting_User['UUID_col']];
-                        $_SESSION['2FA']['userdata'] = $userdata;
-                        if(@$_POST['Remember_ME'] == 'on')
-                            $_SESSION['2FA']['Remember_ME'] = true;
-
-                        TwoFA_form(); //output form
-
-                    }else{*/
-                    /* 插入toke資料 */
-                    $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
-                    $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
-                    $stmt->close();
-
-                    /* 儲存 session */
-                    $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
-                    $_SESSION['toke'] = $toke;
-
-                    $this->islogin = true; //login
-                    setcookie('Lang', $userdata[$this->sqlsetting_User['Language_col']], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-
-                    /* 記住我*/
-                    if (@$_POST['Remember_ME'] == 'on') {
-                        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                        setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    }
-
-                    $this->Check_NewIP($userdata, $toke);
-                    //}
-                } else {
-                    call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_NOT_DONE, $email);
-                }
-            } else {
-                return false;
-            }
-        } else {
-            call_user_func(AUTH_LOGIN_FORM_FUNC, AUTH_WRONG_PASS, null);
+        /* 查詢 */
+        $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
+        $stmt->bind_param("s", $email);
+        if (!$stmt->execute()) {
+            ob_clean();
+            http_response_code(500);
+            require_once($this->ErrorFile);
+            exit();
         }
+
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $userdata = $result->fetch_assoc();
+        $stmt->close();
+
+        /* 檢查登入資訊 */
+        if (mysqli_num_rows($result) < 1) return false;
+
+        if (!$userdata[$this->sqlsetting_User['activated_col']]) return false;
+
+        $toke = md5((Generate_Code() . time()));  //產生toke
+
+        /* 更新最後時間 */
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
+        $stmt->bind_param("s", $_SERVER['REMOTE_ADDR']);
+        if (!$stmt->execute()) {
+            ob_clean();
+            header('HTTP/1.1 500 Internal Server Error');
+            require_once($this->ErrorFile);
+            exit();
+        }
+        $stmt->close();
+
+        /* 2FA */
+        /*if($userdata[$this -> sqlsetting_User['2FA_col']] == 1){
+            $_SESSION['2FA']['Doing_2FA'] = true;
+            $_SESSION['2FA']['toke'] = $toke;
+            $_SESSION['2FA']['UUID'] = $userdata[$this -> sqlsetting_User['UUID_col']];
+            $_SESSION['2FA']['userdata'] = $userdata;
+            if(@$_POST['Remember_ME'] == 'on')
+                $_SESSION['2FA']['Remember_ME'] = true;
+
+            TwoFA_form(); //output form
+
+        }*/
+
+        /* 插入toke資料 */
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
+        $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
+        if (!$stmt->execute()) {
+            ob_clean();
+            header('HTTP/1.1 500 Internal Server Error');
+            require_once($this->ErrorFile);
+            exit();
+        }
+        $stmt->close();
+
+        /* 儲存 session */
+        $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
+        $_SESSION['toke'] = $toke;
+        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+
+        $this->islogin = true; //login
+        $this->Check_NewIP($userdata, $toke);
+
         return true;
     }
 
@@ -355,14 +341,12 @@ class MyAuth {
         /* 儲存 session */
         $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
         $_SESSION['toke'] = $toke;
+        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         $this->islogin = true; //login
 
         /* 記住我*/
-        if ($remember_me) {
-            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-            setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-        }
+        if ($remember_me) setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
     }
@@ -666,7 +650,7 @@ class MyAuth {
         $query = "SELECT {$this->sqlsetting_User['table']}.*, IF({$this->sqlsetting_TokeList['table']}.{$this->sqlsetting_TokeList['Toke']} = ?, TRUE , FALSE) AS 'TrueToke' FROM {$this->sqlsetting_User['table']} AS User, {$this->sqlsetting_TokeList['table']} AS Toke_list WHERE Toke_list.{$this->sqlsetting_TokeList['UUID']} = User.{$this->sqlsetting_User['UUID_col']} AND Toke_list.{$this->sqlsetting_TokeList['Toke']} = ? LIMIT 1";
 
         /* 系統資訊優先 */
-        if (isset($_SESSION['UUID'])) {
+        if (!empty($_SESSION['UUID']) && !empty($_SESSION['toke'])) {
 
             /* 查詢 */
             $stmt = $this->sqlcon->prepare($query);
@@ -700,59 +684,59 @@ class MyAuth {
 
             //Login!
             $this->islogin = true;
-            if (!@$_COOKIE['Lang']) setLang($this->userdata['Language']);
+            if (empty($_COOKIE['Lang'])) setLang($this->userdata['Language']);
             setcookie('Lang', $this->userdata['Language'], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-        } else {
+        } else
 
             /* 記住我登入 */
-            if (!isset($_COOKIE['_ID'])) return;
+            if (!empty($_COOKIE['_tk']) && !empty($_COOKIE['_ID'])) {
 
-            /* 消毒/解密 */
-            $uuid = base64_decode($_COOKIE['_ID']);
-            $uuid = filter_var($uuid, FILTER_SANITIZE_STRING);
-            $toke = base64_decode($_COOKIE['_tk']);
-            $toke = filter_var($toke, FILTER_SANITIZE_STRING);
+                /* 消毒/解密 */
+                $uuid = base64_decode($_COOKIE['_ID']);
+                $uuid = filter_var($uuid, FILTER_SANITIZE_STRING);
+                $toke = base64_decode($_COOKIE['_tk']);
+                $toke = filter_var($toke, FILTER_SANITIZE_STRING);
 
-            /* 查詢 */
-            $stmt = $this->sqlcon->prepare($query);
-            $stmt->bind_param("ss", $toke, $toke);
-            if (!$stmt->execute()) {
-                ob_clean();
-                http_response_code(500);
-                require_once($this->ErrorFile);
-                exit();
+                /* 查詢 */
+                $stmt = $this->sqlcon->prepare($query);
+                $stmt->bind_param("ss", $toke, $toke);
+                if (!$stmt->execute()) {
+                    ob_clean();
+                    http_response_code(500);
+                    require_once($this->ErrorFile);
+                    exit();
+                }
+
+                /* 分析結果 */
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+                $this->userdata = array(
+                    'UUID' => $row[$this->sqlsetting_User['UUID_col']],
+                    'Email' => $row[$this->sqlsetting_User['Email_col']],
+                    'Activated' => $row[$this->sqlsetting_User['activated_col']],
+                    'Name' => $row[$this->sqlsetting_User['Name_col']],
+                    'Role' => $row[$this->sqlsetting_User['role_col']],
+                    'Language' => $row[$this->sqlsetting_User['Language_col']],
+                    'TrueToke' => $row['TrueToke'],
+                    'ALLData' => $row
+                );
+                $stmt->close();
+
+                /* 檢查登入資訊, 不符合取消cookie */
+                if (mysqli_num_rows($result) < 1 || !($uuid == $this->userdata['UUID'] && $this->userdata['TrueToke'] && $this->userdata['Activated'])) {
+                    setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+                    setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+                    return;
+                }
+
+                //Login!
+                $_SESSION['UUID'] = $this->userdata['UUID'];
+                $_SESSION['toke'] = $toke;
+
+                $this->islogin = true;
+                if (empty($_COOKIE['Lang'])) setLang($this->userdata['Language']);
+                setcookie('Lang', $this->userdata['Language'], time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
             }
-
-            /* 分析結果 */
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            $this->userdata = array(
-                'UUID' => $row[$this->sqlsetting_User['UUID_col']],
-                'Email' => $row[$this->sqlsetting_User['Email_col']],
-                'Activated' => $row[$this->sqlsetting_User['activated_col']],
-                'Name' => $row[$this->sqlsetting_User['Name_col']],
-                'Role' => $row[$this->sqlsetting_User['role_col']],
-                'Language' => $row[$this->sqlsetting_User['Language_col']],
-                'TrueToke' => $row['TrueToke'],
-                'ALLData' => $row
-            );
-            $stmt->close();
-
-            /* 檢查登入資訊 */
-            if (mysqli_num_rows($result) < 1 || !($uuid == $this->userdata['UUID'] && $this->userdata['TrueToke'] && $this->userdata['Activated'])) {
-                setcookie('_ID', 'uuid', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                setcookie('_tk', 'toke', time() - 3600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                return;
-            }
-
-            //Login!
-            $_SESSION['UUID'] = $this->userdata['UUID'];
-            $_SESSION['toke'] = $toke;
-
-            $this->islogin = true;
-            if (!@$_COOKIE['Lang']) setLang($this->userdata['Language']);
-            setcookie('Lang', $this->userdata['Language'], time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-        }
     }
 
     /**
