@@ -200,12 +200,7 @@ class MyAuth {
         /* 更新最後時間 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
         $stmt->bind_param("s", $_SERVER['REMOTE_ADDR']);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) return false;
         $stmt->close();
 
         /* 2FA */
@@ -224,12 +219,7 @@ class MyAuth {
         /* 插入toke資料 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
         $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) return false;
         $stmt->close();
 
         /* 儲存 session */

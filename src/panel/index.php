@@ -258,7 +258,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                 <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
                                     <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                 </a>
-                                <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/login?logout=1">
+                                <a class="dropdown-item g_id_signout" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/login?logout=1">
                                     <i class="fa fa-sign-out pr--10"></i><?php echo showText("index.Logout") ?>
                                 </a>
                             </div>

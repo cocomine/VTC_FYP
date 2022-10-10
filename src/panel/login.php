@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $gclient = load_google_client();
         } catch (\Google\Exception $e) {
             header("Location: /panel/login");
-            return;
+            exit();
         }
 
         if (!empty($_POST['credential'])) {
@@ -150,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* 激活 */
     if (isset($_GET['code']) && !isset($_GET['login'])) {
+        $auth->add_Hook("acc_activated", "acc_activated_Hook");
         $status = $auth->activated($_GET['code'] ?? "");
         login_form(false, $status);
     }

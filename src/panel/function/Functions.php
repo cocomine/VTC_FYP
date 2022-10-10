@@ -4,6 +4,7 @@
  * Create by cocomine
  */
 
+use cocomine\API\notifyAPI;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
@@ -295,7 +296,7 @@ function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = nu
         /* 訊息覆蓋 */
         $count = 2;
         $html = str_replace('%localCode%', $userdata['Language'], $html);
-        $html = str_replace('%URL%', "https://gblacklist.cocopixelmc.com/panel/Block_login?code=" . urlencode(base64_encode($code)), $html, $count);
+        $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/Block_login?code=" . urlencode(base64_encode($code)), $html, $count);
         $html = str_replace('%NAME%', $userdata['Name'], $html);
         $html = str_replace('%IP%', filter_var($_SERVER['REMOTE_ADDR'], FILTER_SANITIZE_STRING), $html);
         $html = str_replace('%COUNTRY%', getCity(), $html);
@@ -347,7 +348,7 @@ function acc_ForgetPass_Hook(array $userdata, string $email, string $code, mysql
     /* 訊息覆蓋 */
     $count = 2;
     $html = str_replace('%localCode%', $userdata['Language'], $html);
-    $html = str_replace('%URL%', "https://itp4506.cocopixelmc.com/panel/forgotpass?code=" . urlencode(base64_encode($userdata['UUID'] . "@" . $code)), $html, $count);
+    $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/forgotpass?code=" . urlencode(base64_encode($userdata['UUID'] . "@" . $code)), $html, $count);
     $html = str_replace('%NAME%', $userdata['Name'], $html);
     SendMail($email, $html, AUTH_MAIL_RESET, $sqlsetting_Mail_queue, $sqlcon);
 }
