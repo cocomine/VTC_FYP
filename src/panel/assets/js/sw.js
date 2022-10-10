@@ -4,9 +4,9 @@
  */
 
 // This is the "Offline page" service worker
-const CACHE = "pwa-page";
+const CACHE = "v1";
 
-const offlineFallbackPage = "../../offline.html";
+const offlineFallbackPage = "/panel/offline.html";
 
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener("install", function (event) {
