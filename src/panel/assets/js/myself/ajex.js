@@ -29,6 +29,8 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#path').html(data.path);
                 $('#content').html(data.content)
 
+                $(document).trigger('ready')
+                if(putState) window.history.pushState({url: link}, data.title, link);
             },
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {
@@ -48,7 +50,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     }
 
     const loadingPlaceholder = `
-                    <div class='col-8 mt-4'>
+                    <div class='col-12 mt-4 col-md-8'>
                         <div class="row gy-4 gx-0 m-0">
                             <div class='col-12'>
                                 <div class="card">
@@ -92,7 +94,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                         </div>
                     </div>
 
-                    <div class='col-4 mt-4'>
+                    <div class='col-12 mt-4 col-md-4'>
                         <div class="row gy-4 gx-0 m-0">
                             <div class='col-12'>
                                 <div class="card">

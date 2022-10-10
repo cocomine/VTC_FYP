@@ -52,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $payload = $gclient->verifyIdToken($_POST['credential']);
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
                 if ($auth->google_login($payload['email'])) header("Location: /panel");
-                else header('Location: /panel/register?email=' . $payload['email'].'&name='.$payload['name']);
+                else header('Location: /panel/register?email=' . $payload['email'] . '&name=' . $payload['name']);
             } catch (RequestException $e) {
                 header("Location: /panel/login");
             }
-        }else{
+        } else {
             header("Location: /panel/login");
         }
         exit();
@@ -166,9 +166,9 @@ function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
 
     /* alert for GET method */
     $msg = $isGoogleError ? '<div class="alert alert-danger" role="alert">' . showText("Login.AUTH_GOOGLE_ERROR") . '</div>' : '';
-    if($activatedStatus == AUTH_REGISTER_CODE_WRONG) $msg = '<div class="alert alert-danger" role="alert">' . showText("Login.REGISTER_CODE_WRONG") . '</div>';
-    if($activatedStatus == AUTH_SERVER_ERROR) $msg = '<div class="alert alert-danger" role="alert">' . showText("Error") . '</div>';
-    if($activatedStatus == AUTH_REGISTER_COMPLETE) $msg = '<div class="alert alert-success" role="alert">' . showText("Login.REGISTER_COMPLETE") . '</div>';
+    if ($activatedStatus == AUTH_REGISTER_CODE_WRONG) $msg = '<div class="alert alert-danger" role="alert">' . showText("Login.REGISTER_CODE_WRONG") . '</div>';
+    if ($activatedStatus == AUTH_SERVER_ERROR) $msg = '<div class="alert alert-danger" role="alert">' . showText("Error") . '</div>';
+    if ($activatedStatus == AUTH_REGISTER_COMPLETE) $msg = '<div class="alert alert-success" role="alert">' . showText("Login.REGISTER_COMPLETE") . '</div>';
 
     //指引文字
     $Text = showText("Login");
@@ -291,7 +291,11 @@ require([
     "jquery.slicknav.min",
     "plugins",
     "scripts",
-    "forge"])
+    "forge"], () => {
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
+    })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
 </body>

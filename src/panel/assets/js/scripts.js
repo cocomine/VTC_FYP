@@ -23,11 +23,6 @@
     Preloader
     ==================================*/
 
-    var preloader = $('#preloader');
-    $(window).on('load', function() {
-        preloader.fadeOut('slow', function() { $(this).remove(); });
-    });
-
     /*================================
     sidebar collapsing
     ==================================*/
@@ -87,10 +82,9 @@
     /*================================
     form bootstrap validation
     ==================================*/
-    //$('[data-toggle="popover"]').popover()
 
     /*------------- Start form Validation -------------*/
-    $(document).ready(() => {
+    $(document).on('ready', () => {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         const forms = document.querySelectorAll('.needs-validation')
 

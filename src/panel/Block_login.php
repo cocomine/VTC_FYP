@@ -76,7 +76,11 @@ require([
     "jquery.slimscroll.min",
     "jquery.slicknav.min",
     "plugins",
-    "scripts"])
+    "scripts"], () => {
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
+    })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
 </body>

@@ -275,7 +275,13 @@ require([
     "scripts",
     "zxcvbn",
     "forge"
-    ], (forgotpass) => window.recaptchacall = forgotpass.recaptchacall)
+    ], (forgotpass) => {
+        window.recaptchacall = forgotpass.recaptchacall;
+    
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
+    });
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
 </body>

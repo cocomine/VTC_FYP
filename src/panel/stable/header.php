@@ -73,8 +73,8 @@ header('Content-Type:text/html; charset=utf-8');
 <!-- preloader area start -->
 <div id="preloader">
     <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
-    <div class="loader">
-        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px; margin-left: -100px; margin-top: -100px" loop autoplay></lottie-player>
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
     </div>
 </div>
 <!-- preloader area end -->

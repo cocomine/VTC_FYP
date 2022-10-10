@@ -73,8 +73,13 @@
             "showMethod": "slideDown",
             "hideMethod": "slideUp"
         };
+
         ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
         window.ajexLoad = ajex.ajexLoad;
+
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>

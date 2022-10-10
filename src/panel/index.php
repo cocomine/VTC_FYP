@@ -103,7 +103,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
             /* create sql conect */
             $sqlcon = new mysqli(Cfg_Sql_Host, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Sql_dbName);
-            if ($this->sqlcon->connect_errno) {
+            if ($sqlcon->connect_errno) {
                 http_response_code(500);
                 echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
                 exit();
@@ -230,39 +230,41 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             <!-- header area end -->
 
             <!-- page title area start -->
-            <div class="page-title-area">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="breadcrumbs-area clearfix">
+            <div class="sticky-top">
+                <div class="page-title-area">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <div class="breadcrumbs-area clearfix">
 
-                            <!-- title content -->
-                            <h4 class="page-title fa-pull-left" id="title"></h4>
-                            <ul class="breadcrumbs fa-pull-left" id="path">
-                            </ul>
+                                <!-- title content -->
+                                <h4 class="page-title fa-pull-left" id="title"></h4>
+                                <ul class="breadcrumbs fa-pull-left" id="path">
+                                </ul>
 
-                        </div>
-                    </div>
-                    <div class="col-sm-6 clearfix">
-                        <div class="user-profile fa-pull-right">
-
-                            <!-- user avatar -->
-                            <img class="avatar user-thumb"
-                                 src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
-                                 alt="avatar">
-                            <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                <?php echo $auth->userdata['Name'] ?><i class="fa fa-angle-down"></i>
-                            </h4>
-                            <div class="dropdown-menu">
-
-                                <!-- dropdown menu content -->
-                                <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
-                                    <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
-                                </a>
-                                <a class="dropdown-item g_id_signout" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/login?logout=1">
-                                    <i class="fa fa-sign-out pr--10"></i><?php echo showText("index.Logout") ?>
-                                </a>
                             </div>
+                        </div>
+                        <div class="col-sm-6 clearfix">
+                            <div class="user-profile fa-pull-right">
 
+                                <!-- user avatar -->
+                                <img class="avatar user-thumb"
+                                     src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
+                                     alt="avatar">
+                                <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
+                                    <?php echo $auth->userdata['Name'] ?><i class="fa fa-angle-down"></i>
+                                </h4>
+                                <div class="dropdown-menu">
+
+                                    <!-- dropdown menu content -->
+                                    <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
+                                        <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
+                                    </a>
+                                    <a class="dropdown-item g_id_signout" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/login?logout=1">
+                                        <i class="fa fa-sign-out pr--10"></i><?php echo showText("index.Logout") ?>
+                                    </a>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -327,7 +329,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                     <div class='card-body'>
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
-                                                <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_kcsr6fcp.json"  background="transparent"  speed="1"  style="width: 500px; height: 250px;"  loop  autoplay></lottie-player>
+                                                <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_kcsr6fcp.json" background="transparent" speed="1" style="width: 500px; height: 250px;" loop autoplay></lottie-player>
                                             </div>
                                             <div class="w-100"></div>
                                             <h2 class="col-auto">dfsdf</h2>

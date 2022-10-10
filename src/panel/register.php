@@ -119,7 +119,7 @@ function register_form(string $email = null, string $name = null) {
                                 </div>
                                 <div class="form-gp">
                                     <label for="Email">{$Text['email']}</label>
-                                    <input type="email" class="form-control" autocomplete="username" id="Email" name="email" required="required" value="{$email}" inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+                                    <input type="email" class="form-control" autocomplete="email" id="Email" name="email" required="required" value="{$email}" inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
                                     <i class="ti-email"></i>
                                     <div class="invalid-feedback">
                                         {$Text['Form']['Error_format']}
@@ -258,7 +258,13 @@ require([
     "scripts",
     "zxcvbn",
     "forge"
-    ], (register) => window.recaptchacall = register.recaptchacall)
+    ], (register) => {
+        window.recaptchacall = register.recaptchacall;
+        
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
+    });
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
 </body>
