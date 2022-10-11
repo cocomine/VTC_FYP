@@ -74,7 +74,12 @@
             "hideMethod": "slideUp"
         };
 
-        ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+        const returnPath = sessionStorage.getItem('returnPath');
+        if(returnPath !== null) {
+            ajex.ajexLoad(returnPath);
+            sessionStorage.removeItem('returnPath');
+        }
+        else ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
         window.ajexLoad = ajex.ajexLoad;
 
         $(window).on('load', function() {

@@ -11,7 +11,7 @@
  * Time: 下午 5:32
  */
 
-use cocopixelmc\Auth\MyAuth;
+use cocomine\MyAuth;
 
 /* header */
 const title = "Register.title";

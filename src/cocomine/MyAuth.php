@@ -1,10 +1,10 @@
 <?php
 /*
- * Copyright (c) 2020.
+ * Copyright (c) 2022.
  * Create by cocomine
  */
 
-namespace cocopixelmc\Auth;
+namespace cocomine;
 
 use mysqli;
 use Michael_Kliewe\GoogleAuthenticator\PHPGangsta_GoogleAuthenticator;
@@ -85,14 +85,14 @@ define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 505.20);
  */
 class MyAuth {
 
-    public string $ErrorFile = "";
-    public string $CookiesPath = '/';
+    private string $ErrorFile = "";
+    private string $CookiesPath = '/';
     public bool $islogin = false; //is login?
     public ?mysqli $sqlcon = null;
     public ?array $userdata = null;
 
     //sql setting
-    public array $sqlsetting_User = array(
+    private array $sqlsetting_User = array(
         'table' => 'User',
         'Email_col' => 'Email',
         'UUID_col' => 'UUID',
@@ -107,31 +107,31 @@ class MyAuth {
         'Language_col' => 'Language',
         'role_col' => 'role'
     );
-    public array $sqlsetting_IPBlock = array(
+    private array $sqlsetting_IPBlock = array(
         'Last_time' => 'Last_time',
         'IP' => 'IP',
         'table' => 'Block_ip'
     );
-    public array $sqlsetting_Forgetpass = array(
+    private array $sqlsetting_Forgetpass = array(
         'table' => 'ForgetPass',
         'UUID' => 'UUID',
         'Code' => 'Code',
         'Last_time' => 'Last_time'
     );
-    public array $sqlsetting_TokeList = array(
+    private array $sqlsetting_TokeList = array(
         'table' => 'Toke_list',
         'Time' => 'Time',
         'UUID' => 'UUID',
         'Toke' => 'Toke',
         'IP' => 'IP'
     );
-    public array $sqlsetting_2FA_BackupCode = array(
+    private array $sqlsetting_2FA_BackupCode = array(
         'table' => '2FA_BackupCode',
         'UUID' => 'UUID',
         'Code' => 'Code',
         'used' => 'used'
     );
-    public array $sqlsetting_Block_login_code = array(
+    private array $sqlsetting_Block_login_code = array(
         'table' => 'Block_login_code',
         'code' => 'code',
         'Toke' => 'Toke',
@@ -195,7 +195,7 @@ class MyAuth {
 
         if (!$userdata[$this->sqlsetting_User['activated_col']]) return false;
 
-        $toke = md5((Generate_Code() . time()));  //產生toke
+        $toke = md5($this->Generate_Code());  //產生toke
 
         /* 更新最後時間 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
@@ -294,7 +294,7 @@ class MyAuth {
         //檢查帳號啟動
         if (!$userdata[$this->sqlsetting_User['activated_col']]) return AUTH_NOT_DONE;
 
-        $toke = md5((Generate_Code() . time()));  //產生toke
+        $toke = md5($this->Generate_Code());  //產生toke
 
         /* 更新最後時間 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
@@ -389,7 +389,7 @@ class MyAuth {
         /* 檢查最後登入ip */
         if ($userdata[$this->sqlsetting_User['Last_IP_col']] != $_SERVER['REMOTE_ADDR']) {
             /* 創建連接 */
-            $code = md5((Generate_Code() . time()));
+            $code = md5((MyAuth . phpGenerate_Code()));
             $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Block_login_code['table']} ({$this->sqlsetting_Block_login_code['Toke']}, {$this->sqlsetting_Block_login_code['code']}, {$this->sqlsetting_Block_login_code['time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
             $stmt->bind_param("ss", $toke, $code);
             if (!$stmt->execute()) return false;
@@ -1214,8 +1214,7 @@ class MyAuth {
      * @param string $Hook_name 掛勾名
      * @param string $func_name 執行的程式名
      */
-    public
-    function add_Hook(string $Hook_name, string $func_name) {
+    public function add_Hook(string $Hook_name, string $func_name) {
         $a = array();
         $a[] = $func_name;
         $this->Hook_func[$Hook_name] = $a;
@@ -1226,12 +1225,27 @@ class MyAuth {
      * @param string|null $Hook_name 掛勾名
      * @param mixed ...$parameter 參數
      */
-    private
-    function run_Hook(string $Hook_name, ...$parameter) {
+    private function run_Hook(string $Hook_name, ...$parameter) {
         if (isset($this->Hook_func[$Hook_name])) {
             foreach ($this->Hook_func[$Hook_name] as $func_name) {
                 call_user_func($func_name, ...$parameter);
             }
         }
+    }
+
+    /**
+     *產生亂數
+     * @param int $length 長度
+     * @return string 亂數
+     */
+    private function Generate_Code(int $length = 32): string {
+        $chars = 'qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM';
+        $code = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $code .= substr($chars, rand() % 62, 1);
+        }
+
+        return $code;
     }
 }

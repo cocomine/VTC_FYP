@@ -3,7 +3,8 @@
  * Copyright (c) 2020.
  * Create by cocomine
  */
-use cocopixelmc\Auth\MyAuth;
+
+use cocomine\MyAuth;
 
 /* header */
 const title = "Block_login.title";

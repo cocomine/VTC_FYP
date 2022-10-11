@@ -12,7 +12,7 @@
  */
 
 use cocomine\API\notifyAPI;
-use cocopixelmc\Auth\MyAuth;
+use cocomine\MyAuth;
 use panel\page\home;
 
 /* header */
@@ -23,19 +23,6 @@ static $auth;
 $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
 $auth->checkAuth(); //start auth
 $_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
-
-//todo: 無需登入的確進入頁面
-//check auth
-if (!$auth->islogin) {
-    ob_clean();
-    if (isset($_SERVER['HTTP_AJAX'])) {
-        header("content-type: text/json; charset=utf-8");
-        echo json_encode(array('code' => 401, 'return' => '/panel/login'));
-    } else {
-        header("Location: /panel/login");
-    }
-    exit();
-}
 
 /* API互動介面 (即係唔係俾人睇) */
 //if (isset($_GET['api'])) {
@@ -68,27 +55,39 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         $path = array_slice($path, 0, -1);
     }
 
-    //輸出頁面
+    //輸出頁面 home 頁面
     if (count($path) < 1) {
-        // home 頁面
         require_once('./page/home.php');
         $homePage = new home($auth->sqlcon);
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            echo json_encode($homePage->post());
-        } else {
-            echo json_encode(array(
-                'title' => showText("index.title"),
-                'head' => showText("index.home"),
-                'path' => $homePage->path(),
-                'content' => $homePage->showPage()
-            ));
+
+        //檢查權限
+        $access = $homePage->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+        if ($access == 200) {
+            //頁面輸出
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                echo json_encode($homePage->post());
+            } else {
+                echo json_encode(array(
+                    'title' => $homePage->get_Title(),
+                    'head' => $homePage->get_Head(),
+                    'path' => $homePage->path(),
+                    'content' => $homePage->showPage()
+                ));
+            }
+        } else if($access == 403){
+            //沒有權限
+            http_response_code(403);
+            echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
+        }else if($access == 401){
+            //需要登入
+            http_response_code(401);
+            echo json_encode(array('code' => 401, 'path' => './login'));
         }
         exit();
     }
 
     //開始遍歴
     for ($i = count($path); $i >= 0; $i--) {
-
         //重組class路徑
         $class = '\panel\page';
         for ($x = 0; $x < $i; $x++) {
@@ -101,17 +100,18 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             require_once($include_path);
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
 
-            /* create sql conect */
+            /* create sql connect */
             $sqlcon = new mysqli(Cfg_Sql_Host, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Sql_dbName);
             if ($sqlcon->connect_errno) {
                 http_response_code(500);
                 echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
                 exit();
             }
-
             $page = new $class($sqlcon, $up_path); //create class
 
-            if ($page->is_access($auth->userdata['Role'])) { //檢查權限
+            //檢查權限
+            $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+            if ($access == 200) {
                 //頁面輸出
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($page->post());
@@ -123,10 +123,14 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                         'content' => $page->showPage()
                     ));
                 }
-            } else {
+            } else if($access == 403){
                 //沒有權限
                 http_response_code(403);
                 echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
+            }else if($access == 401){
+                //需要登入
+                http_response_code(401);
+                echo json_encode(array('code' => 401, 'path' => './login'));
             }
             exit(); //存在即停止
         }
@@ -422,6 +426,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                         </div>
                     </div>
                 </div>
+
+                <!-- language translate -->
+                <pre style="display: none" id="globalLang">
+                    <?php
+                        echo json_encode(array(
+                                'Error' => showText('Error')
+                        ))
+                    ?>
+                </pre>
 
             </div>
         </div>

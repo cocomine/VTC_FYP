@@ -6,16 +6,15 @@
 
 namespace panel\page;
 
-use cocopixelmc\Auth\MyAuth;
+use cocomine\IPage;
 use mysqli;
 
 /**
  * Class changesetting
  * @package cocopixelmc\Page
  */
-class changesetting {
+class changesetting implements IPage {
 
-    private array $UpPath;
     public static int $Role = 1;
 
     /**
@@ -24,23 +23,13 @@ class changesetting {
      * @param mysqli $sqlcon sql連接
      * @param array $UpPath 上條路徑
      */
-    function __construct(mysqli $sqlcon, array $UpPath) {
-        $this->UpPath = $UpPath;
-    }
+    function __construct(mysqli $sqlcon, array $UpPath) {}
 
-    /**
-     * 檢查訪問權
-     * @param int $role 用戶權限
-     * @return bool 是否允許
-     */
-    public function is_access(int $role): bool {
-        if ($role < $this::$Role) {
-            return false;
-        }
-        if (count($this->UpPath) > 0) {
-            return false;
-        }
-        return true;
+    /* 檢查訪問權 */
+    public function access(bool $isAuth, int $role): int {
+        if(!$isAuth) return 401;
+        if($role < self::$Role) return 403;
+        return 200;
     }
 
     public function get_Title(): string {
@@ -460,8 +449,8 @@ class changesetting {
                 $ALLCode = $status[1];
                 $piKey = openssl_pkey_get_public(filter_var($_POST['puKey'], FILTER_SANITIZE_STRING));
                 for ($i = 0; $i < sizeof($ALLCode); $i++) {
-                    openssl_public_encrypt($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $piKey);
-                    $ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']] = base64_encode($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']]);
+                    //openssl_public_encrypt($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $piKey);
+                    //$ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']] = base64_encode($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']]);
                 }
                 $outPut = array(
                     'UserName' => $auth->userdata['Name'],

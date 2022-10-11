@@ -5,13 +5,14 @@
  */
 namespace panel\page;
 
+use cocomine\IPage;
 use mysqli;
 
 /**
  * Class home
  * @package cocopixelmc\Page
  */
-class home
+class home implements IPage
 {
     private mysqli $sqlcon;
 
@@ -24,18 +25,12 @@ class home
         $this->sqlcon = $sqlcon;
     }
 
-    /**
-     * @param int $role
-     * @return bool
-     */
-    function is_access(int $role): bool{
-        return true;
+    /* 是否有權進入 */
+    function access(bool $isAuth, int $role): int{
+        return 200;
     }
 
-    /**
-     * 輸出頁面
-     * @return string 輸出頁面內容
-     */
+    /* 輸出頁面 */
     function showPage(): string {
         return "
             <div class='col-12 mt-4'>
@@ -48,20 +43,24 @@ class home
         ";
     }
 
-    /**
-     * POST請求
-     * @return array 返回內容
-     */
+    /* POST請求 */
     function post():array{
         return array();
     }
 
-    /**
-     * path輸出
-     * @return string 輸出
-     */
+    /* path輸出 */
     function path(): string {
         return "<li><a href=\"/panel\" data-ajax=\"GET\">".showText("index.Console")."</a></li>
                         <li><span>".showText("index.home")."</span></li>";
+    }
+
+    /* 取得頁面標題 */
+    public function get_Title(): string {
+        return showText('index.title');
+    }
+
+    /* 取得頁首標題 */
+    public function get_Head(): string {
+        return showText("index.home");
     }
 }

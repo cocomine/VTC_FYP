@@ -4,8 +4,6 @@
  * Create by cocomine
  */
 
-namespace cocopixelmc\Auth;
-
 header('Content-Type: text/json; charset=UTF-8');
 
 $config = array(

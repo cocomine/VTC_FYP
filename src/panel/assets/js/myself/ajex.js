@@ -4,6 +4,13 @@
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
+    "use strict";
+
+    /* 語言載入 */
+    let Lang = $('#globalLang').text();
+    Lang = JSON.parse(Lang);
+
+    /* 接管連結 */
     $(document).on("click", 'a[href]', function (e) {
         const link = $(this).attr('href');
         if (/^(\/)/.test(link)) {
@@ -12,6 +19,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         }
     });
 
+    /* 載入頁面 */
     const ajexLoad = (link, putState = true) => {
         if (!/[$\/]/.test(link)) link = link + '/';
         $('#content').html(loadingPlaceholder)
@@ -20,7 +28,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         $.ajax({
             type: 'GET',
             url: link,
-            headers: {'AJAX': 'true'},
             success: function (data) {
                 console.log(data)
 
@@ -29,7 +36,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#path').html(data.path);
                 $('#content').html(data.content)
 
-                $(document).trigger('ready')
+                $(document).trigger('ready');
                 if(putState) window.history.pushState({url: link}, data.title, link);
             },
             error: (xhr, textStatus) => {
@@ -41,10 +48,13 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             $('#content').html(page403(xhr.responseJSON.Message));
                         } else if (xhr.responseJSON.code === 500) {
                             $('#content').html(page500(xhr.responseJSON.Message));
+                        } else if (xhr.responseJSON.code === 401){
+                            sessionStorage.setItem('returnPath', location.pathname);
+                            location.replace(xhr.responseJSON.path)
                         }
-                    } else toastr.error('Unknown error!!');
+                    } else toastr.error(Lang.Error);
                 } else if (textStatus === 'timeout') toastr.error('Request Timeout', '408');
-                else toastr.error('Unknown error!!');
+                else toastr.error(Lang.Error);
             }
         });
     }

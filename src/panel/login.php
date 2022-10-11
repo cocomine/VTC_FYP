@@ -11,8 +11,7 @@
  * Time: 下午 5:32
  */
 
-use cocopixelmc\Auth\MyAuth;
-use GuzzleHttp\Exception\RequestException;
+use cocomine\MyAuth;
 
 /* header */
 const title = "Login.title";
@@ -43,17 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (!empty($_POST['credential'])) {
             try {
-                /*$token = $gclient->fetchAccessTokenWithAuthCode($_GET['code']);
-                $gclient->setAccessToken($token);
-
-                $oauth = new Google_Service_Oauth2($gclient);
-                $profile = $oauth->userinfo->get();*/
-
                 $payload = $gclient->verifyIdToken($_POST['credential']);
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
                 if ($auth->google_login($payload['email'])) header("Location: /panel");
                 else header('Location: /panel/register?email=' . $payload['email'] . '&name=' . $payload['name']);
-            } catch (RequestException $e) {
+            } catch (Exception $e) {
                 header("Location: /panel/login");
             }
         } else {
@@ -134,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . $profile->getName());
                     exit();
                 }
-            } catch (RequestException $e) {
+            } catch (Exception $e) {
                 login_form(true);
             }
         } else {

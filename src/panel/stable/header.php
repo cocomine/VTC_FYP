@@ -23,7 +23,8 @@ require_once('./vendor/autoload.php');
 require_once('./function/Functions.php');
 require_once('./function/config.inc.php');
 require_once('./Lang/Lang.php');
-require_once('./function/MyAuth.php');
+require_once('../cocomine/MyAuth.php');
+require_once ('../cocomine/IPage.php');
 
 header('Content-Type:text/html; charset=utf-8');
 
