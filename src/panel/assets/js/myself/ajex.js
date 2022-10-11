@@ -10,22 +10,24 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     let Lang = $('#globalLang').text();
     Lang = JSON.parse(Lang);
 
-    /* gotop */
+    /* go-top */
     $('.go-top').click(() => {
         $('html').animate({scrollTop: 0}, 200)
     })
 
-    $(document).scroll(() => {
+    /* go-top display */
+    document.addEventListener('scroll',(e) => {
         const scroll = window.scrollY;
-        if(scroll > 100)$('.go-top').fadeIn();
+        if(scroll > 100) $('.go-top').fadeIn();
         else $('.go-top').fadeOut();
-    })
+    }, (Modernizr.passiveeventlisteners ? {passive: true} : false));
 
     /* 接管連結 */
     $(document).on("click", 'a[href]', function (e) {
         const link = $(this).attr('href');
         if (/^(\/)/.test(link)) {
             e.preventDefault();
+            e.stopPropagation()
             ajexLoad(link);
         }
     });
@@ -34,9 +36,29 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     $(window).on("popstate", function (e){
         e.preventDefault();
         e.stopPropagation();
-        console.debug("User jump page to '"+e.originalEvent.state.url+"'. AJAX Load.");
+        console.log("User jump page to '"+e.originalEvent.state.url+"'. AJAX Load.");
         ajexLoad(e.originalEvent.state.url, false)
     });
+
+    /* 加載模組 */
+    let Modules = [];
+    const loadModules = (modules, callBlack = () => null) => {
+        require(modules, callBlack);
+        Modules = modules;
+    }
+
+    /* requireJS 加載模組活動 */
+    require.onResourceLoad = function (context, map, depArray) {
+        console.debug(`➡ ${map.name} Modules Loaded`);
+    };
+
+    /* 卸載模組 */
+    function unModules(){
+        Modules.map(function(item){
+            require.undef(item);
+            console.debug(`⬅ ${item} Modules unLoaded`);
+        });
+    }
 
     /* 載入頁面 */
     const ajexLoad = (link, putState = true) => {
@@ -48,7 +70,8 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             type: 'GET',
             url: link,
             success: function (data) {
-                console.log(data)
+                console.debug(data)
+                unModules()
 
                 $('title').text(data.title);
                 $('#title').text(data.head);
@@ -215,6 +238,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     </div>`
 
     return {
-        ajexLoad
+        ajexLoad, loadModules
     }
 })

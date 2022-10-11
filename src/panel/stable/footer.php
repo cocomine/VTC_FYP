@@ -86,6 +86,7 @@
         }
         else ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
         window.ajexLoad = ajex.ajexLoad;
+        window.loadModules = ajex.loadModules;
 
         $(window).on('load', function() {
             $('#preloader').fadeOut('slow', function() { $(this).remove(); });

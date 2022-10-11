@@ -269,7 +269,7 @@ class changesetting implements IPage {
                         FileSaver: ['FileSaver.min'],
                     },
                 });
-                require(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver']);
+                loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
                 </script>";
     }
 
