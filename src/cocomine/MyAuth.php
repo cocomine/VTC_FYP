@@ -225,7 +225,7 @@ class MyAuth {
         /* 儲存 session */
         $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
         $_SESSION['toke'] = $toke;
-        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         $this->islogin = true; //login
         $this->Check_NewIP($userdata, $toke);
@@ -319,12 +319,17 @@ class MyAuth {
         /* 儲存 session */
         $_SESSION['UUID'] = $userdata[$this->sqlsetting_User['UUID_col']];
         $_SESSION['toke'] = $toke;
-        setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         $this->islogin = true; //login
 
         /* 記住我*/
-        if ($remember_me) setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+        if ($remember_me) {
+            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+            setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+        }else{
+            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+
+        }
 
         return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
     }

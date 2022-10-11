@@ -10,6 +10,17 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     let Lang = $('#globalLang').text();
     Lang = JSON.parse(Lang);
 
+    /* gotop */
+    $('.go-top').click(() => {
+        $('html').animate({scrollTop: 0}, 200)
+    })
+
+    $(document).scroll(() => {
+        const scroll = window.scrollY;
+        if(scroll > 100)$('.go-top').fadeIn();
+        else $('.go-top').fadeOut();
+    })
+
     /* 接管連結 */
     $(document).on("click", 'a[href]', function (e) {
         const link = $(this).attr('href');
@@ -17,6 +28,14 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             e.preventDefault();
             ajexLoad(link);
         }
+    });
+
+    /* 上一頁事件監聽 */
+    $(window).on("popstate", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+        console.debug("User jump page to '"+e.originalEvent.state.url+"'. AJAX Load.");
+        ajexLoad(e.originalEvent.state.url, false)
     });
 
     /* 載入頁面 */

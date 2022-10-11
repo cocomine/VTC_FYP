@@ -11,6 +11,11 @@
  * Time: 下午 11:08
  */
 ?>
+<div class="go-top" style="display: none">
+    <div class="row justify-content-center align-content-center h-100">
+        <i class="col-auto ti-angle-up"></i>
+    </div>
+</div>
 <footer>
     <div class="footer-area">
         <!-- footer content -->
