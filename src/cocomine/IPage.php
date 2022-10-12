@@ -27,9 +27,10 @@ interface IPage {
 
     /**
      * POST請求
+     * @param array $data json數據
      * @return array 返回內容
      */
-    function post():array;
+    function post(array $data):array;
 
     /**
      * path html輸出

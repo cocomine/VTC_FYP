@@ -80,8 +80,12 @@ class changesetting implements IPage {
                       <button type='button' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4' data-bs-toggle='modal' data-bs-target='#TwoFA_register'><i class='fa fa-lock pe-2'></i>{$Text['2FA']['Enable']}</button>";
         }
 
+        /* json 語言 */
+        $jsonLang = json_encode(array('strength' => showText('ChangeSetting.strength')));
+
         /* HTNL */
-        return "<!-- 基本資料 -->
+        return "<pre id='langJson' style='display: none'>$jsonLang</pre>
+                <!-- 基本資料 -->
                 <div class='col-12 mt-4'>
                     <div class='card'>
                         <div class='card-body'>
@@ -90,7 +94,7 @@ class changesetting implements IPage {
                                 <!-- 大頭貼 -->
                                 <div class='col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 position-relative'>
                                     <div class='ratio ratio-1x1 rounded-circle border-primary border-4 border overflow-hidden'>
-                                        <img class='h-100 w-100' src='https://www.gravatar.com/avatar/{$avatar}?s=200' alt='avatar'>
+                                        <img class='h-100 w-100' src='https://www.gravatar.com/avatar/$avatar?s=200' alt='avatar'>
                                         <div class='bg-black bg-opacity-75 position-absolute bottom-0 start-0 end-0 text-center pt-1' style='top: 75%'>
                                             <a class='link-light' href='https://gravatar.com' target='_blank'>
                                                 <span class='ti-pencil pe-1'></span>{$Text['Gravatar']}
@@ -105,22 +109,21 @@ class changesetting implements IPage {
                                             <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
                                             <input class='form-control input-rounded' type='text' value='{$userdata["Name"]}' maxlength='16' id='Name' name='name' autocomplete='nickname' required>
                                             <small class='form-text text-muted'>{$Text['Name']['limit']}</small>
-                                            <div class='invalid-feedback'></div>
+                                            <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                                         </div>
                                         <div class='col-12'>
                                             <label for='Email' class='col-form-label'>{$Text['Email']['Email']}</label>
                                             <input class='form-control input-rounded' type='email' value='{$userdata["Email"]}' id='Email' name='email' autocomplete='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
                                             <small class='form-text text-muted'>{$Text['Email']['addMSG']}</small>
-                                            <div class='invalid-feedback'></div>
+                                            <div class='invalid-feedback'>{$Text['Form']['Error_format']}</div>
                                         </div>
                                         <div class='col-12'>
                                             <label class='col-form-label' for='Language'>{$Text['Lang']['Lang']}</label>
-                                            <select class='input-rounded form-select' name='language' id='Language'>
-                                                <option value='en' {$Lang_Sel[0]}>{$Text['Lang']['en']}</option>
-                                                <option value='zh' {$Lang_Sel[1]}>{$Text['Lang']['zh']}</option>
-                                                <option value='zh-CN' {$Lang_Sel[2]}>{$Text['Lang']['zh-CN']}</option>
+                                            <select class='input-rounded form-select' name='lang' id='Language'>
+                                                <option value='en' $Lang_Sel[0]>{$Text['Lang']['en']}</option>
+                                                <option value='zh' $Lang_Sel[1]>{$Text['Lang']['zh']}</option>
+                                                <option value='zh-CN' $Lang_Sel[2]>{$Text['Lang']['zh-CN']}</option>
                                             </select>
-                                            <div class='invalid-feedback'></div>
                                         </div>
                                         <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
                                     </form>
@@ -135,27 +138,27 @@ class changesetting implements IPage {
                     <div class='card'>
                         <div class='card-body'>
                             <h1 class='header-title'>{$Text['Pass']['Pass']}</h1>
-                            <form id='PassSet' novalidate class='needs-validation'>
+                            <form id='PassSet' novalidate class=''>
                                 <div class='col-12'>
                                     <label for='Old_Pass' class='col-form-label'>{$Text['Pass']['OldPass']}</label>
                                     <input class='form-control input-rounded' type='password' id='Old_Pass' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='passwordOld' autocomplete='current-password' required>
-                                    <div class='invalid-feedback'></div>
+                                    <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                                 </div>
                                 <div class='col-12'>
                                     <label for='New_Pass' class='col-form-label'>{$Text['Pass']['NewPass']}</label>
-                                    <input class='form-control input-rounded' type='password' id='Password' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password' autocomplete='new-password' required>
-                                    <div class='invalid-feedback'></div>
+                                    <input class='input-rounded form-control' type='password' id='Password' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password' autocomplete='new-password' required>
+                                    <div class='invalid-feedback'>{$Text['Form']['Match_Old_Pass']}</div>
                                 </div>
                                 <div class='col-12'>
                                     <label for='CPass' class='col-form-label'>{$Text['Pass']['NewConfirmPass']}</label>
                                     <input class='form-control input-rounded' type='password' id='Password2' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password2' autocomplete='new-password' required data-placement='auto' data-toggle='popover' data-html='true' data-trigger='manual' data-content='<i class=\"ti-alert\" style=\"color:red;\"></i> " . showText("ChangeSetting.Pass.NotMach") . "'>
-                                    <div class='invalid-feedback'></div>
+                                    <div class='invalid-feedback'>{$Text['Form']['Not_Match_Wrong']}</div>
                                 </div>
                                 <div class='col-12 col-md-6 mt-4'>
                                     <p>
                                         {$Text['Pass']['passStrength']}
                                         <div class='progress'>
-                                            <div class='progress-bar' role='progressbar' style='width: 0%' id='passStrength'></div>
+                                            <div class='progress-bar' role='progressbar' style='width: 0' id='passStrength'></div>
                                         </div>
                                     </p>
                                     <p>
@@ -179,7 +182,7 @@ class changesetting implements IPage {
                     <div class='card'>
                         <div class='card-body'>
                             <h1 class='header-title'>{$Text['2FA']['title']}</h1>
-                            {$TwoFA}
+                            $TwoFA
                             <!-- 登記表單 -->
                             <div id='TwoFA_register' class='modal fade'>
                                 <div class='modal-dialog modal-lg'>
@@ -277,101 +280,31 @@ class changesetting implements IPage {
      * 回傳表單資料
      * @return array 彈出窗口
      */
-    function post(): array {
+    function post(array $data): array {
         global $auth;
-
-        $data = json_decode(file_get_contents("php://input"));
 
         /* 修改資料 */
         if ($_GET['type'] == 'DataSet') {
-            $data = array(
-                'Name' => $data->Name,
-                'Email' => $data->Email,
-                'Lang' => $data->Language
-            );
             $auth->add_Hook('acc_changeSetting_data', 'acc_Activated_Mail_Hook');
-            $status = $auth->changeSetting(AUTH_CHANGESETTING_DATA, $data);
-            if ($status[0] === AUTH_CHANGESETTING_DATA_OK_EMAIL) {
-                $OutPut = array(
-                    'status' => 'Success',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_OK_EMAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_OK_EMAIL.1"),
-                    'script' => "$('.user-name').html({$status[1]} + '<i class=\"fa fa-angle-down\"></i>');"
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_DATA_OK) {
-                $OutPut = array(
-                    'status' => 'Success',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_OK"),
-                    'script' => "$('.user-name').html('{$status[1]}' + '<i class=\"fa fa-angle-down\"></i>');"
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_DATA_FAIL) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH.1")
-                );
-            }
-            return $OutPut;
+            $status = $auth->changeDataSetting($data['email'], $data['name'], $data['lang']);
+            return array(
+                'code' => $status,
+                'Title' => $this->ResultMsg($status)[0],
+                'Message' => $this->ResultMsg($status)[1],
+                'Data' => array(
+                    'name' => $auth->userdata['Name'],
+                    'email' => $auth->userdata['Email'],
+                    'lang' => $auth->userdata['Language']
+                )
+            );
         }
         if ($_GET['type'] == 'PassSet') {
-            $data = array(
-                'NewPass' => $data->New_Pass,
-                'ConfirmPass' => $data->Confirm_Pass,
-                'OldPass' => $data->Old_Pass
+            $status = $auth->changePasswordSetting($data['passwordOld'], $data['password'], $data['password2'], $_SESSION['pvKey']);
+            return array(
+                'code' => $status,
+                'Title' => $this->ResultMsg($status)[0],
+                'Message' => $this->ResultMsg($status)[1],
             );
-            $status = $auth->changeSetting(AUTH_CHANGESETTING_PASS, $data);
-            if ($status[0] === AUTH_CHANGESETTING_PASS_OK) {
-                $OutPut = array(
-                    'status' => 'Success',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_OK.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_OK.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_PASS_FAIL) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_PASS_FAIL_EMPTY) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_EMPTY.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_EMPTY.1")
-                );
-            }
-            if ($status[0] === AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG) {
-                $OutPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG.1")
-                );
-            }
-            return $OutPut;
         }
         if ($_GET['type'] == '2FASet') {
             $puKey = filter_var($data->puKey, FILTER_SANITIZE_STRING);;
@@ -469,9 +402,38 @@ class changesetting implements IPage {
         }
 
         return array(
-            'status' => 'Error',
-            'title' => '請求出在錯! 檢查url!',
+            'code' => 400,
+            'Title' => showText('Error_Page.400_title'),
         );
+    }
+
+
+    private function ResultMsg(int $type): array{
+        switch ($type){
+            case AUTH_CHANGESETTING_DATA_FAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL');
+            case AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH');
+            case AUTH_CHANGESETTING_DATA_OK_EMAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_DATA_OK_EMAIL');
+            case AUTH_CHANGESETTING_DATA_OK:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_DATA_OK');
+            case AUTH_CHANGESETTING_PASS_FAIL_EMPTY:
+            case AUTH_CHANGESETTING_DATA_FAIL_EMPTY:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_EMPTY');
+            case AUTH_CHANGESETTING_PASS_OK:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_OK');
+            case AUTH_CHANGESETTING_PASS_FAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL');
+            case AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH');
+            case AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG');
+            case AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG');
+            default:
+                return array('','');
+        }
     }
 
     /**

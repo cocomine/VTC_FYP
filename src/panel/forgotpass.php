@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_SESSION['Doing_Reset'])) {
-        $status = $auth->ForgetPass_set($data['password'] ?? "", $data['password2'] ?? "", true);//傳送新密碼
+        $status = $auth->ForgetPass_set($data['password'] ?? "", $data['password2'] ?? "", $_SESSION['pvKey']);//傳送新密碼
         echo json_encode(array(
             'code' => $status,
             'Message' => ResultMsg($status)
@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $auth->add_Hook('acc_ForgetPass', 'acc_ForgetPass_Hook');
         $status = $auth->ForgetPass($data['email'] ?? "", $data['g-recaptcha-response'], Cfg_recaptcha_key);//傳送電郵
-        var_dump($status);
         echo json_encode(array(
             'code' => $status,
             'Message' => ResultMsg($status)
@@ -78,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['Doing_Reset'] = true;
             ForgetPassSet_from();
         } else {
-            unset($_SESSION['Doing_Reset']);
             ForgetPass_from(true);
+            unset($_SESSION['Doing_Reset']);
         }
     }
 
@@ -153,12 +152,12 @@ function ForgetPassSet_from() {
     <div class="login-area login-bg">
         <div class="container">
             <div class="login-box ptb--100">
-                <form class="" novalidate id="PasswordStep">
+                <form class="needs-validation" novalidate id="PasswordStep">
                     <div class="login-form-head">
                         <h4>{$Text['ForgotPass']}</h4>
                         <p>{$Text['welcome2']}</p>
                     </div>
-                    <div id="ResultMsg">{$msg}</div>
+                    <div id="ResultMsg"></div>
                     <div class="login-form-body">
                         <div class="form-gp focused">
                             <label for="Password">{$Text['NewPass']}</label>

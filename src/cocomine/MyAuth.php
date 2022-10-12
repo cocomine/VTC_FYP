@@ -14,10 +14,6 @@ use RobThree\Auth\TwoFactorAuthException;
 
 /* @deprecated */
 define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
-/* @deprecated */
-define('AUTH_FORGETPASS_FORM_FUNC', 'ForgetPass_from');
-/* @deprecated */
-define('AUTH_FORGETPASS_SET_FORM_FUNC', 'ForgetPassSet_from');
 define('AUTH_SERVER_ERROR', 2);
 
 define('AUTH_NOT_DONE', 100);
@@ -54,30 +50,30 @@ define('AUTH_FORGETPASS_CODE_WRONG', 406);
 define('AUTH_FORGETPASS_YOUR_BOT', 407);
 define('AUTH_FORGETPASS_CODE_OK', 408);
 
-define('AUTH_CHANGESETTING_DATA', 500);
-define('AUTH_CHANGESETTING_DATA_FAIL', 500.10);
-define('AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH', 500.11);
-define('AUTH_CHANGESETTING_DATA_OK_EMAIL', 500.20);
-define('AUTH_CHANGESETTING_DATA_OK', 500.21);
+define('AUTH_CHANGESETTING_DATA_FAIL', 500);
+define('AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH', 501);
+define('AUTH_CHANGESETTING_DATA_OK_EMAIL', 502);
+define('AUTH_CHANGESETTING_DATA_OK', 503);
+define('AUTH_CHANGESETTING_DATA_FAIL_EMPTY', 504);
 
-define('AUTH_CHANGESETTING_PASS', 501);
-define('AUTH_CHANGESETTING_PASS_OK', 501.10);
-define('AUTH_CHANGESETTING_PASS_FAIL', 501.20);
-define('AUTH_CHANGESETTING_PASS_FAIL_EMPTY', 501.21);
-define('AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH', 501.22);
-define('AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG', 501.23);
-define('AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG', 501.24);
+define('AUTH_CHANGESETTING_PASS_OK', 510);
+define('AUTH_CHANGESETTING_PASS_FAIL', 511);
+define('AUTH_CHANGESETTING_PASS_FAIL_EMPTY', 512);
+define('AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH', 513);
+define('AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG', 514);
+define('AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG', 515);
 
-define('AUTH_CHANGESETTING_2FA', 502);
-define('AUTH_CHANGESETTING_2FA_LOGON', 502.10);
-define('AUTH_CHANGESETTING_2FA_CHECK_CODE', 503);
-define('AUTH_CHANGESETTING_2FA_CHECK_CODE_OK', 503.10);
-define('AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL', 503.20);
-define('AUTH_CHANGESETTING_2FA_OFF_OK', 504);
-define('AUTH_CHANGESETTING_2FA_OFF_FAIL', 504.10);
-define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE', 505);
-define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK', 505.10);
-define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 505.20);
+/* @deprecated */
+define('AUTH_CHANGESETTING_2FA', 520);
+define('AUTH_CHANGESETTING_2FA_LOGON', 521);
+define('AUTH_CHANGESETTING_2FA_CHECK_CODE', 522);
+define('AUTH_CHANGESETTING_2FA_CHECK_CODE_OK', 523);
+define('AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL', 524);
+define('AUTH_CHANGESETTING_2FA_OFF_OK', 525);
+define('AUTH_CHANGESETTING_2FA_OFF_FAIL', 526);
+define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE', 527);
+define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK', 528);
+define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 529);
 
 /**
  * Class MyAuth
@@ -89,6 +85,12 @@ class MyAuth {
     private string $CookiesPath = '/';
     public bool $islogin = false; //is login?
     public ?mysqli $sqlcon = null;
+
+    /**
+     * 用戶資料
+     * [UUID, Email, Activate, Name, Role, Language, TrueToke, ALLData]
+     * @var array|null 用戶資料
+     */
     public ?array $userdata = null;
 
     //sql setting
@@ -326,7 +328,7 @@ class MyAuth {
         if ($remember_me) {
             setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
             setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-        }else{
+        } else {
             setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
 
         }
@@ -394,7 +396,7 @@ class MyAuth {
         /* 檢查最後登入ip */
         if ($userdata[$this->sqlsetting_User['Last_IP_col']] != $_SERVER['REMOTE_ADDR']) {
             /* 創建連接 */
-            $code = md5((MyAuth . phpGenerate_Code()));
+            $code = md5($this->Generate_Code());
             $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Block_login_code['table']} ({$this->sqlsetting_Block_login_code['Toke']}, {$this->sqlsetting_Block_login_code['code']}, {$this->sqlsetting_Block_login_code['time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
             $stmt->bind_param("ss", $toke, $code);
             if (!$stmt->execute()) return false;
@@ -734,17 +736,13 @@ class MyAuth {
      * @return int 處理狀態
      */
     function register(string $Name, string $Cpass, string $Pass, string $Email, string $localCode, string $recaptcha, string $recaptcha_key, string $RSAKey = null): int {
-
-        //不能留空
-        if (empty($Cpass) || empty($Name) || empty($Pass) || empty($Email) || empty($recaptcha)) return AUTH_REGISTER_EMPTY;
-
         /* 檢查是否機械人 */
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret={$recaptcha_key}&response={$recaptcha}"); //will add ip
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=$recaptcha_key&response=$recaptcha"); //will add ip
         $output = curl_exec($curl);
         $json = json_decode($output);
         //print_r($json);
@@ -757,6 +755,9 @@ class MyAuth {
             //解密失敗
             if (!($dePass && $deCpass)) return AUTH_REGISTER_PASS_NOT_MATCH;
         }
+
+        //不能留空
+        if (empty($Cpass) || empty($Name) || empty($Pass) || empty($Email) || empty($recaptcha)) return AUTH_REGISTER_EMPTY;
 
         /* 消毒 */
         $email = filter_var(trim($Email), FILTER_SANITIZE_EMAIL);
@@ -783,7 +784,7 @@ class MyAuth {
         if (!preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_REGISTER_EMAIL_WRONG_FORMAT;
 
         /* 產生啟動序號 */
-        $ActivatedCode = Generate_Code(16);
+        $ActivatedCode = $this->Generate_Code(16);
 
         /* 增值資料 & 檢查電郵衝突 & 取得UUID*/
         $stmt = $this->sqlcon->prepare("SET @uuid = UUID();"); //設置UUID
@@ -844,16 +845,112 @@ class MyAuth {
     }
 
     /**
+     * 更改個人檔案<br/>
+     * 改資料
+     * @param string $email 新電郵地址
+     * @param string $name 新用戶名稱
+     * @param string $lang 新語言設定
+     * @return int 狀態
+     */
+    public function changeDataSetting(string $email, string $name, string $lang): int {
+        /* 消毒 */
+        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+        $name = filter_var(trim($name), FILTER_SANITIZE_STRING);
+        $lang = filter_var(trim($lang), FILTER_SANITIZE_STRING);
+
+        /* 未定義/空值檢查 */
+        if (empty($name) || empty($email) || empty($lang)) return AUTH_CHANGESETTING_DATA_FAIL_EMPTY;
+
+        /* 檢查是否符合限制 */
+        if (strlen($name) > 16 || !preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH;
+
+        /* 檢查電郵是否更改 */
+        if ($email != $this->userdata['Email']) {
+            /* 更改電郵 */
+            /* 產生啟動序號 */
+            $ActivatedCode = $this->Generate_Code(16);
+
+            /* 修改資料 */
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Name_col']} = ?, {$this->sqlsetting_User['Email_col']} = ?, {$this->sqlsetting_User['activated_col']} = false, {$this->sqlsetting_User['activated_code_col']} = ?, {$this->sqlsetting_User['Language_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+            $stmt->bind_param("sssss", $name, $email, $ActivatedCode, $lang, $_SESSION['UUID']);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_DATA_FAIL;
+            $stmt->close();
+
+            /* 更新user data */
+            $this->userdata['Email'] = $email;
+            $this->userdata['Name'] = $name;
+            $this->userdata['Language'] = $lang;
+
+            //Send Mail
+            $this->run_Hook('acc_changeSetting_data', $_SESSION['UUID'], $email, $ActivatedCode, $name, $this->sqlcon); //執行Hook
+            return AUTH_CHANGESETTING_DATA_OK_EMAIL;
+        } else {
+            /* Only修改名稱 */
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Name_col']} = ?, {$this->sqlsetting_User['Language_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+            $stmt->bind_param("sss", $name, $lang, $_SESSION['UUID']);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_DATA_FAIL;
+            $stmt->close();
+
+            /* 更新user data */
+            $this->userdata['Name'] = $name;
+            $this->userdata['Language'] = $lang;
+            return AUTH_CHANGESETTING_DATA_OK;
+        }
+    }
+
+    /**
+     * 更改個人檔案<br/>
+     * 換密碼
+     * @param string $OldPass 舊密碼
+     * @param string $NewPass 新密碼
+     * @param string $NewCPass 確認新密碼
+     * @param string|null $RSAKey RSA加密
+     * @return int 狀態
+     */
+    public function changePasswordSetting(string $OldPass, string $NewPass, string $NewCPass, string $RSAKey = null): int {
+        /* 解密 */
+        if ($RSAKey != null) {
+            $pi_key = openssl_pkey_get_private($RSAKey);
+            $deNewPass = openssl_private_decrypt(base64_decode($NewPass), $NewPass, $pi_key);
+            $deNewCPass = openssl_private_decrypt(base64_decode($NewCPass), $NewCPass, $pi_key);
+            $deOldPass = openssl_private_decrypt(base64_decode($OldPass), $OldPass, $pi_key);
+            if (!($deNewPass && $deNewCPass && $deOldPass)) return AUTH_CHANGESETTING_PASS_FAIL;
+        }
+
+        //不能空白
+        if (empty($OldPass) || empty($NewPass) || empty($NewCPass)) return AUTH_CHANGESETTING_PASS_FAIL_EMPTY;
+
+        /* 消毒 */
+        $OldPass = filter_var(trim($OldPass), FILTER_SANITIZE_STRING);
+        $NewCPass = filter_var(trim($NewCPass), FILTER_SANITIZE_STRING);
+        $NewPass = filter_var(trim($NewPass), FILTER_SANITIZE_STRING);
+
+        //檢查密碼是否一樣
+        if ($NewPass != $NewCPass) return AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH;
+
+        //判斷密碼強度
+        if (!preg_match("/(?=.*?[A-Z])(?=.*?[a-z])/", $NewCPass) || strlen($NewCPass) < 8 ||
+            $this->userdata['Name'] == $NewCPass || $this->userdata['Email'] == $NewCPass) return AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG;
+
+        /* 加密 */
+        $password = 'Gblacklist' . $NewCPass;
+        $password = hash('sha512', md5($password));
+        $OLDpassword = 'Gblacklist' . $OldPass;
+        $OLDpassword = hash('sha512', md5($OLDpassword));
+
+        //舊密碼是否正確
+        if ($OLDpassword != $this->userdata['ALLData'][$this->sqlsetting_User['Password_col']]) return AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG;
+
+        /* 修改資料 */
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+        $stmt->bind_param('ss', $password, $_SESSION['UUID']);
+        if (!$stmt->execute()) return AUTH_CHANGESETTING_PASS_FAIL;
+
+        return AUTH_CHANGESETTING_PASS_OK; //成功
+    }
+
+    /**
      *更改個人檔案<br/>
-     * **$data參數輸入資料array key:**
-     * + AUTH_CHANGESETTING_DATA  *改資料*
-     *      + Name -> 用戶名稱
-     *      + Email -> 電郵地址
-     *      + Lang -> 語言
-     * + AUTH_CHANGESETTING_PASS  *換密碼(直接輸入加密資料)*
-     *      + NewPass -> 新密碼
-     *      + ConfirmPass -> 確認新密碼
-     *      + OldPass -> 舊密碼
      * + AUTH_CHANGESETTING_2FA  *2FA開啟關閉*
      *      + 2FAto -> 更改2FA狀態  *true: 開啟, false: 關閉*
      * + AUTH_CHANGESETTING_2FA_CHECK_CODE  *2FA檢查代碼是否正確*
@@ -865,107 +962,7 @@ class MyAuth {
      * @return array 狀態
      */
     function changeSetting(int $type, array $data, bool $RSAon = true): ?array {
-
-        /* 修改資料 */
-        if ($type === AUTH_CHANGESETTING_DATA) {
-
-            /* 消毒 */
-            $data['Email'] = filter_var(trim($data['Email']), FILTER_SANITIZE_EMAIL);
-            $data['Name'] = filter_var(trim($data['Name']), FILTER_SANITIZE_STRING);
-            $data['Lang'] = filter_var(trim($data['Lang']), FILTER_SANITIZE_STRING);
-
-            /* 未定義/空值檢查 */
-            if (empty($data['Name']) || empty($data['Email']) || empty($data['Lang'])) {
-                return array(AUTH_CHANGESETTING_DATA_FAIL);
-            }
-
-            /* 檢查電郵是否更改 */
-            if (strlen($data['Name']) > 16 || !preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $data['Email'])) {
-                return array(AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH);
-            } else
-                if ($data['Email'] !== $this->userdata[$this->sqlsetting_User['Email_col']]) {
-
-                    /* 更改電郵 */
-                    /* 產生啟動序號 */
-                    $ActivatedCode = Generate_Code(16);
-
-                    /* 修改資料 */
-                    $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Name_col']} = ?, {$this->sqlsetting_User['Email_col']} = ?, {$this->sqlsetting_User['activated_col']} = false, {$this->sqlsetting_User['activated_code_col']} = ?, {$this->sqlsetting_User['Language_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-                    $stmt->bind_param("sssss", $data['Name'], $data['Email'], $ActivatedCode, $data['Lang'], $_SESSION['UUID']);
-                    if (!$stmt->execute()) {
-                        $stmt->close();
-                        return array(AUTH_CHANGESETTING_DATA_FAIL);
-                    }
-                    $stmt->close();
-
-                    //Send Mail
-                    $this->run_Hook('acc_changeSetting_data', $_SESSION['UUID'], $data['Email'], $ActivatedCode, $data['Name'], $this->sqlcon); //執行Hook
-                    return array(AUTH_CHANGESETTING_DATA_OK_EMAIL, $data['Name']);
-
-                } else {
-
-                    /* Only修改名稱 */
-                    $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Name_col']} = ?, {$this->sqlsetting_User['Language_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-                    $stmt->bind_param("sss", $data['Name'], $data['Lang'], $_SESSION['UUID']);
-                    if (!$stmt->execute()) {
-                        $stmt->close();
-                        return array(AUTH_CHANGESETTING_DATA_FAIL);
-                    }
-                    $stmt->close();
-                    return array(AUTH_CHANGESETTING_DATA_OK, $data['Name']);
-                }
-
-        } elseif ($type === AUTH_CHANGESETTING_PASS) {
-            if ((!empty($data['NewPass']) && !empty($data['ConfirmPass'])) && !empty($data['OldPass'])) { ////不能留空
-
-                /* 解密 */
-                $pi_key = openssl_pkey_get_private($_SESSION['pvKey']);
-                if ((openssl_private_decrypt(base64_decode($data['NewPass']), $data['NewPass'], $pi_key) && //解密
-                        openssl_private_decrypt(base64_decode($data['ConfirmPass']), $data['ConfirmPass'], $pi_key) &&
-                        openssl_private_decrypt(base64_decode($data['OldPass']), $data['OldPass'], $pi_key)) || !$RSAon) {
-
-                    /* 消毒 */
-                    $data['OldPass'] = filter_var(trim($data['OldPass']), FILTER_SANITIZE_STRING);
-                    $data['ConfirmPass'] = filter_var(trim($data['ConfirmPass']), FILTER_SANITIZE_STRING);
-                    $data['NewPass'] = filter_var(trim($data['NewPass']), FILTER_SANITIZE_STRING);
-
-                    if ($data['NewPass'] === $data['ConfirmPass']) { //檢查密碼是否一樣
-                        //判斷密碼強度
-                        if (preg_match("/(?=.*?[A-Z])(?=.*?[a-z])/", $data['ConfirmPass']) && strlen($data['ConfirmPass']) >= 8 && $this->userdata[$this->sqlsetting_User['Name_col']] !== $data['ConfirmPass'] && $this->userdata[$this->sqlsetting_User['Email_col']] !== $data['ConfirmPass']) {
-
-                            /* 加密 */
-                            $password = 'Gblacklist' . $data['ConfirmPass'];
-                            $password = hash('sha512', md5($password));
-                            $OLDpassword = 'Gblacklist' . $data['OldPass'];
-                            $OLDpassword = hash('sha512', md5($OLDpassword));
-
-                            if ($OLDpassword == $this->userdata['ALLData'][$this->sqlsetting_User['Password_col']]) {
-                                /* 修改資料 */
-                                $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-                                $stmt->bind_param('ss', $password, $_SESSION['UUID']);
-                                if (!$stmt->execute()) {
-                                    $stmt->close();
-                                    return array(AUTH_CHANGESETTING_PASS_FAIL);
-                                }
-
-                                return array(AUTH_CHANGESETTING_PASS_OK); //成功
-                            } else {
-                                return array(AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG);
-                            }
-                        } else {
-                            return array(AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG);
-                        }
-                    } else {
-                        return array(AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH);
-                    }
-                } else {
-                    return array(AUTH_CHANGESETTING_PASS_FAIL);
-                }
-            } else {
-                return array(AUTH_CHANGESETTING_PASS_FAIL_EMPTY);
-            }
-
-        } elseif ($type === AUTH_CHANGESETTING_2FA) {
+        if ($type === AUTH_CHANGESETTING_2FA) {
 
             try {
                 $qrProvider = new BaconQrCodeProvider();
@@ -1088,9 +1085,9 @@ class MyAuth {
         if ($userdata[$this->sqlsetting_Forgetpass['Code']] != $code[1] || $userdata[$this->sqlsetting_Forgetpass['Last_time']] > 3600) return AUTH_FORGETPASS_CODE_WRONG;
 
         /* 移除條目 */
-        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
-        $stmt->bind_param('s', $code[0]);
-        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+//        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
+//        $stmt->bind_param('s', $code[0]);
+//        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
         /* 回饋成功 */
         $_SESSION['Auth']['uuid'] = $code[0];
@@ -1114,7 +1111,7 @@ class MyAuth {
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret={$recaptcha_key}&response={$recaptcha}"); //will add ip
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "secret=$recaptcha_key&response=$recaptcha"); //will add ip
         $output = curl_exec($curl);
         $json = json_decode($output);
         //print_r($json);
@@ -1138,7 +1135,7 @@ class MyAuth {
         if (mysqli_num_rows($result) < 1) return AUTH_FORGETPASS_EMAIL_FAIL;
 
         /* 寄送確認 */
-        $code = Generate_Code();
+        $code = $this->Generate_Code();
 
         /* 插入數據 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_Forgetpass['table']} ({$this->sqlsetting_Forgetpass['UUID']}, {$this->sqlsetting_Forgetpass['Code']}, {$this->sqlsetting_Forgetpass['Last_time']}) VALUES (?, ?, UNIX_TIMESTAMP())");
@@ -1146,6 +1143,7 @@ class MyAuth {
         if (!$stmt->execute()) {
             $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_Forgetpass['table']} SET {$this->sqlsetting_Forgetpass['Code']} = ?, {$this->sqlsetting_Forgetpass['Last_time']} = UNIX_TIMESTAMP() WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?");
             $stmt->bind_param("ss", $code, $userdata[$this->sqlsetting_User['UUID_col']]);
+            if (!$stmt->execute()) return AUTH_SERVER_ERROR;
         }
         $stmt->close();
 
@@ -1157,21 +1155,22 @@ class MyAuth {
      * 更改忘記密碼
      * @param string $pass 密碼
      * @param string $Cpass 確認密碼
-     * @param bool $RSAon 是否使用了RSA加密
+     * @param string|null $RSAKey RSA加密
+     * @return int
      */
-    function ForgetPass_set(string $pass, string $Cpass, bool $RSAon = false): int {
+    function ForgetPass_set(string $pass, string $Cpass, string $RSAKey = null): int {
         /* 進入判斷程序 */
 
-        //不能留空
-        if (empty($Cpass) || empty($pass)) return AUTH_FORGETPASS_EMPTY;
-
         /* 解密 */
-        if ($RSAon) {
-            $pi_key = openssl_pkey_get_private($_SESSION['pvKey']);
+        if ($RSAKey != null) {
+            $pi_key = openssl_pkey_get_private($RSAKey);
             $dePass = openssl_private_decrypt(base64_decode($pass), $pass, $pi_key);
             $deCpass = openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
             if (!($dePass && $deCpass)) return AUTH_FORGETPASS_PASS_NOT_MATCH;
         }
+
+        //不能留空
+        if (empty($Cpass) || empty($pass)) return AUTH_FORGETPASS_EMPTY;
 
         /* 消毒 */
         $pass = filter_var(trim($pass), FILTER_SANITIZE_STRING);
@@ -1181,7 +1180,7 @@ class MyAuth {
         if ($pass != $Cpass) return AUTH_FORGETPASS_PASS_NOT_MATCH;
 
         /* 先取得資料 */
-        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->$sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Email_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
         $stmt->bind_param('s', $_SESSION['Auth']['uuid']);
         if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 

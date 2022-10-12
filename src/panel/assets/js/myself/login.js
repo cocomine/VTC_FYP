@@ -8,11 +8,10 @@ define(['forge', 'jquery'], function (forge) {
 
     /* 遞交表單 */
     $('form').submit(async function (e) {
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented()  && this.checkValidity()) {
             e.preventDefault();
             e.stopPropagation();
             const data = $(this).serializeObject();
-            console.log(data);
 
             /* 封鎖按鈕 */
             const bt = $('#form_submit');

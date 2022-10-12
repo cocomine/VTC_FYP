@@ -79,15 +79,19 @@
             "hideMethod": "slideUp"
         };
 
+        /* 自動跳轉登入前url */
         const returnPath = sessionStorage.getItem('returnPath');
         if(returnPath !== null) {
             ajex.ajexLoad(returnPath);
             sessionStorage.removeItem('returnPath');
         }
         else ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+
+        /* 註冊全景參數 */
         window.ajexLoad = ajex.ajexLoad;
         window.loadModules = ajex.loadModules;
 
+        /* loading畫面 */
         $(window).on('load', function() {
             $('#preloader').fadeOut('slow', function() { $(this).remove(); });
         });

@@ -11,7 +11,7 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
 
     /* 遞交表單 */
     $('#EmailStep').submit(function (e) {
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented() && this.checkValidity()) {
             e.preventDefault();
             e.stopPropagation();
             const data = $(this).serializeObject();
@@ -66,12 +66,6 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
             e.stopPropagation();
             const data = $(this).serializeObject();
 
-            /* 密碼必須一樣 */
-            /*if(data.password !== data.password2){
-                $('#Password2').removeClass('is-valid').addClass('is-invalid');
-                return;
-            }*/
-
             /* 封鎖按鈕 */
             const bt = $('#form_submit');
             const html = bt.html();
@@ -112,8 +106,18 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
         }
     })
 
+    /* 檢查限制 */
+    $('#Password, #Password2').on("input focus", function () {
+        const Pass = $('#Password');
+        const CPass = $('#Password2');
+
+        /* 密碼必須一樣 */
+        if (Pass.val() !== CPass.val()) CPass[0].setCustomValidity('error');
+        else CPass[0].setCustomValidity('');
+    })
+
     /* 密碼強度 */
-    $('#Password').on("input focus ready", function () {
+    $('#Password').on("input focus", function () {
         const val = $('#Password').val();
         const result = zxcvbn(val).score;
         const pass = $('#passStrength');

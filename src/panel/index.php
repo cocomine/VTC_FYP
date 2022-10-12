@@ -11,7 +11,6 @@
  * Time: 下午 9:03
  */
 
-use cocomine\API\notifyAPI;
 use cocomine\MyAuth;
 use panel\page\home;
 
@@ -114,7 +113,19 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             if ($access == 200) {
                 //頁面輸出
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    echo json_encode($page->post());
+                    $data = json_decode(file_get_contents("php://input"), true);
+
+                    //無法解釋json
+                    if ($data == null) {
+                        http_response_code(500);
+                        echo json_encode(array(
+                            'code' => 500,
+                            'Message' => showText('Error')
+                        ));
+                        exit();
+                    }
+
+                    echo json_encode($page->post($data));
                 } else {
                     echo json_encode(array(
                         'title' => $page->get_Title(),
@@ -255,7 +266,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                      src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
                                      alt="avatar">
                                 <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                    <?php echo $auth->userdata['Name'] ?><i class="fa fa-angle-down"></i>
+                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor')?></span><i class="fa fa-angle-down"></i>
                                 </h4>
                                 <div class="dropdown-menu">
 
@@ -263,9 +274,17 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                     <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
                                         <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                     </a>
-                                    <a class="dropdown-item g_id_signout" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/login?logout=1">
-                                        <i class="fa fa-sign-out pr--10"></i><?php echo showText("index.Logout") ?>
-                                    </a>
+                                    <?php
+                                        if($auth->islogin){
+                                            echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
+                                                    <i class='fa fa-sign-out pr--10'></i>".showText('index.Logout').
+                                                "</a>";
+                                        }else{
+                                            echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
+                                                    <i class='fa fa-sign-in pr--10'></i>".showText('index.Login').
+                                                "</a>";
+                                        }
+                                    ?>
                                 </div>
 
                             </div>
@@ -278,7 +297,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             <!-- Broadcast -->
             <!--<div class="alert-dismiss" id="Broadcast">
             <?php
-            /*            $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
+            /*          $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
                         $stmt = $auth->sqlcon->prepare('SELECT ID, Msg, status, Always_close FROM Broadcast WHERE Broadcast = TRUE ORDER BY Time');
                         if (!$stmt->execute()) {
                             echo "<div class='alert alert-info alert-dismissible fade show' role='alert'>
@@ -317,32 +336,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                 echo $bc;
                             }
                         }
-                        */ ?>
-        </div>-->
+                        */
+            ?>
+            </div>-->
 
             <!-- Main area start -->
             <div class="main-content-inner">
 
                 <!-- Main content-->
                 <div class="row" id="content">
-
-                    <div class='col-12 mt-4'>
-                        <div class="row gy-4 gx-0 m-0">
-                            <div class='col-12'>
-                                <div class="card">
-                                    <div class='card-body'>
-                                        <div class="row justify-content-center">
-                                            <div class="col-auto">
-                                                <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_kcsr6fcp.json" background="transparent" speed="1" style="width: 500px; height: 250px;" loop autoplay></lottie-player>
-                                            </div>
-                                            <div class="w-100"></div>
-                                            <h2 class="col-auto">dfsdf</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Loading Card-->
                     <div class='col-8 mt-4'>

@@ -78,7 +78,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#path').html(data.path);
                 $('#content').html(data.content)
 
-                $(document).trigger('ready');
+                $(window).trigger('ready');
                 if(putState) window.history.pushState({url: link}, data.title, link);
             },
             error: (xhr, textStatus) => {

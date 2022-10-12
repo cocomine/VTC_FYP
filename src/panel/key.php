@@ -18,7 +18,6 @@ $pubKey = openssl_pkey_get_details($res);
 $pubKey = $pubKey["key"];
 
 session_start();
-unset($_SESSION['pvKey']);
 $_SESSION['pvKey'] = $privKey;
 header('Content-Type: text/text; charset=UTF-8');
 echo $pubKey;

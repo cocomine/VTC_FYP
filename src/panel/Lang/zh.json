@@ -14,7 +14,9 @@
       "title": "首頁 | IVE airline",
       "Console": "控制台",
       "home": "首頁",
-      "Logout": "登出"
+      "Logout": "登出",
+      "Login": "登入",
+      "visitor": "訪客"
     },
     "ChangeSetting": {
       "title": "設定 | IVE airline",
@@ -83,7 +85,20 @@
           "download": "保存安全代碼"
         }
       },
-      "AUTH_CHANGESETTING_2FA_OFF_OK": "已經成功重設啦ヾ(^▽^*)))",
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔~~",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~",
+        "Match_Old_Pass": "要與舊密碼不相同喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ],
+      "AUTH_CHANGESETTING_2FA_OFF_OK": ["已經成功重設啦ヾ(^▽^*)))"],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "重設失敗(┬┬﹏┬┬) 請重試~~",
         "若果情況持續請聯絡客服人員"
@@ -104,7 +119,7 @@
         "成功修改ヾ(^▽^*)))",
         "<b>最後一步!</b> 快點到你的郵箱查看吧!"
       ],
-      "AUTH_CHANGESETTING_DATA_OK": "成功修改ヾ(^▽^*)))",
+      "AUTH_CHANGESETTING_DATA_OK": ["成功修改ヾ(^▽^*)))"],
       "AUTH_CHANGESETTING_DATA_FAIL": [
         "修改失敗(┬┬﹏┬┬) 請重試~~",
         "若情況持續請聯絡客服人員"
@@ -270,7 +285,8 @@
       "Where_you_go": "等等! 你去哪裏了!",
       "500_title": "死火啦! | IVE airline",
       "something_happened": "哎吔! 死火啦! 出事喇!",
-      "GoBack": "回去吧"
+      "GoBack": "回去吧",
+      "400_title": "請求出現問題!"
     },
     "Block_login": {
       "title": "封鎖登入",

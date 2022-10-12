@@ -44,7 +44,7 @@ class home implements IPage
     }
 
     /* POST請求 */
-    function post():array{
+    function post(array $data):array{
         return array();
     }
 
