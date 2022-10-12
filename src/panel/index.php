@@ -73,11 +73,11 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                     'content' => $homePage->showPage()
                 ));
             }
-        } else if($access == 403){
+        } else if ($access == 403) {
             //沒有權限
             http_response_code(403);
             echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
-        }else if($access == 401){
+        } else if ($access == 401) {
             //需要登入
             http_response_code(401);
             echo json_encode(array('code' => 401, 'path' => './login'));
@@ -134,11 +134,11 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                         'content' => $page->showPage()
                     ));
                 }
-            } else if($access == 403){
+            } else if ($access == 403) {
                 //沒有權限
                 http_response_code(403);
                 echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
-            }else if($access == 401){
+            } else if ($access == 401) {
                 //需要登入
                 http_response_code(401);
                 echo json_encode(array('code' => 401, 'path' => './login'));
@@ -210,42 +210,42 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         <!-- main content area start -->
         <div class="main-content">
 
-            <!-- header area start -->
-            <div class="header-area">
-                <div class="row align-items-center">
+            <div class="sticky-top">
+                <!-- header area start -->
+                <div class="header-area">
+                    <div class="row align-items-center">
 
-                    <!-- left content-->
-                    <div class="col-md-6 col-sm-8 clearfix">
-                        <div class="nav-btn fa-pull-left">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                        <!-- left content-->
+                        <div class="col-md-6 col-sm-8 clearfix">
+                            <div class="nav-btn fa-pull-left">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <!-- right content-->
+                        <div class="col-md-6 col-sm-4 clearfix">
+                            <ul class="notification-area fa-pull-right">
+
+                                <!-- notify -->
+                                <li class="dropdown">
+                                    <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                    <div class="dropdown-menu bell-notify-box notify-box">
+                                        <span class="notify-title">通知</span>
+                                        <div class="nofity-list" id="notify">
+                                            <!-- notify-item -->
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
                         </div>
                     </div>
-
-                    <!-- right content-->
-                    <div class="col-md-6 col-sm-4 clearfix">
-                        <ul class="notification-area fa-pull-right">
-
-                            <!-- notify -->
-                            <li class="dropdown">
-                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title">通知</span>
-                                    <div class="nofity-list" id="notify">
-                                        <!-- notify-item -->
-                                    </div>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </div>
                 </div>
-            </div>
-            <!-- header area end -->
+                <!-- header area end -->
 
-            <!-- page title area start -->
-            <div class="sticky-top">
+                <!-- page title area start -->
                 <div class="page-title-area">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
@@ -266,7 +266,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                      src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
                                      alt="avatar">
                                 <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor')?></span><i class="fa fa-angle-down"></i>
+                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
                                 </h4>
                                 <div class="dropdown-menu">
 
@@ -275,15 +275,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                                         <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                     </a>
                                     <?php
-                                        if($auth->islogin){
-                                            echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
-                                                    <i class='fa fa-sign-out pr--10'></i>".showText('index.Logout').
-                                                "</a>";
-                                        }else{
-                                            echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
-                                                    <i class='fa fa-sign-in pr--10'></i>".showText('index.Login').
-                                                "</a>";
-                                        }
+                                    if ($auth->islogin) {
+                                        echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
+                                                    <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
+                                            "</a>";
+                                    } else {
+                                        echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
+                                                    <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
+                                            "</a>";
+                                    }
                                     ?>
                                 </div>
 
@@ -432,9 +432,9 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                 <!-- language translate -->
                 <pre style="display: none" id="globalLang">
                     <?php
-                        echo json_encode(array(
-                                'Error' => showText('Error')
-                        ))
+                    echo json_encode(array(
+                        'Error' => showText('Error')
+                    ))
                     ?>
                 </pre>
 

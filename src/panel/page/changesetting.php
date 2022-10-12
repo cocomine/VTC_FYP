@@ -8,6 +8,7 @@ namespace panel\page;
 
 use cocomine\IPage;
 use mysqli;
+use RobThree\Auth\TwoFactorAuthException;
 
 /**
  * Class changesetting
@@ -138,7 +139,7 @@ class changesetting implements IPage {
                     <div class='card'>
                         <div class='card-body'>
                             <h1 class='header-title'>{$Text['Pass']['Pass']}</h1>
-                            <form id='PassSet' novalidate class=''>
+                            <form id='PassSet' novalidate class='needs-validation'>
                                 <div class='col-12'>
                                     <label for='Old_Pass' class='col-form-label'>{$Text['Pass']['OldPass']}</label>
                                     <input class='form-control input-rounded' type='password' id='Old_Pass' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='passwordOld' autocomplete='current-password' required>
@@ -184,7 +185,7 @@ class changesetting implements IPage {
                             <h1 class='header-title'>{$Text['2FA']['title']}</h1>
                             $TwoFA
                             <!-- 登記表單 -->
-                            <div id='TwoFA_register' class='modal fade'>
+                            <div id='TwoFA_register' class='modal fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1'>
                                 <div class='modal-dialog modal-lg'>
                                     <div class='modal-content'>
                                         <div class='modal-header'>
@@ -192,8 +193,7 @@ class changesetting implements IPage {
                                         </div>
                                         <div class='modal-body'>
                                             <p>{$Text['2FA']['2FA_register_modal']['body'][0]}</p>
-                                            <div class='row justify-content-center'>
-                                                <img src='' id='qr' alt='loading' class='visually-hidden'>
+                                            <div class='row justify-content-center g-0' id='qr'>
                                                 <lottie-player src='https://assets1.lottiefiles.com/packages/lf20_a2chheio.json'  background='transparent'  speed='1'  style='width: 300px; height: 300px;'  loop  autoplay></lottie-player>
                                             </div>
                                             <p>{$Text['2FA']['2FA_register_modal']['body'][1]}</p>
@@ -205,10 +205,11 @@ class changesetting implements IPage {
                                                 <div class='col-12'>
                                                     <label for='2FA_Code' class='col-form-label'>{$Text['2FA']['2FA_register_modal']['Enter_code']}</label>
                                                     <input class='form-control input-rounded' type='text' pattern='[0-9]{6}' id='2FA_Code' name='TwoFA_Code' autocomplete='off' required maxlength='6' inputmode='numeric'>
-                                                 </div>
+                                                    <div class='invalid-feedback'>{$Text['Form']['Only_number']}</div>
+                                                </div>
                                             </div>
                                             <div class='modal-footer'>
-                                                <button type='button' class='btn btn-rounded btn-secondary' data-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['2FA_register_modal']['No']}</button>
+                                                <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['2FA_register_modal']['No']}</button>
                                                 <button type='submit' class='btn btn-rounded btn-primary' disabled><i class='fa fa-check pe-2'></i>{$Text['2FA']['2FA_register_modal']['Enable']}</button>
                                             </div>
                                         </form>
@@ -276,10 +277,7 @@ class changesetting implements IPage {
                 </script>";
     }
 
-    /**
-     * 回傳表單資料
-     * @return array 彈出窗口
-     */
+    /* 回傳表單資料 */
     function post(array $data): array {
         global $auth;
 
@@ -307,73 +305,41 @@ class changesetting implements IPage {
             );
         }
         if ($_GET['type'] == '2FASet') {
-            $puKey = filter_var($data->puKey, FILTER_SANITIZE_STRING);;
-            if ($data->DoAction == 'open') {
-                $data = array(
-                    '2FAto' => true,
-                );
-            } else {
-                $data = array(
-                    '2FAto' => false,
-                );
-            }
-
-            $status = $auth->changeSetting(AUTH_CHANGESETTING_2FA, $data);
-            if ($status[0] == AUTH_CHANGESETTING_2FA_LOGON) {
-                $secret = wordwrap($status[1], 4, ' ', true); //分割
+            $puKey = filter_var($data['puKey'], FILTER_SANITIZE_STRING);;
+            $status = $auth->change2FASetting($data['DoAction']);
+            if ($status == AUTH_CHANGESETTING_2FA_LOGON) {
+                $twoFA = $auth->getTwoFA();
 
                 /* 加密 */
                 $piKey = openssl_pkey_get_public($puKey);
-                $qr = base64_encode($status[2]);
-                openssl_public_encrypt($secret, $secret, $piKey);
+                $qr = base64_encode($twoFA->getQRCode($auth->userdata['Name']));
+                openssl_public_encrypt($twoFA->getSecret(), $secret, $piKey);
                 $code = base64_encode($secret);
 
-                $Output = array(
-                    'QRcode' => $qr,
-                    'code' => $code
+                return array(
+                    'code' => $status,
+                    'Title' => $this->ResultMsg($status)[0],
+                    'Message' => $this->ResultMsg($status)[1],
+                    'Data' => array(
+                        'secret' => $code,
+                        'qr' => $qr
+                    )
+                );
+            }else{
+                return array(
+                    'code' => $status,
+                    'Title' => $this->ResultMsg($status)[0],
+                    'Message' => $this->ResultMsg($status)[1],
                 );
             }
-            if ($status[0] == AUTH_CHANGESETTING_2FA_OFF_OK) {
-                $Output = array(
-                    'script' => "$('#TwoFA_confirm_off').modal('hide');",
-                    'status' => 'Success',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_OK")
-                );
-            }
-            if ($status[0] == AUTH_CHANGESETTING_2FA_OFF_FAIL) {
-                $Output = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_FAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_FAIL.1"),
-                );
-            }
-
-            return $Output;
         }
         if ($_GET['type'] == 'TwoFACheck') {
-            $data = array(
-                'code' => $data->TwoFA_Code
-            );
-
             $status = $auth->changeSetting(AUTH_CHANGESETTING_2FA_CHECK_CODE, $data);
-            if ($status[0] == AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL) {
-                $outPut = array(
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL.1"),
-                    'modal' => true,
-                    'script' => "ChangeSetting.bt_reset()"
-                );
-            }
-            if ($status[0] == AUTH_CHANGESETTING_2FA_CHECK_CODE_OK) {
-                $outPut = array(
-                    'script' => "$('#TwoFA_register').modal('hide');",
-                    'status' => 'Success',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_OK.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_OK.1"),
-                );
-            }
-            return $outPut;
+            return array(
+                'code' => $status,
+                'Title' => $this->ResultMsg($status)[0],
+                'Message' => $this->ResultMsg($status)[1],
+            );
         }
         if ($_GET['type'] == '2FABackupCode') {
             $status = $auth->changeSetting(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE, null);
@@ -431,6 +397,10 @@ class changesetting implements IPage {
                 return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG');
             case AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG:
                 return showText('ChangeSetting.AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG');
+            case AUTH_CHANGESETTING_2FA_OFF_FAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_FAIL');
+            case AUTH_CHANGESETTING_2FA_OFF_OK:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_OK');
             default:
                 return array('','');
         }

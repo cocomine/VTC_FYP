@@ -1,10 +1,10 @@
 {
-  "name" : "Global blacklist",
+  "name" : "IVE airline",
   "display" : "minimal-ui",
   "start_url" : "/panel/",
-  "short_name" : "Gblacklist",
+  "short_name" : "IVE airline",
   "theme_color" : "#ff7112",
-  "description" : "拒絕不良玩家",
+  "description" : "IVE airline",
   "background_color" : "#ff9e5b",
   "icons" : [
     {

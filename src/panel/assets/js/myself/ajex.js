@@ -78,7 +78,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#path').html(data.path);
                 $('#content').html(data.content)
 
-                $(window).trigger('ready');
+                window.dispatchEvent(new Event('load'));
                 if(putState) window.history.pushState({url: link}, data.title, link);
             },
             error: (xhr, textStatus) => {
@@ -100,6 +100,8 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             }
         });
     }
+
+    //todo:側邊activate
 
     const loadingPlaceholder = `
                     <div class='col-12 mt-4 col-md-8'>

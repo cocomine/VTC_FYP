@@ -83,8 +83,42 @@ class MyAuth {
 
     private string $ErrorFile = "";
     private string $CookiesPath = '/';
+    private TwoFA $twoFA;
+    private array $Hook_func = array();
+
+    /**
+     * 取得錯誤檔案路徑
+     * @return string 錯誤檔案路徑
+     */
+    public function getErrorFile(): string {
+        return $this->ErrorFile;
+    }
+
+    /**
+     * 取得cookie路徑
+     * @return string cookie路徑
+     */
+    public function getCookiesPath(): string {
+        return $this->CookiesPath;
+    }
+
+    /**
+     * 取得TwoFA
+     * @return TwoFA
+     */
+    public function getTwoFA(): TwoFA {
+        return $this->twoFA;
+    }
+
+    /**
+     * @var bool 是否已登入
+     */
     public bool $islogin = false; //is login?
-    public ?mysqli $sqlcon = null;
+
+    /**
+     * @var mysqli mysql連結
+     */
+    public mysqli $sqlcon;
 
     /**
      * 用戶資料
@@ -140,7 +174,6 @@ class MyAuth {
         'Toke' => 'Toke',
         'time' => 'time'
     );
-    private array $Hook_func = array();
 
     /**
      * Auth class 初始化
@@ -261,7 +294,7 @@ class MyAuth {
         /* 解密RSA */
         if ($RSAkey != null) {
             $pi_key = openssl_pkey_get_private($RSAkey);
-            $dePass = openssl_private_decrypt(base64_decode($password), $password, $pi_key);
+            $dePass = @openssl_private_decrypt(base64_decode($password), $password, $pi_key);
             if (!$dePass) {
                 $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
                 return AUTH_WRONG_PASS;
@@ -752,8 +785,8 @@ class MyAuth {
         /* 解密 */
         if ($RSAKey != null) {
             $pi_key = openssl_pkey_get_private($RSAKey);
-            $dePass = openssl_private_decrypt(base64_decode($Pass), $Pass, $pi_key);
-            $deCpass = openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
+            $dePass = @openssl_private_decrypt(base64_decode($Pass), $Pass, $pi_key);
+            $deCpass = @openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
             //解密失敗
             if (!($dePass && $deCpass)) return AUTH_REGISTER_PASS_NOT_MATCH;
         }
@@ -919,9 +952,9 @@ class MyAuth {
         /* 解密 */
         if ($RSAKey != null) {
             $pi_key = openssl_pkey_get_private($RSAKey);
-            $deNewPass = openssl_private_decrypt(base64_decode($NewPass), $NewPass, $pi_key);
-            $deNewCPass = openssl_private_decrypt(base64_decode($NewCPass), $NewCPass, $pi_key);
-            $deOldPass = openssl_private_decrypt(base64_decode($OldPass), $OldPass, $pi_key);
+            $deNewPass = @openssl_private_decrypt(base64_decode($NewPass), $NewPass, $pi_key);
+            $deNewCPass = @openssl_private_decrypt(base64_decode($NewCPass), $NewCPass, $pi_key);
+            $deOldPass = @openssl_private_decrypt(base64_decode($OldPass), $OldPass, $pi_key);
             if (!($deNewPass && $deNewCPass && $deOldPass)) return AUTH_CHANGESETTING_PASS_FAIL;
         }
 
@@ -952,10 +985,47 @@ class MyAuth {
 
         /* 修改資料 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ?, {$this->sqlsetting_User['Salt_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-        $stmt->bind_param('ss', $password, $salt, $_SESSION['UUID']);
+        $stmt->bind_param('sss', $password, $salt, $_SESSION['UUID']);
         if (!$stmt->execute()) return AUTH_CHANGESETTING_PASS_FAIL;
 
         return AUTH_CHANGESETTING_PASS_OK; //成功
+    }
+
+    /**
+     * 開關雙重驗證
+     * @param bool $turnOnOff 開啟或關閉
+     * @return int 狀態
+     */
+    public function change2FASetting(bool $turnOnOff): int {
+        require (__DIR__.'/TwoFA.php');
+        $this->twoFA = new TwoFA();
+
+        if ($turnOnOff) {
+            /* 啟動 */
+            $secret = $this->twoFA->getSecret();
+
+            /* 插入數據庫 */
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_secret_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+            $stmt->bind_param('ss', $secret, $this->userdata['UUID']);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_OFF_FAIL; //Fail
+
+            return AUTH_CHANGESETTING_2FA_LOGON;
+        } else {
+            /* 關閉 */
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_col']} = FALSE, {$this->sqlsetting_User['2FA_secret_col']} = NULL WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+            $stmt->bind_param('s', $this->userdata['UUID']);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_OFF_FAIL; //Fail
+            $stmt->close();
+
+            //刪除重設代碼
+            $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
+            $stmt->bind_param('s', $this->userdata['UUID']);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_OFF_FAIL; //Fail
+
+            return AUTH_CHANGESETTING_2FA_OFF_OK; //OK
+        }
+
+
     }
 
     /**
@@ -971,49 +1041,7 @@ class MyAuth {
      * @return array 狀態
      */
     function changeSetting(int $type, array $data, bool $RSAon = true): ?array {
-        if ($type === AUTH_CHANGESETTING_2FA) {
-
-            try {
-                $qrProvider = new BaconQrCodeProvider();
-                $G2AF = new TwoFactorAuth(null, 6, 30, 'sha1', $qrProvider);
-
-                if ($data['2FAto']) {
-                    /* 啟動 */
-                    $secret = $G2AF->createSecret();
-                    $qr = $G2AF->getQRCodeImageAsDataUri($this->userdata['Name'], $secret);
-                    $_SESSION['2FA_secret'] = $secret;
-                    return array(
-                        0 => AUTH_CHANGESETTING_2FA_LOGON,
-                        1 => $secret,
-                        2 => $qr
-                    );
-                } else {
-                    /* 關閉 */
-                    $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_col']} = FALSE, {$this->sqlsetting_User['2FA_secret_col']} = NULL WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-                    $stmt->bind_param('s', $this->userdata['UUID']);
-                    if (!$stmt->execute()) {
-                        $stmt->close();
-                        return array(AUTH_CHANGESETTING_2FA_OFF_FAIL); //Fail
-                    }
-                    $stmt->close();
-
-                    //刪除重設代碼
-                    $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
-                    $stmt->bind_param('s', $this->userdata['UUID']);
-                    if (!$stmt->execute()) {
-                        $stmt->close();
-                        return array(AUTH_CHANGESETTING_2FA_OFF_FAIL); //Fail
-                    }
-                    $stmt->close();
-
-                    return array(AUTH_CHANGESETTING_2FA_OFF_OK); //OK
-                }
-
-            } catch (TwoFactorAuthException $e) {
-                return array(AUTH_CHANGESETTING_2FA_OFF_FAIL); //Fail
-            }
-
-        } elseif ($type === AUTH_CHANGESETTING_2FA_CHECK_CODE) {
+        if ($type === AUTH_CHANGESETTING_2FA_CHECK_CODE) {
             /* 認證開啟 */
             $G2AF = new TwoFactorAuth();
 
@@ -1173,8 +1201,8 @@ class MyAuth {
         /* 解密 */
         if ($RSAKey != null) {
             $pi_key = openssl_pkey_get_private($RSAKey);
-            $dePass = openssl_private_decrypt(base64_decode($pass), $pass, $pi_key);
-            $deCpass = openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
+            $dePass = @openssl_private_decrypt(base64_decode($pass), $pass, $pi_key);
+            $deCpass = @openssl_private_decrypt(base64_decode($Cpass), $Cpass, $pi_key);
             if (!($dePass && $deCpass)) return AUTH_FORGETPASS_PASS_NOT_MATCH;
         }
 
@@ -1209,7 +1237,7 @@ class MyAuth {
 
         /* 寫入資料 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ?, {$this->sqlsetting_User['Salt_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
-        $stmt->bind_param('ss', $Cpass, $salt, $_SESSION['Auth']['uuid']);
+        $stmt->bind_param('sss', $Cpass, $salt, $_SESSION['Auth']['uuid']);
         if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
         /* 回饋成功 */
@@ -1220,6 +1248,7 @@ class MyAuth {
     /**
      * 添加掛勾<br/>
      * **目前可使用掛勾:**
+     * todo:添加詳細comment
      * + acc_activated *帳戶啟動後執行*
      * + acc_Check_NewIP *檢查登入ip後執行*
      * + acc_ForgetPass *執行忘記密碼func後執行*

@@ -109,9 +109,7 @@ function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_qu
  * @return string 回傳城市資料
  */
 function getCity(string $ip = null): string {
-    if ($ip == null)
-        $ip = $_SERVER['REMOTE_ADDR'];
-    require './function/GeoIP2/geoip2.phar';
+    if ($ip == null) $ip = $_SERVER['REMOTE_ADDR'];
     $reader = new Reader('./function/GeoIP2/GeoLite2-City.mmdb');
 
     /* 分辨語言 */
@@ -151,9 +149,7 @@ function getCity(string $ip = null): string {
  * @return string 回傳ISP資料
  */
 function getISP(string $ip = null): string {
-    if ($ip == null)
-        $ip = $_SERVER['REMOTE_ADDR'];
-    require './function/GeoIP2/geoip2.phar';
+    if ($ip == null) $ip = $_SERVER['REMOTE_ADDR'];
     $reader = new Reader('./function/GeoIP2/GeoLite2-ASN.mmdb');
 
     /* 取得資料 */
@@ -169,12 +165,11 @@ function getISP(string $ip = null): string {
 
 /**
  * 取得瀏覽器
- * @param string|null $user_agent
+ * @param string $user_agent
  * @return array|object 回傳Browscap資料
  * @throws \phpbrowscap\Exception
  */
-function getBrowser(string $user_agent = null) {
-    require_once './function/Browscap/Browscap.php';
+function getBrowser(string $user_agent) {
     $bc = new Browscap('./function/Browscap');
     return $bc->getBrowser($user_agent);
 }
@@ -246,14 +241,13 @@ TwoFA_FORM;
 
 /**
  * 帳戶啟動後執行掛勾function
- * @deprecated
  * @param mysqli $sqlcon 數據庫連接[option]
  * @param string $uuid 用戶id
  */
 function acc_activated_Hook(string $uuid, mysqli $sqlcon) {
     require_once('./function/notifyAPI.php');
     $notify = new notifyAPI($sqlcon);
-    $notify->Send_notify($uuid, "fa fa-thumbs-up", notifyAPI::$Status_Success, '/panel', '歡迎!新用戶!ヾ(≧▽≦*)o<br>Welcome! New users!ヾ(≧▽≦*)o');
+    $notify->Send_notify($uuid, "fa fa-thumbs-up", notifyAPI::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
 }
 
 /**

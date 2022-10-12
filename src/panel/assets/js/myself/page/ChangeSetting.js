@@ -50,6 +50,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
         }
     })
 
+    /* 修改密碼 */
     $('#PassSet').submit(async function (e) {
         if (!e.isDefaultPrevented() && this.checkValidity()) {
             e.preventDefault();
@@ -98,6 +99,38 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
             })
         }
     });
+
+    /* 註冊2FA */
+    $('#TwoFA_register').on('shown.bs.modal', function () {
+        const modal = $(this);
+
+        forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function (err, key) {
+            $.ajax({
+                type: 'POST',
+                url: '/panel/ChangeSetting?type=2FASet',
+                contentType: 'text/json; charset=utf-8',
+                data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey), 'DoAction': true}),
+                success: function (data) {
+                    let code = key.privateKey.decrypt(window.atob(data.Data.secret)); //解密
+
+                    /* 輸出 */
+                    //modal.find('#qr').attr('src', window.atob(data.Data.qr)).removeClass('visually-hidden');
+                    const img = jQuery('<img />',{
+                        src: window.atob(data.Data.qr),
+                        width: 250,
+                        height: 250,
+                        alt: 'QRcode'
+                    });
+                    modal.find('#qr').html(img)
+                    modal.find('#secret').text(code);
+                    modal.find('.btn-primary').removeAttr('disabled');
+                    //$('#2FA_Code').focus();
+                }
+            });
+        });
+    })
+
+
 
     /* 檢查限制 */
     $('#Password, #Old_Pass, #Password2').on("input focus", function () {

@@ -89,7 +89,8 @@
         "Cant_EMPTY": "這裏是不能留空喔~~",
         "Error_format": "電郵格式應該不是這樣的吧",
         "Not_Match_Wrong": "兩次密碼輸入不對喔~~",
-        "Match_Old_Pass": "要與舊密碼不相同喔~~"
+        "Match_Old_Pass": "要與舊密碼不相同喔~~",
+        "Only_number": "只可以輸入數字哦~~"
       },
       "strength": [
         "太弱了!",
