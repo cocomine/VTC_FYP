@@ -99,6 +99,7 @@ class MyAuth {
         'Email_col' => 'Email',
         'UUID_col' => 'UUID',
         'Password_col' => 'password',
+        'Salt_col' => 'salt',
         'Name_col' => 'Name',
         'activated_code_col' => 'activated_code',
         'activated_col' => 'activated',
@@ -267,11 +268,6 @@ class MyAuth {
             }
         }
 
-        /* 加密 */
-        $password = filter_var(trim($password), FILTER_SANITIZE_STRING); //消毒
-        $password = 'Gblacklist' . $password;
-        $password = hash('sha512', md5($password));
-
         /* 查詢 */
         $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
         $stmt->bind_param("s", $email);
@@ -288,6 +284,12 @@ class MyAuth {
             $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
             return AUTH_WRONG_PASS;
         }
+
+        /* 加密 */
+        $password = filter_var(trim($password), FILTER_SANITIZE_STRING); //消毒
+        $password = $userdata[$this->sqlsetting_User['Salt_col']] . $password;
+        $password = hash('sha512', md5($password));
+
         //檢查資料匹配
         if ($userdata[$this->sqlsetting_User['Email_col']] != $email || $userdata[$this->sqlsetting_User['Password_col']] != $password) {
             $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
@@ -777,7 +779,8 @@ class MyAuth {
         if (!(preg_match("/(?=.*?[A-Z])(?=.*?[a-z]).{8,}/", $Cpass) && $Name != $Cpass && $Email != $Cpass)) return AUTH_REGISTER_PASS_NOT_STRONG;
 
         /* 加密 */
-        $password = 'Gblacklist' . $Cpass;
+        $salt = $this->Generate_Code(12);
+        $password = $salt . $Cpass;
         $password = hash('sha512', md5($password));
 
         //檢查電郵格式
@@ -789,8 +792,13 @@ class MyAuth {
         /* 增值資料 & 檢查電郵衝突 & 取得UUID*/
         $stmt = $this->sqlcon->prepare("SET @uuid = UUID();"); //設置UUID
         $stmt->execute();
-        $stmt->prepare("INSERT INTO {$this->sqlsetting_User['table']} ({$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Email_col']}, {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Password_col']}, {$this->sqlsetting_User['activated_code_col']}, {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Last_IP_col']}, {$this->sqlsetting_User['Language_col']}) VALUES (@uuid, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)"); //加入資料
-        $stmt->bind_param("ssssss", $email, $name, $password, $ActivatedCode, $_SERVER['REMOTE_ADDR'], $localCode);
+        $stmt->prepare("INSERT INTO {$this->sqlsetting_User['table']} (
+                   {$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Email_col']}, 
+                   {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Password_col']}, 
+                   {$this->sqlsetting_User['activated_code_col']}, {$this->sqlsetting_User['Last_Login_col']}, 
+                   {$this->sqlsetting_User['Last_IP_col']}, {$this->sqlsetting_User['Language_col']}, 
+                   {$this->sqlsetting_User['Salt_col']}) VALUES (@uuid, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?, ?)"); //加入資料
+        $stmt->bind_param("sssssss", $email, $name, $password, $ActivatedCode, $_SERVER['REMOTE_ADDR'], $localCode, $salt);
         if ($stmt->execute()) {
             $stmt->prepare("SELECT @uuid AS UUID"); //取得UUID
             $stmt->execute();
@@ -933,17 +941,18 @@ class MyAuth {
             $this->userdata['Name'] == $NewCPass || $this->userdata['Email'] == $NewCPass) return AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG;
 
         /* 加密 */
-        $password = 'Gblacklist' . $NewCPass;
+        $salt = $this->Generate_Code(12);
+        $password = $salt . $NewCPass;
         $password = hash('sha512', md5($password));
-        $OLDpassword = 'Gblacklist' . $OldPass;
+        $OLDpassword = $this->userdata['ALLData'][$this->sqlsetting_User['Salt_col']] . $OldPass;
         $OLDpassword = hash('sha512', md5($OLDpassword));
 
         //舊密碼是否正確
         if ($OLDpassword != $this->userdata['ALLData'][$this->sqlsetting_User['Password_col']]) return AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG;
 
         /* 修改資料 */
-        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-        $stmt->bind_param('ss', $password, $_SESSION['UUID']);
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ?, {$this->sqlsetting_User['Salt_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+        $stmt->bind_param('ss', $password, $salt, $_SESSION['UUID']);
         if (!$stmt->execute()) return AUTH_CHANGESETTING_PASS_FAIL;
 
         return AUTH_CHANGESETTING_PASS_OK; //成功
@@ -1085,9 +1094,9 @@ class MyAuth {
         if ($userdata[$this->sqlsetting_Forgetpass['Code']] != $code[1] || $userdata[$this->sqlsetting_Forgetpass['Last_time']] > 3600) return AUTH_FORGETPASS_CODE_WRONG;
 
         /* 移除條目 */
-//        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
-//        $stmt->bind_param('s', $code[0]);
-//        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+        $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Forgetpass['table']} WHERE {$this->sqlsetting_Forgetpass['UUID']} = ?;");
+        $stmt->bind_param('s', $code[0]);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
         /* 回饋成功 */
         $_SESSION['Auth']['uuid'] = $code[0];
@@ -1194,12 +1203,13 @@ class MyAuth {
             $userdata[$this->sqlsetting_User['Email_col']] == $Cpass || $userdata[$this->sqlsetting_User['Name_col']] == $Cpass) return AUTH_FORGETPASS_PASS_NOT_STRONG;
 
         /* 消毒/加密 */
-        $Cpass = 'Gblacklist' . $Cpass;
+        $salt = $this->Generate_Code(12);
+        $Cpass = $salt . $Cpass;
         $Cpass = hash('sha512', md5($Cpass));
 
         /* 寫入資料 */
-        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
-        $stmt->bind_param('ss', $Cpass, $_SESSION['Auth']['uuid']);
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Password_col']} = ?, {$this->sqlsetting_User['Salt_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?;");
+        $stmt->bind_param('ss', $Cpass, $salt, $_SESSION['Auth']['uuid']);
         if (!$stmt->execute()) return AUTH_SERVER_ERROR;
 
         /* 回饋成功 */
