@@ -24,12 +24,12 @@ class changesetting implements IPage {
      * @param mysqli $sqlcon sql連接
      * @param array $UpPath 上條路徑
      */
-    function __construct(mysqli $sqlcon, array $UpPath) {}
+    function __construct(mysqli $sqlcon, array $UpPath) { }
 
     /* 檢查訪問權 */
     public function access(bool $isAuth, int $role): int {
-        if(!$isAuth) return 401;
-        if($role < self::$Role) return 403;
+        if (!$isAuth) return 401;
+        if ($role < self::$Role) return 403;
         return 200;
     }
 
@@ -194,7 +194,7 @@ class changesetting implements IPage {
                                         <div class='modal-body'>
                                             <p>{$Text['2FA']['2FA_register_modal']['body'][0]}</p>
                                             <div class='row justify-content-center g-0' id='qr'>
-                                                <lottie-player src='https://assets1.lottiefiles.com/packages/lf20_a2chheio.json'  background='transparent'  speed='1'  style='width: 300px; height: 300px;'  loop  autoplay></lottie-player>
+                                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
                                             </div>
                                             <p>{$Text['2FA']['2FA_register_modal']['body'][1]}</p>
                                             <pre id='secret' class='text-center text-uppercase fs-2 bg-secondary bg-opacity-50' style='color: #dc3545;'><div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div></pre>
@@ -210,7 +210,7 @@ class changesetting implements IPage {
                                             </div>
                                             <div class='modal-footer'>
                                                 <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['2FA_register_modal']['No']}</button>
-                                                <button type='submit' class='btn btn-rounded btn-primary' disabled><i class='fa fa-check pe-2'></i>{$Text['2FA']['2FA_register_modal']['Enable']}</button>
+                                                <button type='submit' class='btn btn-rounded btn-primary form-submit' disabled><i class='fa fa-check pe-2'></i>{$Text['2FA']['2FA_register_modal']['Enable']}</button>
                                             </div>
                                         </form>
                                         
@@ -230,10 +230,8 @@ class changesetting implements IPage {
                                         </div>
                                         
                                         <div class='modal-footer'>
-                                            <form id='2FAReset' novalidate class='needs-validation'>
-                                                <button type='button' class='btn btn-rounded btn-secondary' data-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['NO']}</button>&nbsp;&nbsp;
-                                                <button type='submit' class='btn btn-rounded btn-danger'><i class='fa fa-close pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['YES']}</button>
-                                            </form>
+                                            <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['NO']}</button>&nbsp;&nbsp;
+                                            <button type='submit' class='btn btn-rounded btn-danger' id='2FAReset'><i class='fa fa-close pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['YES']}</button>
                                         </div>
                                         
                                     </div>
@@ -252,7 +250,7 @@ class changesetting implements IPage {
                                             <p>{$Text['2FA']['TwoFA_BackupCode_modal']['body']}</p>
                                             <div class='table-responsive mt-2' id='BackupCodeShowArea'></div>
                                             <div class='row justify-content-center' id='BackupCodeLoading'>
-                                                <lottie-player src='https://assets1.lottiefiles.com/packages/lf20_a2chheio.json'  background='transparent'  speed='1'  style='width: 300px; height: 300px;'  loop  autoplay></lottie-player>
+                                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
                                             </div>
                                         </div>
                                         <div class='modal-footer'>
@@ -325,7 +323,7 @@ class changesetting implements IPage {
                         'qr' => $qr
                     )
                 );
-            }else{
+            } else {
                 return array(
                     'code' => $status,
                     'Title' => $this->ResultMsg($status)[0],
@@ -334,7 +332,7 @@ class changesetting implements IPage {
             }
         }
         if ($_GET['type'] == 'TwoFACheck') {
-            $status = $auth->changeSetting(AUTH_CHANGESETTING_2FA_CHECK_CODE, $data);
+            $status = $auth->change2FASettingCheckCode($data['TwoFA_Code']);
             return array(
                 'code' => $status,
                 'Title' => $this->ResultMsg($status)[0],
@@ -374,8 +372,8 @@ class changesetting implements IPage {
     }
 
 
-    private function ResultMsg(int $type): array{
-        switch ($type){
+    private function ResultMsg(int $type): array {
+        switch ($type) {
             case AUTH_CHANGESETTING_DATA_FAIL:
                 return showText('ChangeSetting.AUTH_CHANGESETTING_DATA_FAIL');
             case AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH:
@@ -401,8 +399,12 @@ class changesetting implements IPage {
                 return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_FAIL');
             case AUTH_CHANGESETTING_2FA_OFF_OK:
                 return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_OFF_OK');
+            case AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL');
+            case AUTH_CHANGESETTING_2FA_CHECK_CODE_OK:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_OK');
             default:
-                return array('','');
+                return array('', '');
         }
     }
 

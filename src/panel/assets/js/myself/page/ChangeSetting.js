@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
+define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn, forge, bootstrap) => {
     "use strict";
 
     let Lang = $('#langJson').text();
@@ -59,7 +59,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
             console.log(data)
 
             /* 封鎖按鈕 */
-            const bt = $('#form_submit');
+            const bt = $(this).children('.form-submit');
             const html = bt.html();
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
@@ -113,6 +113,14 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
                 success: function (data) {
                     let code = key.privateKey.decrypt(window.atob(data.Data.secret)); //解密
 
+                    /* 分割代碼 */
+                    code = code.split('')
+                    const temp = []
+                    while (code.length > 0){
+                        temp.push(code.splice(0, 4).join(''));
+                    }
+                    const temp2 = '<span class="pe-2">'+temp.join('</span><span class="pe-2">')+'</span>'
+
                     /* 輸出 */
                     //modal.find('#qr').attr('src', window.atob(data.Data.qr)).removeClass('visually-hidden');
                     const img = jQuery('<img />',{
@@ -122,15 +130,87 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge'], (jq, toastr, zxcvbn, forge) => {
                         alt: 'QRcode'
                     });
                     modal.find('#qr').html(img)
-                    modal.find('#secret').text(code);
-                    modal.find('.btn-primary').removeAttr('disabled');
-                    //$('#2FA_Code').focus();
+                    modal.find('#secret').html(temp2);
+                    modal.find('.form-submit').removeAttr('disabled');
+                    $("#2FA_Code").val('').focus();
                 }
             });
         });
     })
 
+    /* 重置2FA */
+    $('#2FAReset').click(function () {
+        /* 封鎖按鈕 */
+        const bt = $('#TwoFA_confirm_off').find('.btn-secondary, .btn-danger');
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
+        $.ajax({
+            type: 'POST',
+            url: '/panel/ChangeSetting?type=2FASet',
+            contentType: 'text/json; charset=utf-8',
+            data: JSON.stringify({'DoAction': false}),
+            success: function (json) {
+                if(json.code === 525){
+                    toastr.success(json.Message, json.Title);
+                    bootstrap.Modal.getInstance($('#TwoFA_confirm_off')[0]).hide()
+                    ajexLoad('/panel/ChangeSetting')
+                }else {
+                    toastr.error(json.Message, json.Title);
+                }
+            }
+        }).always(() => {
+            bt.html(html).removeAttr('disabled');
+        });
+    })
+
+    /* 2FA自動submit */
+    $('#2FA_Code').on('input focus', function () {
+        if($(this).val().length >=6) $('#TwoFASet').submit();
+    });
+
+    /* 2FA確認代碼 */
+    $('#TwoFASet').submit(function (e) {
+        if (!e.isDefaultPrevented() && this.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            const data = $(this).serializeObject();
+            console.log(data)
+
+            /* 封鎖按鈕 */
+            const bt = $(this).find('.form-submit, .btn-secondary');
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/ChangeSetting?type=TwoFACheck', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            }).then((response) => {
+                response.json().then((json) => {
+                    console.log(json) //debug
+
+                    if(json.code === 523){
+                        toastr.success(json.Message, json.Title);
+                        bootstrap.Modal.getInstance($('#TwoFA_register')[0]).hide()
+                        ajexLoad('/panel/ChangeSetting')
+                    }else {
+                        toastr.error(json.Message, json.Title);
+                        $("#2FA_Code").val('')
+                    }
+                })
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    })
 
     /* 檢查限制 */
     $('#Password, #Old_Pass, #Password2').on("input focus", function () {

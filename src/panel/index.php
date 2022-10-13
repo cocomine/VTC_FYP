@@ -80,7 +80,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         } else if ($access == 401) {
             //需要登入
             http_response_code(401);
-            echo json_encode(array('code' => 401, 'path' => './login'));
+            echo json_encode(array('code' => 401, 'path' => './panel/login'));
         }
         exit();
     }

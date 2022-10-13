@@ -85,7 +85,6 @@
 
     /*------------- Start form Validation -------------*/
     window.addEventListener('load', function () {
-        console.log('ok')
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         const forms = document.querySelectorAll('.needs-validation');
 

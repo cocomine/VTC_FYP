@@ -66,11 +66,13 @@ define('AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG', 515);
 /* @deprecated */
 define('AUTH_CHANGESETTING_2FA', 520);
 define('AUTH_CHANGESETTING_2FA_LOGON', 521);
+/* @deprecated */
 define('AUTH_CHANGESETTING_2FA_CHECK_CODE', 522);
 define('AUTH_CHANGESETTING_2FA_CHECK_CODE_OK', 523);
 define('AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL', 524);
 define('AUTH_CHANGESETTING_2FA_OFF_OK', 525);
 define('AUTH_CHANGESETTING_2FA_OFF_FAIL', 526);
+/* @deprecated */
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE', 527);
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK', 528);
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 529);
@@ -997,7 +999,7 @@ class MyAuth {
      * @return int 狀態
      */
     public function change2FASetting(bool $turnOnOff): int {
-        require (__DIR__.'/TwoFA.php');
+        require_once(__DIR__ . '/TwoFA.php');
         $this->twoFA = new TwoFA();
 
         if ($turnOnOff) {
@@ -1024,8 +1026,44 @@ class MyAuth {
 
             return AUTH_CHANGESETTING_2FA_OFF_OK; //OK
         }
+    }
 
+    /**
+     * @param string $code
+     * @return int
+     */
+    public function change2FASettingCheckCode(string $code): int {
+        require_once(__DIR__ . '/TwoFA.php');
 
+        /* 消毒 */
+        $code = filter_var(trim($code), FILTER_SANITIZE_STRING);
+
+        /* 取得secret */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['2FA_secret_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+        $stmt->bind_param('s', $this->userdata['UUID']);
+        if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL; //Fail
+
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        /* 確認code */
+        if (!TwoFA::verifyCode($row[$this->sqlsetting_User['2FA_secret_col']], $code)) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL;
+
+        $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_col']} = TRUE WHERE {$this->sqlsetting_User['UUID_col']} = ?");
+        $stmt->bind_param('s', $this->userdata['UUID']);
+        if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL; //Fail
+        $stmt->close();
+
+        /* 產出後備代碼 */
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_2FA_BackupCode['table']} ({$this->sqlsetting_2FA_BackupCode['UUID']}, {$this->sqlsetting_2FA_BackupCode['Code']}) VALUES (?, ?)");
+        $stmt->bind_param('ss', $this->userdata[$this->sqlsetting_User['UUID_col']], $generate_Code);
+        for ($i = 0; $i < 12; $i++) {
+            $generate_Code = $this->Generate_Code(6);
+            if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL; //Fail
+        }
+
+        return AUTH_CHANGESETTING_2FA_CHECK_CODE_OK; //OK
     }
 
     /**
@@ -1042,38 +1080,7 @@ class MyAuth {
      */
     function changeSetting(int $type, array $data, bool $RSAon = true): ?array {
         if ($type === AUTH_CHANGESETTING_2FA_CHECK_CODE) {
-            /* 認證開啟 */
-            $G2AF = new TwoFactorAuth();
 
-            /* 消毒 */
-            $data['code'] = filter_var(trim($data['code']), FILTER_SANITIZE_EMAIL);
-
-            /* 確認code */
-            if ($G2AF->verifyCode($_SESSION['2FA_secret'], $data['code'])) {
-                $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_col']} = TRUE, {$this->sqlsetting_User['2FA_secret_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-                $stmt->bind_param('ss', $_SESSION['2FA_secret'], $this->userdata['UUID']);
-                if (!$stmt->execute()) {
-                    $stmt->close();
-                    return array(AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL); //Fail
-                }
-                $stmt->close();
-
-                /* 產出後備代碼 */
-                for ($i = 0; $i < 12; $i++) {
-                    $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_2FA_BackupCode['table']} ({$this->sqlsetting_2FA_BackupCode['UUID']}, {$this->sqlsetting_2FA_BackupCode['Code']}) VALUES (?, ?)");
-                    $generate_Code = Generate_Code(6);
-                    $stmt->bind_param('ss', $this->userdata[$this->sqlsetting_User['UUID_col']], $generate_Code);
-                    if (!$stmt->execute()) {
-                        $stmt->close();
-                        return array(AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL); //Fail
-                    }
-                    $stmt->close();
-                }
-
-                return array(AUTH_CHANGESETTING_2FA_CHECK_CODE_OK); //OK
-            } else {
-                return array(AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL); //Fail
-            }
         } elseif ($type === AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE) {
             /* 查詢資料 */
             $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
