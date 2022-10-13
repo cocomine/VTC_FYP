@@ -189,7 +189,7 @@
       "welcome": "<b>Hello!</b> 從你的手機應用程式取得神秘代碼輸入就可以啦",
       "2FACode": "2FA代碼",
       "Login": "登入",
-      "ReDo": "帳號輸錯了? <a href=\"login\">重新輸入吧</a>",
+      "ReDo": "帳號輸錯了? <a href=\"/panel/login?Reset2FA=1\">重新輸入吧</a>",
       "Can't_use_phone": "手機用不了?<br>你可以直接輸入6個安全代碼的其中1個 （づ￣3￣）づ╭❤～",
       "Form": {
         "empty": "這裏是不能留空喔"

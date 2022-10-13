@@ -70,7 +70,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             type: 'GET',
             url: link,
             success: function (data) {
-                console.debug(data)
                 unModules()
 
                 $('title').text(data.title);
@@ -104,7 +103,13 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         })
     }
 
-    //todo:側邊activate
+    /* 展開 menu */
+    const updateNavBar = (link) => {
+        const meun = $('#menu')
+        const active = meun.find(`[href="${link}"]`);
+        active.parents('li').addClass('mm-active')
+        active.parents('#menu ul').addClass('mm-show')
+    }
 
     const loadingPlaceholder = `
                     <div class='col-12 mt-4 col-md-8'>
@@ -243,6 +248,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     </div>`
 
     return {
-        ajexLoad, loadModules
+        ajexLoad, loadModules, updateNavBar
     }
 })

@@ -8,9 +8,9 @@ define(['forge', 'jquery'], function (forge) {
 
     /* 遞交表單 */
     $('#Login').submit(async function (e) {
-        if (!e.isDefaultPrevented()  && this.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.checkValidity()) {
             const data = $(this).serializeObject();
 
             /* 封鎖按鈕 */
@@ -58,9 +58,9 @@ define(['forge', 'jquery'], function (forge) {
 
     /* 2FA */
     $('#2FA').submit(async function (e) {
-        if (!e.isDefaultPrevented() && this.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.checkValidity()) {
             const data = $(this).serializeObject();
 
             /* 封鎖按鈕 */

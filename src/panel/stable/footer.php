@@ -83,9 +83,13 @@
         const returnPath = sessionStorage.getItem('returnPath');
         if(returnPath !== null) {
             ajex.ajexLoad(returnPath);
+            ajex.updateNavBar(returnPath);
             sessionStorage.removeItem('returnPath');
         }
-        else ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+        else {
+            ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+            ajex.updateNavBar('<?php echo $_SERVER['REQUEST_URI'] ?>');
+        }
 
         /* 註冊全景參數 */
         window.ajexLoad = ajex.ajexLoad;

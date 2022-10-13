@@ -34,6 +34,7 @@ if (isset($_GET['logout'])) {
     try {
         ob_clean();
         $auth->logout();
+        unset($_SESSION['Doing_2FA']);
         header("Location: /panel/login");
         exit();
     } catch (MyAuthException $e) {
@@ -97,9 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     /* 2FA */
     if (isset($_SESSION['Doing_2FA'])) {
-        $status = $auth->TwoFA_check($data['TwoFA_Code'] ?? "");
-        if($status == AUTH_OK || $status == AUTH_2FA_DUE){
-            unset($_SESSION['Doing_2FA']);
+        try {
+            $status = $auth->TwoFA_check($data['TwoFA_Code'] ?? "");
+            if($status == AUTH_OK || $status == AUTH_2FA_DUE){
+                unset($_SESSION['Doing_2FA']);
+            }
+        } catch (MyAuthException $e) {
+            $status = AUTH_2FA_WRONG;
         }
     }else{
         $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
@@ -127,6 +132,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($auth->islogin) {
         ob_clean();
         header("Location: /panel");
+        exit();
+    }
+
+    /* 2FA重置登入 */
+    if(isset($_GET['Reset2FA'])){
+        ob_clean();
+        unset($_SESSION['Doing_2FA']);
+        header("Location: /panel/login");
         exit();
     }
 

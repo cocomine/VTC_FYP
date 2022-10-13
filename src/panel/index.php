@@ -195,24 +195,17 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
                             <!-- sidebar content -->
                             <li>
-                                <a href="javascript:void(0)" aria-expanded="false" class="has-arrow">
-                                    <i class="ti-dashboard"></i><span><?php echo showText("index.Console") ?></span>
+                                <a href="/panel/">
+                                    <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                 </a>
-                                <ul class="mm-collapse">
-                                    <li>
-                                        <a href="/panel/">
-                                            <i class='fa fa-home'></i><span><?php echo showText("index.home") ?></span>
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
 
                             <?php
                             /* NOTE: ⚠ 限制頁面 ⚠ */
                             /*if ($auth->userdata['Role'] == '2') {
                                 echo '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false"><i class="fa fa-wrench"></i><span>管理後台</span></a>
-                                    <ul class="collapse">
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa fa-wrench"></i><span>管理後台</span></a>
+                                    <ul class="mm-collapse">
                                         <li><a href="/panel/admin_background/broadcast/" data-ajax="GET"><i class="ti-announcement"></i><span>廣播</span></a></li>
                                         <li><a href="/panel/admin_background/notify/" data-ajax="GET"><i class="ti-bell"></i><span>通知</span></a></li>
                                     </ul>

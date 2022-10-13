@@ -263,8 +263,7 @@ class MyAuth {
             if (!$dePass) {
                 try {
                     $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-                } catch (MyAuthException $e) {
-                }
+                } catch (MyAuthException $e) {}
                 return AUTH_WRONG_PASS;
             }
         }
@@ -315,7 +314,6 @@ class MyAuth {
 
         /* 2FA */
         if ($userdata[$this->sqlsetting_User['2FA_col']]) {
-            $_SESSION['Auth']['Doing_2FA'] = true;
             $_SESSION['Auth']['uuid'] = $userdata[$this->sqlsetting_User['UUID_col']];
             $_SESSION['Auth']['Remember_ME'] = $remember_me;
             return AUTH_2FA_NEED;
@@ -492,7 +490,7 @@ class MyAuth {
         $BackupCodePass = $row['Count'];
 
         //檢查 2FA Code
-        if (!(TwoFA::verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code) || $BackupCodePass)) return AUTH_2FA_WRONG;
+        if (!(TwoFA::verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code) || $BackupCodePass >= 1)) return AUTH_2FA_WRONG;
         $toke = md5($this->Generate_Code());  //產生toke
 
         /* 插入toke資料 */
@@ -506,24 +504,24 @@ class MyAuth {
         $_SESSION['toke'] = $toke;
 
         $this->islogin = true; //login
-        unset($_SESSION['Auth']);
 
         /* 記住我*/
         if ($_SESSION['Auth']['Remember_ME']) {
-            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+            setcookie('_ID', base64_encode($_SESSION['Auth']['uuid']), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
             setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
         } else {
-            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+            setcookie('_ID', base64_encode($_SESSION['Auth']['uuid']), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
         }
 
         /* 使用備份代碼 */
         if ($BackupCodePass) {
-            $stmt->prepare("UPDATE {$this->sqlsetting_2FA_BackupCode['table']} SET {$this->sqlsetting_2FA_BackupCode['used']} = true WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ?");
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_2FA_BackupCode['table']} SET {$this->sqlsetting_2FA_BackupCode['used']} = true WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ?");
             $stmt->bind_param("ss", $_SESSION['Auth']['uuid'], $code);
             if (!$stmt->execute()) throw new MyAuthException('SQL Error');
             $stmt->close();
         }
 
+        unset($_SESSION['Auth']);
         return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
     }
 
@@ -553,9 +551,6 @@ class MyAuth {
      * @throws MyAuthException
      */
     function checkAuth(): void {
-        /* 如果Doing_2FA處於true的時候不進行登入動作 */
-        if (isset($_SESSION['Auth']['Doing_2FA'])) return;
-
         /* 查詢 SQL
          * SELECT User.*, IF(Toke_list.Toke = ?, TRUE , FALSE) AS 'TrueToke'
          * FROM User AS User, Toke_list AS Toke_list

@@ -168,6 +168,10 @@
     max-width: 120px;
 }
 
+.metismenu .has-arrow{
+    cursor: pointer;
+}
+
 .metismenu >li >a {
     padding-left: 32px!important;
 }
@@ -191,14 +195,14 @@
 .metismenu li a:after {
     position: absolute;
     content: '\f107';
-    font-family: fontawesome;
+    font-family: fontawesome, serif;
     right: 15px;
     top: 12px;
     color: #8d97ad;
     font-size: 20px;
 }
 
-.metismenu li.active>a:after {
+.metismenu li.mm-active>a:after {
     content: '\f106';
 }
 
@@ -210,7 +214,7 @@
     margin-left: 10px;
 }
 
-.metismenu li.active>a,
+.metismenu li.mm-active>a,
 .metismenu li:hover>a {
     color: #fff;
 }
@@ -224,18 +228,18 @@
 }
 
 .metismenu >li:hover>a,
-.metismenu >li.active>a {
+.metismenu >li.mm-active>a {
     color: #fff;
     background: #343942;
 }
 
 .metismenu li:hover>a,
-.metismenu li.active>a {
+.metismenu li.mm-active>a {
     color: #fff;
 }
 
 .metismenu li:hover>a i,
-.metismenu li.active>a i {
+.metismenu li.mm-active>a i {
     color: #fff;
 }
 
