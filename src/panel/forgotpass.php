@@ -12,13 +12,22 @@
  */
 
 use cocomine\MyAuth;
+use cocomine\MyAuthException;
 
 /* header */
 const title = "ForgotPass.title";
 require_once('./stable/header.php'); //head
 
-$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
-$auth->checkAuth(); //start auth
+//start auth
+$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
+try {
+    $auth->checkAuth();
+} catch (MyAuthException $e) {
+    ob_clean();
+    http_response_code(500);
+    require(Cfg_500_Error_File_Path);
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     /* POST 請求 */
@@ -47,18 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_SESSION['Doing_Reset'])) {
         $status = $auth->ForgetPass_set($data['password'] ?? "", $data['password2'] ?? "", $_SESSION['pvKey']);//傳送新密碼
-        echo json_encode(array(
-            'code' => $status,
-            'Message' => ResultMsg($status)
-        ));
     } else {
         $auth->add_Hook('acc_ForgetPass', 'acc_ForgetPass_Hook');
         $status = $auth->ForgetPass($data['email'] ?? "", $data['g-recaptcha-response'], Cfg_recaptcha_key);//傳送電郵
-        echo json_encode(array(
-            'code' => $status,
-            'Message' => ResultMsg($status)
-        ));
     }
+    echo json_encode(array(
+        'code' => $status,
+        'Message' => ResultMsg($status)
+    ));
     exit();
 } else {
     /* GET 請求 */
@@ -109,7 +114,7 @@ function ForgetPass_from(bool $isCodeWong = false) {
                         <h4>{$Text['ForgotPass']}</h4>
                         <p>{$Text['welcome']}</p>
                     </div>
-                    <div id="ResultMsg">{$msg}</div>
+                    <div id="ResultMsg">$msg</div>
                     <div class="login-form-body">
                         <div class="form-gp focused">
                             <label for="Email">{$Text['Email']}</label>
@@ -175,7 +180,7 @@ function ForgetPassSet_from() {
                             <p>
                                 {$Text['passStrength']} 
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 0%" id="passStrength"></div>
+                                    <div class="progress-bar" role="progressbar" style="width: 0" id="passStrength"></div>
                                 </div>
                             </p>
                             <p>
@@ -197,7 +202,7 @@ function ForgetPassSet_from() {
         </div>
     </div>
     <pre style="display: none" id="langJson">
-        {$LangJson}
+        $LangJson
     </pre>
 FORGETPASSSET_FROM;
 

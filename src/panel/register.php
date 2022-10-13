@@ -12,13 +12,22 @@
  */
 
 use cocomine\MyAuth;
+use cocomine\MyAuthException;
 
 /* header */
 const title = "Register.title";
 require_once('./stable/header.php'); //head
 
-$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
-$auth->checkAuth(); //start auth
+//start auth
+$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
+try {
+    $auth->checkAuth();
+} catch (MyAuthException $e) {
+    ob_clean();
+    http_response_code(500);
+    require(Cfg_500_Error_File_Path);
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     /* post 請求 */
@@ -105,13 +114,11 @@ function register_form(string $email = null, string $name = null) {
                                 <h4>{$Text['Register']}</h4>
                                 <p>{$Text['welcome']}</p>
                             </div>
-                            <div id="ResultMsg">
-                                {$msg}
-                            </div>
+                            <div id="ResultMsg">$msg</div>
                             <div class="login-form-body">
                                 <div class="form-gp focused">
                                     <label for="Name">{$Text['Name']}</label>
-                                    <input type="text" class="form-control" name="name" id="Name" required="required" autocomplete='nickname' autofocus value='{$name}' maxlength="16">
+                                    <input type="text" class="form-control" name="name" id="Name" required="required" autocomplete='nickname' autofocus value='$name' maxlength="16">
                                     <i class="ti-user"></i>
                                     <div class="invalid-feedback">
                                         {$Text['Form']['Cant_EMPTY']}
@@ -119,7 +126,7 @@ function register_form(string $email = null, string $name = null) {
                                 </div>
                                 <div class="form-gp">
                                     <label for="Email">{$Text['email']}</label>
-                                    <input type="email" class="form-control" autocomplete="email" id="Email" name="email" required="required" value="{$email}" inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+                                    <input type="email" class="form-control" autocomplete="email" id="Email" name="email" required="required" value="$email" inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
                                     <i class="ti-email"></i>
                                     <div class="invalid-feedback">
                                         {$Text['Form']['Error_format']}
@@ -145,7 +152,7 @@ function register_form(string $email = null, string $name = null) {
                                     <p>
                                         {$Text['passStrength']} 
                                         <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 0%" id="passStrength"></div>
+                                            <div class="progress-bar" role="progressbar" style="width: 0" id="passStrength"></div>
                                         </div>
                                     </p>
                                     <p>
@@ -178,9 +185,7 @@ function register_form(string $email = null, string $name = null) {
         </div>
     </div>
     <!-- login area end -->
-    <pre style="display: none" id="langJson">
-        {$LangJson}
-    </pre>
+    <pre style="display: none" id="langJson">$LangJson</pre>
 REGISTER_FROM;
 }
 

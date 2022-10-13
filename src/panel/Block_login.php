@@ -5,18 +5,29 @@
  */
 
 use cocomine\MyAuth;
+use cocomine\MyAuthException;
 
 /* header */
 const title = "Block_login.title";
 require_once('./stable/header.php'); //head
 
-$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
+$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
 
 /* 移除登入 */
-if($auth->Block_login(base64_decode($_GET['code'] ?? ""))){
+try {
+    if ($auth->Block_login(base64_decode($_GET['code'] ?? ""))) {
+        successful();
+    } else {
+        /* 回首頁 */
+        header("Location: /panel");
+    }
+} catch (MyAuthException $e) {
+}
 
+/* 輸出成功訊息 */
+function successful(){
     $Text = showText("Block_login");
-    /* 輸出成功訊息 */
+
     echo <<<TwoFA_FORM
 <!-- login area start -->
 <div class="login-area login-bg">
@@ -34,9 +45,6 @@ if($auth->Block_login(base64_decode($_GET['code'] ?? ""))){
     </div>
 </div>
 TwoFA_FORM;
-}else{
-    /* 回首頁 */
-    header("Location: /panel");
 }
 
 /* Foot */

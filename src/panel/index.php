@@ -12,16 +12,24 @@
  */
 
 use cocomine\MyAuth;
+use cocomine\MyAuthException;
 use panel\page\home;
 
 /* header */
 const title = "index.title";
 require_once('./stable/header.php');
 
+//start auth
 static $auth;
 $auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
-$auth->checkAuth(); //start auth
-$_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
+try {
+    $auth->checkAuth();
+} catch (MyAuthException $e) {
+    ob_clean();
+    http_response_code(500);
+    require(Cfg_500_Error_File_Path);
+    exit();
+}
 
 /* API互動介面 (即係唔係俾人睇) */
 //if (isset($_GET['api'])) {
@@ -41,6 +49,7 @@ $_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH'
 //}
 
 /* AJAX內容 */
+$_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
 if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     ob_clean();
     header("content-type: text/json; charset=utf-8");

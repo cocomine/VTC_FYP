@@ -190,7 +190,10 @@
       "2FACode": "2FA代碼",
       "Login": "登入",
       "ReDo": "帳號輸錯了? <a href=\"login\">重新輸入吧</a>",
-      "Can't_use_phone": "手機用不了?<br>你可以直接輸入12個安全代碼的其中1個 （づ￣3￣）づ╭❤～"
+      "Can't_use_phone": "手機用不了?<br>你可以直接輸入6個安全代碼的其中1個 （づ￣3￣）づ╭❤～",
+      "Form": {
+        "empty": "這裏是不能留空喔"
+      }
     },
     "Register": {
       "title": "註冊 | IVE airline",

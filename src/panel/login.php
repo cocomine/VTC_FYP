@@ -12,20 +12,36 @@
  */
 
 use cocomine\MyAuth;
+use cocomine\MyAuthException;
 
 /* header */
 const title = "Login.title";
 require_once('./stable/header.php'); //head
 
-$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
-$auth->checkAuth(); //start auth
+//start auth
+$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
+try {
+    $auth->checkAuth();
+} catch (MyAuthException $e) {
+    ob_clean();
+    http_response_code(500);
+    require(Cfg_500_Error_File_Path);
+    exit();
+}
 
 /* 登出 */
 if (isset($_GET['logout'])) {
-    ob_clean();
-    $auth->logout(); //logout
-    header("Location: /panel/login");
-    exit();
+    try {
+        ob_clean();
+        $auth->logout();
+        header("Location: /panel/login");
+        exit();
+    } catch (MyAuthException $e) {
+        ob_clean();
+        http_response_code(500);
+        require(Cfg_500_Error_File_Path);
+        exit();
+    }
 }
 
 /* 登入 */
@@ -79,12 +95,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    /*if (isset($_POST['TwoFA_Code']) && $_SESSION['2FA']['Doing_2FA']) {
-        $auth->TwoFA_check($_POST['TwoFA_Code'] ?? "");
-    }*/
-
-    $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
-    $status = $auth->login($data['email'], $data['password'], $data['remember_me'] == 'on', $_SESSION['pvKey']);
+    /* 2FA */
+    if (isset($_SESSION['Doing_2FA'])) {
+        $status = $auth->TwoFA_check($data['TwoFA_Code'] ?? "");
+        if($status == AUTH_OK || $status == AUTH_2FA_DUE){
+            unset($_SESSION['Doing_2FA']);
+        }
+    }else{
+        $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
+        $status = $auth->login($data['email'], $data['password'], $data['remember_me'] == 'on', $_SESSION['pvKey']);
+        if($status == AUTH_2FA_NEED){
+            $_SESSION['Doing_2FA'] = true;
+        }
+    }
     echo json_encode(array(
         'code' => $status,
         'Message' => ResultMsg($status),
@@ -107,22 +130,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
+    /* 2FA */
+    if(isset($_SESSION['Doing_2FA'])){
+        TwoFA_form();
+    }
+
     /* 正常訪問 */
-    if (empty($_GET['code']) && empty($_GET['login'])) {
+    if (empty($_GET['code']) && empty($_GET['login']) && !isset($_SESSION['Doing_2FA'])) {
         login_form();
-        //unset($_SESSION['2FA']);
     }
 
     /* Google 登入 */
     if (isset($_GET['login']) && $_GET['login'] === 'google') {
         try {
             $gclient = load_google_client();
-        } catch (\Google\Exception $e) {
-            login_form(true);
-        }
 
-        if (!empty($_GET['code'])) {
-            try {
+            if (!empty($_GET['code'])) {
                 $token = $gclient->fetchAccessTokenWithAuthCode($_GET['code']);
                 $gclient->setAccessToken($token);
 
@@ -135,17 +158,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . $profile->getName());
                     exit();
                 }
-            } catch (Exception $e) {
-                login_form(true);
-            }
-        } else {
-            if (isset($_GET['error'])) {
-                login_form(true);
             } else {
-                $auth_url = $gclient->createAuthUrl();
-                header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
-                exit();
+                if (isset($_GET['error'])) {
+                    login_form(true);
+                } else {
+                    $auth_url = $gclient->createAuthUrl();
+                    header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
+                    exit();
+                }
             }
+        } catch (\Google\Exception|MyAuthException $e) {
+            login_form(true);
         }
     }
 }
@@ -172,13 +195,13 @@ function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
 <div class="login-area login-bg">
     <div class="container">
         <div class="login-box ptb--100">
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" novalidate id="Login">
                 <div class="login-form-head">
                     <h4>{$Text['Login']}</h4>
                     <p>{$Text['welcome']}</p>
                 </div>
                 <div id="ResultMsg">
-                {$msg}
+                $msg
                 </div>
                 <div class="login-form-body">
                     <div class="form-gp focused">
@@ -225,6 +248,49 @@ LOGIN_FROM;
 }
 
 /**
+ * 雙重驗證表
+ */
+function TwoFA_form() {
+
+    //指引文字
+    $Text = showText("TwoFA");
+
+    echo <<<TwoFA_FORM
+<!-- login area start -->
+<div class="login-area login-bg">
+    <div class="container">
+        <div class="login-box ptb--100">
+            <form class="needs-validation" novalidate id="2FA">
+                <div class="login-form-head">
+                    <h4>{$Text['2FA']}</h4>
+                    <p>{$Text['welcome']}</p>
+                </div>
+                <div id="ResultMsg"></div>
+                <div class="login-form-body">
+                    <div class="form-gp focused">
+                        <label for="2FA">{$Text['2FACode']}</label>
+                        <input type='text' class="form-control" pattern='[0-9a-zA-Z]{6}' id='2FA_Code' name='TwoFA_Code' autocomplete='off' autofocus required maxlength='6'>
+                        <i class="ti-key"></i>
+                        <div class="invalid-feedback">{$Text['Form']['empty']}</div>
+                    </div>
+                    <div class="submit-btn-area">
+                        <button id="form_submit" type="submit">{$Text['Login']}<i class="ti-arrow-right"></i></button>
+                    </div>
+                    <div class="form-footer text-center mt-5">
+                        <p class="text-muted">{$Text['ReDo']}</p>
+                    </div>
+                    <div class="form-footer mt-5">
+                        <small class="text-muted">{$Text["Can't_use_phone"]}</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+TwoFA_FORM;
+}
+
+/**
  * 狀態結果訊息
  * @param int $type 類型
  * @return string 訊息
@@ -241,6 +307,10 @@ function ResultMsg(int $type): string {
             return showText("Login.BLOCK_30.0") . '<br>' . showText("Login.BLOCK_30.1");
         case AUTH_SERVER_ERROR:
             return showText("Error");
+        case AUTH_2FA_WRONG:
+            return showText("TwoFA.2FA_WRONG");
+        case AUTH_2FA_DUE:
+            return showText("TwoFA.2FA_DUE");
         default:
             return '';
     }

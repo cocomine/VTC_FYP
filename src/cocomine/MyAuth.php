@@ -9,14 +9,13 @@ namespace cocomine;
 use mysqli;
 use RobThree\Auth\TwoFactorAuth;
 
-/* @deprecated */
-define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
 define('AUTH_SERVER_ERROR', 2);
 
 define('AUTH_NOT_DONE', 100);
 define('AUTH_WRONG_PASS', 101);
 define('AUTH_2FA_WRONG', 102);
 define('AUTH_2FA_DUE', 103);
+define('AUTH_2FA_NEED', 108);
 define('AUTH_BLOCK_10', 104);
 define('AUTH_BLOCK_30', 105);
 define('AUTH_GOOGLE_ERROR', 106);
@@ -32,10 +31,6 @@ define('AUTH_REGISTER_COMPLETE', 207);
 define('AUTH_REGISTER_NAME_TOO_LONG', 208);
 define('AUTH_REGISTER_YOUR_BOT', 210);
 define('AUTH_REGISTER_CODE_WRONG', 211);
-
-define('AUTH_MAIL_RESET', 300);
-define('AUTH_MAIL_ACTIVATE', 301);
-define('AUTH_MAIL_WONG_NEWIP', 302);
 
 define('AUTH_FORGETPASS_EMAIL_FAIL', 400);
 define('AUTH_FORGETPASS_LASTSTEP', 401);
@@ -218,19 +213,6 @@ class MyAuth {
         if (!$stmt->execute()) return false;
         $stmt->close();
 
-        /* 2FA */
-        /*if($userdata[$this -> sqlsetting_User['2FA_col']] == 1){
-            $_SESSION['2FA']['Doing_2FA'] = true;
-            $_SESSION['2FA']['toke'] = $toke;
-            $_SESSION['2FA']['UUID'] = $userdata[$this -> sqlsetting_User['UUID_col']];
-            $_SESSION['2FA']['userdata'] = $userdata;
-            if(@$_POST['Remember_ME'] == 'on')
-                $_SESSION['2FA']['Remember_ME'] = true;
-
-            TwoFA_form(); //output form
-
-        }*/
-
         /* 插入toke資料 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
         $stmt->bind_param("sss", $userdata[$this->sqlsetting_User['UUID_col']], $_SERVER['REMOTE_ADDR'], $toke);
@@ -266,9 +248,13 @@ class MyAuth {
         $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
 
         /* 防爆破 */
-        $IPCheck = $this->Check_Block_ip($_SERVER['REMOTE_ADDR']);
-        if ($IPCheck === AUTH_BLOCK_10) return AUTH_BLOCK_10;
-        if ($IPCheck === AUTH_BLOCK_30) return AUTH_BLOCK_30;
+        try {
+            $IPCheck = $this->Check_Block_ip($_SERVER['REMOTE_ADDR']);
+            if ($IPCheck === AUTH_BLOCK_10) return AUTH_BLOCK_10;
+            if ($IPCheck === AUTH_BLOCK_30) return AUTH_BLOCK_30;
+        } catch (MyAuthException $e) {
+            return AUTH_SERVER_ERROR;
+        }
 
         /* 解密RSA */
         if ($RSAkey != null) {
@@ -277,7 +263,8 @@ class MyAuth {
             if (!$dePass) {
                 try {
                     $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-                } catch (MyAuthException $e) {}
+                } catch (MyAuthException $e) {
+                }
                 return AUTH_WRONG_PASS;
             }
         }
@@ -297,7 +284,9 @@ class MyAuth {
         if (mysqli_num_rows($result) < 1) {
             try {
                 $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-            } catch (MyAuthException $e) {}
+            } catch (MyAuthException $e) {
+                return AUTH_SERVER_ERROR;
+            }
             return AUTH_WRONG_PASS;
         }
 
@@ -310,13 +299,13 @@ class MyAuth {
         if ($userdata[$this->sqlsetting_User['Email_col']] != $email || $userdata[$this->sqlsetting_User['Password_col']] != $password) {
             try {
                 $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
-            } catch (MyAuthException $e) {}
+            } catch (MyAuthException $e) {
+                return AUTH_SERVER_ERROR;
+            }
             return AUTH_WRONG_PASS;
         }
         //檢查帳號啟動
         if (!$userdata[$this->sqlsetting_User['activated_col']]) return AUTH_NOT_DONE;
-
-        $toke = md5($this->Generate_Code());  //產生toke
 
         /* 更新最後時間 */
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ? WHERE {$this->sqlsetting_User['UUID_col']} = '{$userdata[$this->sqlsetting_User['UUID_col']]}'");
@@ -325,12 +314,14 @@ class MyAuth {
         $stmt->close();
 
         /* 2FA */
-        /*if ($userdata[$this->sqlsetting_User['2FA_col']]) {
-            $_SESSION['2FA']['Doing_2FA'] = true;
-            $_SESSION['2FA']['toke'] = $toke;
-            $_SESSION['2FA']['userdata'] = $userdata;
-            $_SESSION['2FA']['Remember_ME'] = $_POST['Remember_ME'] ? true : false;
-        }*/
+        if ($userdata[$this->sqlsetting_User['2FA_col']]) {
+            $_SESSION['Auth']['Doing_2FA'] = true;
+            $_SESSION['Auth']['uuid'] = $userdata[$this->sqlsetting_User['UUID_col']];
+            $_SESSION['Auth']['Remember_ME'] = $remember_me;
+            return AUTH_2FA_NEED;
+        }
+
+        $toke = md5($this->Generate_Code());  //產生toke
 
         /* 插入toke資料 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
@@ -350,7 +341,6 @@ class MyAuth {
             setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
         } else {
             setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-
         }
 
         return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
@@ -470,13 +460,13 @@ class MyAuth {
      * @param string $code 確認代碼
      * @throws MyAuthException
      */
-    function TwoFA_check(string $code) {
-        $ga = new TwoFactorAuth();
+    function TwoFA_check(string $code): int {
+        require_once(__DIR__ . '/TwoFA.php');
         $code = filter_var(trim($code), FILTER_SANITIZE_STRING); //消毒
 
         /* 查詢 */
         $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['2FA_secret_col']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_User['Last_Login_col']}) AS {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Language_col']}, {$this->sqlsetting_User['Last_IP_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?");
-        $stmt->bind_param("s", $_SESSION['2FA']['UUID']);
+        $stmt->bind_param("s", $_SESSION['Auth']['uuid']);
         if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
         /* 分析結果 */
@@ -485,84 +475,56 @@ class MyAuth {
         $stmt->close();
 
         /* 檢查代碼 */
-        if ($userdata[$this->sqlsetting_User['Last_Login_col']] <= 600) {
-            if (!empty($code)) { //不能留空
-                if ($ga->verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code)) {  //檢查 2FA Code
-                    /* 使用代碼 */
+        /* 檢查是否超時 10min*/
+        if ($userdata[$this->sqlsetting_User['Last_Login_col']] > 600) return AUTH_2FA_DUE;
+        //不能留空
+        if (empty($code)) return AUTH_2FA_WRONG;
 
-                    /* 插入toke資料 */
-                    $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
-                    $stmt->bind_param("sss", $_SESSION['2FA']['UUID'], $_SERVER['REMOTE_ADDR'], $_SESSION['2FA']['toke']);
-                    if (!$stmt->execute()) throw new MyAuthException('SQL Error');
-                    $stmt->close();
+        /* 安全代碼 */
+        $stmt = $this->sqlcon->prepare("SELECT COUNT(*) AS `Count` FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ? AND {$this->sqlsetting_2FA_BackupCode['used']} IS FALSE");
+        $stmt->bind_param("ss", $_SESSION['Auth']['uuid'], $code);
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
-                    $_SESSION['toke'] = $_SESSION['2FA']['toke']; //Set toke
-                    $_SESSION['UUID'] = $_SESSION['2FA']['UUID']; //Set uuid
+        /* 分析結果 */
+        $result = $stmt->get_result();
+        $stmt->close();
+        $row = $result->fetch_assoc();
+        $BackupCodePass = $row['Count'];
 
-                    /* 記住我功能 */
-                    if (@$_SESSION['2FA']['Remember_ME']) {
-                        setcookie('_ID', base64_encode($_SESSION['2FA']['UUID']), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                        setcookie('_tk', base64_encode($_SESSION['2FA']['toke']), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                    }
+        //檢查 2FA Code
+        if (!(TwoFA::verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code) || $BackupCodePass)) return AUTH_2FA_WRONG;
+        $toke = md5($this->Generate_Code());  //產生toke
 
-                    $this->islogin = true; //login
-                    setcookie('Lang', $userdata[$this->sqlsetting_User['Language_col']], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
+        /* 插入toke資料 */
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
+        $stmt->bind_param("sss", $_SESSION['Auth']['uuid'], $_SERVER['REMOTE_ADDR'], $toke);
+        if (!$stmt->execute()) return AUTH_SERVER_ERROR;
+        $stmt->close();
 
-                    $this->Check_NewIP($_SESSION['2FA']['userdata'], $_SESSION['toke']);
-                    unset($_SESSION['2FA']);
+        /* 儲存 session */
+        $_SESSION['UUID'] = $_SESSION['Auth']['uuid'];
+        $_SESSION['toke'] = $toke;
 
-                } else {
-                    /* 使用安全代碼 */
+        $this->islogin = true; //login
+        unset($_SESSION['Auth']);
 
-                    $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
-                    $stmt->bind_param("s", $_SESSION['2FA']['UUID']);
-                    if (!$stmt->execute()) throw new MyAuthException('SQL Error');
-
-                    /* 分析結果 */
-                    $result = $stmt->get_result();
-                    $stmt->close();
-
-                    while ($row = $result->fetch_assoc()) {
-                        /* 檢查安全代碼 */
-                        if ($row[$this->sqlsetting_2FA_BackupCode['Code']] == $code && $row[$this->sqlsetting_2FA_BackupCode['used']] == false) {
-
-                            /* 插入toke資料 */
-                            $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
-                            $stmt->bind_param("sss", $_SESSION['2FA']['UUID'], $_SERVER['REMOTE_ADDR'], $_SESSION['2FA']['toke']);
-                            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
-
-                            $_SESSION['toke'] = $_SESSION['2FA']['toke']; //Set toke
-                            $_SESSION['UUID'] = $_SESSION['2FA']['UUID']; //Set uuid
-
-                            $stmt->prepare("UPDATE {$this->sqlsetting_2FA_BackupCode['table']} SET {$this->sqlsetting_2FA_BackupCode['used']} = true WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ?");
-                            $stmt->bind_param("ss", $_SESSION['2FA']['UUID'], $code);
-                            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
-                            $stmt->close();
-
-                            /* 記住我功能 */
-                            if (@$_SESSION['2FA']['Remember_ME']) {
-                                setcookie('_ID', base64_encode($_SESSION['2FA']['UUID']), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                                setcookie('_tk', base64_encode($_SESSION['2FA']['toke']), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
-                            }
-
-                            $this->islogin = true; //login
-                            setcookie('Lang', $userdata[$this->sqlsetting_User['Language_col']], time() + 2592000, $this->CookiesPath, $_SERVER['HTTP_HOST'], true); //設置語言cookies
-
-                            $this->Check_NewIP($_SESSION['2FA']['userdata'], $_SESSION['toke']);
-                            unset($_SESSION['2FA']);
-                            return; //End Check
-                        }
-                    }
-                    call_user_func(AUTH_2FA_FORM_FUNC, AUTH_2FA_WRONG);
-
-                }
-            } else {
-                call_user_func(AUTH_2FA_FORM_FUNC, AUTH_2FA_WRONG);
-            }
+        /* 記住我*/
+        if ($_SESSION['Auth']['Remember_ME']) {
+            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
+            setcookie('_tk', base64_encode($toke), time() + 1209600, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
         } else {
-            call_user_func(AUTH_2FA_FORM_FUNC, AUTH_2FA_DUE);
-            unset($_SESSION['2FA']);
+            setcookie('_ID', base64_encode($userdata[$this->sqlsetting_User['UUID_col']]), 0, $this->CookiesPath, $_SERVER['HTTP_HOST'], true, true);
         }
+
+        /* 使用備份代碼 */
+        if ($BackupCodePass) {
+            $stmt->prepare("UPDATE {$this->sqlsetting_2FA_BackupCode['table']} SET {$this->sqlsetting_2FA_BackupCode['used']} = true WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ?");
+            $stmt->bind_param("ss", $_SESSION['Auth']['uuid'], $code);
+            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
+            $stmt->close();
+        }
+
+        return $this->Check_NewIP($userdata, $toke) ? AUTH_OK : AUTH_SERVER_ERROR;
     }
 
     /**
@@ -592,7 +554,7 @@ class MyAuth {
      */
     function checkAuth(): void {
         /* 如果Doing_2FA處於true的時候不進行登入動作 */
-        if (@$_SESSION['2FA']['Doing_2FA']) return;
+        if (isset($_SESSION['Auth']['Doing_2FA'])) return;
 
         /* 查詢 SQL
          * SELECT User.*, IF(Toke_list.Toke = ?, TRUE , FALSE) AS 'TrueToke'
@@ -983,7 +945,7 @@ class MyAuth {
         /* 產出後備代碼 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_2FA_BackupCode['table']} ({$this->sqlsetting_2FA_BackupCode['UUID']}, {$this->sqlsetting_2FA_BackupCode['Code']}) VALUES (?, ?)");
         $stmt->bind_param('ss', $this->userdata[$this->sqlsetting_User['UUID_col']], $generate_Code);
-        for ($i = 0; $i < 12; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $generate_Code = $this->Generate_Code(6);
             if (!$stmt->execute()) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL; //Fail
         }
@@ -996,7 +958,7 @@ class MyAuth {
      * @return array
      * @throws MyAuthException
      */
-    public function change2FASettingShowBackupCode(): array{
+    public function change2FASettingShowBackupCode(): array {
         /* 查詢資料 */
         $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
         $stmt->bind_param('s', $this->userdata['UUID']);

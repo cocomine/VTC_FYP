@@ -8,6 +8,9 @@ namespace cocomine;
 
 use Exception;
 
+/**
+ * MyAuth class Exception
+ */
 class MyAuthException extends Exception{
 
 }
