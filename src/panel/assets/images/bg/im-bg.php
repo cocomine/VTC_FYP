@@ -15,5 +15,5 @@ if(false !== strpos($_SERVER['REQUEST_URI'], '.php')){
 
 header("Content-type: image/jpeg");
 header("Cache-Control: no-cache");
-$imgurl = rand(1,6) .".jpg";
+$imgurl = rand(1,5) .".jpg";
 readfile("bg/".$imgurl);
