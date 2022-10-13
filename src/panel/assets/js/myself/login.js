@@ -97,7 +97,7 @@ define(['forge', 'jquery'], function (forge) {
                 })
             }).finally(() => {
                 bt.html(html).removeAttr('disabled');
-                $('#Password').val('')
+                $('#2FA_Code').val('')
             }).catch((error) => {
                 console.log(error)
             })

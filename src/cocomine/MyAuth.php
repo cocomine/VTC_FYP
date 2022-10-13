@@ -726,7 +726,30 @@ class MyAuth {
             $this->run_Hook('acc_register', $uuid, $email, $ActivatedCode, $name, $this->sqlcon); //執行Hook
             return AUTH_REGISTER_LAST_STEP; //Done
         } else {
+            /* 未激活成功重新註冊 */
             $stmt->close();
+            $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET 
+                 {$this->sqlsetting_User['Name_col']} = ?, {$this->sqlsetting_User['Password_col']} = ?, 
+                 {$this->sqlsetting_User['Last_Login_col']} = UNIX_TIMESTAMP(), {$this->sqlsetting_User['Last_IP_col']} = ?,
+                 {$this->sqlsetting_User['Language_col']} = ?, {$this->sqlsetting_User['Salt_col']} = ? , 
+                 {$this->sqlsetting_User['activated_code_col']} = ? WHERE {$this->sqlsetting_User['Email_col']} = ? AND {$this->sqlsetting_User['activated_col']} IS FALSE");
+            $stmt->bind_param("sssssss", $name, $password, $_SERVER['REMOTE_ADDR'], $localCode, $salt, $ActivatedCode, $email);
+            if(!$stmt->execute()) return AUTH_REGISTER_EMAIL_FAIL;
+
+            /* 修改成功 */
+            if($stmt->affected_rows >=1){
+                /* 取得UUID */
+                $stmt->prepare("SELECT {$this->sqlsetting_User['UUID_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
+                $stmt->bind_param("s", $email);
+                if(!$stmt->execute()) return AUTH_REGISTER_EMAIL_FAIL;
+
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+                $stmt->close();
+
+                $this->run_Hook('acc_register', $row[$this->sqlsetting_User['UUID_col']], $email, $ActivatedCode, $name, $this->sqlcon); //執行Hook
+                return AUTH_REGISTER_LAST_STEP;
+            }
             return AUTH_REGISTER_EMAIL_FAIL;
         }
     }

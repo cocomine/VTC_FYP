@@ -15,13 +15,6 @@ spl_autoload_register(function ($Class) {
     include './function/' . str_replace("cocomine\API\\", "", $Class) . '.php';
 });
 
-function mystrip($value) {
-    if (get_magic_quotes_gpc()) {
-        $value = stripcslashes($value);
-    }
-    return $value;
-}
-
 /**
  * 檢查電郵格式
  * @param string $email 電郵地址
@@ -62,6 +55,10 @@ function Generate_Code(int $length = 32): string {
     return $code;
 }
 
+const MAIL_RESET = 100;
+const MAIL_ACTIVATE = 101;
+const MAIL_WONG_NEWIP = 102;
+
 /**
  *電郵隊列
  * @param string $To 收件者電郵
@@ -74,17 +71,17 @@ function Generate_Code(int $length = 32): string {
 function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_queue, mysqli $sqlcon): bool {
 
     switch ($type) {
-        case AUTH_MAIL_RESET:
+        case MAIL_RESET:
             $subject = showText('Email.forgetPass.subject');
             $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
             $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
-        case AUTH_MAIL_ACTIVATE:
+        case MAIL_ACTIVATE:
             $subject = showText('Email.activated.subject');
             $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
             $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
-        case AUTH_MAIL_WONG_NEWIP:
+        case MAIL_WONG_NEWIP:
             $subject = showText('Email.Wong-newIP.subject');
             $From = 'auth@cocopixelmc.com;'.Cfg_site_title;
             $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
@@ -233,7 +230,7 @@ function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = nu
         $html = str_replace('%ISP%', getISP(), $html);
 
         /* 發出電郵 */
-        $mail = [$userdata['Email'], $html, AUTH_MAIL_WONG_NEWIP];
+        $mail = [$userdata['Email'], $html, MAIL_WONG_NEWIP];
         SendMail($mail[0], $mail[1], $mail[2], $sqlsetting_Mail_queue, $sqlcon);
     }
 
@@ -279,7 +276,7 @@ function acc_ForgetPass_Hook(array $userdata, string $email, string $code, mysql
     $html = str_replace('%localCode%', $userdata['Language'], $html);
     $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/forgotpass?code=" . urlencode(base64_encode($userdata['UUID'] . "@" . $code)), $html, $count);
     $html = str_replace('%NAME%', $userdata['Name'], $html);
-    SendMail($email, $html, AUTH_MAIL_RESET, $sqlsetting_Mail_queue, $sqlcon);
+    SendMail($email, $html, MAIL_RESET, $sqlsetting_Mail_queue, $sqlcon);
 }
 
 /**
@@ -325,5 +322,5 @@ function acc_Activated_Mail_Hook(string $uuid, string $email, string $ActivatedC
     $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/login?code=" . urlencode(base64_encode($uuid . "@" . $ActivatedCode)), $html, $count);
     $html = str_replace('%NAME%', $name, $html);
 
-    SendMail($email, $html, AUTH_MAIL_ACTIVATE, $sqlsetting_Mail_queue, $sqlcon);
+    SendMail($email, $html, MAIL_ACTIVATE, $sqlsetting_Mail_queue, $sqlcon);
 }
