@@ -8,7 +8,6 @@ use cocomine\API\notifyAPI;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
-use phpbrowscap\Browscap;
 
 //自動載入器
 spl_autoload_register(function ($Class) {
@@ -65,10 +64,9 @@ const MAIL_WONG_NEWIP = 102;
  * @param string $html 內容
  * @param int $type 類型
  * @param mysqli $sqlcon sql連結
- * @param array $sqlsetting_Mail_queue SQL tables Setting
  * @return bool 是否已經放入
  */
-function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_queue, mysqli $sqlcon): bool {
+function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
 
     switch ($type) {
         case MAIL_RESET:
@@ -88,7 +86,6 @@ function SendMail(string $To, string $html, int $type, array $sqlsetting_Mail_qu
             break;
         default:
             return false;
-            break;
     }
 
     /* 放入隊列 */
@@ -162,13 +159,11 @@ function getISP(string $ip = null): string {
 
 /**
  * 取得瀏覽器
- * @param string $user_agent
+ * @param string|null $user_agent
  * @return array|object 回傳Browscap資料
- * @throws \phpbrowscap\Exception
  */
-function getBrowser(string $user_agent) {
-    $bc = new Browscap('./function/Browscap');
-    return $bc->getBrowser($user_agent);
+function getBrowser(string $user_agent = null) {
+    return get_browser($user_agent, true);
 }
 
 /**
@@ -188,24 +183,9 @@ function acc_activated_Hook(string $uuid, mysqli $sqlcon) {
  * @param array|null $userdata 用戶資料
  * @param string|null $code 驗證代碼
  * @param mysqli|null $sqlcon 數據庫連接[option]
- * @throws \phpbrowscap\Exception
  */
 function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = null, mysqli $sqlcon = null) {
     if ($isNewIP) {
-        $sqlsetting_Mail_queue = array(
-            'table' => 'Mail_queue',
-            'ID' => 'ID',
-            'Send_To' => 'Send_To',
-            'Send_From' => 'Send_From',
-            'Subject' => 'Subject',
-            'Reply_To' => 'Reply_To',
-            'Body' => 'Body',
-            'Fail' => 'Fail',
-            'Sending' => 'Sending',
-            'Send_Time' => 'Send_Time',
-            'Create_Time' => 'Create_Time'
-        );
-
         /* 傳送電郵 */
         $html = file_get_contents('./stable/Wong-newIP-mail.html');
 
@@ -219,6 +199,8 @@ function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = nu
             $html = str_replace($replace, showText($Path), $html);
         }
 
+        $bc = getBrowser();
+
         /* 訊息覆蓋 */
         $count = 2;
         $html = str_replace('%localCode%', $userdata['Language'], $html);
@@ -226,12 +208,12 @@ function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = nu
         $html = str_replace('%NAME%', $userdata['Name'], $html);
         $html = str_replace('%IP%', filter_var($_SERVER['REMOTE_ADDR'], FILTER_SANITIZE_STRING), $html);
         $html = str_replace('%COUNTRY%', getCity(), $html);
-        $html = str_replace('%BROWSER%', getBrowser()->Browser . ', ' . getBrowser()->Platform, $html);
+        $html = str_replace('%BROWSER%', $bc['browser'] . $bc['version'] . ', ' . $bc['platform'], $html);
         $html = str_replace('%ISP%', getISP(), $html);
 
         /* 發出電郵 */
         $mail = [$userdata['Email'], $html, MAIL_WONG_NEWIP];
-        SendMail($mail[0], $mail[1], $mail[2], $sqlsetting_Mail_queue, $sqlcon);
+        SendMail($mail[0], $mail[1], $mail[2], $sqlcon);
     }
 
 }
@@ -244,20 +226,6 @@ function acc_NewIP_Hook(bool $isNewIP, array $userdata = null, string $code = nu
  * @param mysqli $sqlcon 數據庫連接[option]
  */
 function acc_ForgetPass_Hook(array $userdata, string $email, string $code, mysqli $sqlcon) {
-    $sqlsetting_Mail_queue = array(
-        'table' => 'Mail_queue',
-        'ID' => 'ID',
-        'Send_To' => 'Send_To',
-        'Send_From' => 'Send_From',
-        'Subject' => 'Subject',
-        'Reply_To' => 'Reply_To',
-        'Body' => 'Body',
-        'Fail' => 'Fail',
-        'Sending' => 'Sending',
-        'Send_Time' => 'Send_Time',
-        'Create_Time' => 'Create_Time'
-    );
-
     /* 傳送電郵 */
     $html = file_get_contents('./stable/forgetpass-mail.html');
 
@@ -276,7 +244,7 @@ function acc_ForgetPass_Hook(array $userdata, string $email, string $code, mysql
     $html = str_replace('%localCode%', $userdata['Language'], $html);
     $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/forgotpass?code=" . urlencode(base64_encode($userdata['UUID'] . "@" . $code)), $html, $count);
     $html = str_replace('%NAME%', $userdata['Name'], $html);
-    SendMail($email, $html, MAIL_RESET, $sqlsetting_Mail_queue, $sqlcon);
+    SendMail($email, $html, MAIL_RESET, $sqlcon);
 }
 
 /**
@@ -289,19 +257,6 @@ function acc_ForgetPass_Hook(array $userdata, string $email, string $code, mysql
  */
 function acc_Activated_Mail_Hook(string $uuid, string $email, string $ActivatedCode, string $name, mysqli $sqlcon) {
     global $localCode;
-    $sqlsetting_Mail_queue = array(
-        'table' => 'Mail_queue',
-        'ID' => 'ID',
-        'Send_To' => 'Send_To',
-        'Send_From' => 'Send_From',
-        'Subject' => 'Subject',
-        'Reply_To' => 'Reply_To',
-        'Body' => 'Body',
-        'Fail' => 'Fail',
-        'Sending' => 'Sending',
-        'Send_Time' => 'Send_Time',
-        'Create_Time' => 'Create_Time'
-    );
 
     /* 傳送電郵 */
     $html = file_get_contents('./stable/activated-mail.html');
@@ -322,5 +277,5 @@ function acc_Activated_Mail_Hook(string $uuid, string $email, string $ActivatedC
     $html = str_replace('%URL%', "https://".$_SERVER['SERVER_NAME']."/panel/login?code=" . urlencode(base64_encode($uuid . "@" . $ActivatedCode)), $html, $count);
     $html = str_replace('%NAME%', $name, $html);
 
-    SendMail($email, $html, MAIL_ACTIVATE, $sqlsetting_Mail_queue, $sqlcon);
+    SendMail($email, $html, MAIL_ACTIVATE, $sqlcon);
 }
