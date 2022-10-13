@@ -19,7 +19,7 @@ const title = "index.title";
 require_once('./stable/header.php');
 
 static $auth;
-$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_500_Error_File_Path, Cfg_Cookies_Path); //startup
+$auth = new MyAuth(Cfg_Sql_Host, Cfg_Sql_dbName, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Cookies_Path); //startup
 $auth->checkAuth(); //start auth
 $_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
 
@@ -64,7 +64,19 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         if ($access == 200) {
             //頁面輸出
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                echo json_encode($homePage->post());
+                $data = json_decode(file_get_contents("php://input"), true);
+
+                //無法解釋json
+                if ($data == null) {
+                    http_response_code(500);
+                    echo json_encode(array(
+                        'code' => 500,
+                        'Message' => showText('Error')
+                    ));
+                    exit();
+                }
+
+                echo json_encode($homePage->post($data));
             } else {
                 echo json_encode(array(
                     'title' => $homePage->get_Title(),

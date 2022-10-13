@@ -111,28 +111,32 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn
                 contentType: 'text/json; charset=utf-8',
                 data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey), 'DoAction': true}),
                 success: function (data) {
-                    let code = key.privateKey.decrypt(window.atob(data.Data.secret)); //解密
+                    if(data.code === 521){
+                        let code = key.privateKey.decrypt(window.atob(data.Data.secret)); //解密
 
-                    /* 分割代碼 */
-                    code = code.split('')
-                    const temp = []
-                    while (code.length > 0){
-                        temp.push(code.splice(0, 4).join(''));
+                        /* 分割代碼 */
+                        code = code.split('')
+                        const temp = []
+                        while (code.length > 0){
+                            temp.push(code.splice(0, 4).join(''));
+                        }
+                        const temp2 = '<span class="pe-2">'+temp.join('</span><span class="pe-2">')+'</span>'
+
+                        /* 輸出 */
+                        //modal.find('#qr').attr('src', window.atob(data.Data.qr)).removeClass('visually-hidden');
+                        const img = jQuery('<img />',{
+                            src: window.atob(data.Data.qr),
+                            width: 250,
+                            height: 250,
+                            alt: 'QRcode'
+                        });
+                        modal.find('#qr').html(img)
+                        modal.find('#secret').html(temp2);
+                        modal.find('.form-submit').removeAttr('disabled');
+                        $("#2FA_Code").val('').focus();
+                    }else {
+                        toastr.error(json.Message, json.Title);
                     }
-                    const temp2 = '<span class="pe-2">'+temp.join('</span><span class="pe-2">')+'</span>'
-
-                    /* 輸出 */
-                    //modal.find('#qr').attr('src', window.atob(data.Data.qr)).removeClass('visually-hidden');
-                    const img = jQuery('<img />',{
-                        src: window.atob(data.Data.qr),
-                        width: 250,
-                        height: 250,
-                        alt: 'QRcode'
-                    });
-                    modal.find('#qr').html(img)
-                    modal.find('#secret').html(temp2);
-                    modal.find('.form-submit').removeAttr('disabled');
-                    $("#2FA_Code").val('').focus();
                 }
             });
         });
@@ -211,6 +215,50 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn
             })
         }
     })
+
+    /*  */
+    $('#TwoFA_BackupCode').on('shown.bs.modal', function (e) {
+        const modal = $(this);
+
+        forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function (err, key) {
+            $.ajax({
+                type: 'POST',
+                url: '/panel/ChangeSetting?type=2FABackupCode',
+                contentType: 'text/json',
+                data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey)}),
+                success: function (json) {
+                    if(json.code === 528){
+                        /* 解密訊息 */
+                        const codes = json.Data.code.map((item) => key.privateKey.decrypt(window.atob(item.Code)))
+                        console.log(codes)
+
+                        /* 排列table */
+                        let table = '';
+                        let saveText = '';
+                        for (let i=0;i<json.Data.code.length;i = i+2){
+                            table += '<tr>';
+                            for(let a=i;a<i+2;a++){
+                                if(json.Data.code[a].used){
+                                    table += `<td class="text-decoration-line-through bg-secondary bg-opacity-50"><s>${codes[a]}</s></td>`; //寫入table
+                                }else{
+                                    saveText += codes[a]+"\n"; //寫入txt
+                                    table += `<td>${codes[a]}</td>`; //寫入table
+                                }
+                            }
+                            table += '</tr>';
+                        }
+
+                        /* 輸出 */
+                        modal.find('#BackupCodeShowArea').html("<table class='table table-hover table-bordered text-center'>"+table+"</table>");
+                        modal.find('.btn-primary').removeAttr('disabled');
+                        modal.find('#BackupCodeLoading').remove();
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                }
+            });
+        });
+    });
 
     /* 檢查限制 */
     $('#Password, #Old_Pass, #Password2').on("input focus", function () {

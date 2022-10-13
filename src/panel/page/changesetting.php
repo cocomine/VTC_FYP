@@ -7,8 +7,8 @@
 namespace panel\page;
 
 use cocomine\IPage;
+use cocomine\MyAuthException;
 use mysqli;
-use RobThree\Auth\TwoFactorAuthException;
 
 /**
  * Class changesetting
@@ -294,6 +294,8 @@ class changesetting implements IPage {
                 )
             );
         }
+
+        /* 修改密碼 */
         if ($_GET['type'] == 'PassSet') {
             $status = $auth->changePasswordSetting($data['passwordOld'], $data['password'], $data['password2'], $_SESSION['pvKey']);
             return array(
@@ -302,6 +304,8 @@ class changesetting implements IPage {
                 'Message' => $this->ResultMsg($status)[1],
             );
         }
+
+        /* 開啟關閉2FA */
         if ($_GET['type'] == '2FASet') {
             $puKey = filter_var($data['puKey'], FILTER_SANITIZE_STRING);;
             $status = $auth->change2FASetting($data['DoAction']);
@@ -331,6 +335,8 @@ class changesetting implements IPage {
                 );
             }
         }
+
+        /* 檢查2FA代碼 */
         if ($_GET['type'] == 'TwoFACheck') {
             $status = $auth->change2FASettingCheckCode($data['TwoFA_Code']);
             return array(
@@ -339,30 +345,37 @@ class changesetting implements IPage {
                 'Message' => $this->ResultMsg($status)[1],
             );
         }
+
+        /* 展示備用代碼 */
         if ($_GET['type'] == '2FABackupCode') {
-            $status = $auth->changeSetting(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE, null);
-            if ($status[0] == AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK) {
-                /* 加密訊息 */
-                $ALLCode = $status[1];
-                $piKey = openssl_pkey_get_public(filter_var($_POST['puKey'], FILTER_SANITIZE_STRING));
-                for ($i = 0; $i < sizeof($ALLCode); $i++) {
-                    //openssl_public_encrypt($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']], $piKey);
-                    //$ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']] = base64_encode($ALLCode[$i][$auth->sqlsetting_2FA_BackupCode['Code']]);
-                }
-                $outPut = array(
-                    'UserName' => $auth->userdata['Name'],
-                    'Code' => $ALLCode
+            $puKey = filter_var($data['puKey'], FILTER_SANITIZE_STRING);;
+            try {
+                $codes = $auth->change2FASettingShowBackupCode();
+
+                /* 加密 */
+                $piKey = openssl_pkey_get_public($puKey);
+                $temp = array_map(function($item) use($piKey) {
+                    openssl_public_encrypt($item['Code'], $item['Code'], $piKey);
+                    $item['Code'] = base64_encode($item['Code']);
+                    return $item;
+                }, $codes);
+
+                return array(
+                    'code' => AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK,
+                    'Title' => $this->ResultMsg(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK)[0],
+                    'Message' => $this->ResultMsg(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK)[1],
+                    'Data' => array(
+                        'code' => $temp,
+                        'username' => $auth->userdata['Name']
+                    )
+                );
+            } catch (MyAuthException $e) {
+                return array(
+                    'code' => $e->getCode(),
+                    'Title' => $this->ResultMsg($e->getCode())[0],
+                    'Message' => $this->ResultMsg($e->getCode())[1],
                 );
             }
-            if ($status[0] == AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL) {
-                $outPut = array(
-                    'script' => "$('#TwoFA_BackupCode').modal('hide');",
-                    'status' => 'Error',
-                    'title' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL.0"),
-                    'content' => showText("ChangeSetting.AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL.1"),
-                );
-            }
-            return $outPut;
         }
 
         return array(
@@ -371,7 +384,11 @@ class changesetting implements IPage {
         );
     }
 
-
+    /**
+     * 翻譯結果訊息
+     * @param int $type 類型
+     * @return string[] 訊息
+     */
     private function ResultMsg(int $type): array {
         switch ($type) {
             case AUTH_CHANGESETTING_DATA_FAIL:
@@ -403,6 +420,8 @@ class changesetting implements IPage {
                 return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL');
             case AUTH_CHANGESETTING_2FA_CHECK_CODE_OK:
                 return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_CHECK_CODE_OK');
+            case AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL:
+                return showText('ChangeSetting.AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL');
             default:
                 return array('', '');
         }

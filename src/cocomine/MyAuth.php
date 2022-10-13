@@ -7,10 +7,7 @@
 namespace cocomine;
 
 use mysqli;
-use Michael_Kliewe\GoogleAuthenticator\PHPGangsta_GoogleAuthenticator;
-use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
-use RobThree\Auth\TwoFactorAuthException;
 
 /* @deprecated */
 define('AUTH_2FA_FORM_FUNC', 'TwoFA_form');
@@ -63,17 +60,14 @@ define('AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH', 513);
 define('AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG', 514);
 define('AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG', 515);
 
-/* @deprecated */
-define('AUTH_CHANGESETTING_2FA', 520);
+
 define('AUTH_CHANGESETTING_2FA_LOGON', 521);
-/* @deprecated */
-define('AUTH_CHANGESETTING_2FA_CHECK_CODE', 522);
+
 define('AUTH_CHANGESETTING_2FA_CHECK_CODE_OK', 523);
 define('AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL', 524);
 define('AUTH_CHANGESETTING_2FA_OFF_OK', 525);
 define('AUTH_CHANGESETTING_2FA_OFF_FAIL', 526);
-/* @deprecated */
-define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE', 527);
+
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK', 528);
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 529);
 
@@ -83,18 +77,9 @@ define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 529);
  */
 class MyAuth {
 
-    private string $ErrorFile = "";
     private string $CookiesPath = '/';
     private TwoFA $twoFA;
     private array $Hook_func = array();
-
-    /**
-     * 取得錯誤檔案路徑
-     * @return string 錯誤檔案路徑
-     */
-    public function getErrorFile(): string {
-        return $this->ErrorFile;
-    }
 
     /**
      * 取得cookie路徑
@@ -184,19 +169,15 @@ class MyAuth {
      * @param string $dbName 數據庫名稱
      * @param string $dbUser 數據庫用戶名稱
      * @param string $dbPass 數據庫密碼
-     * @param string $ErrorFile 當出現錯誤時會展示的錯誤頁面php文件
      * @param string $CookiesPath 瀏覽器cookie規限路徑 預設: "/"
+     * @throws MyAuthException
      */
-    function __construct(string $dbServer = "localhost", string $dbName = "dbName", string $dbUser = "dbUser", string $dbPass = "dbPass", string $ErrorFile = '500ErrorFilePath', string $CookiesPath = '/') {
+    function __construct(string $dbServer = "localhost", string $dbName = "dbName", string $dbUser = "dbUser", string $dbPass = "dbPass", string $CookiesPath = '/') {
         @session_start();
+        require_once(__DIR__ . '/MyAuthException.php');
         $this->sqlcon = new mysqli($dbServer, $dbUser, $dbPass, $dbName);
-        if ($this->sqlcon->connect_errno) {
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if ($this->sqlcon->connect_errno) throw new MyAuthException('SQL Error');
 
-        $this->ErrorFile = $ErrorFile;
         $this->CookiesPath = $CookiesPath;
         $this->sqlcon->query("SET NAMES utf8");
     }
@@ -205,6 +186,7 @@ class MyAuth {
      * Google 登入
      * @param string $email 電郵
      * @return bool 註冊與否
+     * @throws MyAuthException
      */
     function google_login(string $email): bool {
         //不能留空
@@ -216,12 +198,7 @@ class MyAuth {
         /* 查詢 */
         $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['Email_col']} = ?");
         $stmt->bind_param("s", $email);
-        if (!$stmt->execute()) {
-            ob_clean();
-            http_response_code(500);
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error', AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL);
 
         /* 分析結果 */
         $result = $stmt->get_result();
@@ -298,7 +275,9 @@ class MyAuth {
             $pi_key = openssl_pkey_get_private($RSAkey);
             $dePass = @openssl_private_decrypt(base64_decode($password), $password, $pi_key);
             if (!$dePass) {
-                $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+                try {
+                    $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+                } catch (MyAuthException $e) {}
                 return AUTH_WRONG_PASS;
             }
         }
@@ -316,7 +295,9 @@ class MyAuth {
         /* 檢查登入資訊 */
         //檢查用戶存在
         if (mysqli_num_rows($result) < 1) {
-            $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            try {
+                $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            } catch (MyAuthException $e) {}
             return AUTH_WRONG_PASS;
         }
 
@@ -327,7 +308,9 @@ class MyAuth {
 
         //檢查資料匹配
         if ($userdata[$this->sqlsetting_User['Email_col']] != $email || $userdata[$this->sqlsetting_User['Password_col']] != $password) {
-            $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            try {
+                $this->Add_Block_ip($_SERVER['REMOTE_ADDR']);
+            } catch (MyAuthException $e) {}
             return AUTH_WRONG_PASS;
         }
         //檢查帳號啟動
@@ -377,6 +360,7 @@ class MyAuth {
      * 封鎖登入
      * @param $code string 代碼
      * @return bool 是否成功
+     * @throws MyAuthException
      */
     function Block_login(string $code): bool {
         /* 空值檢查 */
@@ -387,12 +371,7 @@ class MyAuth {
         /* 查詢 */
         $stmt = $this->sqlcon->prepare("SELECT * FROM {$this->sqlsetting_Block_login_code['table']} WHERE {$this->sqlsetting_Block_login_code['code']} = ?");
         $stmt->bind_param("s", $code);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
         /* 分析結果 */
         $result = $stmt->get_result();
@@ -404,20 +383,10 @@ class MyAuth {
 
         $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_Block_login_code['table']} WHERE {$this->sqlsetting_Block_login_code['code']} = ?");
         $stmt->bind_param("s", $code);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
         $stmt->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
         $stmt->bind_param("s", $data[$this->sqlsetting_Block_login_code['Toke']]);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
         $stmt->close();
 
         return true; //存在
@@ -450,17 +419,13 @@ class MyAuth {
      * 防爆破
      *
      * @param string $ip 訪客ip
+     * @throws MyAuthException
      */
     private function Add_Block_ip(string $ip) {
         /* 插入 */
         $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_IPBlock['table']}({$this->sqlsetting_IPBlock['IP']}, {$this->sqlsetting_IPBlock['Last_time']}) VALUES (?, UNIX_TIMESTAMP())");
         $stmt->bind_param("s", $ip);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
     }
 
     /**
@@ -468,17 +433,13 @@ class MyAuth {
      *
      * @param string $ip ip地址
      * @return bool|int 狀態
+     * @throws MyAuthException
      */
     private function Check_Block_ip(string $ip) {
         /* 插入 */
         $stmt = $this->sqlcon->prepare("SELECT COUNT({$this->sqlsetting_IPBlock['IP']}) AS 'count', (UNIX_TIMESTAMP()-MAX({$this->sqlsetting_IPBlock['Last_time']})) AS {$this->sqlsetting_IPBlock['Last_time']} FROM {$this->sqlsetting_IPBlock['table']} WHERE {$this->sqlsetting_IPBlock['IP']} = ?");
         $stmt->bind_param("s", $ip);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
         /* 分析結果 */
         $result = $stmt->get_result();
@@ -507,6 +468,7 @@ class MyAuth {
      * 2FA登入檢查
      *
      * @param string $code 確認代碼
+     * @throws MyAuthException
      */
     function TwoFA_check(string $code) {
         $ga = new TwoFactorAuth();
@@ -515,12 +477,7 @@ class MyAuth {
         /* 查詢 */
         $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_User['2FA_secret_col']}, (UNIX_TIMESTAMP()-{$this->sqlsetting_User['Last_Login_col']}) AS {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Language_col']}, {$this->sqlsetting_User['Last_IP_col']} FROM {$this->sqlsetting_User['table']} WHERE {$this->sqlsetting_User['UUID_col']} = ?");
         $stmt->bind_param("s", $_SESSION['2FA']['UUID']);
-        if (!$stmt->execute()) {
-            ob_clean();
-            header('HTTP/1.1 500 Internal Server Error');
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
         /* 分析結果 */
         $result = $stmt->get_result();
@@ -536,12 +493,7 @@ class MyAuth {
                     /* 插入toke資料 */
                     $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
                     $stmt->bind_param("sss", $_SESSION['2FA']['UUID'], $_SERVER['REMOTE_ADDR'], $_SESSION['2FA']['toke']);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
+                    if (!$stmt->execute()) throw new MyAuthException('SQL Error');
                     $stmt->close();
 
                     $_SESSION['toke'] = $_SESSION['2FA']['toke']; //Set toke
@@ -564,12 +516,7 @@ class MyAuth {
 
                     $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
                     $stmt->bind_param("s", $_SESSION['2FA']['UUID']);
-                    if (!$stmt->execute()) {
-                        ob_clean();
-                        header('HTTP/1.1 500 Internal Server Error');
-                        require_once($this->ErrorFile);
-                        exit();
-                    }
+                    if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
                     /* 分析結果 */
                     $result = $stmt->get_result();
@@ -582,24 +529,14 @@ class MyAuth {
                             /* 插入toke資料 */
                             $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_TokeList['table']} ({$this->sqlsetting_TokeList['UUID']}, {$this->sqlsetting_TokeList['IP']}, {$this->sqlsetting_TokeList['Toke']}, {$this->sqlsetting_TokeList['Time']}) VALUES (?, ?, ?, UNIX_TIMESTAMP())");
                             $stmt->bind_param("sss", $_SESSION['2FA']['UUID'], $_SERVER['REMOTE_ADDR'], $_SESSION['2FA']['toke']);
-                            if (!$stmt->execute()) {
-                                ob_clean();
-                                header('HTTP/1.1 500 Internal Server Error');
-                                require_once($this->ErrorFile);
-                                exit();
-                            }
+                            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
                             $_SESSION['toke'] = $_SESSION['2FA']['toke']; //Set toke
                             $_SESSION['UUID'] = $_SESSION['2FA']['UUID']; //Set uuid
 
                             $stmt->prepare("UPDATE {$this->sqlsetting_2FA_BackupCode['table']} SET {$this->sqlsetting_2FA_BackupCode['used']} = true WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ? AND {$this->sqlsetting_2FA_BackupCode['Code']} = ?");
                             $stmt->bind_param("ss", $_SESSION['2FA']['UUID'], $code);
-                            if (!$stmt->execute()) {
-                                ob_clean();
-                                header('HTTP/1.1 500 Internal Server Error');
-                                require_once($this->ErrorFile);
-                                exit();
-                            }
+                            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
                             $stmt->close();
 
                             /* 記住我功能 */
@@ -630,6 +567,7 @@ class MyAuth {
 
     /**
      * 登出帳號
+     * @throws MyAuthException
      */
     function logout() {
         if (empty($_SESSION['UUID'])) return;
@@ -637,12 +575,7 @@ class MyAuth {
         /* 移除toke紀錄 */
         $stmt = $this->sqlcon->prepare("DELETE FROM {$this->sqlsetting_TokeList['table']} WHERE {$this->sqlsetting_TokeList['Toke']} = ?");
         $stmt->bind_param("s", $_SESSION['toke']);
-        if (!$stmt->execute()) {
-            ob_clean();
-            http_response_code(500);
-            require_once($this->ErrorFile);
-            exit();
-        }
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error');
         $stmt->close();
 
         unset($_SESSION['UUID']);
@@ -655,6 +588,7 @@ class MyAuth {
 
     /**
      * 檢查登入狀態
+     * @throws MyAuthException
      */
     function checkAuth(): void {
         /* 如果Doing_2FA處於true的時候不進行登入動作 */
@@ -675,12 +609,7 @@ class MyAuth {
             /* 查詢 */
             $stmt = $this->sqlcon->prepare($query);
             $stmt->bind_param("ss", $_SESSION['toke'], $_SESSION['toke']);
-            if (!$stmt->execute()) {
-                ob_clean();
-                http_response_code(500);
-                require_once($this->ErrorFile);
-                exit();
-            }
+            if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
             /* 分析結果 */
             $result = $stmt->get_result();
@@ -720,12 +649,7 @@ class MyAuth {
                 /* 查詢 */
                 $stmt = $this->sqlcon->prepare($query);
                 $stmt->bind_param("ss", $toke, $toke);
-                if (!$stmt->execute()) {
-                    ob_clean();
-                    http_response_code(500);
-                    require_once($this->ErrorFile);
-                    exit();
-                }
+                if (!$stmt->execute()) throw new MyAuthException('SQL Error');
 
                 /* 分析結果 */
                 $result = $stmt->get_result();
@@ -1029,8 +953,9 @@ class MyAuth {
     }
 
     /**
-     * @param string $code
-     * @return int
+     * 檢查代碼開啟2FA
+     * @param string $code 代碼
+     * @return int 狀態
      */
     public function change2FASettingCheckCode(string $code): int {
         require_once(__DIR__ . '/TwoFA.php');
@@ -1067,39 +992,25 @@ class MyAuth {
     }
 
     /**
-     *更改個人檔案<br/>
-     * + AUTH_CHANGESETTING_2FA  *2FA開啟關閉*
-     *      + 2FAto -> 更改2FA狀態  *true: 開啟, false: 關閉*
-     * + AUTH_CHANGESETTING_2FA_CHECK_CODE  *2FA檢查代碼是否正確*
-     *      + code -> 2FA Code
      *
-     * @param int $type 修改類型
-     * @param array $data 修改資料
-     * @param bool $RSAon 是否使用了RSA加密
-     * @return array 狀態
+     * @return array
+     * @throws MyAuthException
      */
-    function changeSetting(int $type, array $data, bool $RSAon = true): ?array {
-        if ($type === AUTH_CHANGESETTING_2FA_CHECK_CODE) {
+    public function change2FASettingShowBackupCode(): array{
+        /* 查詢資料 */
+        $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
+        $stmt->bind_param('s', $this->userdata['UUID']);
+        if (!$stmt->execute()) throw new MyAuthException('SQL Error', AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL);
+        $result = $stmt->get_result();
 
-        } elseif ($type === AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE) {
-            /* 查詢資料 */
-            $stmt = $this->sqlcon->prepare("SELECT {$this->sqlsetting_2FA_BackupCode['Code']}, {$this->sqlsetting_2FA_BackupCode['used']} FROM {$this->sqlsetting_2FA_BackupCode['table']} WHERE {$this->sqlsetting_2FA_BackupCode['UUID']} = ?");
-            $stmt->bind_param('s', $this->userdata['UUID']);
-            if (!$stmt->execute()) {
-                return array(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL);
-            }
-            $result = $stmt->get_result();
-
-            /* 分析資料 */
-            $ALLcode = array();
-            while ($row = $result->fetch_assoc()) {
-                array_push($ALLcode, $row);
-            }
-            $stmt->close();
-
-            return array(AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK, $ALLcode);
+        /* 分析資料 */
+        $codes = array();
+        while ($row = $result->fetch_assoc()) {
+            $codes[] = $row;
         }
-        return null;
+        $stmt->close();
+
+        return $codes;
     }
 
     /**
