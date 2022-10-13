@@ -6,6 +6,9 @@
 define(['forge', 'jquery'], function (forge) {
     "use strict";
 
+    /* Go back home */
+    $('#GoBack').click(() => sessionStorage.removeItem('returnPath'))
+
     /* 遞交表單 */
     $('#Login').submit(async function (e) {
         e.preventDefault();
