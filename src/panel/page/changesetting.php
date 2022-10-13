@@ -82,7 +82,10 @@ class changesetting implements IPage {
         }
 
         /* json 語言 */
-        $jsonLang = json_encode(array('strength' => showText('ChangeSetting.strength')));
+        $jsonLang = json_encode(array(
+            'strength' => showText('ChangeSetting.strength'),
+            'BackupCode' => showText('ChangeSetting.BackupCode')
+            ));
 
         /* HTNL */
         return "<pre id='langJson' style='display: none'>$jsonLang</pre>

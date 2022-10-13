@@ -99,6 +99,10 @@
         "嗯! 好點了~~",
         "非常強大!!"
       ],
+      "BackupCode": {
+        "content": "這些就是你的安全代碼, 請放在一個安全地方。如果可以將它加密當然是最好!（￣︶￣）↗　",
+        "BackupCode": "安全代碼"
+      },
       "AUTH_CHANGESETTING_2FA_OFF_OK": ["已經成功重設啦ヾ(^▽^*)))"],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "重設失敗(┬┬﹏┬┬) 請重試~~",
@@ -345,11 +349,6 @@
     }
   },
   "JS": {
-    "2FA": {
-      "isUsed": "已使用✔",
-      "content": "這些就是你的安全代碼, 請放在一個安全地方。如果可以將它加密當然是最好!（￣︶￣）↗　",
-      "BackupCode": "安全代碼"
-    },
     "notify": {
       "just_now": "現在",
       "few_seconds": "幾秒前",

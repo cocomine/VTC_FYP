@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn, forge, bootstrap) => {
+define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, toastr, zxcvbn, forge, bootstrap, FileSaver) => {
     "use strict";
 
     let Lang = $('#langJson').text();
@@ -216,7 +216,8 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn
         }
     })
 
-    /*  */
+    /* show備份代碼 */
+    let saveText = '';
     $('#TwoFA_BackupCode').on('shown.bs.modal', function (e) {
         const modal = $(this);
 
@@ -234,7 +235,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn
 
                         /* 排列table */
                         let table = '';
-                        let saveText = '';
                         for (let i=0;i<json.Data.code.length;i = i+2){
                             table += '<tr>';
                             for(let a=i;a<i+2;a++){
@@ -258,6 +258,13 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap'], (jq, toastr, zxcvbn
                 }
             });
         });
+    });
+
+    /* 下載備份代碼 */
+    $('#Download_BackupCode').click(function () {
+        const UserName = $('#username').text();
+        const blob = new Blob([Lang.BackupCode.content+"\n\n"+saveText], {type: "text/plain;charset=utf-8"});
+        FileSaver.saveAs(blob, `Global blacklist ${Lang.BackupCode.BackupCode} (${UserName}).txt`);
     });
 
     /* 檢查限制 */
