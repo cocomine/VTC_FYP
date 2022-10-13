@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "9/10/2022",
+  "Last_Update": "13/10/2022",
   "Translate": {
     "Error": "發生未知錯誤!!",
     "header": {
@@ -8,7 +8,7 @@
       "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching &。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Law chun kit。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
       "title": "首頁 | IVE airline",
@@ -75,7 +75,7 @@
         },
         "TwoFA_confirm_off_modal": {
           "title": "認真?",
-          "body": "重設之後帳戶就會少一層防護, 多一份煩惱。你真的要這樣做? (⊙﹏⊙)",
+          "body": "重設之後, 帳戶就會少一層防護, 多一份煩惱。你真的要這樣做? (⊙﹏⊙)",
           "NO": "還是算了~",
           "YES": "是! 我認真的!"
         },

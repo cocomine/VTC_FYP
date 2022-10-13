@@ -1,26 +1,25 @@
 {
   "Lang": "zh",
-  "Last_Update": "10/9/2020",
+  "Last_Update": "13/10/2022",
   "Translate": {
+    "Error": "发生未知错误!!",
     "header": {
-      "browserupgrade": "我知道你对<b>IE</b>有一份特别的<b>忠诚</b>, 但是他实在有点太旧... 你至少也要把它<a href=\"http://browsehappy .com/\">升级成IE 11</a>吧!",
+      "browserupgrade": "我知道你对<b>IE</b>有一份特别的<b>忠诚</b>, 但是他实在有点太旧... 你至少也要把它<a href=\"http://browsehappy.com/\">升级成IE 11</a>吧!",
       "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>"
     },
     "footer": {
-      "privacy": [
-        "<a href=\"\">隐私政策</a> 和 <a href=\"\">服务条款</a>",
-        "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。",
-        "此产品不属于Minecraft，Mojang AB或Microsoft游戏。"
-      ]
+      "privacy": "© Chu Ho Ching & Law chun kit。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
-      "title": "首页 | Global blacklist",
+      "title": "首页 | IVE airline",
       "Console": "控制台",
       "home": "首页",
-      "Logout": "登出"
+      "Logout": "登出",
+      "Login": "登入",
+      "visitor": "访客"
     },
     "ChangeSetting": {
-      "title": "帐号设定 | Global blacklist",
+      "title": "设定 | IVE airline",
       "setting": "帐号设定",
       "ChangeData": "个人档案",
       "Gravatar": "前往Gravatar修改",
@@ -76,7 +75,7 @@
         },
         "TwoFA_confirm_off_modal": {
           "title": "认真?",
-          "body": "重设之后帐户就会少一层防护, 多一份烦恼。你真的要这样做? (⊙﹏⊙)",
+          "body": "重设之后, 帐户就会少一层防护, 多一份烦恼。你真的要这样做? (⊙﹏⊙)",
           "NO": "还是算了~",
           "YES": "是! 我认真的!"
         },
@@ -86,7 +85,25 @@
           "download": "保存安全代码"
         }
       },
-      "AUTH_CHANGESETTING_2FA_OFF_OK": "已经成功重设啦ヾ(^▽^*)))",
+      "Form": {
+        "Cant_EMPTY": "这里是不能留空喔~~",
+        "Error_format": "电邮格式应该不是这样的吧",
+        "Not_Match_Wrong": "两次密码输入不对喔~~",
+        "Match_Old_Pass": "要与旧密码不相同喔~~",
+        "Only_number": "只可以输入数字哦~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有点弱..",
+        "中规中矩",
+        "嗯! 好点了~~",
+        "非常强大!!"
+      ],
+      "BackupCode": {
+        "content": "这些就是你的安全代码, 请放在一个安全地方。如果可以将它加密当然是最好!（￣︶￣）↗　",
+        "BackupCode": "安全代码"
+      },
+      "AUTH_CHANGESETTING_2FA_OFF_OK": ["已经成功重设啦ヾ(^▽^*)))"],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "重设失败(┬┬﹏┬┬) 请重试~~",
         "若果情况持续请联络客服人员"
@@ -107,7 +124,7 @@
         "成功修改ヾ(^▽^*)))",
         "<b>最后一步!</b> 快点到你的邮箱查看吧!"
       ],
-      "AUTH_CHANGESETTING_DATA_OK": "成功修改ヾ(^▽^*)))",
+      "AUTH_CHANGESETTING_DATA_OK": ["成功修改ヾ(^▽^*)))"],
       "AUTH_CHANGESETTING_DATA_FAIL": [
         "修改失败(┬┬﹏┬┬) 请重试~~",
         "若情况持续请联络客服人员"
@@ -142,20 +159,21 @@
       ]
     },
     "Login": {
-      "title": "登入 | Global blacklist",
+      "title": "登入 | IVE airline",
       "Login": "登入",
       "welcome": "<b>Hello!</b> 登入就可以了",
       "email": "电邮地址",
       "password": "密码",
       "Remember_ME": "记住我",
       "forgotpass": "忘记密码?",
-      "register": "你没有账号又想用? <a href=\"register\">马上注册吧</a>",
+      "go_register": "你没有账号又想用? <a href=\"register\">马上注册吧</a>",
       "WRONG_PASS": "<b>Oh Nooooo!</b> 电邮或者密码不对哦!",
       "NOT_DOEN": "<b>Hey!</b> 这么心急是不行的!快去检查邮箱吧!",
       "REGISTER_COMPLETE": "<b>Yes!</b> 你完成了! 马上去登陆使用吧!",
       "REGISTER_CODE_WRONG": "<b>Hey!</b> 失效啦!",
       "AUTH_GOOGLE_ERROR": "发生错误! (っ °Д °;)っ",
-      "Login_with_google": "<i class=\"fa fa-google\"></i> 登入",
+      "Login_with_google": "<i class=\"fa-brands fa-google me-2\"></i>登入",
+      "go_back_home": "暂时不想登入? <a href=\"/panel\" id=\"GoBack\">那么先回去吧</a>",
       "BLOCK_10": [
         "<b>Sorry~~</b> 你失败太多次啦! 先等10分钟再尝试吧~~",
         "如果你把密码忘记得一干二净, 你可以试一试<a href=\"forgotpass\">找回密码</a>"
@@ -163,7 +181,11 @@
       "BLOCK_30": [
         "<b>Sorry~~</b> 你失败太多次啦! 先等30分钟再尝试吧~~ <br> ",
         "如果你把密码忘记得一干二净, 你可以试一试<a href=\"forgotpass\">找回密码</a>"
-      ]
+      ],
+      "Form": {
+        "Cant_EMPTY": "这里是不能留空喔",
+        "Error_format": "电邮格式应该不是这样的吧"
+      }
     },
     "TwoFA": {
       "2FA_WRONG": "<b>Ah Oh!</b> 神秘代码不对哦!",
@@ -172,11 +194,14 @@
       "welcome": "<b>Hello!</b> 从你的手机应用程式取得神秘代码输入就可以啦",
       "2FACode": "2FA代码",
       "Login": "登入",
-      "ReDo": "帐号输错了? <a href=\"login\">重新输入吧</a>",
-      "Can't_use_phone": "手机用不了?<br>你可以直接输入12个安全代码的其中1个 （づ￣3￣）づ╭❤～"
+      "ReDo": "帐号输错了? <a href=\"/panel/login?Reset2FA=1\">重新输入吧</a>",
+      "Can't_use_phone": "手机用不了?<br>你可以直接输入6个安全代码的其中1个 （づ￣3￣）づ╭❤～",
+      "Form": {
+        "empty": "这里是不能留空喔"
+      }
     },
     "Register": {
-      "title": "注册 | Global blacklist",
+      "title": "注册 | IVE airline",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 电邮寄不出去! 检查有没有打错吧~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> 两次输入的密码不是一样的哦!",
       "PASS_NOT_STRONG": "<b>Umm..</b> 密码不太强哦!",
@@ -186,13 +211,13 @@
       "LAST_STEP": "<b>最后一步!</b> 快点到你的邮箱查看吧!",
       "NEED_AGREE": "<b>Hey!</b> 你需要同意<b>服务条款</b>和<b>私隐权政策</b>才能注册哦!",
       "YOUR_BOT": "<b>Ah Oh!</b> 你是机械人不能注册哦! (或者你没有验证)",
+      "First_use": "<b>你是第一次使用!</b> 注册了之后就可以直接使用google登入啦",
       "Register": "注册",
       "welcome": "想用的话就注册吧",
       "Name": "名称",
       "email": "电邮地址",
       "password": "密码",
       "confirmPass": "确认密码",
-      "Not_Match_Wrong": "两次密码输入不对喔~~",
       "passStrength": "密码强度:",
       "condition": [
         "条件",
@@ -203,10 +228,24 @@
       ],
       "Agree-Service": "我同意<a href=\"#\">服务条款</a>",
       "Agree-privacy": "我同意<a href=\"#\">私隐权政策</a>",
-      "go_login": "已经注册过了? <a href=\"login\">去登入吧!!</a>"
+      "go_login": "已经注册过了? <a href=\"login\">去登入吧!!</a>",
+      "Form": {
+        "Cant_EMPTY": "这里是不能留空喔",
+        "Error_format": "电邮格式应该不是这样的吧",
+        "Not_checked": "你不剔选, 我们就无法继续了",
+        "Check_bot": "我需要知道你是谁",
+        "Not_Match_Wrong": "两次密码输入不对喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有点弱..",
+        "中规中矩",
+        "嗯! 好点了~~",
+        "非常强大!!"
+      ]
     },
     "ForgotPass": {
-      "title": "忘记密码 | Global blacklist",
+      "title": "忘记密码 | IVE airline",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 电邮寄不出去! 检查有没有打错吧~~",
       "LASTSTEP": "<b>最后两步!</b> 快点到你的邮箱查看吧!",
       "CODE_WRONG": "<b>Hey!</b> 失效啦!",
@@ -233,16 +272,30 @@
         "至少需要八只字以上",
         "不可和电邮地址或名称相同"
       ],
-      "Change_Pass": "更换密码"
+      "Change_Pass": "更换密码",
+      "Form": {
+        "Cant_EMPTY": "这里是不能留空喔",
+        "Error_format": "电邮格式应该不是这样的吧",
+        "Check_bot": "我需要知道你是谁",
+        "Not_Match_Wrong": "两次密码输入不对喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有点弱..",
+        "中规中矩",
+        "嗯! 好点了~~",
+        "非常强大!!"
+      ]
     },
     "Error_Page": {
-      "403_title": "停!停! | Global blacklist",
+      "403_title": "停!停! | IVE airline",
       "Dont_Come": "喂喂喂! 你不应该来这里!",
-      "404_title": "你去哪里了! | Global blacklist",
+      "404_title": "你去哪里了! | IVE airline",
       "Where_you_go": "等等! 你去哪里了!",
-      "500_title": "死火啦! | Global blacklist",
+      "500_title": "死火啦! | IVE airline",
       "something_happened": "哎吔! 死火啦! 出事喇!",
-      "GoBack": "回去吧"
+      "GoBack": "回去吧",
+      "400_title": "请求出现问题!"
     },
     "Block_login": {
       "title": "封锁登入",
@@ -261,11 +314,7 @@
           "如果按钮点爆了都没有反应, 就直接把下方连结搬到浏览器吧!",
           "如有任何问题请寄电邮至"
         ],
-        "privacy": [
-          "<a href=\"\">隐私政策</a> 和 <a href=\"\">服务条款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。",
-          "此产品不属于Minecraft，Mojang AB或Microsoft游戏。"
-        ]
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。"
       },
       "forgetPass": {
         "subject": "你请求的密码重设, 已送到!",
@@ -277,11 +326,7 @@
           "如果按钮点爆了都没有反应, 就直接把下方连结搬到浏览器吧!",
           "如有任何问题请寄电邮至"
         ],
-        "privacy": [
-          "<a href=\"\">隐私政策</a> 和 <a href=\"\">服务条款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。",
-          "此产品不属于Minecraft，Mojang AB或Microsoft游戏。"
-        ]
+        "privacy": "由<ahref=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 "
       },
       "Wong-newIP": {
         "subject": "有人登入你的帐号! Σ(っ °Д °;)っ",
@@ -299,35 +344,12 @@
         ],
         "Unknown_Location": "地点不明",
         "Äny-question": "如有任何问题请寄电邮至",
-        "privacy": [
-          "<a href=\"\">隐私政策</a> 和 <a href=\"\">服务条款</a>",
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a>提供翻译。",
-          "此产品不属于Minecraft，Mojang AB或Microsoft游戏。"
-        ]
+        "privacy":
+        "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。"
       }
     }
   },
   "JS": {
-    "meter": {
-      "strength": [
-        "太弱了!",
-        "有点弱..",
-        "中规中矩",
-        "嗯! 好点了~~",
-        "非常强大!!"
-      ]
-    },
-    "Form": {
-      "Cant_EMPTY": "这里是不能留空喔",
-      "Error_format": "电邮格式应该不是这样的吧",
-      "Not_checked": "你不剔选, 我们就无法继续了",
-      "Check_bot": "我需要知道你是谁"
-    },
-    "2FA": {
-      "isUsed": "已使用✔",
-      "content": "这些就是你的安全代码, 请放在一个安全地方。如果可以将它加密当然是最好!（￣︶￣）↗　",
-      "BackupCode": "安全代码"
-    },
     "notify": {
       "just_now": "现在",
       "few_seconds": "几秒前",
