@@ -13,7 +13,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'], '.php')){
     exit();
 }
 
-header("Content-type: image/jpeg");
+header("Content-type: image/webp");
 header("Cache-Control: no-cache");
-$imgurl = rand(1,5) .".jpg";
+$imgurl = rand(1,5) .".webp";
 readfile("bg/".$imgurl);
