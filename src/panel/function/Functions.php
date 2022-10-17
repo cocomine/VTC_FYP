@@ -10,8 +10,8 @@ use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 
 //自動載入器
-spl_autoload_register(function ($Class) {
-    include_once '../cocomine/' . $Class . '.php';
+spl_autoload_register(function ($class) {
+    include_once '../' . str_replace('\\', '/', $class) . '.php';
 });
 
 /**

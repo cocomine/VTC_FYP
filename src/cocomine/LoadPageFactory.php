@@ -21,7 +21,9 @@ class LoadPageFactory {
      * Create page factory
      * @throws Exception File is not exits
      */
-    public static function create(string $path, string $up_path): IPage{
+    public static function create(string $class, string $rootPath, array $up_path): IPage{
+        $path = $rootPath.str_replace('\\', '/', $class).'.php';
+
         if(!file_exists($path)) throw new Exception('File is not exits');
         require_once($path);
 
@@ -32,6 +34,6 @@ class LoadPageFactory {
             echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
             exit();
         }
-        return new $path($sqlcon, $up_path); //create class
+        return new $class($sqlcon, $up_path); //create class
     }
 }

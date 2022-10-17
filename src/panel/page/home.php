@@ -32,15 +32,22 @@ class home implements IPage
 
     /* 輸出頁面 */
     function showPage(): string {
-        return "
-            <div class='col-12 mt-4'>
-                <div class='card'>
-                    <div class='card-body'>
-                        Hello world!
+        return <<<body
+        <div class='col-12 mt-4' style="height: 100vh">
+            <div class="card h-100" style="background-image: url('/panel/assets/images/bg/bg/6.webp'); background-size: cover; background-position: center">
+                <div class='card-body'>
+                    <div class="row align-content-center h-100">
+                        <div class="col-12 col-lg-8">
+                            <div class="form-floating">
+                                <input type="text" class="form-control form-rounded" id="Search" placeholder="Search flight">
+                                <label for="Search">Search flight</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        ";
+        </div>
+        body;
     }
 
     /* POST請求 */

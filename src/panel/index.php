@@ -110,16 +110,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     //開始遍歴
     for ($i = count($path); $i >= 0; $i--) {
         //重組class路徑
-        $class = '\panel\page';
+        $class = 'panel\\page';
         for ($x = 0; $x < $i; $x++) {
             $class .= '\\' . $path[$x];
         }
-        $include_path = './..' . str_replace('\\', '/', $class) . '.php';
         $up_path = array_slice($path, $i); //傳入在此之前的路徑
 
         //建立頁面
         try {
-            $page = LoadPageFactory::create($class, $up_path);
+            $page = LoadPageFactory::create($class, __DIR__.'/../', (array)$up_path);
         } catch (Exception $e) {
             continue; //如不存在跳過
         }
@@ -350,92 +349,8 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
             <!-- Main area start -->
             <div class="main-content-inner">
-
                 <!-- Main content-->
                 <div class="row" id="content">
-
-                    <!-- Loading Card-->
-                    <div class='col-8 mt-4'>
-                        <div class="row gy-4 gx-0 m-0">
-                            <div class='col-12'>
-                                <div class="card">
-                                    <div class='card-body'>
-                                        <div class='placeholder-glow'>
-                                            <h5 class="card-title">
-                                                <span class="placeholder col-6"></span>
-                                            </h5>
-                                            <p class="card-text row m-0">
-                                                <span class="placeholder col-2" style="margin-right: 1.5rem"></span>
-                                                <span class="placeholder col" style="margin-right: 1.5rem"></span>
-                                                <span class="placeholder col-2"></span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='col-12'>
-                                <div class="card ratio ratio-21x9 overflow-hidden placeholder-glow">
-                                    <div class="card-body placeholder"></div>
-                                </div>
-                            </div>
-                            <div class='col-12'>
-                                <div class="card ">
-                                    <div class='card-body'>
-                                        <div class='placeholder-glow'>
-                                            <h5 class="card-title">
-                                                <span class="placeholder col-6"></span>
-                                            </h5>
-                                            <p class="card-text">
-                                                <span class="placeholder col-6"></span>
-                                                <span class="placeholder col-4"></span>
-                                                <span class="placeholder col-8"></span>
-                                                <span class="placeholder col-4"></span>
-                                                <span class="placeholder col-7"></span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class='col-4 mt-4'>
-                        <div class="row gy-4 gx-0 m-0">
-                            <div class='col-12'>
-                                <div class="card">
-                                    <div class='card-body'>
-                                        <div class='col-12 placeholder-glow row justify-content-center'>
-                                            <h2 class="card-title text-center">
-                                                <span class="placeholder col-8"></span>
-                                            </h2>
-                                            <a href="#" tabindex="-1" class="btn btn-rounded btn-primary disabled placeholder col-6"></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='col-12'>
-                                <div class="card">
-                                    <div class='card-body'>
-                                        <div class='placeholder-glow'>
-                                            <p class="card-text">
-                                                <span class="placeholder col-12 placeholder-lg"></span>
-                                                <span class="placeholder col-3 placeholder-sm"></span>
-                                            </p>
-                                            <p class="card-text">
-                                                <span class="placeholder col-12 placeholder-lg"></span>
-                                                <span class="placeholder col-3 placeholder-sm"></span>
-                                            </p>
-                                            <p class="card-text">
-                                                <span class="placeholder col-12 placeholder-lg"></span>
-                                                <span class="placeholder col-3 placeholder-sm"></span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- language translate -->
                 <pre style="display: none" id="globalLang">
