@@ -11,7 +11,7 @@ use MaxMind\Db\Reader\InvalidDatabaseException;
 
 //自動載入器
 spl_autoload_register(function ($Class) {
-    include './function/' . str_replace("cocomine\API\\", "", $Class) . '.php';
+    include_once '../cocomine/' . $Class . '.php';
 });
 
 /**

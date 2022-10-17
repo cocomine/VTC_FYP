@@ -267,7 +267,7 @@ LOGIN_FROM;
 function TwoFA_form() {
 
     //指引文字
-    $Text = showText("TwoFA");
+    $Text = showText("TwoFAWrapper");
 
     echo <<<TwoFA_FORM
 <!-- login area start -->
@@ -322,9 +322,9 @@ function ResultMsg(int $type): string {
         case AUTH_SERVER_ERROR:
             return showText("Error");
         case AUTH_2FA_WRONG:
-            return showText("TwoFA.2FA_WRONG");
+            return showText("TwoFAWrapper.2FA_WRONG");
         case AUTH_2FA_DUE:
-            return showText("TwoFA.2FA_DUE");
+            return showText("TwoFAWrapper.2FA_DUE");
         default:
             return '';
     }

@@ -10,7 +10,13 @@ use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\TwoFactorAuthException;
 
-class TwoFA {
+/**
+ * 雙重驗證包裝套件
+ * @package cocomine/TwoFAWrapper
+ * @author cocomine<https://github.com/cocomine>
+ * @version 1.0
+ */
+class TwoFAWrapper {
 
     private TwoFactorAuth $G2AF;
     private string $Secret;

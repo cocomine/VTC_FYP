@@ -6,6 +6,12 @@
 
 namespace cocomine;
 
+/**
+ * 頁面方法界定
+ * @package cocomine/IPage
+ * @author cocomine<https://github.com/cocomine>
+ * @version 1.0
+ */
 interface IPage {
 
     /**

@@ -11,6 +11,7 @@
  * Time: 下午 9:03
  */
 
+use cocomine\LoadPageFactory;
 use cocomine\MyAuth;
 use cocomine\MyAuthException;
 use panel\page\home;
@@ -114,58 +115,51 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             $class .= '\\' . $path[$x];
         }
         $include_path = './..' . str_replace('\\', '/', $class) . '.php';
+        $up_path = array_slice($path, $i); //傳入在此之前的路徑
 
-        //檢查存在
-        if (file_exists($include_path)) {
-            require_once($include_path);
-            $up_path = array_slice($path, $i); //傳入在此之前的路徑
-
-            /* create sql connect */
-            $sqlcon = new mysqli(Cfg_Sql_Host, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Sql_dbName);
-            if ($sqlcon->connect_errno) {
-                http_response_code(500);
-                echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
-                exit();
-            }
-            $page = new $class($sqlcon, $up_path); //create class
-
-            //檢查權限
-            $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0);
-            if ($access == 200) {
-                //頁面輸出
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $data = json_decode(file_get_contents("php://input"), true);
-
-                    //無法解釋json
-                    if ($data == null) {
-                        http_response_code(500);
-                        echo json_encode(array(
-                            'code' => 500,
-                            'Message' => showText('Error')
-                        ));
-                        exit();
-                    }
-
-                    echo json_encode($page->post($data));
-                } else {
-                    echo json_encode(array(
-                        'title' => $page->get_Title(),
-                        'head' => $page->get_Head(),
-                        'path' => $page->path(),
-                        'content' => $page->showPage()
-                    ));
-                }
-            } else if ($access == 403) {
-                //沒有權限
-                http_response_code(403);
-                echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
-            } else if ($access == 401) {
-                //需要登入
-                http_response_code(401);
-                echo json_encode(array('code' => 401, 'path' => './login'));
-            }
-            exit(); //存在即停止
+        //建立頁面
+        try {
+            $page = LoadPageFactory::create($class, $up_path);
+        } catch (Exception $e) {
+            continue; //如不存在跳過
         }
+
+        //檢查權限
+        $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+        if ($access == 200) {
+            //頁面輸出
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $data = json_decode(file_get_contents("php://input"), true);
+
+                //無法解釋json
+                if ($data == null) {
+                    http_response_code(500);
+                    echo json_encode(array(
+                        'code' => 500,
+                        'Message' => showText('Error')
+                    ));
+                    exit();
+                }
+
+                echo json_encode($page->post($data));
+            } else {
+                echo json_encode(array(
+                    'title' => $page->get_Title(),
+                    'head' => $page->get_Head(),
+                    'path' => $page->path(),
+                    'content' => $page->showPage()
+                ));
+            }
+        } else if ($access == 403) {
+            //沒有權限
+            http_response_code(403);
+            echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
+        } else if ($access == 401) {
+            //需要登入
+            http_response_code(401);
+            echo json_encode(array('code' => 401, 'path' => './login'));
+        }
+        exit(); //存在即停止
     }
     //不存在
     http_response_code(404);

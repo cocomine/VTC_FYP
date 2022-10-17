@@ -7,7 +7,6 @@
 namespace cocomine;
 
 use mysqli;
-use RobThree\Auth\TwoFactorAuth;
 
 define('AUTH_SERVER_ERROR', 2);
 
@@ -67,13 +66,15 @@ define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_OK', 528);
 define('AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL', 529);
 
 /**
- * Class MyAuth
- * @package cocopixelmc\Auth
+ * 驗證套件
+ * @package cocomine\MyAuth
+ * @author cocomine <https://github.com/cocomine>
+ * @version 2.0
  */
 class MyAuth {
 
     private string $CookiesPath = '/';
-    private TwoFA $twoFA;
+    private TwoFAWrapper $twoFA;
     private array $Hook_func = array();
 
     /**
@@ -86,9 +87,9 @@ class MyAuth {
 
     /**
      * 取得TwoFA
-     * @return TwoFA
+     * @return TwoFAWrapper
      */
-    public function getTwoFA(): TwoFA {
+    public function getTwoFA(): TwoFAWrapper {
         return $this->twoFA;
     }
 
@@ -158,7 +159,7 @@ class MyAuth {
     );
 
     /**
-     * Auth class 初始化
+     * 驗證套件 初始化
      *
      * @param string $dbServer 數據庫IP
      * @param string $dbName 數據庫名稱
@@ -459,7 +460,7 @@ class MyAuth {
      * @throws MyAuthException
      */
     function TwoFA_check(string $code): int {
-        require_once(__DIR__ . '/TwoFA.php');
+        require_once(__DIR__ . '/TwoFAWrapper.php');
         $code = filter_var(trim($code), FILTER_SANITIZE_STRING); //消毒
 
         /* 查詢 */
@@ -490,7 +491,7 @@ class MyAuth {
         $BackupCodePass = $row['Count'];
 
         //檢查 2FA Code
-        if (!(TwoFA::verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code) || $BackupCodePass >= 1)) return AUTH_2FA_WRONG;
+        if (!(TwoFAWrapper::verifyCode($userdata[$this->sqlsetting_User['2FA_secret_col']], $code) || $BackupCodePass >= 1)) return AUTH_2FA_WRONG;
         $toke = md5($this->Generate_Code());  //產生toke
 
         /* 插入toke資料 */
@@ -903,8 +904,8 @@ class MyAuth {
      * @return int 狀態
      */
     public function change2FASetting(bool $turnOnOff): int {
-        require_once(__DIR__ . '/TwoFA.php');
-        $this->twoFA = new TwoFA();
+        require_once(__DIR__ . '/TwoFAWrapper.php');
+        $this->twoFA = new TwoFAWrapper();
 
         if ($turnOnOff) {
             /* 啟動 */
@@ -938,7 +939,7 @@ class MyAuth {
      * @return int 狀態
      */
     public function change2FASettingCheckCode(string $code): int {
-        require_once(__DIR__ . '/TwoFA.php');
+        require_once(__DIR__ . '/TwoFAWrapper.php');
 
         /* 消毒 */
         $code = filter_var(trim($code), FILTER_SANITIZE_STRING);
@@ -953,7 +954,7 @@ class MyAuth {
         $stmt->close();
 
         /* 確認code */
-        if (!TwoFA::verifyCode($row[$this->sqlsetting_User['2FA_secret_col']], $code)) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL;
+        if (!TwoFAWrapper::verifyCode($row[$this->sqlsetting_User['2FA_secret_col']], $code)) return AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL;
 
         $stmt = $this->sqlcon->prepare("UPDATE {$this->sqlsetting_User['table']} SET {$this->sqlsetting_User['2FA_col']} = TRUE WHERE {$this->sqlsetting_User['UUID_col']} = ?");
         $stmt->bind_param('s', $this->userdata['UUID']);
@@ -1145,13 +1146,33 @@ class MyAuth {
 
     /**
      * 添加掛勾<br/>
+     * ----
      * **目前可使用掛勾:**
-     * todo:添加詳細comment
-     * + acc_activated *帳戶啟動後執行*
-     * + acc_Check_NewIP *檢查登入ip後執行*
-     * + acc_ForgetPass *執行忘記密碼func後執行*
-     * + acc_register *用戶註冊後執行*
-     * + acc_changeSetting_data *修改用戶資料後執行*
+     * + acc_activated *帳戶啟動後執行*, (string $code, mysqli $sql)
+     *     + string $code 啟動代碼
+     *     + mysqli $sql  sql連結
+     * + acc_Check_NewIP *檢查登入ip後執行*, (bool $isNewIP, array $userdata = null, string $code = null, mysqli $sqlcon = null)
+     *     + bool        $isNewIP  是否新登入IP
+     *     + array|null  $userdata 用戶資料
+     *     + string|null $code     封鎖授權代碼
+     *     + mysqli|null $sql      sql連結
+     * + acc_ForgetPass *執行忘記密碼func後執行*, (array $userdata, string $email, string $code, mysqli #sqlcon)
+     *     + array       $userdata 用戶資料
+     *     + string      $email    用戶電郵地址
+     *     + string      $code     忘記密碼修改授權代碼
+     *     + mysqli      $sql      sql連結
+     * + acc_register *用戶註冊後執行*, (string $uuid, string $email, string $ActivatedCode, string $name, mysqli $sqlcon)
+     *     + string $uuid          用戶id
+     *     + string $email         用戶電郵地址
+     *     + string $ActivatedCode 啟動代碼
+     *     + string $name          用戶名稱
+     *     + mysqli $sql           sql連結
+     * + acc_changeSetting_data *修改用戶資料後執行*, (string $uuid, string $email, string $ActivatedCode, string $name, mysqli $sqlcon)
+     *     + string $uuid          用戶id
+     *     + string $email         用戶電郵地址
+     *     + string $ActivatedCode 啟動代碼
+     *     + string $name          用戶名稱
+     *     + mysqli $sql           sql連結
      * @param string $Hook_name 掛勾名
      * @param string $func_name 執行的程式名
      */
