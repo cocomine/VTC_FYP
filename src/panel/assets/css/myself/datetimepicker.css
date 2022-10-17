@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2022.
+ * Create by cocomine
+ */
+
+.date-picker .date-calendar .day,th{
+    text-align: center;
+    transition: color, background-color .2s;
+    cursor: pointer;
+}
+
+.date-picker .date-calendar .day:hover,th:hover,.day.activate{
+    background-color: var(--primary-color);
+    color: var(--bs-light);
+}
