@@ -260,8 +260,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
                                 <!-- title content -->
                                 <h4 class="page-title fa-pull-left" id="title"></h4>
-                                <ul class="breadcrumbs fa-pull-left" id="path">
-                                </ul>
+                                <ul class="breadcrumbs fa-pull-left" id="path"></ul>
 
                             </div>
                         </div>
