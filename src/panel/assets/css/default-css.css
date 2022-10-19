@@ -643,6 +643,8 @@ img {
     }
 }
 
+/* noscript */
+
 #noscript{
     position: fixed;
     left: 0;
@@ -652,4 +654,26 @@ img {
     width: 100%;
     background: #fff;
     display: flex;
+}
+
+/* fly-arrow */
+
+.fly-arrow{
+    height: 4px;
+    position: relative;
+}
+.fly-arrow:before{
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-color: var(--bs-dark);
+    position: absolute;
+    right: 0;
+    top: -10px;
+    clip-path: polygon(0 0, 0% 100%, 100% 50%);
+}
+.fly-arrow > div{
+    background-color: var(--bs-dark);
+    width: 100%;
+    height: 4px;
 }

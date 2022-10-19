@@ -9,7 +9,6 @@ define(['jquery', 'moment.min', 'bootstrap'], function (jq, moment, bootstrap) {
     let activateDate = moment();
 
     /* 初始化 */
-
     const pickers = $('.date-picker').append('<div class="dropdown-menu date-calendar"></div>')
     pickers.map((index, picker) => {
         const children = $(picker).children('.date-picker-toggle');

@@ -349,7 +349,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             <!-- Main area start -->
             <div class="main-content-inner">
                 <!-- Main content-->
-                <div class="row" id="content">
+                <div class="row gy-4 pt-4" id="content"></div>
 
                 <!-- language translate -->
                 <pre style="display: none" id="globalLang">
@@ -361,9 +361,8 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                 </pre>
 
             </div>
+            <!-- Main area end -->
         </div>
-        <!-- Main area end -->
-
     </div>
     <!-- main content area end -->
 

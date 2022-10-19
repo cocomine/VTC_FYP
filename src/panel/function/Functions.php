@@ -14,6 +14,13 @@ spl_autoload_register(function ($class) {
     include_once '../' . str_replace('\\', '/', $class) . '.php';
 });
 
+const CabinList = array('All class', 'Economy class', 'Business class');
+function filterCabin(int $value): bool {
+    return array_key_exists($value, CabinList);
+}
+
+const LocationList = array('');
+
 /**
  * 檢查電郵格式
  * @param string $email 電郵地址

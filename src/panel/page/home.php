@@ -39,10 +39,10 @@ class home implements IPage {
                 <div class='card-body'>
                     <div class="row align-content-center h-100 text-light g-2">
                         <div class="col-12">
-                            <h1>search flight</h1>
+                            <h1>Search Flight</h1>
                         </div>
                         <div class="col-12 col-lg-10 col-xxl-8">
-                            <div class="row align-items-center g-2">
+                            <div class="row align-items-center g-2 justify-content-center">
                                 <div class="form-floating col-12 col-lg ps-1">
                                     <input type="text" class="form-control form-rounded" id="Departure" placeholder="Departure">
                                     <label for="Departure">Departure</label>
