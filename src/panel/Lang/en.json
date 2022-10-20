@@ -16,7 +16,22 @@
       "home": "Home",
       "Logout": "Logout",
       "Login": "Login",
-      "visitor": "Visitor"
+      "visitor": "Visitor",
+      "Content": {
+        "Title": "Search Flight",
+        "Departure": "Departure",
+        "Destination": "Destination",
+        "Date": "Departure date",
+        "Cabin": "Cabin",
+        "Cabin_type": [
+          "All class", "Economy class", "Business class"
+        ],
+        "Search": "Search",
+        "Form": {
+          "Cant_EMPTY": "This place cannot be left blank",
+          "min_date": "Date must be on or after today"
+        }
+      }
     },
     "ChangeSetting": {
       "title": "Settings | IVE airline",
@@ -346,6 +361,25 @@
         "Äny-question": "Email any questions to",
         "privacy":
         "Produced by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a> provides translations."
+      }
+    },
+    "Search": {
+      "Title": "Search Flight | IVE airline",
+      "Head": "Search Flight",
+      "Content": {
+        "Title": "Search Flight",
+        "Departure": "Departure",
+        "Destination": "Destination",
+        "Date": "Departure date",
+        "Cabin": "Cabin",
+        "Cabin_type": [
+          "All class", "Economy class", "Business class"
+        ],
+        "Search": "Search",
+        "Form": {
+          "Cant_EMPTY": "This place cannot be left blank",
+          "min_date": "Date must be on or after today"
+        }
       }
     }
   },

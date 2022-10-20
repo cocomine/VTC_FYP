@@ -83,7 +83,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {
                     if (xhr.responseJSON.code) {
-                        if (putState) window.history.pushState({url: link}, xhr.responseJSON.Message, link);
+                        if (putState) window.history.pushState({url: link}, '', link);
 
                         if (xhr.responseJSON.code === 404) {
                             $('#content').html(page404(xhr.responseJSON.Message));
@@ -111,6 +111,26 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         active.parents('#menu ul').addClass('mm-show')
     }
 
+    /* 格式化銀碼 */
+    const formatPrice = (Str) => {
+        Str = Str.toString();
+
+        const digits = Str.toString().split('.'); // 先分左邊跟小數點
+        const integerDigits = digits[0].split(""); // 獎整數的部分切割成陣列
+        const threeDigits = []; // 用來存放3個位數的陣列
+
+        // 當數字足夠，從後面取出三個位數，轉成字串塞回 threeDigits
+        while (integerDigits.length > 3) {
+            threeDigits.unshift(integerDigits.splice(integerDigits.length - 3, 3).join(""));
+        }
+
+        threeDigits.unshift(integerDigits.join(""));
+        digits[0] = threeDigits.join(',');
+
+        return digits.join(".");
+    }
+
+    /* html code */
     const loadingPlaceholder = `
                     <div class='col-12 mt-4 col-md-8'>
                         <div class="row gy-4 gx-0 m-0">
@@ -192,7 +212,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             </div>
                         </div>
                     </div>`
-
     const page404 = (Msg) => `
                     <div class='col-12 mt-4'>
                         <div class="row gy-4 gx-0 m-0">
@@ -211,7 +230,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             </div>
                         </div>
                     </div>`
-
     const page403 = (Msg) => `
                     <div class='col-12 mt-4'>
                         <div class="row gy-4 gx-0 m-0">
@@ -229,7 +247,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             </div>
                         </div>
                     </div>`
-
     const page500 = (Msg) => `
                     <div class='col-12 mt-4'>
                         <div class="row gy-4 gx-0 m-0">
@@ -248,6 +265,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     </div>`
 
     return {
-        ajexLoad, loadModules, updateNavBar
+        ajexLoad, loadModules, updateNavBar, formatPrice
     }
 })

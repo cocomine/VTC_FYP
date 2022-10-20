@@ -85,15 +85,15 @@
             ajex.ajexLoad(returnPath);
             ajex.updateNavBar(returnPath);
             sessionStorage.removeItem('returnPath');
-        }
-        else {
-            ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI'] ?>');
+        }else {
+            ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI']?>', false);
             ajex.updateNavBar('<?php echo $_SERVER['REQUEST_URI'] ?>');
         }
 
         /* 註冊全景參數 */
         window.ajexLoad = ajex.ajexLoad;
         window.loadModules = ajex.loadModules;
+        window.formatPrice = ajex.formatPrice
 
         /* loading畫面 */
         $(window).on('load', function() {

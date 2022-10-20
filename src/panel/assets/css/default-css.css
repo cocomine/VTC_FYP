@@ -677,3 +677,6 @@ img {
     width: 100%;
     height: 4px;
 }
+
+/* needs-validation IDE auto complete */
+.needs-validation{}

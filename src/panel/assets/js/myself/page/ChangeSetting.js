@@ -112,7 +112,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                 data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey), 'DoAction': true}),
                 success: function (data) {
                     if(data.code === 521){
-                        let code = key.privateKey.decrypt(window.atob(data.Data.secret)); //解密
+                        let code = key.privateKey.decrypt(forge.util.decode64(data.Data.secret)); //解密
 
                         /* 分割代碼 */
                         code = code.split('')
@@ -230,7 +230,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                 success: function (json) {
                     if(json.code === 528){
                         /* 解密訊息 */
-                        const codes = json.Data.code.map((item) => key.privateKey.decrypt(window.atob(item.Code)))
+                        const codes = json.Data.code.map((item) => key.privateKey.decrypt(forge.util.decode64(item.Code)))
                         console.log(codes)
 
                         /* 排列table */

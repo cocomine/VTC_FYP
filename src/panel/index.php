@@ -118,7 +118,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
         //建立頁面
         try {
-            $page = LoadPageFactory::create($class, __DIR__.'/../', (array)$up_path);
+            $page = LoadPageFactory::create($class, __DIR__ . '/../', (array)$up_path);
         } catch (Exception $e) {
             continue; //如不存在跳過
         }
@@ -217,83 +217,81 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         <!-- main content area start -->
         <div class="main-content">
 
-            <div class="sticky-top">
-                <!-- header area start -->
-                <div class="header-area">
-                    <div class="row align-items-center">
+            <!-- header area start -->
+            <div class="header-area">
+                <div class="row align-items-center">
 
-                        <!-- left content-->
-                        <div class="col-md-6 col-sm-8 clearfix">
-                            <div class="nav-btn fa-pull-left">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-
-                        <!-- right content-->
-                        <div class="col-md-6 col-sm-4 clearfix">
-                            <ul class="notification-area fa-pull-right">
-
-                                <!-- notify -->
-                                <li class="dropdown">
-                                    <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                    <div class="dropdown-menu bell-notify-box notify-box">
-                                        <span class="notify-title">通知</span>
-                                        <div class="nofity-list" id="notify">
-                                            <!-- notify-item -->
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ul>
+                    <!-- left content-->
+                    <div class="col-md-6 col-sm-8 clearfix">
+                        <div class="nav-btn fa-pull-left">
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </div>
                     </div>
-                </div>
-                <!-- header area end -->
 
-                <!-- page title area start -->
-                <div class="page-title-area">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <div class="breadcrumbs-area clearfix">
+                    <!-- right content-->
+                    <div class="col-md-6 col-sm-4 clearfix">
+                        <ul class="notification-area fa-pull-right">
 
-                                <!-- title content -->
-                                <h4 class="page-title fa-pull-left" id="title"></h4>
-                                <ul class="breadcrumbs fa-pull-left" id="path"></ul>
-
-                            </div>
-                        </div>
-                        <div class="col-sm-6 clearfix">
-                            <div class="user-profile fa-pull-right">
-
-                                <!-- user avatar -->
-                                <img class="avatar user-thumb"
-                                     src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
-                                     alt="avatar">
-                                <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
-                                </h4>
-                                <div class="dropdown-menu">
-
-                                    <!-- dropdown menu content -->
-                                    <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
-                                        <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
-                                    </a>
-                                    <?php
-                                    if ($auth->islogin) {
-                                        echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
-                                                    <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
-                                            "</a>";
-                                    } else {
-                                        echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
-                                                    <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
-                                            "</a>";
-                                    }
-                                    ?>
+                            <!-- notify -->
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                <div class="dropdown-menu bell-notify-box notify-box">
+                                    <span class="notify-title">通知</span>
+                                    <div class="nofity-list" id="notify">
+                                        <!-- notify-item -->
+                                    </div>
                                 </div>
+                            </li>
 
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- header area end -->
+
+            <!-- page title area start -->
+            <div class="page-title-area">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+
+                            <!-- title content -->
+                            <h4 class="page-title fa-pull-left" id="title"></h4>
+                            <ul class="breadcrumbs fa-pull-left" id="path"></ul>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <div class="user-profile fa-pull-right">
+
+                            <!-- user avatar -->
+                            <img class="avatar user-thumb"
+                                 src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
+                                 alt="avatar">
+                            <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
+                                <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
+                            </h4>
+                            <div class="dropdown-menu">
+
+                                <!-- dropdown menu content -->
+                                <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
+                                    <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
+                                </a>
+                                <?php
+                                if ($auth->islogin) {
+                                    echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
+                                                    <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
+                                        "</a>";
+                                } else {
+                                    echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
+                                                    <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
+                                        "</a>";
+                                }
+                                ?>
                             </div>
+
                         </div>
                     </div>
                 </div>
