@@ -265,10 +265,7 @@ require([
     "forge"
     ], (register) => {
         window.recaptchacall = register.recaptchacall;
-        
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
+        $('#preloader').fadeOut('slow', function() { $(this).remove(); });
     });
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>

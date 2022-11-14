@@ -86,9 +86,7 @@ require([
     "jquery.slicknav.min",
     "plugins",
     "scripts"], () => {
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
+        $('#preloader').fadeOut('slow', function() { $(this).remove(); });
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>

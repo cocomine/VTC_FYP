@@ -370,9 +370,7 @@ require([
     "plugins",
     "scripts",
     "forge"], () => {
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
+        $('#preloader').fadeOut('slow', function() { $(this).remove(); });
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>
@@ -393,7 +391,7 @@ function load_google_client(): Google_Client {
     $gclient->setAccessType('offline'); // offline access
     $gclient->setIncludeGrantedScopes(true); // incremental auth
     $gclient->addScope([Google_Service_Oauth2::USERINFO_EMAIL, Google_Service_Oauth2::USERINFO_PROFILE]);
-    $gclient->setRedirectUri('https://itp4506.cocopixelmc.com/panel/login?login=google');
+    $gclient->setRedirectUri('https://'.$_SERVER['SERVER_NAME'].'/panel/login?login=google');
 
     return $gclient;
 }
