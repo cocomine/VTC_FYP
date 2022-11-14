@@ -3,13 +3,18 @@
  * Create by cocomine
  */
 
-.date-picker .date-calendar .day,th{
+.date-picker .date-calendar .day{
     text-align: center;
     transition: color, background-color .2s;
     cursor: pointer;
 }
 
-.date-picker .date-calendar .day:hover,th:hover,.day.activate{
+.date-picker .date-calendar .day.disable{
+    background-color: darkgray;
+    cursor: no-drop;
+}
+
+.date-picker .date-calendar .day:hover:not(.disable),.day.activate{
     background-color: var(--primary-color);
     color: var(--bs-light);
 }
