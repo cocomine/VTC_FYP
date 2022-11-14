@@ -6,6 +6,9 @@
 define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge, toastr) {
     "use strict";
 
+    let Lang = $('#langJson').text();
+    Lang = JSON.parse(Lang);
+
     /* 反轉搜尋 */
     $('#reverse').click(function (e) {
         e.preventDefault();
@@ -28,7 +31,7 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
 
     /* set min date */
     const jqDate = $('#Date')
-    //jqDate.attr('min', moment().format('YYYY-MM-DD'));
+    jqDate.attr('min', moment().format('YYYY-MM-DD'));
 
     /* Search */
     const jqForm = $('form')
@@ -88,11 +91,13 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
 
     /* 渲染結果 */
     function readerRecord(flights) {
-        return flights.map((item) => flightRecord(item.Flight, item.DateTime.split(' ')[1], formatPrice(item.Price), item.From, item.To)).join('');
+        return flights.map((item) => flightRecord(item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, item.cabin)).join('');
     }
 
     /* html code */
-    function flightRecord(flight, time, price, from, to) {
+    function flightRecord(flight, time, price, from, to, cabin) {
+        cabin = cabin === 1 ? Lang.Cabin_type[1] : Lang.Cabin_type[2]
+        time = moment(time).format("hh:mm A");
         return `
     <div class="col-12">
         <div class="card">
@@ -103,8 +108,6 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
                             <h4 class="col-auto">${flight}</h4>
                             <div class="w-100"></div>
                             <span class="col-auto">${time}</span>
-                            <div class="w-100"></div>
-                            <span class="col-auto">$ ${price}</span>
                         </div>
                     </div>
                     <div class="col">
@@ -112,6 +115,13 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
                             <div class="col-auto"><h3>${from}</h3></div>
                             <div class="col row align-content-center"><div class="fly-arrow"><div></div></div></div>
                             <div class="col-auto"><h3>${to}</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        <div class="row align-content-center h-100 justify-content-center">
+                            <h4 class="col-auto">$ ${price}</h4>
+                            <div class="w-100"></div>
+                            <span class="col-auto">${cabin}</span>
                         </div>
                     </div>
                 </div>

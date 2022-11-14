@@ -389,9 +389,8 @@ function load_google_client(): Google_Client {
     $gclient = new Google_Client();
     $gclient->setAuthConfig('function/secret/credentials.json');
     $gclient->setAccessType('offline'); // offline access
-    $gclient->setIncludeGrantedScopes(true); // incremental auth
     $gclient->addScope([Google_Service_Oauth2::USERINFO_EMAIL, Google_Service_Oauth2::USERINFO_PROFILE]);
-    $gclient->setRedirectUri('https://'.$_SERVER['SERVER_NAME'].'/panel/login?login=google');
+    $gclient->setRedirectUri('https://itp4506.cocomine.cc/panel/login?login=google');
 
     return $gclient;
 }

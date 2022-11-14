@@ -47,35 +47,59 @@ class home implements IPage {
                         </div>
                         <div class="col-12 col-lg-10 col-xxl-8">
                             <div class="row align-items-center g-2 justify-content-center">
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <input type="text" class="form-control form-rounded" id="Departure" name="departure" placeholder="{$Text['Departure']}" required>
-                                    <label for="Departure">{$Text['Departure']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['Cant_EMPTY']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-plane-departure ps-1"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-rounded" list="departure-list" id="Departure" name="departure" placeholder="{$Text['Departure']}" required>
+                                        <datalist id="departure-list">
+                                            <option value="Hong Kong International Airport">
+                                            <option value="Kansai Airports">
+                                            <option value="Shanghai Pudong International Airport">
+                                            <option value="Taoyuan International Airport">
+                                        </datalist>
+                                        <label for="Departure">{$Text['Departure']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['Cant_EMPTY']}</div>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-light btn-rounded" id="reverse" type="button"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
                                 </div>
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <input type="text" class="form-control form-rounded" id="Destination" name="destination" placeholder="{$Text['Destination']}" required>
-                                    <label for="Destination">{$Text['Destination']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['Cant_EMPTY']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-plane-arrival ps-1"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-rounded" list="destination-list" id="Destination" name="destination" placeholder="{$Text['Destination']}" required>
+                                        <datalist id="destination-list">
+                                            <option value="Hong Kong International Airport">
+                                            <option value="Kansai Airports">
+                                            <option value="Shanghai Pudong International Airport">
+                                            <option value="Taoyuan International Airport">
+                                        </datalist>
+                                        <label for="Destination">{$Text['Destination']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['Cant_EMPTY']}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-10 col-xxl-8">
                             <div class="row align-items-center g-2">
-                                <div class="form-floating col-12 col-md ps-1 date-picker">
-                                    <input type="date" id="Date" name="date" class="form-control form-rounded date-picker-toggle" data-bs-toggle="dropdown" placeholder="{$Text['Date']}" required>
-                                    <label for="Date">{$Text['Date']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['min_date']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-regular fa-calendar ps-1"></i></span>
+                                    <div class="form-floating date-picker">
+                                        <input type="date" id="Date" name="date" class="form-control form-rounded date-picker-toggle" data-bs-toggle="dropdown" placeholder="{$Text['Date']}" required>
+                                        <label for="Date">{$Text['Date']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['min_date']}</div>
+                                    </div>
                                 </div>
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <select class="form-select form-rounded" aria-label="Default select example" id="Cabin" name="cabin" required>
-                                        <option value="0">{$Text['Cabin_type'][0]}</option>
-                                        <option value="1">{$Text['Cabin_type'][1]}</option>
-                                        <option value="2">{$Text['Cabin_type'][2]}</option>
-                                    </select>
-                                    <label for="Cabin">{$Text['Cabin']}</label>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-briefcase"></i></span>
+                                    <div class="form-floating">
+                                        <select class="form-select form-rounded" aria-label="Default select example" id="Cabin" name="cabin" required>
+                                            <option value="0">{$Text['Cabin_type'][0]}</option>
+                                            <option value="1">{$Text['Cabin_type'][1]}</option>
+                                            <option value="2">{$Text['Cabin_type'][2]}</option>
+                                        </select>
+                                        <label for="Cabin">{$Text['Cabin']}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -435,7 +435,7 @@ class changesetting implements IPage {
      * @return string 輸出
      */
     function path(): string {
-        return "<li><a href='/panel' data-ajax='GET'>" . showText("index.Console") . "</a></li>
+        return "<li><a href='/panel/' data-ajax='GET'>" . showText("index.Console") . "</a></li>
                 <li><span>" . showText("ChangeSetting.setting") . "</span></li>";
     }
 }

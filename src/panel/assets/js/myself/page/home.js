@@ -27,7 +27,7 @@ define(['jquery', 'moment.min', 'forge'], function (jq, moment, forge) {
     })
 
     /* set min date */
-    //$('#Date').attr('min', moment().format('YYYY-MM-DD'))
+    $('#Date').attr('min', moment().format('YYYY-MM-DD'))
 
     /* Search */
     $('form').submit(function (e) {

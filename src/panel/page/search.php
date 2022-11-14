@@ -35,8 +35,10 @@ class search implements IPage {
     public function showPage(): string {
 
         $Text = showText('Search.Content');
+        $jsonLang = json_encode(array('Cabin_type' => $Text['Cabin_type']));
 
         return <<<body
+        <pre id='langJson' style='display: none'>$jsonLang</pre>
         <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
         <div class='col-12'>
             <div class="card" style="background-image: url('/panel/assets/images/bg/bg/6.webp'); background-size: cover; background-position: center">
@@ -45,35 +47,59 @@ class search implements IPage {
                     <div class="row align-content-center h-100 text-light g-2">
                         <div class="col-12">
                             <div class="row align-items-center g-2 justify-content-center">
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <input type="text" class="form-control form-rounded" id="Departure" name="departure" placeholder="{$Text['Departure']}" required>
-                                    <label for="Departure">{$Text['Departure']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['Cant_EMPTY']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-plane-departure ps-1"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-rounded" list="departure-list" id="Departure" name="departure" placeholder="{$Text['Departure']}" required>
+                                        <datalist id="departure-list">
+                                            <option value="Hong Kong International Airport">
+                                            <option value="Kansai Airports">
+                                            <option value="Shanghai Pudong International Airport">
+                                            <option value="Taoyuan International Airport">
+                                        </datalist>
+                                        <label for="Departure">{$Text['Departure']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['Cant_EMPTY']}</div>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-light btn-rounded" id="reverse" type="button"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
                                 </div>
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <input type="text" class="form-control form-rounded" id="Destination" name="destination" placeholder="{$Text['Destination']}" required>
-                                    <label for="Destination">{$Text['Destination']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['Cant_EMPTY']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-plane-arrival ps-1"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-rounded" list="destination-list" id="Destination" name="destination" placeholder="{$Text['Destination']}" required>
+                                        <datalist id="destination-list">
+                                            <option value="Hong Kong International Airport">
+                                            <option value="Kansai Airports">
+                                            <option value="Shanghai Pudong International Airport">
+                                            <option value="Taoyuan International Airport">
+                                        </datalist>
+                                        <label for="Destination">{$Text['Destination']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['Cant_EMPTY']}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="row align-items-center g-2">
-                                <div class="form-floating col-12 col-md ps-1 date-picker">
-                                    <input type="date" id="Date" name="date" class="form-control form-rounded date-picker-toggle" data-bs-toggle="dropdown" placeholder="{$Text['Date']}" required>
-                                    <label for="Date">{$Text['Date']}</label>
-                                    <div class="invalid-feedback bg-light bg-opacity-50">{$Text['Form']['min_date']}</div>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-regular fa-calendar ps-1"></i></span>
+                                    <div class="form-floating date-picker">
+                                        <input type="date" id="Date" name="date" class="form-control form-rounded date-picker-toggle" data-bs-toggle="dropdown" placeholder="{$Text['Date']}" required>
+                                        <label for="Date">{$Text['Date']}</label>
+                                        <div class="invalid-tooltip">{$Text['Form']['min_date']}</div>
+                                    </div>
                                 </div>
-                                <div class="form-floating col-12 col-md ps-1">
-                                    <select class="form-select form-rounded" aria-label="Default select example" id="Cabin" name="cabin" required>
-                                        <option value="0">{$Text['Cabin_type'][0]}</option>
-                                        <option value="1">{$Text['Cabin_type'][1]}</option>
-                                        <option value="2">{$Text['Cabin_type'][2]}</option>
-                                    </select>
-                                    <label for="Cabin">{$Text['Cabin']}</label>
+                                <div class="input-group col-12 col-md ps-1">
+                                    <span class="input-group-text form-rounded"><i class="fa-solid fa-briefcase ps-1"></i></span>
+                                    <div class="form-floating">
+                                        <select class="form-select form-rounded" aria-label="Default select example" id="Cabin" name="cabin" required>
+                                            <option value="0">{$Text['Cabin_type'][0]}</option>
+                                            <option value="1">{$Text['Cabin_type'][1]}</option>
+                                            <option value="2">{$Text['Cabin_type'][2]}</option>
+                                        </select>
+                                        <label for="Cabin">{$Text['Cabin']}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +135,7 @@ class search implements IPage {
      */
     function post(array $data): array {
         $cabin = intval(filter_var(trim($data['cabin']), FILTER_SANITIZE_NUMBER_INT));
+        $cabin = $cabin == 0 ? '%' : strval($cabin);
         $date = filter_var(trim($data['date']), FILTER_SANITIZE_STRING) . "%";
         $departure = filter_var(trim($data['departure']), FILTER_SANITIZE_STRING);
         $like_departure = "%" . $departure . "%";
@@ -121,10 +148,11 @@ class search implements IPage {
                 IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
             AND f.`To`
                 IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
-        ) */
+        ) AND DateTime LIKE ? AND cabin LIKE ?
+        */
         /* 取得資料 */
-        $stmt = $this->sqlcon->prepare("SELECT * FROM Flight WHERE ID IN(SELECT ID FROM Flight f WHERE `From` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?) AND `To` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)) AND DateTime LIKE ?");
-        $stmt->bind_param("sssss", $departure, $like_departure, $destination, $like_destination, $date);
+        $stmt = $this->sqlcon->prepare("SELECT * FROM Flight WHERE ID IN(SELECT ID FROM Flight f WHERE `From` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?) AND `To` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)) AND DateTime LIKE ? AND cabin LIKE ?");
+        $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $cabin);
         if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));
 
         /* 處理資料 */
@@ -147,7 +175,7 @@ class search implements IPage {
      * @inheritDoc
      */
     function path(): string {
-        return "<li><span><a href='/panel'>" . showText("index.home") . "</a></span></li><li><span>" . showText('Search.Head') . "</span></li>";
+        return "<li><span><a href='/panel/'>" . showText("index.home") . "</a></span></li><li><span>" . showText('Search.Head') . "</span></li>";
     }
 
     /**
