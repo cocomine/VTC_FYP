@@ -91,6 +91,7 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
 
     /* 渲染結果 */
     function readerRecord(flights) {
+        if(flights.length <= 0) return not_match
         return flights.map((item) => flightRecord(item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, item.cabin)).join('');
     }
 
@@ -103,7 +104,7 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-md-2">
                         <div class="row align-content-center h-100 justify-content-center">
                             <h4 class="col-auto">${flight}</h4>
                             <div class="w-100"></div>
@@ -117,7 +118,7 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
                             <div class="col-auto"><h3>${to}</h3></div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-md-2">
                         <div class="row align-content-center h-100 justify-content-center">
                             <h4 class="col-auto">$ ${price}</h4>
                             <div class="w-100"></div>
@@ -160,5 +161,19 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
         `)
 
         return html.join('');
+    }
+
+    function not_match() {
+        return `
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-auto"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
+                    <div class="col-auto h-auto"><h3 class="align-middle">${Lang.Not_match}</h3></div>
+                </div>
+            </div>
+        </div>
+    </div>`
     }
 })

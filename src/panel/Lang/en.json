@@ -379,7 +379,8 @@
         "Form": {
           "Cant_EMPTY": "This place cannot be left blank",
           "min_date": "Date must be on or after today"
-        }
+        },
+        "Not_match": "No matching results found <(＿　＿)>"
       }
     }
   },

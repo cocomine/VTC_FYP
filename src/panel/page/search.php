@@ -35,7 +35,10 @@ class search implements IPage {
     public function showPage(): string {
 
         $Text = showText('Search.Content');
-        $jsonLang = json_encode(array('Cabin_type' => $Text['Cabin_type']));
+        $jsonLang = json_encode(array(
+            'Cabin_type' => $Text['Cabin_type'],
+            'Not_match' => $Text['Not_match']
+        ));
 
         return <<<body
         <pre id='langJson' style='display: none'>$jsonLang</pre>
