@@ -7,6 +7,7 @@
 namespace panel\page;
 
 use cocomine\IPage;
+use DateTime;
 use mysqli;
 
 class search implements IPage {
@@ -139,11 +140,22 @@ class search implements IPage {
     function post(array $data): array {
         $cabin = intval(filter_var(trim($data['cabin']), FILTER_SANITIZE_NUMBER_INT));
         $cabin = $cabin == 0 ? '%' : strval($cabin);
-        $date = filter_var(trim($data['date']), FILTER_SANITIZE_STRING) . "%";
+        $date = filter_var(trim($data['date']), FILTER_SANITIZE_STRING);
         $departure = filter_var(trim($data['departure']), FILTER_SANITIZE_STRING);
         $like_departure = "%" . $departure . "%";
         $destination = filter_var(trim($data['destination']), FILTER_SANITIZE_STRING);
         $like_destination = "%" . $destination . "%";
+
+        /* 判斷今日之前 */
+        $interval = DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime());
+        if($interval->invert == 0 && $interval->days > 0){
+            return array(
+                'code' => 200,
+                'data' => array(
+                    'flights' => array()
+                )
+            );
+        }
 
         /*
         SELECT * FROM Flight WHERE ID IN(
@@ -154,6 +166,7 @@ class search implements IPage {
         ) AND DateTime LIKE ? AND cabin LIKE ?
         */
         /* 取得資料 */
+        $date .= '%';
         $stmt = $this->sqlcon->prepare("SELECT * FROM Flight WHERE ID IN(SELECT ID FROM Flight f WHERE `From` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?) AND `To` IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)) AND DateTime LIKE ? AND cabin LIKE ?");
         $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $cabin);
         if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));

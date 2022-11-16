@@ -78,6 +78,10 @@
             "showMethod": "slideDown",
             "hideMethod": "slideUp"
         };
+        /* loading畫面 */
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        });
 
         /* 自動跳轉登入前url */
         const returnPath = sessionStorage.getItem('returnPath');
@@ -94,11 +98,6 @@
         window.ajexLoad = ajex.ajexLoad;
         window.loadModules = ajex.loadModules;
         window.formatPrice = ajex.formatPrice
-
-        /* loading畫面 */
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>

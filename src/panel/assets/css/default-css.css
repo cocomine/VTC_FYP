@@ -44,11 +44,12 @@ img {
 
 /*custome css*/
 
-::selection{
+::selection {
     background: #FF7112;
     color: #fff;
 }
-::-moz-selection{
+
+::-moz-selection {
     background: #FF7112;
     color: #fff;
 }
@@ -418,7 +419,7 @@ img {
 :root {
     --primary-color: #ff7112;
     --bs-primary: #ff9d22;
-    --bs-primary-rgb: 225,113,18
+    --bs-primary-rgb: 225, 113, 18
 }
 
 #preloader {
@@ -431,6 +432,7 @@ img {
     background: #fff;
     display: flex;
 }
+
 .loader {
     display: inline-block;
     position: relative;
@@ -438,6 +440,7 @@ img {
     height: 64px;
     margin: auto;
 }
+
 .loader div {
     position: absolute;
     top: 27px;
@@ -447,22 +450,27 @@ img {
     background: rgba(0, 0, 0, 0.4);
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
+
 .loader div:nth-child(1) {
     left: 6px;
     animation: move-dio 2.5s infinite;
 }
+
 .loader div:nth-child(2) {
     left: 26px;
     animation: move-dio1 2.5s infinite;
 }
+
 .loader div:nth-child(3) {
     left: 45px;
     animation: move-dio12 2.5s infinite;
 }
+
 .loader div:nth-child(4) {
     left: 65px;
     animation: move-dio13 2.5s infinite;
 }
+
 @keyframes move-dio {
     from {
         left: 6px;
@@ -489,6 +497,7 @@ img {
         left: 65px;
     }
 }
+
 @keyframes move-dio1 {
     from {
         left: 26px;
@@ -503,6 +512,7 @@ img {
         left: 6px;
     }
 }
+
 @keyframes move-dio12 {
     from {
         left: 45px;
@@ -517,6 +527,7 @@ img {
         left: 26px;
     }
 }
+
 @keyframes move-dio13 {
     from {
         left: 65px;
@@ -539,6 +550,7 @@ img {
     width: 100%;
     display: flex;
 }
+
 .submit-load {
     display: inline-block;
     position: relative;
@@ -546,6 +558,7 @@ img {
     height: 100%;
     margin: auto;
 }
+
 .submit-load div {
     position: absolute;
     top: 44%;
@@ -555,22 +568,27 @@ img {
     background: rgba(0, 0, 0, 0.4);
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
+
 .submit-load div:nth-child(1) {
     left: 0px;
     animation: submit-move-dio 2.5s infinite;
 }
+
 .submit-load div:nth-child(2) {
     left: 14px;
     animation: submit-move-dio1 2.5s infinite;
 }
+
 .submit-load div:nth-child(3) {
     left: 29px;
     animation: submit-move-dio12 2.5s infinite;
 }
+
 .submit-load div:nth-child(4) {
     left: 44px;
     animation: submit-move-dio13 2.5s infinite;
 }
+
 @keyframes submit-move-dio {
     from {
         left: 0px;
@@ -597,6 +615,7 @@ img {
         left: 44px;
     }
 }
+
 @keyframes submit-move-dio1 {
     from {
         left: 14px;
@@ -612,6 +631,7 @@ img {
         left: 0px;
     }
 }
+
 @keyframes submit-move-dio12 {
     from {
         left: 29px;
@@ -627,6 +647,7 @@ img {
         left: 14px;
     }
 }
+
 @keyframes submit-move-dio13 {
     from {
         left: 44px;
@@ -645,7 +666,7 @@ img {
 
 /* noscript */
 
-#noscript{
+#noscript {
     position: fixed;
     left: 0;
     top: 0;
@@ -658,11 +679,12 @@ img {
 
 /* fly-arrow */
 
-.fly-arrow{
+.fly-arrow {
     height: 4px;
     position: relative;
 }
-.fly-arrow:before{
+
+.fly-arrow:before {
     content: '';
     width: 24px;
     height: 24px;
@@ -672,11 +694,29 @@ img {
     top: -10px;
     clip-path: polygon(0 0, 0% 100%, 100% 50%);
 }
-.fly-arrow > div{
+
+.fly-arrow > div {
     background-color: var(--bs-dark);
     width: 100%;
     height: 4px;
 }
 
+.fly-arrow > i {
+    position: absolute;
+    left: 10px;
+    top: -20px;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: left 1.5s ease;
+    color: var(--primary-color);
+    text-shadow: grey 2px 2px 3px;
+}
+
+.fly-arrow > i.activate{
+    opacity: 1;
+    left: calc(100% - 1.2rem - 28px);
+}
+
 /* needs-validation IDE auto complete */
-.needs-validation{}
+.needs-validation {
+}

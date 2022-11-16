@@ -157,6 +157,9 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
             //需要登入
             http_response_code(401);
             echo json_encode(array('code' => 401, 'path' => './login'));
+        } else if ($access == 404) {
+            http_response_code(404);
+            echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
         }
         exit(); //存在即停止
     }

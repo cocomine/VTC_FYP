@@ -91,9 +91,17 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
 
     /* 渲染結果 */
     function readerRecord(flights) {
-        if(flights.length <= 0) return not_match
+        if (flights.length <= 0) return not_match
         return flights.map((item) => flightRecord(item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, item.cabin)).join('');
     }
+
+    /* 懸浮動畫 */
+    $('#result').on('mouseenter', 'a', function (e) {
+        $(e.target).find('.fly-arrow > i').addClass('activate');
+    })
+    .on('mouseleave', 'a', function (e) {
+        $(e.target).find('.fly-arrow > i').removeClass('activate');
+    })
 
     /* html code */
     function flightRecord(flight, time, price, from, to, cabin) {
@@ -101,33 +109,35 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
         time = moment(time).format("hh:mm A");
         return `
     <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-md-2">
-                        <div class="row align-content-center h-100 justify-content-center">
-                            <h4 class="col-auto">${flight}</h4>
-                            <div class="w-100"></div>
-                            <span class="col-auto">${time}</span>
+        <a href="/panel/flight/${flight}" class="text-dark">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            <div class="row align-content-center h-100 justify-content-center">
+                                <h4 class="col-auto">${flight}</h4>
+                                <div class="w-100"></div>
+                                <span class="col-auto">${time}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="row align-content-center h-100 pe-4">
-                            <div class="col-auto"><h3>${from}</h3></div>
-                            <div class="col row align-content-center"><div class="fly-arrow"><div></div></div></div>
-                            <div class="col-auto"><h3>${to}</h3></div>
+                        <div class="col">
+                            <div class="row align-content-center h-100 pe-4">
+                                <div class="col-auto"><h3>${from}</h3></div>
+                                <div class="col row align-content-center"><div class="fly-arrow"><i class="fa-solid fa-plane"></i><div></div></div></div>
+                                <div class="col-auto"><h3>${to}</h3></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-2">
-                        <div class="row align-content-center h-100 justify-content-center">
-                            <h4 class="col-auto">$ ${price}</h4>
-                            <div class="w-100"></div>
-                            <span class="col-auto">${cabin}</span>
+                        <div class="col-12 col-md-2">
+                            <div class="row align-content-center h-100 justify-content-center">
+                                <h4 class="col-auto">$ ${price}</h4>
+                                <div class="w-100"></div>
+                                <span class="col-auto">${cabin}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>`
     }
 

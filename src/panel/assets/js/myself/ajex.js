@@ -83,8 +83,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {
                     if (xhr.responseJSON.code) {
-                        if (putState) window.history.pushState({url: link}, '', link);
-
+                        //known error
                         if (xhr.responseJSON.code === 404) {
                             $('#content').html(page404(xhr.responseJSON.Message));
                         } else if (xhr.responseJSON.code === 403) {
@@ -96,6 +95,9 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             console.log(xhr.responseJSON.path)
                             location.replace(xhr.responseJSON.path)
                         }
+
+                        if (putState) window.history.pushState({url: link}, '', link);
+                        window.dispatchEvent(new Event('load'));
                     } else toastr.error(Lang.Error);
                 } else if (textStatus === 'timeout') toastr.error('Request Timeout', '408');
                 else toastr.error(Lang.Error);

@@ -382,6 +382,13 @@
         },
         "Not_match": "No matching results found <(＿　＿)>"
       }
+    },
+    "Flight": {
+      "Title": "Flight | IVE airline",
+      "Head": "Flight",
+      "Content": {
+
+      }
     }
   },
   "JS": {
