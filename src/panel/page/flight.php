@@ -9,6 +9,7 @@ namespace panel\page;
 use cocomine\IPage;
 use DateTime;
 use mysqli;
+use NumberFormatter;
 
 class flight implements IPage {
 
@@ -68,6 +69,10 @@ class flight implements IPage {
             'Economy' => $row['Economy'],
             'Business' => $row['Business'],
         ));
+
+        $fmt = numfmt_create( 'zh', NumberFormatter::DECIMAL);
+        $row['PriceBusiness'] = $fmt->format($row['PriceBusiness']);
+        $row['PriceEconomy'] = $fmt->format($row['PriceEconomy']);
 
         $Text = showText('Flight.Content');
         return <<<body

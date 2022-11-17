@@ -725,7 +725,7 @@ ul.breadcrumbs {
 }
 
 .user-profile {
-    margin-right: -30px;
+    margin: 0 -30px 0 0 !important;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
