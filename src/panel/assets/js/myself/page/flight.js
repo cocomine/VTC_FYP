@@ -9,7 +9,7 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
     let Economy = 0, Business = 0;
 
     /* js資料 */
-    const Lang = JSON.parse($('#langJson').text());
+    //const Lang = JSON.parse($('#langJson').text());
     const Data = JSON.parse($('#DataJson').text());
 
     /* 前往預留座位 Card */

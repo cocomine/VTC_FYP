@@ -68,8 +68,10 @@ class flight implements IPage {
             'Economy' => $row['Economy'],
             'Business' => $row['Business'],
         ));
+
+        $Text = showText('Flight.Content');
         return <<<body
-<pre id='langJson' style='display: none'>{}</pre>
+<!--pre id='langJson' style='display: none'>{}</pre-->
 <pre id='DataJson' style='display: none'>$dataJson</pre>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
 <div class='col-12 mt-4 col-md-8'>
@@ -97,10 +99,10 @@ class flight implements IPage {
         <div class='col-12'>
             <div class="card" id="Reserve">
                 <div class="card-body">
-                    <h5 class="card-title">Reserve Seat</h5>
+                    <h5 class="card-title">{$Text['Reserve_Seat']}</h5>
                     <div style="background-color: lightgray" class="rounded p-1">
                         <div class="row justify-content-between align-items-center">
-                            <h5 class="col-auto">Business class</h5>
+                            <h5 class="col-auto">{$Text['Cabin_type'][1]}</h5>
                             <div class="col-auto">
                                 <div class="row align-items-center">
                                     <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
@@ -112,7 +114,7 @@ class flight implements IPage {
                     </div>
                     <div style="background-color: lightgray" class="mt-2 rounded p-1">
                         <div class="row justify-content-between align-items-center">
-                            <h5 class="col-auto">Economy class</h4>
+                            <h5 class="col-auto">{$Text['Cabin_type'][0]}</h4>
                             <div class="col-auto">
                                 <div class="row align-items-center">
                                     <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Economy-add"><i class="fa-solid fa-plus"></i></button></div>
@@ -125,7 +127,7 @@ class flight implements IPage {
                     <div class="row justify-content-between align-items-center mt-2 p-1">
                         <h4 class="col-auto" id="total">$ 0</h4>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-primary btn-rounded" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>Reserve</button>
+                            <button type="button" class="btn btn-primary btn-rounded" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>{$Text['Reserve']}</button>
                         </div>
                     </div>
                 </div>
@@ -140,17 +142,17 @@ class flight implements IPage {
                 <div class='card-body'>
                     <div class="row g-3 justify-content-center">
                         <div class="col-12">
-                            <span>Business class</span>
+                            <span>{$Text['Cabin_type'][1]}</span>
                             <h4>$ {$row['PriceBusiness']}</h4>
                         </div>
                         <div class="col-12">
-                            <span>Economy class</span>
+                            <span>{$Text['Cabin_type'][0]}</span>
                             <h4>$ {$row['PriceEconomy']}</h4>
                         </div>
-                        <button class="btn btn-rounded btn-primary col-6 rout"><i class="fa-solid fa-cart-shopping me-2"></i>Go Reserve</button>
+                        <button class="btn btn-rounded btn-primary col-6 rout"><i class="fa-solid fa-cart-shopping me-2"></i>{$Text['Go_Reserve']}</button>
                         <div class="col-12">
                             <h4>{$row['DateTime']}</h4>
-                            <span>Departure time</span>
+                            <span>{$Text['Departure_time']}</span>
                         </div>
                     </div>
                 </div>
@@ -180,19 +182,19 @@ class flight implements IPage {
         <div class="col-12 col-sm-auto row justify-content-around justify-content-sm-start">
             <div class="col-auto">
                 <h4>$ {$row['PriceBusiness']}</h4>
-                <span>Business class</span>
+                <span>{$Text['Cabin_type'][1]}</span>
             </div>
             <div class="col-auto">
                 <h4>$ {$row['PriceEconomy']}</h4>
-                <span>Economy class</span>
+                <span>{$Text['Cabin_type'][0]}</span>
             </div>
         </div>
         <div class="col-12 col-sm row justify-content-around justify-content-sm-end">
             <div class="col-auto">
                 <h4>{$row['DateTime']}</h4>
-                <span>Departure time</span>
+                <span>{$Text['Departure_time']}</span>
             </div>
-            <button class="btn btn-rounded btn-primary col-auto rout"><i class="fa-solid fa-cart-shopping me-2"></i>Go Reserve</button>
+            <button class="btn btn-rounded btn-primary col-auto rout"><i class="fa-solid fa-cart-shopping me-2"></i>{$Text['Go_Reserve']}</button>
         </div>
     </div>
 </div>

@@ -387,6 +387,13 @@
       "Title": "Flight | IVE airline",
       "Head": "Flight",
       "Content": {
+        "Reserve_Seat": "Reserve Seat",
+        "Cabin_type": [
+          "Economy class", "Business class"
+        ],
+        "Reserve": "Reserve",
+        "Departure_time": "Departure time",
+        "Go_Reserve": "Go Reserve"
       }
     }
   },
