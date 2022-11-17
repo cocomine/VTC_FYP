@@ -82,17 +82,23 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
 
     /* Autofill with url */
     const hashtag = location.hash;
-    const data = forge.util.decode64(hashtag.slice(1)).split('&')
-    $('#Departure').val(data[0]);
-    $('#Destination').val(data[1]);
-    jqDate.val(data[2]);
-    $('#Cabin').val(data[3]);
-    jqForm.delay(500).submit();
+    if(hashtag.length > 0) {
+        const data = forge.util.decode64(hashtag.slice(1)).split('&')
+        $('#Departure').val(data[0]);
+        $('#Destination').val(data[1]);
+        jqDate.val(data[2]);
+        $('#Cabin').val(data[3]);
+        jqForm.delay(500).submit();
+    }
 
     /* 渲染結果 */
     function readerRecord(flights) {
-        if (flights.length <= 0) return not_match
-        return flights.map((item) => flightRecord(item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, item.cabin)).join('');
+        if (!flights.Economy && !flights.Business) return not_match
+
+        let record;
+        record = flights.Economy ? flights.Economy.map((item) => flightRecord(item.ID, item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, Lang.Cabin_type[1])).join('') : '';
+        record += flights.Business ? flights.Business.map((item) => flightRecord(item.ID, item.Flight, item.DateTime, formatPrice(item.Price), item.From, item.To, Lang.Cabin_type[2])).join('') : '';
+        return record;
     }
 
     /* 懸浮動畫 */
@@ -104,12 +110,11 @@ define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge,
     })
 
     /* html code */
-    function flightRecord(flight, time, price, from, to, cabin) {
-        cabin = cabin === 1 ? Lang.Cabin_type[1] : Lang.Cabin_type[2]
+    function flightRecord(id, flight, time, price, from, to, cabin) {
         time = moment(time).format("hh:mm A");
         return `
     <div class="col-12">
-        <a href="/panel/flight/${flight}" class="text-dark">
+        <a href="/panel/flight/${id}" class="text-dark">
             <div class="card">
                 <div class="card-body">
                     <div class="row">

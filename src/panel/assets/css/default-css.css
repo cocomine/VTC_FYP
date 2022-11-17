@@ -418,8 +418,8 @@ img {
 
 :root {
     --primary-color: #ff7112;
-    --bs-primary: #ff9d22;
-    --bs-primary-rgb: 225, 113, 18
+    --bs-primary: #ff7112;
+    --bs-primary-rgb: 225, 113, 18;
 }
 
 #preloader {

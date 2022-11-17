@@ -1844,8 +1844,17 @@ table.dbkit-table tr td {
 }
 
 .btn-primary {
-    background-color: #ff7112;
-    border-color: #ff7112;
+    --bs-btn-bg: var(--primary-color);
+    --bs-btn-border-color: var(--primary-color);
+    --bs-btn-hover-bg: #cc5a0e;
+    --bs-btn-hover-border-color: var(--primary-color);
+}
+
+.btn-outline-primary{
+    --bs-btn-color: var(--primary-color);
+    --bs-btn-border-color: var(--primary-color);
+    --bs-btn-hover-bg: var(--primary-color);
+    --bs-btn-hover-border-color: var(--primary-color);
 }
 
 /*-------------------- END Button ------------------- */
