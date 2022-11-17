@@ -63,6 +63,10 @@ class flight implements IPage {
         $dataJson = json_encode(array(
             'FromStr' => $row['FromStr'],
             'ToStr' => $row['ToStr'],
+            'PriceBusiness' => $row['PriceBusiness'],
+            'PriceEconomy' => $row['PriceEconomy'],
+            'Economy' => $row['Economy'],
+            'Business' => $row['Business'],
         ));
         return <<<body
 <pre id='langJson' style='display: none'>{}</pre>
@@ -99,9 +103,9 @@ class flight implements IPage {
                             <h5 class="col-auto">Business class</h5>
                             <div class="col-auto">
                                 <div class="row align-items-center">
-                                    <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded"><i class="fa-solid fa-plus"></i></button></div>
-                                    <h6 class="col-auto">0</h6>
-                                    <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded"><i class="fa-solid fa-minus"></i></button></div>
+                                    <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
+                                    <h6 class="col-auto" id="Business-count">0</h6>
+                                    <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
                                 </div>
                             </div>
                         </div>
@@ -111,9 +115,9 @@ class flight implements IPage {
                             <h5 class="col-auto">Economy class</h4>
                             <div class="col-auto">
                                 <div class="row align-items-center">
-                                    <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded"><i class="fa-solid fa-plus"></i></button></div>
-                                    <h6 class="col-auto">0</h6>
-                                    <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded"><i class="fa-solid fa-minus"></i></button></div>
+                                    <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Economy-add"><i class="fa-solid fa-plus"></i></button></div>
+                                    <h6 class="col-auto" id="Economy-count">0</h6>
+                                    <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Economy-sub"><i class="fa-solid fa-minus"></i></button></div>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +125,7 @@ class flight implements IPage {
                     <div class="row justify-content-between align-items-center mt-2 p-1">
                         <h4 class="col-auto" id="total">$ 0</h4>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-primary btn-rounded"><i class="fa-solid fa-cart-shopping me-2"></i>Reserve</button>
+                            <button type="button" class="btn btn-primary btn-rounded" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>Reserve</button>
                         </div>
                     </div>
                 </div>
@@ -171,7 +175,7 @@ class flight implements IPage {
         </div>
     </div>
 </div>
-<div class="position-fixed fixed-bottom bg-light p-3 d-md-none">
+<div class="sticky-bottom bg-light p-3 d-md-none" id="fixed-price">
     <div class="row">
         <div class="col-12 col-sm-auto row justify-content-around justify-content-sm-start">
             <div class="col-auto">

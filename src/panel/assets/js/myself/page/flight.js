@@ -6,14 +6,14 @@
 define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], function (jq, mapboxgl, mapboxSdk, turf, MapAutoFit) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
+    let Economy = 0, Business = 0;
 
     /* js資料 */
-    let Lang = $('#langJson').text();
-    Lang = JSON.parse(Lang);
-    let Data = $('#DataJson').text();
-    Data = JSON.parse(Data);
+    const Lang = JSON.parse($('#langJson').text());
+    const Data = JSON.parse($('#DataJson').text());
 
-    $('.rout').click(() =>{
+    /* 前往預留座位 Card */
+    $('.rout').click(() => {
         $('html').animate({scrollTop: $('#Reserve')[0].offsetTop}, 200, 'swing', () => {
             $('#Reserve').addClass('card-highlight')
             setTimeout(() => {
@@ -22,14 +22,40 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
         })
     })
 
+    /* go-top 自動適應 */
+    if(window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
+    $(window).resize(function () {
+        if(window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
+    })
+
+    /* 調整預定數量 */
+    $("[data-reserve]").click(function () {
+        const type = $(this).data('reserve');
+        if (type === "Business-add" && Business + 1 <= Data.Business) Business++;
+        if (type === "Business-sub" && Business - 1 >= 0) Business--;
+        if (type === "Economy-add" && Economy + 1 <= Data.Economy) Economy++;
+        if (type === "Economy-sub" && Economy - 1 >= 0) Economy--;
+
+        // show count
+        $('#Economy-count').text(Economy);
+        $('#Business-count').text(Business);
+        $('#total').text('$ ' + formatPrice(Data.PriceBusiness * Business + Data.PriceEconomy * Economy))
+    })
+
+    /* 前往預約確認介面 */
+    $('#checkout').click(function () {
+
+    })
+
     /* Load Map */
     const map = new mapboxgl.Map({
         container: 'map',
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
         style: 'mapbox://styles/mapbox/streets-v11',
-        zoom: 0.5
+        zoom: 0.5,
     });
 
+    /* Add Map Control */
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
@@ -83,7 +109,7 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
     /* 劃線&動畫 */
     function drawLine(origin, destination) {
         if (origin && destination) {
-            map.addControl(new MapAutoFit(origin, destination));
+            map.addControl(new MapAutoFit(origin, destination)); //auto fit
 
             //A simple line from origin to destination.
             const route = {
