@@ -91,7 +91,7 @@ class flight implements IPage {
             </div>
         </div>
         <div class='col-12'>
-            <div class="card">
+            <div class="card" id="Reserve">
                 <div class="card-body">
                     <h5 class="card-title">Reserve Seat</h5>
                     <div style="background-color: lightgray" class="rounded p-1">
@@ -131,7 +131,7 @@ class flight implements IPage {
 </div>
 <div class='col-12 mt-4 col-md-4'>
     <div class="row gy-4 gx-0 m-0 sticky-top">
-        <div class='col-12'>
+        <div class='col-12 d-none d-md-block'>
             <div class="card">
                 <div class='card-body'>
                     <div class="row g-3 justify-content-center">
@@ -143,7 +143,7 @@ class flight implements IPage {
                             <span>Economy class</span>
                             <h4>$ {$row['PriceEconomy']}</h4>
                         </div>
-                        <a href="#" tabindex="-1" class="btn btn-rounded btn-primary col-6"><i class="fa-solid fa-cart-shopping me-2"></i>Go Reserve</a>
+                        <button class="btn btn-rounded btn-primary col-6 rout"><i class="fa-solid fa-cart-shopping me-2"></i>Go Reserve</button>
                         <div class="col-12">
                             <h4>{$row['DateTime']}</h4>
                             <span>Departure time</span>
@@ -171,6 +171,27 @@ class flight implements IPage {
         </div>
     </div>
 </div>
+<div class="position-fixed fixed-bottom bg-light p-3 d-md-none">
+    <div class="row">
+        <div class="col-12 col-sm-auto row justify-content-around justify-content-sm-start">
+            <div class="col-auto">
+                <h4>$ {$row['PriceBusiness']}</h4>
+                <span>Business class</span>
+            </div>
+            <div class="col-auto">
+                <h4>$ {$row['PriceEconomy']}</h4>
+                <span>Economy class</span>
+            </div>
+        </div>
+        <div class="col-12 col-sm row justify-content-around justify-content-sm-end">
+            <div class="col-auto">
+                <h4>{$row['DateTime']}</h4>
+                <span>Departure time</span>
+            </div>
+            <button class="btn btn-rounded btn-primary col-auto rout"><i class="fa-solid fa-cart-shopping me-2"></i>Go Reserve</button>
+        </div>
+    </div>
+</div>
 <script>
         require.config({
             paths:{
@@ -179,7 +200,7 @@ class flight implements IPage {
                 turf: ['https://unpkg.com/@turf/turf@6/turf.min']
             },
         });
-        loadModules(['mapbox', 'mapboxSdk', 'turf', 'myself/page/flight'])
+        loadModules(['mapbox', 'mapboxSdk', 'turf', 'myself/page/flight', 'myself/map-auto-fit'])
         </script>
 body;
     }

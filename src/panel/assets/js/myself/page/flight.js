@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'mapbox', 'mapboxSdk', 'turf'], function (jq, mapboxgl, mapboxSdk, turf) {
+define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], function (jq, mapboxgl, mapboxSdk, turf, MapAutoFit) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
 
@@ -13,6 +13,15 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf'], function (jq, mapboxgl, mapbox
     let Data = $('#DataJson').text();
     Data = JSON.parse(Data);
 
+    $('.rout').click(() =>{
+        $('html').animate({scrollTop: $('#Reserve')[0].offsetTop}, 200, 'swing', () => {
+            $('#Reserve').addClass('card-highlight')
+            setTimeout(() => {
+                $('#Reserve').removeClass('card-highlight')
+            }, 1000)
+        })
+    })
+
     /* Load Map */
     const map = new mapboxgl.Map({
         container: 'map',
@@ -20,6 +29,10 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf'], function (jq, mapboxgl, mapbox
         style: 'mapbox://styles/mapbox/streets-v11',
         zoom: 0.5
     });
+
+    map.addControl(new mapboxgl.GeolocateControl());
+    map.addControl(new mapboxgl.ScaleControl());
+    map.addControl(new mapboxgl.NavigationControl());
 
     /* Map Load Image */
     map.loadImage('/panel/assets/images/plane-solid.png', (error, image) => {
@@ -67,9 +80,10 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf'], function (jq, mapboxgl, mapbox
         });
     })
 
-    /* 劃線 */
+    /* 劃線&動畫 */
     function drawLine(origin, destination) {
         if (origin && destination) {
+            map.addControl(new MapAutoFit(origin, destination));
 
             //A simple line from origin to destination.
             const route = {

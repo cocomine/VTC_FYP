@@ -717,6 +717,29 @@ img {
     left: calc(100% - 1.2rem - 28px);
 }
 
+/* card-highlight */
+.card-highlight{
+    animation: card-highlight 1s ease-in-out;
+}
+
+@keyframes card-highlight {
+    from{
+        background-color: white;
+    }
+    25%{
+        background-color: rgba(255, 255, 0, 0.5);
+    }
+    50%{
+        background-color: white;
+    }
+    75%{
+        background-color: rgba(255, 255, 0, 0.5);
+    }
+    to{
+        background-color: white;
+    }
+}
+
 /* needs-validation IDE auto complete */
 .needs-validation {
 }

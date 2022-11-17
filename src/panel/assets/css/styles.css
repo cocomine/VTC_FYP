@@ -58,7 +58,7 @@
 
 .go-top{
     position: fixed;
-    bottom: 4rem;
+    bottom: 4.5rem;
     right: 4rem;
     width: 3.5rem;
     height: 3.5rem;
@@ -67,6 +67,7 @@
     border: 2px var(--bs-light) solid;
     color: var(--bs-light);
     cursor: pointer;
+    z-index: 1030;
 }
 
 /*------------------------- 1. Core Css -------------------*/
