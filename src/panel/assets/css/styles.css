@@ -2138,9 +2138,24 @@ div.dataTables_wrapper div.dataTables_length select {
 /* datatable-primary */
 
 .datatable-primary thead {
-    background: #4336fb;
+    height: 2rem;
+    background: var(--primary-color);
     color: #fff;
 }
+
+.datatable-primary thead tr th:first-child{
+    padding-left: 10px;
+}
+
+.datatable-primary tbody tr td{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.datatable-primary tbody tr:not(.dt-hasChild) .dtr-control:before{
+    background-color: var(--primary-color) !important;
+}
+
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     border: none;
@@ -2164,27 +2179,27 @@ table.dataTable thead td {
 
 .datatable-primary .dataTables_paginate .page-item.active .page-link,
 .datatable-primary .dataTables_paginate .page-item .page-link:hover {
-    background-color: #4336fb;
-    border-color: #4336fb;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
     color: #fff;
 }
 
 .datatable-primary .dataTables_paginate .page-link {
-    color: #4336fb;
-    border: 1px solid #4336fb;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
 }
 
 .datatable-primary .dataTables_paginate .paginate_button.disabled,
 .datatable-primary .dataTables_paginate .paginate_button.disabled:hover,
 .datatable-primary .dataTables_paginate .paginate_button.disabled:active {
-    color: #4336fb!important;
+    color: var(--primary-color)!important;
     border: none;
 }
 
 .datatable-primary .dataTables_paginate .page-item.disabled .page-link {
-    color: #9f98f7;
+    color: #f7bf99;
     background-color: #f9f9f9;
-    border-color: #c9c6f5;
+    border-color: #f5d9c6;
 }
 
 

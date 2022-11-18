@@ -198,15 +198,9 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
                             <?php
                             /* NOTE: ⚠ 限制頁面 ⚠ */
-                            /*if ($auth->userdata['Role'] == '2') {
-                                echo '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa fa-wrench"></i><span>管理後台</span></a>
-                                    <ul class="mm-collapse">
-                                        <li><a href="/panel/admin_background/broadcast/" data-ajax="GET"><i class="ti-announcement"></i><span>廣播</span></a></li>
-                                        <li><a href="/panel/admin_background/notify/" data-ajax="GET"><i class="ti-bell"></i><span>通知</span></a></li>
-                                    </ul>
-                                    </li>';
-                            }*/
+                            if ($auth->userdata['Role'] >= 2) {
+                                echo '<li><a href="/panel/account/" data-ajax="GET"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
+                            }
                             ?>
 
                         </ul>
@@ -276,7 +270,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                             <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
                                 <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
                             </h4>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu" style="z-index: 1030">
 
                                 <!-- dropdown menu content -->
                                 <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">

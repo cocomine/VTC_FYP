@@ -27,7 +27,7 @@ class flight implements IPage {
     }
 
     public function access(bool $isAuth, int $role): int {
-        //if(sizeof($this->upPath) != 1) return 404;
+        if(sizeof($this->upPath) != 1) return 404;
 
         /* 是否在本日之後 */
         $stmt = $this->sqlcon->prepare("SELECT Flight FROM Flight WHERE ID = ? AND DateTime >= CURRENT_DATE");
@@ -84,7 +84,7 @@ class flight implements IPage {
         <div class='col-12'>
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">{$row['Flight']}</h4>
+                    <h4 class="header-title">{$row['Flight']}</h4>
                     <div class="row">
                         <div class="col">
                             <div class="row align-content-center h-100 pe-4">
@@ -104,7 +104,7 @@ class flight implements IPage {
         <div class='col-12'>
             <div class="card" id="Reserve">
                 <div class="card-body">
-                    <h5 class="card-title">{$Text['Reserve_Seat']}</h5>
+                    <h5 class="header-title">{$Text['Reserve_Seat']}</h5>
                     <div style="background-color: lightgray" class="rounded p-1">
                         <div class="row justify-content-between align-items-center">
                             <h5 class="col-auto">{$Text['Cabin_type'][1]}</h5>
@@ -154,7 +154,7 @@ class flight implements IPage {
                             <span>{$Text['Cabin_type'][0]}</span>
                             <h4>$ {$row['PriceEconomy']}</h4>
                         </div>
-                        <button class="btn btn-rounded btn-primary col-6 rout"><i class="fa-solid fa-cart-shopping me-2"></i>{$Text['Go_Reserve']}</button>
+                        <button class="btn btn-rounded btn-primary col-6 rout"><i class="fa-solid fa-arrow-right me-2"></i>{$Text['Go_Reserve']}</button>
                         <div class="col-12">
                             <h4>{$row['DateTime']}</h4>
                             <span>{$Text['Departure_time']}</span>
@@ -166,7 +166,7 @@ class flight implements IPage {
         <div class='col-12'>
             <div class="card">
                 <div class='card-body'>
-                    <h5 class="card-title">Remaining Seats</h5>
+                    <h5 class="header-title">Remaining Seats</h5>
                     <div class="row g-3 justify-content-center">
                         <div class="col-12">
                             <h4>{$row['Business']}</h4>
@@ -204,15 +204,15 @@ class flight implements IPage {
     </div>
 </div>
 <script>
-        require.config({
-            paths:{
-                mapbox: ['https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl'],
-                mapboxSdk: ['https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min'],
-                turf: ['https://unpkg.com/@turf/turf@6/turf.min']
-            },
-        });
-        loadModules(['mapbox', 'mapboxSdk', 'turf', 'myself/page/flight', 'myself/map-auto-fit'])
-        </script>
+    require.config({
+        paths:{
+            mapbox: ['https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl'],
+            mapboxSdk: ['https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min'],
+            turf: ['https://unpkg.com/@turf/turf@6/turf.min']
+        },
+    });
+    loadModules(['mapbox', 'mapboxSdk', 'turf', 'myself/page/flight', 'myself/map-auto-fit'])
+</script>
 body;
     }
 

@@ -395,6 +395,11 @@
         "Departure_time": "Departure time",
         "Go_Reserve": "Go Reserve"
       }
+    },
+    "Account": {
+      "Title": "Account Management | IVE airline",
+      "Head": "Account Management",
+      "Content": {}
     }
   },
   "JS": {

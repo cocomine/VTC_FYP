@@ -66,6 +66,10 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
         map.addImage('plane', image);
     });
 
+    map.on('style.load', () => {
+        map.setFog({ 'horizon-blend': 0.05 }); // Enable stars with reduced atmosphere
+    });
+
     /* 起點終點位置 Marker */
     map.on('load', () => {
         let origin, destination;

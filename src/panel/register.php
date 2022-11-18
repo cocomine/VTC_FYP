@@ -158,10 +158,10 @@ function register_form(string $email = null, string $name = null) {
                                     <p>
                                         <b>{$Text['condition'][0]}</b>
                                         <ol id="passStrength-list">
-                                            <li>{$Text['condition'][1]}</li>
-                                            <li>{$Text['condition'][2]}</li>
-                                            <li>{$Text['condition'][3]}</li>
-                                            <li>{$Text['condition'][4]}</li>
+                                            <li><span class="status-p bg-danger">{$Text['condition'][1]}</span></li>
+                                            <li><span class="status-p bg-danger">{$Text['condition'][2]}</span></li>
+                                            <li><span class="status-p bg-danger">{$Text['condition'][3]}</span></li>
+                                            <li><span class="status-p bg-danger">{$Text['condition'][4]}</span></li>
                                         </ol>
                                     </p>
                                 </div>
