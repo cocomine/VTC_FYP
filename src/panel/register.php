@@ -118,7 +118,7 @@ function register_form(string $email = null, string $name = null) {
                             <div class="login-form-body">
                                 <div class="form-gp focused">
                                     <label for="Name">{$Text['Name']}</label>
-                                    <input type="text" class="form-control" name="name" id="Name" required="required" autocomplete='nickname' autofocus value='$name' maxlength="16">
+                                    <input type="text" class="form-control" name="name" id="Name" required="required" autocomplete='username' autofocus value='$name' maxlength="16">
                                     <i class="ti-user"></i>
                                     <div class="invalid-feedback">
                                         {$Text['Form']['Cant_EMPTY']}

@@ -40,4 +40,7 @@ define(['jquery', 'moment.min', 'forge'], function (jq, moment, forge) {
             ajexLoad("/panel/search#" + forge.util.encode64(hashtag))
         }
     })
+
+    /* 強制更改密碼 */
+    //todo
 })

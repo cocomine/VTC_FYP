@@ -49,13 +49,13 @@ class account implements IPage {
                 <div class="row g-2">
                     <div class='col-12 col-md-4'>
                         <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
-                        <input class='form-control input-rounded' type='text' maxlength='16' id='Name' name='name' autocomplete='nickname' required>
+                        <input class='form-control input-rounded' type='text' maxlength='16' id='Name' name='name' required>
                         <small class='form-text text-muted'>{$Text['Name']['limit']}</small>
                         <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                     </div>
                     <div class='col-12 col-md-4'>
                         <label for='Email' class='col-form-label'>{$Text['Email']}</label>
-                        <input class='form-control input-rounded' type='email' id='Email' name='email' autocomplete='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
+                        <input class='form-control input-rounded' type='email' id='Email' name='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
                         <div class='invalid-feedback'>{$Text['Form']['Error_format']}</div>
                     </div>
                     <div class='col-12 col-md-4'>
@@ -161,6 +161,10 @@ body;
         global $auth;
 
         $status = $auth->create_account($data['name'], $data['email'], 'IVEairline!', $data['role']);
+
+        /* 設置強制更改 */
+        //todo:
+
         return array(
             'code' => $status,
             'Message' => $this->ResultMsg($status),

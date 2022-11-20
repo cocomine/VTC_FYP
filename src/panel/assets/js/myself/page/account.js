@@ -33,8 +33,7 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
 
                     if(json.code === 207){
                         toastr.success(json.Message);
-                        $(this).find('#Name, #Email').val('');
-                        $(this).removeClass('was-validated')
+                        ajexLoad('/panel/account/', false);
                     }else{
                         toastr.error(json.Message);
                     }

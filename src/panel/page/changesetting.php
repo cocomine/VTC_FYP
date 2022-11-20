@@ -111,7 +111,7 @@ class changesetting implements IPage {
                                     <form id='DataSet' novalidate class='needs-validation'>
                                         <div class='col-12'>
                                             <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
-                                            <input class='form-control input-rounded' type='text' value='{$userdata["Name"]}' maxlength='16' id='Name' name='name' autocomplete='nickname' required>
+                                            <input class='form-control input-rounded' type='text' value='{$userdata["Name"]}' maxlength='16' id='Name' name='name' autocomplete='username' required>
                                             <small class='form-text text-muted'>{$Text['Name']['limit']}</small>
                                             <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                                         </div>
