@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function () {
+define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function (jq, toastr) {
     const table = $('#dataTable').DataTable({responsive: true});
     table.column('3').order('desc').draw()
 
@@ -31,12 +31,12 @@ define(['jquery', 'datatables.net', 'datatables.net-bs5', 'datatables.net-respon
                 response.json().then((json) => {
                     console.log(json) //debug
 
-                    if(json.code === 503 || json.code === 502){
-                        toastr.success(json.Message, json.Title);
-                        $("#username").text(json.Data.name)
+                    if(json.code === 207){
+                        toastr.success(json.Message);
+                        $(this).find('#Name, #Email').val('');
                         $(this).removeClass('was-validated')
                     }else{
-                        toastr.error(json.Message, json.Title);
+                        toastr.error(json.Message);
                     }
                 })
             }).finally(() => {

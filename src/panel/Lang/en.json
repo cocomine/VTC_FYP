@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "13/10/2022",
+  "Last_Update": "21/11/2022",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -405,6 +405,10 @@
           "limit": "Maximum 16 characters"
         },
         "Email": "Email address",
+        "password": {
+          "password": "Password",
+          "limit": "This is the default password, the user will be forced to change it after logging in for the first time."
+        },
         "Role": {
           "Role": "Role",
           "Normal": "Normal user",
@@ -425,7 +429,14 @@
         "Form": {
           "Cant_EMPTY": "This place cannot be left blank~~",
           "Error_format": "The email format should not be like this"
-        }
+        },
+        "EMAIL_FAIL": "<b>Ah Oh!</b> I can't send emails! Check for typos~~",
+        "PASS_NOT_MATCH": "<b>Ah Oh!</b> The passwords entered twice are not the same!",
+        "PASS_NOT_STRONG": "<b>Umm..</b> the password is not too strong!",
+        "EMAIL_WRONG_FORMAT": "<b>Umm..</b> email address should not be like this!",
+        "EMPTY": "<b>Hey!</b> You haven't played anything!",
+        "NAME_TOO_LONG": "<b>Ah Oh!</b> The name is too long to remember!",
+        "COMPLETE": "Account has been successfully created."
       }
     }
   },

@@ -6,11 +6,10 @@
 
 namespace panel\page;
 
-use DateTime;
-use DateTimeZone;
+use cocomine\IPage;
 use mysqli;
 
-class account implements \cocomine\IPage {
+class account implements IPage {
 
     private mysqli $sqlcon;
     private int $role;
@@ -67,6 +66,12 @@ class account implements \cocomine\IPage {
                             <option value='3'>{$Text['Role']['Administrator']}</option>
                         </select>
                     </div>
+                    <div class='col-12 col-md-5'>
+                        <label for='Pass' class='col-form-label'>{$Text['password']['password']}</label>
+                        <input class='form-control input-rounded' type='text' id='Pass' disabled value="IVEairline!">
+                        <small class='form-text text-muted'>{$Text['password']['limit']}</small>
+                    </div>
+                    <div class="w-100"></div>
                     <button type='submit' class='col-auto btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class="fa-solid fa-plus me-2"></i>{$Text['Create']}</button>
                 </div>
             </form>
@@ -156,7 +161,10 @@ body;
         global $auth;
 
         $status = $auth->create_account($data['name'], $data['email'], 'IVEairline!', $data['role']);
-        return array($status);
+        return array(
+            'code' => $status,
+            'Message' => $this->ResultMsg($status),
+        );
     }
 
     /**
@@ -178,5 +186,31 @@ body;
      */
     public function get_Head(): string {
         return showText('Account.Head');
+    }
+
+    /**
+     * 翻譯結果訊息
+     * @param int $type 類型
+     * @return string 訊息
+     */
+    private function ResultMsg(int $type): string {
+        switch ($type) {
+            case AUTH_REGISTER_EMAIL_FAIL:
+                return showText("Account.Content.EMAIL_FAIL");
+            case AUTH_REGISTER_PASS_NOT_STRONG:
+                return showText("Account.Content.PASS_NOT_STRONG");
+            case AUTH_REGISTER_EMAIL_WRONG_FORMAT:
+                return showText("Account.Content.EMAIL_WRONG_FORMAT");
+            case AUTH_REGISTER_EMPTY:
+                return showText("Account.Content.EMPTY");
+            case AUTH_REGISTER_NAME_TOO_LONG:
+                return showText('Account.Content.NAME_TOO_LONG');
+            case AUTH_SERVER_ERROR:
+                return showText("Error");
+            case AUTH_REGISTER_COMPLETE:
+                return showText('Account.Content.COMPLETE');
+            default:
+                return '';
+        }
     }
 }
