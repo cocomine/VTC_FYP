@@ -26,7 +26,7 @@ class home implements IPage {
     }
 
     /* 是否有權進入 */
-    function access(bool $isAuth, int $role): int {
+    function access(bool $isAuth, int $role, bool $isPost): int {
         return 200;
     }
 

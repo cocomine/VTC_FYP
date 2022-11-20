@@ -23,7 +23,7 @@ class account implements \cocomine\IPage {
     /**
      * @inheritDoc
      */
-    public function access(bool $isAuth, int $role): int {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
         if ($isAuth && $role >= 2) return 200;
         return 403;
     }

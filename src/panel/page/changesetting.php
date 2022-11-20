@@ -27,7 +27,7 @@ class changesetting implements IPage {
     function __construct(mysqli $sqlcon, array $UpPath) { }
 
     /* 檢查訪問權 */
-    public function access(bool $isAuth, int $role): int {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
         if (!$isAuth) return 401;
         if ($role < self::$Role) return 403;
         return 200;

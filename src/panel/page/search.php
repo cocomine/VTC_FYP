@@ -26,7 +26,7 @@ class search implements IPage {
     /**
      * @inheritDoc
      */
-    public function access(bool $isAuth, int $role): int {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
         return 200;
     }
 

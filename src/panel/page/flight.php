@@ -26,7 +26,8 @@ class flight implements IPage {
         $this->upPath = $upPath;
     }
 
-    public function access(bool $isAuth, int $role): int {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
+        if($isPost) return 403;
         if(sizeof($this->upPath) != 1) return 404;
 
         /* 是否在本日之後 */
