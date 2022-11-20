@@ -6,11 +6,14 @@
 
 namespace panel\page;
 
+use DateTime;
+use DateTimeZone;
 use mysqli;
 
 class account implements \cocomine\IPage {
 
     private mysqli $sqlcon;
+    private int $role;
 
     /**
      * @param mysqli $conn
@@ -24,6 +27,7 @@ class account implements \cocomine\IPage {
      * @inheritDoc
      */
     public function access(bool $isAuth, int $role, bool $isPost): int {
+        $this->role = $role;
         if ($isAuth && $role >= 2) return 200;
         return 403;
     }
@@ -33,10 +37,11 @@ class account implements \cocomine\IPage {
      */
     public function showPage(): string {
 
-        $Text = showText('ChangeSetting');//todo:
-        return <<<body
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
+        $Text = showText('Account.Content'); //翻譯文件
+
+        /* 身份組3以上可以增加user */
+        $createAC_html = "";
+        if ($this->role >= 3) $createAC_html = <<<tmp
 <div class="col-12 mt-4">
     <div class="card">
         <div class="card-body">
@@ -50,58 +55,81 @@ class account implements \cocomine\IPage {
                         <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                     </div>
                     <div class='col-12 col-md-4'>
-                        <label for='Email' class='col-form-label'>{$Text['Email']['Email']}</label>
+                        <label for='Email' class='col-form-label'>{$Text['Email']}</label>
                         <input class='form-control input-rounded' type='email' id='Email' name='email' autocomplete='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
                         <div class='invalid-feedback'>{$Text['Form']['Error_format']}</div>
                     </div>
                     <div class='col-12 col-md-4'>
                         <label class='col-form-label' for='Role'>Role</label>
                         <select class='input-rounded form-select' name='role' id='Role'>
-                            <option value='1'>Normal user</option>
-                            <option value='2'>Operator</option>
-                            <option value='3'>Administrator</option>
+                            <option value='1'>{$Text['Role']['Normal']}</option>
+                            <option value='2'>{$Text['Role']['Operator']}</option>
+                            <option value='3'>{$Text['Role']['Administrator']}</option>
                         </select>
                     </div>
-                    <button type='submit' class='col-auto btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class="fa-solid fa-plus me-2"></i>Create Account</button>
+                    <button type='submit' class='col-auto btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class="fa-solid fa-plus me-2"></i>{$Text['Create']}</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+tmp;
+
+        /* 取得資料 */
+        $stmt = $this->sqlcon->prepare("SELECT UUID, Name, Email, Last_Login, role, activated FROM User;");
+        if (!$stmt->execute()) return "";
+
+        /* 處理資料 */
+        $result = $stmt->get_result();
+        $user_data = "";
+        while ($row = $result->fetch_assoc()) {
+            // role 處理
+            switch ($row['role']){
+                case 1:
+                    $role = $Text['Role']['Normal'];
+                    break;
+                case 2:
+                    $role = $Text['Role']['Operator'];
+                    break;
+                case 3:
+                    $role = $Text['Role']['Administrator'];
+                    break;
+                default:
+                    $role = $row['role'];
+                    break;
+            }
+
+            //activated 處理
+            if($row['activated']) $active = '<span class="status-p bg-success">'.$Text['List']['Activated'].'</span>';
+            else $active = '<span class="status-p bg-danger">'.$Text['List']['Not_activated'].'</span>';
+
+            //time 處理;
+            $time = date('Y-m-d G:i:s', $row['Last_Login']);
+
+            $user_data .= "<tr><td>{$row['UUID']}</td><td>{$row['Name']}</td><td>{$row['Email']}</td><td>$time</td><td>$role</td><td>$active</td></tr>";
+        }
+
+        return <<<body
+$createAC_html
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
 <div class="col-12">
     <div class="card">
         <div class="card-body">
-            <h4 class="header-title">Account List</h4>
+            <h4 class="header-title">{$Text['List']['List']}</h4>
             <div class="data-tables datatable-primary">
                 <table id="dataTable" class="text-center w-100">
                     <thead class="text-capitalize">
                         <tr>
-                            <th>User ID</th>
-                            <th>User Name</th>
-                            <th>User Email</th>
-                            <th>Role</th>
-                            <th>Last Login Time</th>
-                            <th>Active state</th>
+                            <th>{$Text['List']['ID']}</th>
+                            <th>{$Text['List']['Name']}</th>
+                            <th>{$Text['List']['Email']}</th>
+                            <th>{$Text['List']['Time']}</th>
+                            <th>{$Text['Role']['Role']}</th>
+                            <th>{$Text['List']['Active']}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td><span class="status-p bg-success">Activated</span></td>
-                        </tr>
-                        <tr>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td><span class="status-p bg-danger">Not activated</span></td>
-                        </tr>
-                    </tbody>
+                    <tbody>$user_data</tbody>
                 </table>
             </div>
         </div>
@@ -125,7 +153,10 @@ body;
      * @inheritDoc
      */
     function post(array $data): array {
-        return array();
+        global $auth;
+
+        $status = $auth->create_account($data['name'], $data['email'], 'IVEairline!', $data['role']);
+        return array($status);
     }
 
     /**

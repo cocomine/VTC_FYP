@@ -642,6 +642,49 @@ class MyAuth {
     }
 
     /**
+     * 創建帳號
+     * @param string $Name 用戶名稱
+     * @param string $Email 電郵地址
+     * @param string $Pass 密碼
+     * @param int $role '身份組'
+     * @param string $localCode 語言代號
+     * @return int 處理狀態
+     */
+    public function create_account(string $Name, string $Email, string $Pass, int $role = 1, string $localCode = 'en'): int{
+        //不能留空
+        if (empty($Name) || empty($Pass) || empty($Email)) return AUTH_REGISTER_EMPTY;
+
+        /* 消毒 */
+        $email = filter_var(trim($Email), FILTER_SANITIZE_EMAIL);
+        $name = filter_var(trim($Name), FILTER_SANITIZE_STRING);
+        $Pass = filter_var(trim($Pass), FILTER_SANITIZE_STRING);
+
+        /* 進入判斷程序 */
+        //檢查名稱是否少於16字
+        if (strlen($name) > 16) return AUTH_REGISTER_NAME_TOO_LONG;
+        //檢查電郵格式
+        if (!preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_REGISTER_EMAIL_WRONG_FORMAT;
+        /* 判斷密碼強度 */
+        if (!(preg_match("/(?=.*?[A-Z])(?=.*?[a-z]).{8,}/", $Pass) && $Name != $Pass && $Email != $Pass)) return AUTH_REGISTER_PASS_NOT_STRONG;
+
+        /* 加密 */
+        $salt = $this->Generate_Code(12);
+        $password = $salt . $Pass;
+        $password = hash('sha512', md5($password));
+
+        /* 增值資料 & 檢查電郵衝突*/
+        $stmt = $this->sqlcon->prepare("INSERT INTO {$this->sqlsetting_User['table']} (
+                   {$this->sqlsetting_User['UUID_col']}, {$this->sqlsetting_User['Email_col']}, 
+                   {$this->sqlsetting_User['Name_col']}, {$this->sqlsetting_User['Password_col']}, 
+                   {$this->sqlsetting_User['Last_Login_col']}, {$this->sqlsetting_User['Last_IP_col']}, 
+                   {$this->sqlsetting_User['Language_col']}, {$this->sqlsetting_User['Salt_col']},
+                   {$this->sqlsetting_User['role_col']}, {$this->sqlsetting_User['activated_col']}) VALUES (UUID(), ?, ?, ?, UNIX_TIMESTAMP(), ?, ?, ?, ?, 1)"); //加入資料
+        $stmt->bind_param("ssssssi", $email, $name, $password, $_SERVER['REMOTE_ADDR'], $localCode, $salt, $role);
+        if ($stmt->execute()) return AUTH_REGISTER_COMPLETE; //Done
+        return AUTH_REGISTER_EMAIL_FAIL; //Fail
+    }
+
+    /**
      * 註冊帳號
      *
      * @param $Name String 用戶名稱
@@ -654,7 +697,7 @@ class MyAuth {
      * @param string|null $RSAKey RSA加密
      * @return int 處理狀態
      */
-    function register(string $Name, string $Cpass, string $Pass, string $Email, string $localCode, string $recaptcha, string $recaptcha_key, string $RSAKey = null): int {
+    function register(string $Name, string $Cpass, string $Pass, string $Email, string $recaptcha, string $recaptcha_key, string $localCode = 'en', string $RSAKey = null): int {
         /* 檢查是否機械人 */
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
@@ -688,10 +731,11 @@ class MyAuth {
         //是否機械人
         if (!($json->success && $json->hostname == $_SERVER['SERVER_NAME'])) return AUTH_REGISTER_YOUR_BOT;
         //檢查名稱是否少於16字
-        if (strlen($Name) > 16) return AUTH_REGISTER_NAME_TOO_LONG;
+        if (strlen($name) > 16) return AUTH_REGISTER_NAME_TOO_LONG;
         //檢查密碼是否一樣
         if ($Pass != $Cpass) return AUTH_REGISTER_PASS_NOT_MATCH;
-
+        //檢查電郵格式
+        if (!preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_REGISTER_EMAIL_WRONG_FORMAT;
         /* 判斷密碼強度 */
         if (!(preg_match("/(?=.*?[A-Z])(?=.*?[a-z]).{8,}/", $Cpass) && $Name != $Cpass && $Email != $Cpass)) return AUTH_REGISTER_PASS_NOT_STRONG;
 
@@ -699,9 +743,6 @@ class MyAuth {
         $salt = $this->Generate_Code(12);
         $password = $salt . $Cpass;
         $password = hash('sha512', md5($password));
-
-        //檢查電郵格式
-        if (!preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/", $email)) return AUTH_REGISTER_EMAIL_WRONG_FORMAT;
 
         /* 產生啟動序號 */
         $ActivatedCode = $this->Generate_Code(16);
