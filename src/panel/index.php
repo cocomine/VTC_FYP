@@ -70,7 +70,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         $homePage = new home($auth->sqlcon);
 
         //檢查權限
-        $access = $homePage->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+        $access = $homePage->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
         if ($access == 200) {
             //頁面輸出
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -124,7 +124,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         }
 
         //檢查權限
-        $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+        $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
         if ($access == 200) {
             //頁面輸出
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {

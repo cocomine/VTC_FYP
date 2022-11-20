@@ -399,7 +399,34 @@
     "Account": {
       "Title": "Account Management | IVE airline",
       "Head": "Account Management",
-      "Content": {}
+      "Content": {
+        "Name": {
+          "Name": "Name",
+          "limit": "Maximum 16 characters"
+        },
+        "Email": "Email address",
+        "Role": {
+          "Role": "Role",
+          "Normal": "Normal user",
+          "Operator": "Operator",
+          "Administrator": "Administrator"
+        },
+        "Create": "Create Account",
+        "List": {
+          "List": "Account List",
+          "ID": "User ID",
+          "Name": "User Name",
+          "Email": "User Email",
+          "Time": "Last Login Time",
+          "Active": "Active state",
+          "Activated": "Activated",
+          "Not_activated": "Not activated"
+        },
+        "Form": {
+          "Cant_EMPTY": "This place cannot be left blank~~",
+          "Error_format": "The email format should not be like this"
+        }
+      }
     }
   },
   "JS": {

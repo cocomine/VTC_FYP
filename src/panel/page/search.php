@@ -8,6 +8,7 @@ namespace panel\page;
 
 use cocomine\IPage;
 use DateTime;
+use DateTimeZone;
 use mysqli;
 
 class search implements IPage {
@@ -140,14 +141,15 @@ class search implements IPage {
     function post(array $data): array {
         $cabin = intval(filter_var(trim($data['cabin']), FILTER_SANITIZE_NUMBER_INT));
         $date = filter_var(trim($data['date']), FILTER_SANITIZE_STRING);
-        $like_date = $date . '%';
         $departure = filter_var(trim($data['departure']), FILTER_SANITIZE_STRING);
         $like_departure = "%" . $departure . "%";
         $destination = filter_var(trim($data['destination']), FILTER_SANITIZE_STRING);
         $like_destination = "%" . $destination . "%";
 
         /* 判斷今日之前 */
-        $interval = DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime());
+        $time_zone = new DateTimeZone("Asia/Hong_Kong");
+        $now = new DateTime('now', $time_zone);
+        $interval = DateTime::createFromFormat('Y-m-d', $date, $time_zone)->diff($now);
         if ($interval->invert == 0 && $interval->days > 0) {
             return array(
                 'code' => 200,
@@ -155,6 +157,12 @@ class search implements IPage {
                     'flights' => array()
                 )
             );
+        }
+
+        /* 如果是本日增加時間過濾 */
+        $time = '00:00:00';
+        if($interval->invert == 0){
+            $time = $now->format('H:i:s');
         }
 
         $flights = array();
@@ -169,8 +177,8 @@ class search implements IPage {
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
                 AND f.`To`
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
-            ) AND DateTime LIKE ? AND Aircaft.Economy > 0");
-            $stmt->bind_param("sssss", $departure, $like_departure, $destination, $like_destination, $like_date);
+            ) AND DATE(DateTime) >= ? AND TIME(DateTime) >= ? AND Aircaft.Economy > 0 ORDER BY Flight.DateTime");
+            $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $time);
             if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));
 
             /* 處理資料 Economy */
@@ -191,8 +199,8 @@ class search implements IPage {
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
                 AND f.`To`
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
-            ) AND DateTime LIKE ? AND Aircaft.Business > 0");
-            $stmt->bind_param("sssss", $departure, $like_departure, $destination, $like_destination, $like_date);
+            ) AND DATE(DateTime) >= ? AND TIME(DateTime) >= ? AND Aircaft.Business > 0");
+            $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $time);
             if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));
 
             /* 處理資料 Business */
