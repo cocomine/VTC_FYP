@@ -28,8 +28,22 @@
         ],
         "Search": "Search",
         "Form": {
-          "Cant_EMPTY": "This place cannot be left blank",
-          "min_date": "Date must be on or after today"
+          "Cant_EMPTY": "This place cannot be left blank~~",
+          "min_date": "Date must be on or after today",
+          "Not_Match_Wrong": "Wrong password input twice~~"
+        },
+        "Pass": {
+          "NewPass": "New Password",
+          "NewConfirmPass": "Confirm Password",
+          "NotMach": "The password entered twice is incorrect~~",
+          "passStrength": "Password Strength:",
+          "condition": [
+            "Condition",
+            "At least one uppercase english is required",
+            "At least one lowercase english is required",
+            "At least 8 characters are required",
+            "Cannot be the same as email address or name"
+          ]
         }
       }
     },
@@ -61,7 +75,7 @@
         "NotMach": "The password entered twice is incorrect~~",
         "passStrength": "Password Strength:",
         "condition": [
-          "condition",
+          "Condition",
           "At least one uppercase english is required",
           "At least one lowercase english is required",
           "At least 8 characters are required",

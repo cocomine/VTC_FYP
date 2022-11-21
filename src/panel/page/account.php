@@ -163,7 +163,13 @@ body;
         $status = $auth->create_account($data['name'], $data['email'], 'IVEairline!', $data['role']);
 
         /* 設置強制更改 */
-        //todo:
+        if($status == AUTH_REGISTER_COMPLETE){
+            $stmt = $this->sqlcon->prepare("SET @uuid = (SELECT UUID FROM User WHERE Email = ?)");
+            $stmt->bind_param('s', $data['email']);
+            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+            $stmt->prepare("INSERT INTO pwd_change (UUID) VALUES (@uuid)");
+            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+        }
 
         return array(
             'code' => $status,

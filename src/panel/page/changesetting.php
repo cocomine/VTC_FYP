@@ -69,11 +69,8 @@ class changesetting implements IPage {
 
         /* 雙重驗證狀態 */
         if ($userdata['ALLData']['2FA']) {
-            $TwoFA = "<p>
-                            <span style='color: limegreen'><i class='fa fa-lock pe-1'></i>{$Text['2FA']['is_Enable'][0]}</span><br>
-                            {$Text['2FA']['is_Enable'][1]}<br>
-                            <small class='text-muted'>" . showText("ChangeSetting.2FA.is_Enable.2") . "</small>
-                      </p>
+            $TwoFA = "<p><span style='color: limegreen'><i class='fa fa-lock pe-1'></i>{$Text['2FA']['is_Enable'][0]}</span><br>{$Text['2FA']['is_Enable'][1]}<br>
+                      <small class='text-muted'>" . showText("ChangeSetting.2FA.is_Enable.2") . "</small></p>
                       <button type='button' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 me-2' data-bs-toggle='modal' data-bs-target='#TwoFA_BackupCode'><i class='fa fa-eye pe-2'></i>{$Text['2FA']['show_BackupCode']}</button>
                       <button type='button' class='btn btn-rounded btn-secondary mt-4 pr-4 pl-4' data-bs-toggle='modal' data-bs-target='#TwoFA_confirm_off'><span class='ti-reload pe-2'></span>{$Text['2FA']['reset']}</button>";
         } else {
@@ -437,7 +434,7 @@ body2;
      * @return string 輸出
      */
     function path(): string {
-        return "<li><a href='/panel/' data-ajax='GET'>" . showText("index.Console") . "</a></li>
+        return "<li><a href='/panel/' data-ajax='GET'>" . showText("index.home") . "</a></li>
                 <li><span>" . showText("ChangeSetting.setting") . "</span></li>";
     }
 }

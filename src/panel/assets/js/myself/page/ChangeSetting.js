@@ -6,8 +6,7 @@
 define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, toastr, zxcvbn, forge, bootstrap, FileSaver) => {
     "use strict";
 
-    let Lang = $('#langJson').text();
-    Lang = JSON.parse(Lang);
+    const Lang = JSON.parse($('#langJson').text());
 
     /* 資料修改 */
     $('#DataSet').submit(function (e) {
@@ -32,7 +31,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json) //debug
 
                     if(json.code === 503 || json.code === 502){
                         toastr.success(json.Message, json.Title);
@@ -56,7 +54,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
             e.preventDefault();
             e.stopPropagation();
             const data = $(this).serializeObject();
-            console.log(data)
 
             /* 封鎖按鈕 */
             const bt = $(this).children('.form-submit');
@@ -82,8 +79,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json) //debug
-
                     if(json.code === 510){
                         toastr.success(json.Message, json.Title);
                         $("#Password, #Old_Pass, #Password2").val('')
@@ -123,7 +118,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                         const temp2 = '<span class="pe-2">'+temp.join('</span><span class="pe-2">')+'</span>'
 
                         /* 輸出 */
-                        //modal.find('#qr').attr('src', window.atob(data.Data.qr)).removeClass('visually-hidden');
                         const img = jQuery('<img />',{
                             src: window.atob(data.Data.qr),
                             width: 250,
@@ -197,7 +191,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json) //debug
 
                     if(json.code === 523){
                         toastr.success(json.Message, json.Title);
@@ -231,7 +224,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                     if(json.code === 528){
                         /* 解密訊息 */
                         const codes = json.Data.code.map((item) => key.privateKey.decrypt(forge.util.decode64(item.Code)))
-                        console.log(codes)
 
                         /* 排列table */
                         let table = '';

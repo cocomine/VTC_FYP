@@ -77,7 +77,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                 $data = json_decode(file_get_contents("php://input"), true);
 
                 //無法解釋json
-                if ($data == null) {
+                if ($data === null) {
                     http_response_code(500);
                     echo json_encode(array(
                         'code' => 500,
@@ -131,7 +131,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                 $data = json_decode(file_get_contents("php://input"), true);
 
                 //無法解釋json
-                if ($data == null) {
+                if ($data === null) {
                     http_response_code(500);
                     echo json_encode(array(
                         'code' => 500,
