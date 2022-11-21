@@ -133,19 +133,19 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
         if (result === 4) pass.css({'background-color': 'var(--bs-success)'});
 
         /* 條件指示 */
-        if (/[A-Z]+/.test(val)) $(list[0]).addClass('text-success');
-        else $(list[0]).removeClass('text-success');
+        if (/[A-Z]+/.test(val)) $(list[0]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[0]).removeClass('bg-success').addClass('bg-danger');
 
-        if (/[a-z]+/.test(val)) $(list[1]).addClass('text-success');
-        else $(list[1]).removeClass('text-success');
+        if (/[a-z]+/.test(val)) $(list[1]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[1]).removeClass('bg-success').addClass('bg-danger');
 
         if (val.length >= 8) {
-            $(list[2]).addClass('text-success');
-            $(list[3]).addClass('text-success');
+            $(list[2]).removeClass('bg-danger').addClass('bg-success');
+            $(list[3]).removeClass('bg-danger').addClass('bg-success');
         } else {
-            $(list[2]).removeClass('text-success');
-            $(list[3]).removeClass('text-success');
-        };
+            $(list[2]).removeClass('bg-success').addClass('bg-danger');
+            $(list[3]).removeClass('bg-success').addClass('bg-danger');
+        }
     });
 
     /* 外傳function */

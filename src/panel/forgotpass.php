@@ -107,37 +107,35 @@ function ForgetPass_from(bool $isCodeWong = false) {
 
     echo <<<FORGETPASS_FROM
 <div class="login-area login-bg">
-        <div class="container">
-            <div class="login-box ptb--100">
-                <form class="needs-validation" novalidate id="EmailStep">
-                    <div class="login-form-head">
-                        <h4>{$Text['ForgotPass']}</h4>
-                        <p>{$Text['welcome']}</p>
+    <div class="container">
+        <div class="login-box ptb--100">
+            <form class="needs-validation" novalidate id="EmailStep">
+                <div class="login-form-head">
+                    <h4>{$Text['ForgotPass']}</h4>
+                    <p>{$Text['welcome']}</p>
+                </div>
+                <div id="ResultMsg">$msg</div>
+                <div class="login-form-body">
+                    <div class="form-gp focused">
+                        <label for="Email">{$Text['Email']}</label>
+                        <input type="email" class="form-control" autocomplete="username" required="required" name="email" title="{$Text['Email_Tips']}" autofocus inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+                        <i class="ti-email"></i>
+                        <div class="invalid-feedback">{$Text['Form']['Error_format']}</div>
                     </div>
-                    <div id="ResultMsg">$msg</div>
-                    <div class="login-form-body">
-                        <div class="form-gp focused">
-                            <label for="Email">{$Text['Email']}</label>
-                            <input type="email" class="form-control" autocomplete="username" required="required" name="email" title="{$Text['Email_Tips']}" autofocus inputmode="email" pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
-                            <i class="ti-email"></i>
-                            <div class="invalid-feedback">{$Text['Form']['Error_format']}</div>
-                        </div>
-                        <div id="g-recaptcha" class="g-recaptcha form-control" data-sitekey="6Le90ykTAAAAAOgxgMUBE-hW7OivFZs1ebR5btuu" data-callback="recaptchacall"></div>
-                        <div class="invalid-feedback">{$Text['Form']['Check_bot']}</div>
-                        <div class="submit-btn-area mt-5">
-                            <button id="form_submit" type="submit">{$Text['FindPass']} <i class="ti-arrow-right"></i></button>
-                        </div>
-                        <div class="form-footer text-center mt-5">
-                            <p class="text-muted">{$Text['go_login']}</p>
-                        </div>
+                    <div id="g-recaptcha" class="g-recaptcha form-control" data-sitekey="6Le90ykTAAAAAOgxgMUBE-hW7OivFZs1ebR5btuu" data-callback="recaptchacall"></div>
+                    <div class="invalid-feedback">{$Text['Form']['Check_bot']}</div>
+                    <div class="submit-btn-area mt-5">
+                        <button id="form_submit" type="submit">{$Text['FindPass']} <i class="ti-arrow-right"></i></button>
                     </div>
-                </form>
-            </div>
+                    <div class="form-footer text-center mt-5">
+                        <p class="text-muted">{$Text['go_login']}</p>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <pre style="display: none" id="langJson">
-        {}
-    </pre>
+</div>
+<pre style="display: none" id="langJson">{}</pre>
 FORGETPASS_FROM;
 }
 
@@ -154,56 +152,56 @@ function ForgetPassSet_from() {
     ));
 
     echo <<<FORGETPASSSET_FROM
-    <div class="login-area login-bg">
-        <div class="container">
-            <div class="login-box ptb--100">
-                <form class="needs-validation" novalidate id="PasswordStep">
-                    <div class="login-form-head">
-                        <h4>{$Text['ForgotPass']}</h4>
-                        <p>{$Text['welcome2']}</p>
+<div class="login-area login-bg">
+    <div class="container">
+        <div class="login-box ptb--100">
+            <form class="needs-validation" novalidate id="PasswordStep">
+                <div class="login-form-head">
+                    <h4>{$Text['ForgotPass']}</h4>
+                    <p>{$Text['welcome2']}</p>
+                </div>
+                <div id="ResultMsg"></div>
+                <div class="login-form-body">
+                    <div class="form-gp focused">
+                        <label for="Password">{$Text['NewPass']}</label>
+                        <input type="password" class="form-control" autocomplete="new-password" id="Password" required="required" autofocus name="password">
+                        <i class="ti-lock"></i>
+                        <div class="invalid-feedback">{$Text['Form']['Cant_EMPTY']}</div>
                     </div>
-                    <div id="ResultMsg"></div>
-                    <div class="login-form-body">
-                        <div class="form-gp focused">
-                            <label for="Password">{$Text['NewPass']}</label>
-                            <input type="password" class="form-control" autocomplete="new-password" id="Password" required="required" autofocus name="password">
-                            <i class="ti-lock"></i>
-                            <div class="invalid-feedback">{$Text['Form']['Cant_EMPTY']}</div>
-                        </div>
-                        <div class="form-gp">
-                            <label for="Password2">{$Text['ConfirmNewPass']}</label>
-                            <input type="password" class="form-control" autocomplete="new-password" required="required" id="Password2" name="password2">
-                            <i class="ti-lock"></i>
-                            <div class="invalid-feedback">{$Text['Form']['Not_Match_Wrong']}</div>
-                        </div>
-                        <div class="form-gp">
-                            <p>
-                                {$Text['passStrength']} 
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 0" id="passStrength"></div>
-                                </div>
-                            </p>
-                            <p>
-                                <b>{$Text['condition'][0]}</b>
-                                <ol id="passStrength-list">
-                                    <li>{$Text['condition'][1]}</li>
-                                    <li>{$Text['condition'][2]}</li>
-                                    <li>{$Text['condition'][3]}</li>
-                                    <li>{$Text['condition'][4]}</li>
-                                </ol>
-                            </p>
-                        </div>
-                        <div class="submit-btn-area mt-5">
-                            <button id="form_submit" type="submit">{$Text['Change_Pass']} <i class="ti-arrow-right"></i></button>
-                        </div>
+                    <div class="form-gp">
+                        <label for="Password2">{$Text['ConfirmNewPass']}</label>
+                        <input type="password" class="form-control" autocomplete="new-password" required="required" id="Password2" name="password2">
+                        <i class="ti-lock"></i>
+                        <div class="invalid-feedback">{$Text['Form']['Not_Match_Wrong']}</div>
                     </div>
-                </form>
-            </div>
+                    <div class="form-gp">
+                        <p>
+                            {$Text['passStrength']} 
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 0" id="passStrength"></div>
+                            </div>
+                        </p>
+                        <p>
+                            <b>{$Text['condition'][0]}</b>
+                            <ol id="passStrength-list">
+                                <li><span class='status-p bg-danger'>{$Text['condition'][1]}</span></li>
+                                <li><span class='status-p bg-danger'>{$Text['condition'][2]}</span></li>
+                                <li><span class='status-p bg-danger'>{$Text['condition'][3]}</span></li>
+                                <li><span class='status-p bg-danger'>{$Text['condition'][4]}</span></li>
+                            </ol>
+                        </p>
+                    </div>
+                    <div class="submit-btn-area mt-5">
+                        <button id="form_submit" type="submit">{$Text['Change_Pass']} <i class="ti-arrow-right"></i></button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <pre style="display: none" id="langJson">
-        $LangJson
-    </pre>
+</div>
+<pre style="display: none" id="langJson">
+    $LangJson
+</pre>
 FORGETPASSSET_FROM;
 
 }

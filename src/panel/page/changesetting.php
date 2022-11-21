@@ -88,194 +88,196 @@ class changesetting implements IPage {
             ));
 
         /* HTNL */
-        return "<pre id='langJson' style='display: none'>$jsonLang</pre>
-                <!-- 基本資料 -->
-                <div class='col-12 mt-4'>
-                    <div class='card'>
-                        <div class='card-body'>
-                            <h1 class='header-title'>{$Text['ChangeData']}</h1>
-                            <div class='row justify-content-center'>
-                                <!-- 大頭貼 -->
-                                <div class='col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 position-relative'>
-                                    <div class='ratio ratio-1x1 rounded-circle border-primary border-4 border overflow-hidden'>
-                                        <img class='h-100 w-100' src='https://www.gravatar.com/avatar/$avatar?s=200' alt='avatar'>
-                                        <div class='bg-black bg-opacity-75 position-absolute bottom-0 start-0 end-0 text-center pt-1' style='top: 75%'>
-                                            <a class='link-light' href='https://gravatar.com' target='_blank'>
-                                                <span class='ti-pencil pe-1'></span>{$Text['Gravatar']}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 表單 -->
-                                <div class='col-12 col-lg'>
-                                    <form id='DataSet' novalidate class='needs-validation'>
-                                        <div class='col-12'>
-                                            <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
-                                            <input class='form-control input-rounded' type='text' value='{$userdata["Name"]}' maxlength='16' id='Name' name='name' autocomplete='username' required>
-                                            <small class='form-text text-muted'>{$Text['Name']['limit']}</small>
-                                            <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
-                                        </div>
-                                        <div class='col-12'>
-                                            <label for='Email' class='col-form-label'>{$Text['Email']['Email']}</label>
-                                            <input class='form-control input-rounded' type='email' value='{$userdata["Email"]}' id='Email' name='email' autocomplete='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
-                                            <small class='form-text text-muted'>{$Text['Email']['addMSG']}</small>
-                                            <div class='invalid-feedback'>{$Text['Form']['Error_format']}</div>
-                                        </div>
-                                        <div class='col-12'>
-                                            <label class='col-form-label' for='Language'>{$Text['Lang']['Lang']}</label>
-                                            <select class='input-rounded form-select' name='lang' id='Language'>
-                                                <option value='en' $Lang_Sel[0]>{$Text['Lang']['en']}</option>
-                                                <option value='zh' $Lang_Sel[1]>{$Text['Lang']['zh']}</option>
-                                                <option value='zh-CN' $Lang_Sel[2]>{$Text['Lang']['zh-CN']}</option>
-                                            </select>
-                                        </div>
-                                        <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
-                                    </form>
-                                </div>
-                            </div>
+        return <<<body
+<pre id='langJson' style='display: none'>$jsonLang</pre>
+<!-- 基本資料 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title'>{$Text['ChangeData']}</h1>
+            <div class='row justify-content-center'>
+                <!-- 大頭貼 -->
+                <div class='col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 position-relative'>
+                    <div class='ratio ratio-1x1 rounded-circle border-primary border-4 border overflow-hidden'>
+                        <img class='h-100 w-100' src='https://www.gravatar.com/avatar/$avatar?s=200' alt='avatar'>
+                        <div class='bg-black bg-opacity-75 position-absolute bottom-0 start-0 end-0 text-center pt-1' style='top: 75%'>
+                            <a class='link-light' href='https://gravatar.com' target='_blank'>
+                                <span class='ti-pencil pe-1'></span>{$Text['Gravatar']}
+                            </a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 密碼 -->
-                <div class='col-12 mt-4'>
-                    <div class='card'>
-                        <div class='card-body'>
-                            <h1 class='header-title'>{$Text['Pass']['Pass']}</h1>
-                            <form id='PassSet' novalidate class='needs-validation'>
+                <!-- 表單 -->
+                <div class='col-12 col-lg'>
+                    <form id='DataSet' novalidate class='needs-validation'>
+                        <div class='col-12'>
+                            <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
+                            <input class='form-control input-rounded' type='text' value='{$userdata["Name"]}' maxlength='16' id='Name' name='name' autocomplete='username' required>
+                            <small class='form-text text-muted'>{$Text['Name']['limit']}</small>
+                            <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                        </div>
+                        <div class='col-12'>
+                            <label for='Email' class='col-form-label'>{$Text['Email']['Email']}</label>
+                            <input class='form-control input-rounded' type='email' value='{$userdata["Email"]}' id='Email' name='email' autocomplete='email' required inputmode='email' pattern='^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$'>
+                            <small class='form-text text-muted'>{$Text['Email']['addMSG']}</small>
+                            <div class='invalid-feedback'>{$Text['Form']['Error_format']}</div>
+                        </div>
+                        <div class='col-12'>
+                            <label class='col-form-label' for='Language'>{$Text['Lang']['Lang']}</label>
+                            <select class='input-rounded form-select' name='lang' id='Language'>
+                                <option value='en' $Lang_Sel[0]>{$Text['Lang']['en']}</option>
+                                <option value='zh' $Lang_Sel[1]>{$Text['Lang']['zh']}</option>
+                                <option value='zh-CN' $Lang_Sel[2]>{$Text['Lang']['zh-CN']}</option>
+                            </select>
+                        </div>
+                        <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 密碼 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title'>{$Text['Pass']['Pass']}</h1>
+            <form id='PassSet' novalidate class='needs-validation'>
+                <div class='col-12'>
+                    <label for='Old_Pass' class='col-form-label'>{$Text['Pass']['OldPass']}</label>
+                    <input class='form-control input-rounded' type='password' id='Old_Pass' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='passwordOld' autocomplete='current-password' required>
+                    <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                </div>
+                <div class='col-12'>
+                    <label for='New_Pass' class='col-form-label'>{$Text['Pass']['NewPass']}</label>
+                    <input class='input-rounded form-control' type='password' id='Password' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password' autocomplete='new-password' required>
+                    <div class='invalid-feedback'>{$Text['Form']['Match_Old_Pass']}</div>
+                </div>
+                <div class='col-12'>
+                    <label for='CPass' class='col-form-label'>{$Text['Pass']['NewConfirmPass']}</label>
+                    <input class='form-control input-rounded' type='password' id='Password2' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password2' autocomplete='new-password' required data-placement='auto' data-toggle='popover' data-html='true' data-trigger='manual' data-content='<i class=\"ti-alert\" style=\"color:red;\"></i> " . showText("ChangeSetting.Pass.NotMach") . "'>
+                    <div class='invalid-feedback'>{$Text['Form']['Not_Match_Wrong']}</div>
+                </div>
+                <div class='col-12 col-md-6 mt-4'>
+                    <p>
+                        {$Text['Pass']['passStrength']}
+                        <div class='progress'>
+                            <div class='progress-bar' role='progressbar' style='width: 0' id='passStrength'></div>
+                        </div>
+                    </p>
+                    <p>
+                        <b>{$Text['Pass']['condition'][0]}</b>
+                        <ol id='passStrength-list'>
+                            <li><span class='status-p bg-danger'>{$Text['Pass']['condition'][1]}</span></li>
+                            <li><span class='status-p bg-danger'>{$Text['Pass']['condition'][2]}</span></li>
+                            <li><span class='status-p bg-danger'>{$Text['Pass']['condition'][3]}</span></li>
+                            <li><span class='status-p bg-danger'>{$Text['Pass']['condition'][4]}</span></li>
+                        </ol>
+                    </p>
+                </div>
+                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
+            </form>
+        </div>
+    </div>
+</div>
+body . <<<body2
+<!-- 雙重驗證 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title'>{$Text['2FA']['title']}</h1>
+            $TwoFA
+            <!-- 登記表單 -->
+            <div id='TwoFA_register' class='modal fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1'>
+                <div class='modal-dialog modal-lg'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h5 class='modal-title'><b>{$Text['2FA']['title']}</b></h5>
+                        </div>
+                        <div class='modal-body'>
+                            <p>{$Text['2FA']['2FA_register_modal']['body'][0]}</p>
+                            <div class='row justify-content-center g-0' id='qr'>
+                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
+                            </div>
+                            <p>{$Text['2FA']['2FA_register_modal']['body'][1]}</p>
+                            <pre id='secret' class='text-center text-uppercase fs-2 bg-secondary bg-opacity-50' style='color: #dc3545;'><div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div></pre>
+                        </div>
+                        
+                        <form id='TwoFASet' novalidate class='needs-validation'>
+                            <div class='modal-body' style='border-top: 1px solid #dee2e6;'>
                                 <div class='col-12'>
-                                    <label for='Old_Pass' class='col-form-label'>{$Text['Pass']['OldPass']}</label>
-                                    <input class='form-control input-rounded' type='password' id='Old_Pass' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='passwordOld' autocomplete='current-password' required>
-                                    <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                                    <label for='2FA_Code' class='col-form-label'>{$Text['2FA']['2FA_register_modal']['Enter_code']}</label>
+                                    <input class='form-control input-rounded' type='text' pattern='[0-9]{6}' id='2FA_Code' name='TwoFA_Code' autocomplete='off' required maxlength='6' inputmode='numeric'>
+                                    <div class='invalid-feedback'>{$Text['Form']['Only_number']}</div>
                                 </div>
-                                <div class='col-12'>
-                                    <label for='New_Pass' class='col-form-label'>{$Text['Pass']['NewPass']}</label>
-                                    <input class='input-rounded form-control' type='password' id='Password' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password' autocomplete='new-password' required>
-                                    <div class='invalid-feedback'>{$Text['Form']['Match_Old_Pass']}</div>
-                                </div>
-                                <div class='col-12'>
-                                    <label for='CPass' class='col-form-label'>{$Text['Pass']['NewConfirmPass']}</label>
-                                    <input class='form-control input-rounded' type='password' id='Password2' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password2' autocomplete='new-password' required data-placement='auto' data-toggle='popover' data-html='true' data-trigger='manual' data-content='<i class=\"ti-alert\" style=\"color:red;\"></i> " . showText("ChangeSetting.Pass.NotMach") . "'>
-                                    <div class='invalid-feedback'>{$Text['Form']['Not_Match_Wrong']}</div>
-                                </div>
-                                <div class='col-12 col-md-6 mt-4'>
-                                    <p>
-                                        {$Text['Pass']['passStrength']}
-                                        <div class='progress'>
-                                            <div class='progress-bar' role='progressbar' style='width: 0' id='passStrength'></div>
-                                        </div>
-                                    </p>
-                                    <p>
-                                        <b>{$Text['Pass']['condition'][0]}</b>
-                                        <ol id='passStrength-list'>
-                                            <li>{$Text['Pass']['condition'][1]}</li>
-                                            <li>{$Text['Pass']['condition'][2]}</li>
-                                            <li>{$Text['Pass']['condition'][3]}</li>
-                                            <li>{$Text['Pass']['condition'][4]}</li>
-                                        </ol>
-                                    </p>
-                                </div>
-                                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
-                            </form>
+                            </div>
+                            <div class='modal-footer'>
+                                <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['2FA_register_modal']['No']}</button>
+                                <button type='submit' class='btn btn-rounded btn-primary form-submit' disabled><i class='fa fa-check pe-2'></i>{$Text['2FA']['2FA_register_modal']['Enable']}</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 確認關閉 -->
+            <div id='TwoFA_confirm_off' class='modal fade'>
+                <div class='modal-dialog modal-dialog-centered'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h5 class='modal-title'><b>{$Text['2FA']['TwoFA_confirm_off_modal']['title']}</b></h5>
+                        </div>
+                        <div class='modal-body'>
+                            <p>{$Text['2FA']['TwoFA_confirm_off_modal']['body']}</p>
+                        </div>
+                        
+                        <div class='modal-footer'>
+                            <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['NO']}</button>&nbsp;&nbsp;
+                            <button type='submit' class='btn btn-rounded btn-danger' id='2FAReset'><i class='fa fa-close pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['YES']}</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 安全代碼 -->
+            <div id='TwoFA_BackupCode' class='modal fade'>
+                <div class='modal-dialog'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h5 class='modal-title'><b>{$Text['2FA']['TwoFA_BackupCode_modal']['title']}</b></h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                        </div>
+                        <div class='modal-body'>
+                            <p>{$Text['2FA']['TwoFA_BackupCode_modal']['body']}</p>
+                            <div class='table-responsive mt-2' id='BackupCodeShowArea'></div>
+                            <div class='row justify-content-center' id='BackupCodeLoading'>
+                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
+                            </div>
+                        </div>
+                        <div class='modal-footer'>
+                            <button type='button' class='btn btn-rounded btn-primary' id='Download_BackupCode' disabled><i class='fa fa-download pe-2'></i>{$Text['2FA']['TwoFA_BackupCode_modal']['download']}</button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 雙重驗證 -->
-                <div class='col-12 mt-4'>
-                    <div class='card'>
-                        <div class='card-body'>
-                            <h1 class='header-title'>{$Text['2FA']['title']}</h1>
-                            $TwoFA
-                            <!-- 登記表單 -->
-                            <div id='TwoFA_register' class='modal fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1'>
-                                <div class='modal-dialog modal-lg'>
-                                    <div class='modal-content'>
-                                        <div class='modal-header'>
-                                            <h5 class='modal-title'><b>{$Text['2FA']['title']}</b></h5>
-                                        </div>
-                                        <div class='modal-body'>
-                                            <p>{$Text['2FA']['2FA_register_modal']['body'][0]}</p>
-                                            <div class='row justify-content-center g-0' id='qr'>
-                                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
-                                            </div>
-                                            <p>{$Text['2FA']['2FA_register_modal']['body'][1]}</p>
-                                            <pre id='secret' class='text-center text-uppercase fs-2 bg-secondary bg-opacity-50' style='color: #dc3545;'><div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div></pre>
-                                        </div>
-                                        
-                                        <form id='TwoFASet' novalidate class='needs-validation'>
-                                            <div class='modal-body' style='border-top: 1px solid #dee2e6;'>
-                                                <div class='col-12'>
-                                                    <label for='2FA_Code' class='col-form-label'>{$Text['2FA']['2FA_register_modal']['Enter_code']}</label>
-                                                    <input class='form-control input-rounded' type='text' pattern='[0-9]{6}' id='2FA_Code' name='TwoFA_Code' autocomplete='off' required maxlength='6' inputmode='numeric'>
-                                                    <div class='invalid-feedback'>{$Text['Form']['Only_number']}</div>
-                                                </div>
-                                            </div>
-                                            <div class='modal-footer'>
-                                                <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['2FA_register_modal']['No']}</button>
-                                                <button type='submit' class='btn btn-rounded btn-primary form-submit' disabled><i class='fa fa-check pe-2'></i>{$Text['2FA']['2FA_register_modal']['Enable']}</button>
-                                            </div>
-                                        </form>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 確認關閉 -->
-                            <div id='TwoFA_confirm_off' class='modal fade'>
-                                <div class='modal-dialog modal-dialog-centered'>
-                                    <div class='modal-content'>
-                                        <div class='modal-header'>
-                                            <h5 class='modal-title'><b>{$Text['2FA']['TwoFA_confirm_off_modal']['title']}</b></h5>
-                                        </div>
-                                        <div class='modal-body'>
-                                            <p>{$Text['2FA']['TwoFA_confirm_off_modal']['body']}</p>
-                                        </div>
-                                        
-                                        <div class='modal-footer'>
-                                            <button type='button' class='btn btn-rounded btn-secondary' data-bs-dismiss='modal'><i class='fa fa-arrow-left pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['NO']}</button>&nbsp;&nbsp;
-                                            <button type='submit' class='btn btn-rounded btn-danger' id='2FAReset'><i class='fa fa-close pe-2'></i>{$Text['2FA']['TwoFA_confirm_off_modal']['YES']}</button>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 安全代碼 -->
-                            <div id='TwoFA_BackupCode' class='modal fade'>
-                                <div class='modal-dialog'>
-                                    <div class='modal-content'>
-                                        <div class='modal-header'>
-                                            <h5 class='modal-title'><b>{$Text['2FA']['TwoFA_BackupCode_modal']['title']}</b></h5>
-                                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-                                        </div>
-                                        <div class='modal-body'>
-                                            <p>{$Text['2FA']['TwoFA_BackupCode_modal']['body']}</p>
-                                            <div class='table-responsive mt-2' id='BackupCodeShowArea'></div>
-                                            <div class='row justify-content-center' id='BackupCodeLoading'>
-                                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
-                                            </div>
-                                        </div>
-                                        <div class='modal-footer'>
-                                            <button type='button' class='btn btn-rounded btn-primary' id='Download_BackupCode' disabled><i class='fa fa-download pe-2'></i>{$Text['2FA']['TwoFA_BackupCode_modal']['download']}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <script>
-                require.config({
-                    paths:{
-                        zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
-                        forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
-                        FileSaver: ['FileSaver.min'],
-                    },
-                });
-                loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
-                </script>";
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require.config({
+    paths:{
+        zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
+        forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
+        FileSaver: ['FileSaver.min'],
+    },
+});
+loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
+</script>
+body2;
     }
 
     /* 回傳表單資料 */

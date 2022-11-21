@@ -66,7 +66,7 @@ class account implements IPage {
                             <option value='3'>{$Text['Role']['Administrator']}</option>
                         </select>
                     </div>
-                    <div class='col-12 col-md-5'>
+                    <div class='col-12 col-md-4'>
                         <label for='Pass' class='col-form-label'>{$Text['password']['password']}</label>
                         <input class='form-control input-rounded' type='text' id='Pass' disabled value="IVEairline!">
                         <small class='form-text text-muted'>{$Text['password']['limit']}</small>

@@ -288,7 +288,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
         const input = [$('#Name').val(), $('#Email').val()];
         const result = zxcvbn(val, input).score;
         const pass = $('#passStrength');
-        const list = $('#passStrength-list li');
+        const list = $('#passStrength-list li > span');
 
         /* 指示器 */
         pass.css({width: (100 / 4) * result + "%"})
@@ -300,16 +300,16 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
         if (result === 4) pass.css({'background-color': 'var(--bs-success)'});
 
         /* 條件指示 */
-        if (/[A-Z]+/.test(val)) $(list[0]).addClass('text-success');
-        else $(list[0]).removeClass('text-success');
+        if (/[A-Z]+/.test(val)) $(list[0]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[0]).removeClass('bg-success').addClass('bg-danger');
 
-        if (/[a-z]+/.test(val)) $(list[1]).addClass('text-success');
-        else $(list[1]).removeClass('text-success');
+        if (/[a-z]+/.test(val)) $(list[1]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[1]).removeClass('bg-success').addClass('bg-danger');
 
-        if (val.length >= 8) $(list[2]).addClass('text-success');
-        else $(list[2]).removeClass('text-success');
+        if (val.length >= 8) $(list[2]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[2]).removeClass('bg-success').addClass('bg-danger');
 
-        if (!input.includes(val)) $(list[3]).addClass('text-success');
-        else $(list[3]).removeClass('text-success');
+        if (!input.includes(val)) $(list[3]).removeClass('bg-danger').addClass('bg-success');
+        else $(list[3]).removeClass('bg-success').addClass('bg-danger');
     });
 })
