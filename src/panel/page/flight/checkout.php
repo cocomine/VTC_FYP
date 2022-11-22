@@ -27,7 +27,8 @@ class checkout implements IPage {
     /**
      * @inheritDoc
      */
-    public function access(bool $isAuth, int $role): int {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
+        if(!$isPost) return 403;
         if(sizeof($this->upPath) != 1) return 404;
 
         /* 是否在本日之後 */
@@ -39,7 +40,7 @@ class checkout implements IPage {
         if(!$result->num_rows > 0) return 404; //不是本日期之後
         $this->flight = $result->fetch_assoc()['Flight'];
 
-        if($isAuth && $role >= 1) return 200;
+        if($isAuth && $role >= 1) return 200; //ok
         return 403;
     }
 
@@ -54,7 +55,7 @@ class checkout implements IPage {
      * @inheritDoc
      */
     function post(array $data): array {
-        return array();
+        return $data;
     }
 
     /**

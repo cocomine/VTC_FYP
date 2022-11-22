@@ -125,12 +125,11 @@ class home implements IPage {
     <div class='modal-dialog modal-dialog-centered'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title'><b>Set new password</b></h5>
+                <h5 class='modal-title'><b>{$Text['Pass']['title']}</b></h5>
             </div>
             <form id='PassSet' novalidate class='needs-validation'>
                 <div class='modal-body'>
-                    <p>Since you are logging in for the first time and using the default password, please change your password first.</p>
-                    <hr>
+                    <p>{$Text['Pass']['description']}</p><hr>
                     <div class='col-12'>
                         <label for='New_Pass' class='col-form-label'>{$Text['Pass']['NewPass']}</label>
                         <input class='input-rounded form-control' type='password' id='Password' pattern='(?=.*?[A-Z])(?=.*?[a-z]).{8,}' name='password' autocomplete='new-password' required>

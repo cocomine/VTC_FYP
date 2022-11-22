@@ -107,7 +107,7 @@ class flight implements IPage {
                 <div class="card-body">
                     <h5 class="header-title">{$Text['Reserve_Seat']}</h5>
                     <div style="background-color: lightgray" class="rounded p-1">
-                        <div class="row justify-content-between align-items-center">
+                        <div class="row justify-content-sm-between align-items-center justify-content-center">
                             <h5 class="col-auto">{$Text['Cabin_type'][1]}</h5>
                             <div class="col-auto">
                                 <div class="row align-items-center">
@@ -119,7 +119,7 @@ class flight implements IPage {
                         </div>
                     </div>
                     <div style="background-color: lightgray" class="mt-2 rounded p-1">
-                        <div class="row justify-content-between align-items-center">
+                        <div class="row justify-content-sm-between align-items-center justify-content-center">
                             <h5 class="col-auto">{$Text['Cabin_type'][0]}</h4>
                             <div class="col-auto">
                                 <div class="row align-items-center">
@@ -195,8 +195,8 @@ class flight implements IPage {
                 <span>{$Text['Cabin_type'][0]}</span>
             </div>
         </div>
-        <div class="col-12 col-sm row justify-content-around justify-content-sm-end">
-            <div class="col-auto">
+        <div class="col-12 col-sm row justify-content-around justify-content-sm-end gy-1 gy-sm-0">
+            <div class="col-auto text-end">
                 <h4>{$row['DateTime']}</h4>
                 <span>{$Text['Departure_time']}</span>
             </div>
