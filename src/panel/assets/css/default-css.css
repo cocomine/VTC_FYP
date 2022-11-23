@@ -747,6 +747,24 @@ img {
     }
 }
 
+/* cover */
+.cover{
+    position: relative;
+    overflow: hidden;
+}
+
+.cover:before{
+    content: '';
+    position: absolute;
+    background-color: black;
+    opacity: 0.4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
 /* needs-validation IDE auto complete */
 .needs-validation {
 }
