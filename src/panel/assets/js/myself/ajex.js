@@ -92,7 +92,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                             $('#content').html(page500(xhr.responseJSON.Message));
                         } else if (xhr.responseJSON.code === 401){
                             sessionStorage.setItem('returnPath', location.pathname);
-                            console.log(xhr.responseJSON.path)
                             location.replace(xhr.responseJSON.path)
                         }
 

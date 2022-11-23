@@ -3,13 +3,13 @@
  * Create by cocomine
  */
 
-define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], function (jq, mapboxgl, mapboxSdk, turf, MapAutoFit) {
+define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit', 'bootstrap', 'toastr'], function (jq, mapboxgl, mapboxSdk, turf, MapAutoFit, bootstrap, toastr) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     let Economy = 0, Business = 0;
 
     /* js資料 */
-    //const Lang = JSON.parse($('#langJson').text());
+    const Lang = JSON.parse($('#LangJson').text());
     const Data = JSON.parse($('#DataJson').text());
 
     /* 前往預留座位 Card */
@@ -23,9 +23,9 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
     })
 
     /* go-top 自動適應 */
-    if(window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
+    if (window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
     $(window).resize(function () {
-        if(window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
+        if (window.innerWidth < 768) $('.go-top').css('bottom', $('#fixed-price')[0].offsetHeight)
     })
 
     /* 調整預定數量 */
@@ -43,9 +43,66 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
     })
 
     /* 前往預約確認介面 */
+    const Confirm_modal = bootstrap.Modal.getOrCreateInstance($('#Confirm-modal')[0]);
     $('#checkout').click(function () {
+        if (Business > 0 || Economy > 0) {
+            const meal = $('#Meal')[0].checked
+            const modal = $(Confirm_modal._element);
+            modal.find('#Confirm-Business').text(Business);
+            modal.find('#Confirm-Economy').text(Economy);
+            modal.find('#Confirm-meal').text(meal ? Lang.Need_reserve : Lang.No_Need_reserve)
+            Confirm_modal.show()
+        } else {
+            $('#Reserve').addClass('card-highlight')
+            setTimeout(() => {
+                $('#Reserve').removeClass('card-highlight')
+            }, 1000)
+        }
+    });
 
-    })
+    /* 確認預約 */
+    $('#confirm').click(async function () {
+        const meal = $('#Meal')[0].checked
+
+        /* 封鎖按鈕 */
+        const bt = $(this)
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+        /* send */
+        const response = await fetch(location.href, {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                Economy, Business, meal
+            })
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            bt.html(html).removeAttr('disabled');
+        });
+
+        const json = await response.json();
+        console.log(json)//debug
+        if (json.code === 200) {
+            toastr.success(json.Message, json.Title);
+            Confirm_modal.hide();
+            ajexLoad(location.pathname, false);
+        } else if (json.code === 401) {
+            toastr.warning(Lang.Need_login.description, Lang.Need_login.title);
+            setTimeout(() => {
+                sessionStorage.setItem('returnPath', location.pathname);
+                location.replace(json.path)
+            }, 3000)
+        } else {
+            toastr.error(json.Message, json.Title);
+            Confirm_modal.hide();
+        }
+    });
 
     /* Load Map */
     const map = new mapboxgl.Map({
@@ -67,7 +124,7 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit'], functio
     });
 
     map.on('style.load', () => {
-        map.setFog({ 'horizon-blend': 0.05 }); // Enable stars with reduced atmosphere
+        map.setFog({'horizon-blend': 0.05}); // Enable stars with reduced atmosphere
     });
 
     /* 起點終點位置 Marker */

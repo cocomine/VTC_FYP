@@ -409,7 +409,20 @@
         ],
         "Reserve": "Reserve",
         "Departure_time": "Departure time",
-        "Go_Reserve": "Go Reserve"
+        "Go_Reserve": "Go Reserve",
+        "reserve_meal": "Need to reserve a meal?",
+        "Remaining_Seats": "Remaining Seats",
+        "Confirm_Reserve": {
+          "title": "Confirm Reserve",
+          "description": "Please confirm the following information is correct.",
+          "Need_reserve": "Need reserve meal",
+          "No_Need_reserve": "No need reserve meal",
+          "Confirm": "Confirm"
+        },
+        "Need_login": {
+          "title": "Need Login",
+          "description": "You need to login first to reserve.<br>(You will be redirected to the login page after 3 seconds)"
+        }
       }
     },
     "Account": {

@@ -422,6 +422,13 @@ img {
     --bs-primary-rgb: 225, 113, 18;
 }
 
+.form-check-input:checked{
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* pre-loader */
+
 #preloader {
     position: fixed;
     left: 0;

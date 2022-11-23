@@ -27,7 +27,7 @@ class flight implements IPage {
     }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
-        if($isPost) return 403;
+        if($isPost && !$isAuth) return 401;
         if(sizeof($this->upPath) != 1) return 404;
 
         /* 是否在本日之後 */
@@ -76,9 +76,15 @@ class flight implements IPage {
         $row['PriceEconomy'] = $fmt->format($row['PriceEconomy']);
 
         $Text = showText('Flight.Content');
+        $LangJson = json_encode(array(
+            'Need_reserve' => $Text['Confirm_Reserve']['Need_reserve'],
+            'No_Need_reserve' => $Text['Confirm_Reserve']['No_Need_reserve'],
+            'Need_login' => $Text['Need_login']
+        ));
         return <<<body
 <!--pre id='langJson' style='display: none'>{}</pre-->
 <pre id='DataJson' style='display: none'>$dataJson</pre>
+<pre id='LangJson' style='display: none'>$LangJson</pre>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
 <div class='col-12 mt-4 col-md-8'>
     <div class="row gy-4 gx-0 m-0">
@@ -130,10 +136,20 @@ class flight implements IPage {
                             </div>
                         </div>
                     </div>
+                    <div style="background-color: lightgray" class="mt-2 rounded p-1">
+                        <div class="row justify-content-sm-between align-items-center justify-content-center">
+                            <h5 class="col-auto">{$Text['reserve_meal']}</h4>
+                            <div class="col-auto me-sm-2">
+                                <input class="form-check-input mt-0" style="font-size: 2rem" type="checkbox" id="Meal">
+                            </div>
+                        </div>
+                    </div>
                     <div class="row justify-content-between align-items-center mt-2 p-1">
                         <h4 class="col-auto" id="total">$ 0</h4>
                         <div class="col-auto">
+                        <div class="form-check">
                             <button type="button" class="btn btn-primary btn-rounded" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>{$Text['Reserve']}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,15 +183,15 @@ class flight implements IPage {
         <div class='col-12'>
             <div class="card">
                 <div class='card-body'>
-                    <h5 class="header-title">Remaining Seats</h5>
+                    <h5 class="header-title">{$Text['Remaining_Seats']}</h5>
                     <div class="row g-3 justify-content-center">
                         <div class="col-12">
                             <h4>{$row['Business']}</h4>
-                            <span>Business class</span>
+                            <span>{$Text['Cabin_type'][1]}</span>
                         </div>
                         <div class="col-12">
                             <h4>{$row['Economy']}</h4>
-                            <span>Economy class</span>
+                            <span>{$Text['Cabin_type'][0]}</span>
                         </div>
                     </div>
                 </div>
@@ -204,6 +220,35 @@ class flight implements IPage {
         </div>
     </div>
 </div>
+<div id='Confirm-modal' class='modal fade' tabindex='-1'>
+    <div class='modal-dialog modal-dialog-centered'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h5 class='modal-title'><b>{$Text['Confirm_Reserve']['title']}</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class='modal-body'>
+                <p>{$Text['Confirm_Reserve']['description']}</p>
+                <div class="row gap-2 mx-2">
+                    <div class="col text-center rounded p-1" style="background-color: lightgray">
+                        <h4 id="Confirm-Business">5</h4>
+                        <span>{$Text['Cabin_type'][1]}</span>
+                    </div>
+                    <div class="col text-center rounded p-1" style="background-color: lightgray">
+                        <h4 id="Confirm-Economy">5</h4>
+                        <span>{$Text['Cabin_type'][0]}</span>
+                    </div>
+                    <div class="col-12 rounded p-2" style="background-color: lightgray">
+                        <h5 id="Confirm-meal"></h5>
+                    </div>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button class='btn btn-rounded btn-primary' id="confirm"><i class='fa fa-check pe-2'></i>{$Text['Confirm_Reserve']['Confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     require.config({
         paths:{
@@ -218,7 +263,7 @@ body;
     }
 
     function post(array $data): array {
-        return array();
+        return $data;
     }
 
     function path(): string {
