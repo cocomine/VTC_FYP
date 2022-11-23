@@ -421,9 +421,9 @@
         },
         "Need_login": {
           "title": "Need Login",
-          "description": "You need to login first to reserve.<br>(You will be redirected to the login page after 3 seconds)"
+          "description": "You need to login first to reserve. (You will be redirected in 3 seconds)"
         },
-        "alert": "You have already reserve this flight. If you need to modify or cancel it, please go to the Flight Reserve page",
+        "alert": "<b>You have already reserve this flight.</b> If you need to modify or cancel it, please go to the <a href='/panel/reserve/'>Flight Reserve</a> page",
         "Fail": [
           "Reserve Failed", "Failed to process request, please try again later"
         ],
