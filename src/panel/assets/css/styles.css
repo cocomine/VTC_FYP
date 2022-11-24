@@ -2143,7 +2143,9 @@ div.dataTables_wrapper div.dataTables_length select {
     color: #fff;
 }
 
-.datatable-primary thead tr th:first-child{
+.datatable-primary thead tr th{
+    padding-top: 5px;
+    padding-bottom: 5px;
     padding-left: 10px;
 }
 

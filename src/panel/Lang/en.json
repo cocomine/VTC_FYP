@@ -423,12 +423,37 @@
           "title": "Need Login",
           "description": "You need to login first to reserve. (You will be redirected in 3 seconds)"
         },
-        "alert": "<b>You have already reserve this flight.</b> If you need to modify or cancel it, please go to the <a href='/panel/reserve/'>Flight Reserve</a> page",
+        "alert": "<b>You have already reserve this flight.</b> If you need to modify or cancel it, please go to the <a href='/panel/reserve/'>Flight Reserved</a> page",
         "Fail": [
           "Reserve Failed", "Failed to process request, please try again later"
         ],
         "Success": [
           "Reserve Success", "You have successfully reserved your seat!"
+        ]
+      }
+    },
+    "Reserve": {
+      "Title": "Flight Reserved | IVE airline",
+      "Head": "Flight Reserved",
+      "Content": {
+        "Cabin_type": [
+          "Economy class", "Business class"
+        ],
+        "Confirm_Reserve": {
+          "title": "Confirm Reserve",
+          "description": "Please confirm the following information is correct.",
+          "Need_reserve": "Need reserve meal",
+          "No_Need_reserve": "No need reserve meal",
+          "Confirm": "Confirm"
+        },
+        "Fail": [
+          "Process Failed", "Failed to process request, please try again later"
+        ],
+        "Success_Modify": [
+          "Modify Success", "You have successfully Modify your reserved!"
+        ],
+        "Success_Delete": [
+          "Modify Success", "You have successfully Cancel your reserved!"
         ]
       }
     },

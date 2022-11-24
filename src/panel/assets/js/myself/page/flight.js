@@ -87,7 +87,6 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit', 'bootstr
         });
 
         const json = await response.json();
-        console.log(json)//debug
         if (json.code === 200) {
             toastr.success(json.Message, json.Title);
             Confirm_modal.hide();

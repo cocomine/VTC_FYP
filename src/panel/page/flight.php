@@ -8,6 +8,7 @@ namespace panel\page;
 
 use cocomine\IPage;
 use DateTime;
+use DateTimeZone;
 use mysqli;
 use NumberFormatter;
 
@@ -29,6 +30,8 @@ class flight implements IPage {
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
         if ($isPost && !$isAuth) return 401;
+        if ($isPost && $role < 1) return 403;
+
         if (sizeof($this->upPath) != 1) return 404;
 
         /* 是否在本日之後 */
@@ -46,12 +49,13 @@ class flight implements IPage {
     public function showPage(): string {
         global $auth;
         $fmt = numfmt_create('zh', NumberFormatter::DECIMAL);
+        $time_zone = new DateTimeZone("Asia/Hong_Kong");
 
         /* 取得資料 */
         $stmt = $this->sqlcon->prepare(
             "SELECT Flight.Flight, Flight.DateTime, Flight.`From`, Flight.`To`, Price.Economy AS PriceEconomy, Price.Business AS PriceBusiness, 
-            (Aircaft.Economy - (SELECT IFNULL(SUM(Reserve.Economy), 0) FROM Reserve WHERE ID = Flight.ID)) AS Economy,
-            (Aircaft.Business - (SELECT IFNULL(SUM(Reserve.Business), 0) FROM Reserve WHERE ID = Flight.ID)) AS Business,
+            (Aircaft.Economy - (SELECT IFNULL(SUM(Economy), 0) FROM Reserve WHERE ID = Flight.ID)) AS Economy,
+            (Aircaft.Business - (SELECT IFNULL(SUM(Business), 0) FROM Reserve WHERE ID = Flight.ID)) AS Business,
             (SELECT Name FROM Location WHERE Code = Flight.`From`) AS FromStr,
             (SELECT Name FROM Location WHERE Code = Flight.`To`) AS ToStr
         FROM Flight, Price, Aircaft WHERE Flight.ID = ? AND Price.ID = Flight.ID AND Flight.Aircaft = Aircaft.ID");
@@ -63,7 +67,7 @@ class flight implements IPage {
         $row = $result->fetch_assoc();
         $row['Business'] = max($row['Business'], 0);
         $row['Economy'] = max($row['Economy'], 0);
-        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $row['DateTime']);
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $row['DateTime'], $time_zone);
         $row['DateTime'] = $dateTime->format('j M Y - g:i A');
 
         /* js資料 */
@@ -92,7 +96,7 @@ class flight implements IPage {
             if (!$stmt->execute()) return "";
 
             $result = $stmt->get_result();
-            if($result->num_rows >= 1){
+            if ($result->num_rows >= 1) {
                 $tmp = $result->fetch_assoc();
                 $isReserve['css'] = 'cover';
                 $isReserve['alert'] = '';
@@ -280,7 +284,7 @@ class flight implements IPage {
                 </div>
             </div>
             <div class='modal-footer'>
-                <button class='btn btn-rounded btn-primary' id="confirm"><i class='fa fa-check pe-2'></i>{$Text['Confirm_Reserve']['Confirm']}</button>
+                <button class='btn btn-rounded btn-primary' id="confirm"><i class='fa-solid fa-plane-circle-check pe-2'></i>{$Text['Confirm_Reserve']['Confirm']}</button>
             </div>
         </div>
     </div>

@@ -177,7 +177,7 @@ class search implements IPage {
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
                 AND f.`To`
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
-            ) AND DATE(DateTime) >= ? AND TIME(DateTime) >= ? AND Aircaft.Economy > 0 ORDER BY DateTime DESC");
+            ) AND DATE(DateTime) = ? AND TIME(DateTime) >= ? AND Aircaft.Economy > 0 ORDER BY DateTime DESC");
             $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $time);
             if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));
 
@@ -199,7 +199,7 @@ class search implements IPage {
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
                 AND f.`To`
                     IN(SELECT Code FROM Location WHERE Code LIKE ? OR Name LIKE ?)
-            ) AND DATE(DateTime) >= ? AND TIME(DateTime) >= ? AND Aircaft.Business > 0 ORDER BY DateTime DESC ");
+            ) AND DATE(DateTime) = ? AND TIME(DateTime) >= ? AND Aircaft.Business > 0 ORDER BY DateTime DESC ");
             $stmt->bind_param("ssssss", $departure, $like_departure, $destination, $like_destination, $date, $time);
             if (!$stmt->execute()) return array('code' => 500, 'Message' => showText('Error'));
 

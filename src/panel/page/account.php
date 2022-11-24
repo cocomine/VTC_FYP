@@ -27,8 +27,9 @@ class account implements IPage {
      */
     public function access(bool $isAuth, int $role, bool $isPost): int {
         $this->role = $role;
-        if ($isAuth && $role >= 2) return 200;
-        return 403;
+        if (!$isAuth) return 401;
+        if ($role < 2) return 403;
+        return 200;
     }
 
     /**
