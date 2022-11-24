@@ -38,6 +38,7 @@ class reserve implements IPage {
      */
     public function showPage(): string {
         global $auth;
+        $Text = showText('Reserve.Content');
         $fmt = numfmt_create('zh', NumberFormatter::DECIMAL);
         $time_zone = new DateTimeZone("Asia/Hong_Kong");
         $today = new DateTime('now', $time_zone);
@@ -79,15 +80,14 @@ class reserve implements IPage {
                     <td>$meal</td>
                     <td>$ {$row['total']}</td>
                     <td>
-                        <button type="button" class="btn btn-outline-primary btn-sm btn-rounded" data-bs-toggle="tooltip" data-bs-title="Modify" data-action="edit" $disable data-id="{$row['ID']}"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button type="button" class="btn btn-outline-danger btn-sm btn-rounded" data-bs-toggle="tooltip" data-bs-title="Cancel" data-action="delete" $disable data-id="{$row['ID']}"><i class="fa-solid fa-plane-circle-xmark"></i></button>
+                        <button type="button" class="btn btn-outline-primary btn-sm btn-rounded" data-bs-toggle="tooltip" data-bs-title="{$Text['Modify']}" data-action="edit" $disable data-id="{$row['ID']}"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-rounded" data-bs-toggle="tooltip" data-bs-title="{$Text['Cancel']}" data-action="delete" $disable data-id="{$row['ID']}"><i class="fa-solid fa-plane-circle-xmark"></i></button>
                     </td>
                 </tr>
                 table;
         }
 
         /* json */
-        $Text = showText('Flight.Content');
         $LangJson = json_encode(array(
             'Need_reserve' => $Text['Confirm_Reserve']['Need_reserve'],
             'No_Need_reserve' => $Text['Confirm_Reserve']['No_Need_reserve'],
@@ -100,26 +100,26 @@ class reserve implements IPage {
 <div class="col-12 mt-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="header-title">Your Reserve</h4>
+            <h4 class="header-title">{$Text['table'][0]}</h4>
             <div class="data-tables datatable-primary">
                 <table id="dataTable" class="text-center w-100">
                     <thead class="text-capitalize">
                         <tr>
                             <th></th><th></th><th></th><th></th>
-                            <th style="border-left: 1px solid rgba(153,153,153,0.3)">Reserve Seat</th>
+                            <th style="border-left: 1px solid rgba(153,153,153,0.3)">{$Text['table'][1]}</th>
                             <th style="border-right: 1px solid rgba(153,153,153,0.3)"></th>
                             <th></th><th></th><th></th>
                         </tr>
                         <tr>
-                            <th>Flight</th>
-                            <th>Departure time</th>
-                            <th>Departure</th>
-                            <th>Destination</th>
-                            <th style="border-left: 1px solid rgba(153,153,153,0.3)">Business class</th>
-                            <th style="border-right: 1px solid rgba(153,153,153,0.3)">Economy class</th>
-                            <th>Reserve meal</th>
-                            <th>Total</th>
-                            <th>Action</th>
+                            <th>{$Text['table'][2]}</th>
+                            <th>{$Text['table'][3]}</th>
+                            <th>{$Text['table'][4]}</th>
+                            <th>{$Text['table'][5]}</th>
+                            <th style="border-left: 1px solid rgba(153,153,153,0.3)">{$Text['table'][6]}</th>
+                            <th style="border-right: 1px solid rgba(153,153,153,0.3)">{$Text['table'][7]}</th>
+                            <th>{$Text['table'][8]}</th>
+                            <th>{$Text['table'][9]}</th>
+                            <th>{$Text['table'][10]}</th>
                         </tr>
                     </thead>
                     <tbody>$table</tbody>
@@ -132,11 +132,11 @@ class reserve implements IPage {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modify Reserve</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">{$Text['editModal']['title']}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>You are modifying <b><span id="flight"></span></b> flight.</p>
+                <p>{$Text['editModal']['description']}</p>
                 <div style="background-color: lightgray" class="rounded p-1">
                     <div class="row justify-content-sm-between align-items-center justify-content-center">
                         <h5 class="col-auto">{$Text['Cabin_type'][1]}</h5>
@@ -174,7 +174,7 @@ class reserve implements IPage {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-rounded" id="Save" disabled><i class='fa-solid fa-save pe-2'></i>Save</button>
+                <button type="button" class="btn btn-primary btn-rounded" id="Save" disabled><i class='fa-solid fa-save pe-2'></i>{$Text['editModal']['Save']}</button>
             </div>
         </div>
     </div>
@@ -212,15 +212,15 @@ class reserve implements IPage {
     <div class='modal-dialog modal-dialog-centered'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title'><b>Confirm Cancel</b></h5>
+                <h5 class='modal-title'><b>{$Text['Delete_modal']['title']}</b></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class='modal-body'>
-                <p>Are you sure you want to cancel this flight reservation?</p>
+                <p>{$Text['Delete_modal']['description']}</p>
             </div>
             <div class='modal-footer'>
-                <button class='btn btn-rounded btn-secondary' data-bs-dismiss="modal" aria-label="Close"><i class='fa-solid fa-arrow-left pe-2'></i>Cancel</button>
-                <button class='btn btn-rounded btn-danger' id="delete"><i class='fa-solid fa-plane-circle-xmark pe-2'></i>Confirm</button>
+                <button class='btn btn-rounded btn-secondary' data-bs-dismiss="modal" aria-label="Close"><i class='fa-solid fa-arrow-left pe-2'></i>{$Text['Delete_modal']['Cancel']}</button>
+                <button class='btn btn-rounded btn-danger' id="delete"><i class='fa-solid fa-plane-circle-xmark pe-2'></i>{$Text['Delete_modal']['Confirm']}</button>
             </div>
         </div>
     </div>

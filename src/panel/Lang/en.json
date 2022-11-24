@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "21/11/2022",
+  "Last_Update": "24/11/2022",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -24,7 +24,9 @@
         "Date": "Departure date",
         "Cabin": "Cabin",
         "Cabin_type": [
-          "All class", "Economy class", "Business class"
+          "All class",
+          "Economy class",
+          "Business class"
         ],
         "Search": "Search",
         "Form": {
@@ -134,7 +136,9 @@
         "content": "These are your security codes, please keep them in a safe place. It would be best if you could encrypt it! (￣︶￣)↗",
         "BackupCode": "Security Code"
       },
-      "AUTH_CHANGESETTING_2FA_OFF_OK": ["It has been reset successfully ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_2FA_OFF_OK": [
+        "It has been reset successfully ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "Reset failed(┬┬﹏┬┬) Please try again~~",
         "If the situation persists, please contact customer service"
@@ -155,7 +159,9 @@
         "Successfully modified ヾ(^▽^*)))",
         "<b>Final step!</b> Check your mailbox now!"
       ],
-      "AUTH_CHANGESETTING_DATA_OK": ["Successfully modified ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_DATA_OK": [
+        "Successfully modified ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_DATA_FAIL": [
         "Modification failed (┬┬﹏┬┬) Please try again~~",
         "If the situation persists, please contact customer service"
@@ -375,8 +381,7 @@
         ],
         "Unknown_Location": "Unknown location",
         "Äny-question": "Email any questions to",
-        "privacy":
-        "Produced by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a> provides translations."
+        "privacy": "Produced by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a> provides translations."
       }
     },
     "Search": {
@@ -389,7 +394,9 @@
         "Date": "Departure date",
         "Cabin": "Cabin",
         "Cabin_type": [
-          "All class", "Economy class", "Business class"
+          "All class",
+          "Economy class",
+          "Business class"
         ],
         "Search": "Search",
         "Form": {
@@ -405,7 +412,8 @@
       "Content": {
         "Reserve_Seat": "Reserve Seat",
         "Cabin_type": [
-          "Economy class", "Business class"
+          "Economy class",
+          "Business class"
         ],
         "Reserve": "Reserve",
         "Departure_time": "Departure time",
@@ -425,10 +433,12 @@
         },
         "alert": "<b>You have already reserve this flight.</b> If you need to modify or cancel it, please go to the <a href='/panel/reserve/'>Flight Reserved</a> page",
         "Fail": [
-          "Reserve Failed", "Failed to process request, please try again later"
+          "Reserve Failed",
+          "Failed to process request, please try again later"
         ],
         "Success": [
-          "Reserve Success", "You have successfully reserved your seat!"
+          "Reserve Success",
+          "You have successfully reserved your seat!"
         ]
       }
     },
@@ -437,7 +447,8 @@
       "Head": "Flight Reserved",
       "Content": {
         "Cabin_type": [
-          "Economy class", "Business class"
+          "Economy class",
+          "Business class"
         ],
         "Confirm_Reserve": {
           "title": "Confirm Reserve",
@@ -446,14 +457,43 @@
           "No_Need_reserve": "No need reserve meal",
           "Confirm": "Confirm"
         },
+        "table": [
+          "Your Reserve",
+          "Reserve Seat",
+          "Flight",
+          "Departure time",
+          "Departure",
+          "Destination",
+          "Business class",
+          "Economy class",
+          "Reserve meal",
+          "Total",
+          "Action"
+        ],
+        "editModal": {
+          "title": "Modify Reserve",
+          "description": "You are modifying <b><span id=\"flight\"></span></b> flight.",
+          "Save": "Save"
+        },
+        "Delete_modal": {
+          "title": "Confirm Cancel",
+          "description": "Are you sure you want to cancel this flight reservation?",
+          "Cancel": "Cancel",
+          "Confirm": "Confirm"
+        },
+        "Modify": "Modify",
+        "Cancel": "Cancel",
         "Fail": [
-          "Process Failed", "Failed to process request, please try again later"
+          "Process Failed",
+          "Failed to process request, please try again later"
         ],
         "Success_Modify": [
-          "Modify Success", "You have successfully Modify your reserved!"
+          "Modify Success",
+          "You have successfully Modify your reserved!"
         ],
         "Success_Delete": [
-          "Modify Success", "You have successfully Cancel your reserved!"
+          "Modify Success",
+          "You have successfully Cancel your reserved!"
         ]
       }
     },
