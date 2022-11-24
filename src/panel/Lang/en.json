@@ -450,6 +450,7 @@
           "Economy class",
           "Business class"
         ],
+        "reserve_meal": "Need to reserve a meal?",
         "Confirm_Reserve": {
           "title": "Confirm Reserve",
           "description": "Please confirm the following information is correct.",

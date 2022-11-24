@@ -316,7 +316,7 @@ body2;
 
                 /* 加密 */
                 $piKey = openssl_pkey_get_public($puKey);
-                $qr = base64_encode($twoFA->getQRCode($auth->userdata['Name']));
+                $qr = base64_encode($twoFA->getQRCode(Cfg_site_title.'('.$auth->userdata['Name'].')'));
                 openssl_public_encrypt($twoFA->getSecret(), $secret, $piKey);
                 $code = base64_encode($secret);
 

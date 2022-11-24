@@ -115,8 +115,14 @@ tmp;
             $user_data .= "<tr><td>{$row['UUID']}</td><td>{$row['Name']}</td><td>{$row['Email']}</td><td>$time</td><td>$role</td><td>$active</td></tr>";
         }
 
+        /* json */
+        $LangJson = json_encode(array(
+            'Activated' => $Text['List']['Activated'],
+        ));
+
         return <<<body
 $createAC_html
+<pre id='LangJson' style='display: none'>$LangJson</pre>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
 <div class="col-12">
@@ -170,11 +176,20 @@ body;
             if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
             $stmt->prepare("INSERT INTO pwd_change (UUID) VALUES (@uuid)");
             if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+            $stmt->prepare("SELECT @uuid AS `UUID`");
+            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $uuid = $row['UUID'];
         }
 
         return array(
             'code' => $status,
             'Message' => $this->ResultMsg($status),
+            'data' => array(
+                'UUID' => $uuid ?? null
+            )
         );
     }
 

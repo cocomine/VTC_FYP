@@ -267,7 +267,7 @@ LOGIN_FROM;
 function TwoFA_form() {
 
     //指引文字
-    $Text = showText("TwoFAWrapper");
+    $Text = showText("TwoFA");
 
     echo <<<TwoFA_FORM
 <!-- login area start -->

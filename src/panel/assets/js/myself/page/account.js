@@ -4,8 +4,12 @@
  */
 
 define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function (jq, toastr) {
+    /* dataTables */
     const table = $('#dataTable').DataTable({responsive: true});
     table.column('3').order('desc').draw()
+
+    /* js資料 */
+    const Lang = JSON.parse($('#LangJson').text());
 
     $('#AddAC').submit(function (e) {
         if (!e.isDefaultPrevented() && this.checkValidity()) {
@@ -14,7 +18,7 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
             const data = $(this).serializeObject();
 
             /* 封鎖按鈕 */
-            const bt = $(this).children('.form-submit');
+            const bt = $(this).find('.form-submit, .btn-secondary');
             const html = bt.html();
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
@@ -31,11 +35,18 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
                 response.json().then((json) => {
                     console.log(json) //debug
 
-                    if(json.code === 207){
-                        toastr.success(json.Message);
-                        ajexLoad('/panel/account/', false);
-                    }else{
-                        toastr.error(json.Message);
+                    if (json.code === 207) {
+                        toastr.success(json.Message, json.Title);
+
+                        //update table
+                        const role = $(`#Role option[value="${data.role}"]`).text();
+                        let row = [[json.data.UUID, data.name, data.email, '-', role, '<span class="status-p bg-success">' + Lang.Activated + '</span>']]
+                        table.rows.add(row).draw();
+
+                        $('#Name, #Email').val('');
+                        $(this).removeClass('was-validated')
+                    } else {
+                        toastr.error(json.Message, json.Title);
                     }
                 })
             }).finally(() => {

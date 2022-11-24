@@ -36,6 +36,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
                         toastr.success(json.Message, json.Title);
                         $("#username").text(json.Data.name)
                         $(this).removeClass('was-validated')
+                        setTimeout(() => location.reload(), 2000)
                     }else{
                         toastr.error(json.Message, json.Title);
                     }
@@ -173,7 +174,6 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
             e.preventDefault();
             e.stopPropagation();
             const data = $(this).serializeObject();
-            console.log(data)
 
             /* 封鎖按鈕 */
             const bt = $(this).find('.form-submit, .btn-secondary');

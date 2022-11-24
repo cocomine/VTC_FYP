@@ -17,6 +17,7 @@ define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5',
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         tooltipTriggerList.forEach(tooltipTriggerEl => bootstrap.Tooltip.getOrCreateInstance(tooltipTriggerEl))
     }
+
     initTooltips();
 
     /* responsive table head */
@@ -64,8 +65,7 @@ define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5',
                     ...md,
                     ...json.data
                 }
-
-                console.log(md)
+                
                 const modal = $(editModal._element);
                 modal.find('#flight').text(md.Flight);
                 modal.find('#Business-count').text(md.Business);
@@ -82,8 +82,8 @@ define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5',
         })
     })
 
-    /* 前往取消確認介面 */
-    .on("click", "[data-action=\"delete\"]", function (e) {
+        /* 前往取消確認介面 */
+        .on("click", "[data-action=\"delete\"]", function (e) {
         md.id = $(this).data('id')
         Delete_modal.show();
     })
@@ -103,7 +103,7 @@ define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5',
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({
-                type: 'delete', data: {...md}
+                type: 'delete', data: {id: md.id}
             })
         }).then(async function (response) {
             const json = await response.json();
@@ -145,19 +145,21 @@ define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5',
             const modal = $(Confirm_modal._element);
             modal.find('#Confirm-Business').text(md.Business);
             modal.find('#Confirm-Economy').text(md.Economy);
-            modal.find('#Confirm-meal').text(md.meal ? Lang.Need_reserve : Lang.No_Need_reserve)
+            modal.find('#Confirm-meal').text(md.Meal ? Lang.Need_reserve : Lang.No_Need_reserve)
             editModal.hide()
             Confirm_modal.show()
         } else {
-            $('#Reserve').addClass('card-highlight')
+            $('#editModal').addClass('card-highlight')
             setTimeout(() => {
-                $('#Reserve').removeClass('card-highlight')
+                $('#editModal').removeClass('card-highlight')
             }, 1000)
         }
     });
 
     /* Meal 切換 */
-    $('#Meal').change(() => md.Meal = this.checked);
+    $('#Meal').change(function (){
+        md.Meal = this.checked
+    });
 
     /* 確認修改 */
     $('#confirm').click(async function () {
