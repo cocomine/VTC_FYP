@@ -16,10 +16,12 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     })
 
     /* go-top display */
-    document.addEventListener('scroll',(e) => {
+    let last_scroll = 0;
+    document.addEventListener('scroll',() => {
         const scroll = window.scrollY;
-        if(scroll > 100) $('.go-top').fadeIn();
+        if(last_scroll - scroll > 0) $('.go-top').fadeIn();
         else $('.go-top').fadeOut();
+        last_scroll = scroll;
     }, (Modernizr.passiveeventlisteners ? {passive: true} : false));
 
     /* 接管連結 */

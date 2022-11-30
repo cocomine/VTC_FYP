@@ -95,7 +95,7 @@ define(['jquery', 'moment.min', 'bootstrap'], function (jq, moment, bootstrap) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Sun</th>
+                            <th scope="col" style="color: red">Sun</th>
                             <th scope="col">Mon</th>
                             <th scope="col">Tue</th>
                             <th scope="col">Wed</th>
