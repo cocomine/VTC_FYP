@@ -6,6 +6,43 @@
 define(['jquery', 'toastr'], function (jq, toastr){
 
     /* 添加通知 */
+    $('form').submit(function (e) {
+        if (!e.isDefaultPrevented() && this.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            const data = $(this).serializeObject();
+
+            /* 封鎖按鈕 */
+            const bt = $(this).children('.form-submit');
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/notify?type=sendNotify', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            }).then((response) => {
+                response.json().then((json) => {
+
+                    if (json.code === 200) {
+                        toastr.success(json.Message);
+                        $(this).removeClass('was-validated')
+                    } else {
+                        toastr.error(json.Message);
+                    }
+                })
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    });
 
     /* 刪除通知 */
     $('#list-notify').on('click', 'a[data-action="DeleteNotify"]', function (e) {
@@ -19,14 +56,11 @@ define(['jquery', 'toastr'], function (jq, toastr){
             data: JSON.stringify({id: id}),
             contentType: "text/json",
             success: function (data) {
-                if (data.return) {
-                    window.location.href = data.return;
+                if (data.code === 200) {
+                    toastr.success(data.Message);
                 }
-                if (data.status === 'Success') {
-                    toastr.success(data.content, data.title);
-                }
-                if (data.status === 'Error') {
-                    toastr.error(data.content, data.title);
+                if (data.code === 500) {
+                    toastr.error(data.Message);
                 }
                 if (data.modal !== true) {
                     setTimeout(function () {
@@ -49,8 +83,9 @@ define(['jquery', 'toastr'], function (jq, toastr){
         const val = $(this).find(':selected').val();
         load_table(val);
     });
+
     function load_table(val){
-        $('#list-notify').find('tbody').html("<tr><td> <div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div> </td></tr>")
+        $('#list-notify').find('tbody').html("<tr><td colspan='6'> <div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div> </td></tr>")
 
         $.post({
             url: '/panel/notify/?type=ShowNotify',
@@ -60,12 +95,12 @@ define(['jquery', 'toastr'], function (jq, toastr){
             data: JSON.stringify({uuid: val}),
             contentType: "text/json",
             success: function (data){
-                if (data.status === 'Error') {
-                    toastr.error(data.content, data.title);
+                if (data.code === 500) {
+                    toastr.error(data.Message);
                     return
                 }
-                if (data.status === 'Warning') {
-                    toastr.warning(data.content, data.title);
+                if (data.code === 200) {
+                    toastr.warning(data.Message);
                     return
                 }
 

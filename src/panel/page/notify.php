@@ -165,8 +165,8 @@ class notify implements IPage {
             /* 未定義/空值檢查 */
             if(empty($data['Content']) || empty($data['Icon']) || empty($data['Link']) || empty($data['User']) || !ctype_digit(strval($data['status']))){
                 return array(
-                    'status' => 'Error',
-                    'title' => '欄位不能留空!',
+                    'code' => 400,
+                    'Message' => '欄位不能留空!',
                 );
             }
 
@@ -192,13 +192,13 @@ class notify implements IPage {
             /* 發送 */
             if($this->notify->Send_notify($data['User'], $data['Icon'], $data['status'], $data['Link'], $data['Content'])){
                 return array(
-                    'status' => 'Success',
-                    'title' => '通知發送成功!',
+                    'code' => 200,
+                    'Message' => '通知發送成功!',
                 );
             }else{
                 return array(
-                    'status' => 'Error',
-                    'title' => '通知發送失敗!',
+                    'code' => 500,
+                    'Message' => '通知發送失敗!',
                 );
             }
 
@@ -210,16 +210,16 @@ class notify implements IPage {
             $notify = $this->notify->Show_notify($data['uuid']);
             if($notify === false){
                 return array(
-                    'status' => 'Error',
-                    'title' => 'Database Error!',
+                    'code' => 500,
+                    'Message' => 'Database Error!',
                 );
             }else{
                 if(!empty($notify)){
                     return $notify;
                 }else{
                     return array(
-                        'status' => 'Warning',
-                        'title' => '沒有通知!',
+                        'code' => 200,
+                        'Message' => '沒有通知!',
                     );
                 }
             }
@@ -231,29 +231,29 @@ class notify implements IPage {
             /* 類型/空值檢查 */
             if(!ctype_digit(strval($data['id']))){
                 return array(
-                    'status' => 'Error',
-                    'title' => '欄位不能留空!'
+                    'code' => 400,
+                    'Message' => '欄位不能留空!'
                 );
             }
 
             /* 删除 */
             if($this->notify->Delete_notify($data['id'])){
                 return array(
-                    'status' => 'Success',
-                    'title' => '通知成功删除!',
+                    'code' => 200,
+                    'Message' => '通知成功删除!',
                 );
 
             }else{
                 return array(
-                    'status' => 'Error',
-                    'title' => 'Database Error!'
+                    'code' => 500,
+                    'Message' => 'Database Error!'
                 );
             }
         }
 
         return array(
-            'status' => 'Error',
-            'title' => '請求出在錯! 檢查url!',
+            'code' => 500,
+            'Message' => '請求出在錯! 檢查url!',
         );
     }
 
