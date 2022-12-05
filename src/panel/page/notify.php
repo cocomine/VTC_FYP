@@ -208,7 +208,7 @@ class notify implements IPage {
             $data['uuid'] = filter_var(trim($data['uuid']), FILTER_SANITIZE_STRING);
 
             $notify = $this->notify->Show_notify($data['uuid']);
-            if($notify === false){
+            if(!$notify){
                 return array(
                     'code' => 500,
                     'Message' => 'Database Error!',

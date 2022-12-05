@@ -106,13 +106,12 @@ define(['jquery', 'toastr'], function (jq, toastr){
 
                 let table = '';
                 data.forEach(function (raw){
-                    const data = new Date(raw.Time*1000);
                     const tr = `<tr>
                                     <td>${raw.notifyID}</td>
                                     <td><div class="notify-thumb">${raw.icon}</div></td>
                                     <td>${raw.Msg}</td>
                                     <td>${raw.link}</td>
-                                    <td>${data.toLocaleString()}</td>
+                                    <td>${raw.Time}</td>
                                     <td>
                                         <ul class="d-flex justify-content-center">
                                             <li><a href="#" class="text-danger" data-action="DeleteNotify" data-row-id="${raw.notifyID}"><i class="ti-trash"></i></a></li>

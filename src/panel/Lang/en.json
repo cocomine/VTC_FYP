@@ -552,7 +552,8 @@
           "hour_ago": "hour ago",
           "day_ago": "The day before",
           "week_ago": "week ago",
-          "month_ago": "month ago"
+          "month_ago": "month ago",
+          "year_ago": "year ago"
         }
       }
     }

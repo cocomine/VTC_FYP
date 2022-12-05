@@ -64,7 +64,7 @@ class notify implements IApi {
      */
     public function Send_notify(string $uuid, string $icon, string $status, string $link, string $Msg): bool {
         $icon = sprintf("<i class='btn %s %s'></i>", $icon, $status);
-        $stmt = $this->sqlcon->prepare("INSERT INTO notify (UUID, Time, icon, link, Msg) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?)");
+        $stmt = $this->sqlcon->prepare("INSERT INTO notify (UUID, icon, link, Msg) VALUES (?, ?, ?, ?)");
         $stmt->bind_param('ssss', $uuid, $icon, $link, $Msg);
         if(!$stmt -> execute()){
             return false;

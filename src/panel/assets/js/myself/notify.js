@@ -20,8 +20,8 @@ define(['jquery', 'myself/ajex', 'moment.min'], function (jq, ajex, moment) {
                 NotifyIDList = [];
 
                 data.body.forEach(function (notifyItem) {
-                    const time = moment(notifyItem.Time);
-                    const elapsed = moment().diff(time);
+                    const elapsed = moment().diff(moment(notifyItem.Time));
+                    const duration = moment.duration(elapsed)
                     let text;
 
                     if (!seenNotifyID.includes(notifyItem.notifyID)) newNotifyCount++;
@@ -34,21 +34,23 @@ define(['jquery', 'myself/ajex', 'moment.min'], function (jq, ajex, moment) {
                         text = ajex.Lang.notify.few_seconds;
                     }
                     if (elapsed > 60 * 1000 && elapsed <= 60 * 60 * 1000) { //in 60min(1h)
-                        text = moment().diff(time, 'minute') + " " + ajex.Lang.notify.minutes_ago;
+                        text = duration.get('m') + " " + ajex.Lang.notify.minutes_ago;
                     }
                     if (elapsed > 60 * 60 * 1000 && elapsed <= 24 * 60 * 60 * 1000) { //in 24h(1d)
-                        text = moment().diff(time, 'hour') + " " + ajex.Lang.notify.hour_ago
+                        text = duration.get('h') + " " + ajex.Lang.notify.hour_ago
                     }
                     if (elapsed > 24 * 60 * 60 * 1000 && elapsed <= 7 * 24 * 60 * 60 * 1000) { //in 7d(1w)
-                        text = moment().diff(time, 'day') + " " + ajex.Lang.notify.day_ago
+                        text = duration.get('d') + " " + ajex.Lang.notify.day_ago
                     }
                     if (elapsed > 7 * 24 * 60 * 60 * 1000 && elapsed <= 30 * 24 * 60 * 60 * 1000) { //in 1m
-                        text = moment().diff(time, 'week') + " " + ajex.Lang.notify.week_ago
+                        text = duration.get('w') + " " + ajex.Lang.notify.week_ago
                     }
-                    if (elapsed > 30 * 24 * 60 * 60 * 1000) { //More than 1m
-                        text = moment().diff(time, 'month') + " " + ajex.Lang.notify.month_ago
+                    if (elapsed > 30 * 24 * 60 * 60 * 1000 && elapsed <= 12 * 30 * 24 * 60 * 60 * 1000) { //in 1y
+                        text = duration.get('M') + " " + ajex.Lang.notify.month_ago
                     }
-                    //console.log(text);
+                    if(elapsed > 12 * 30 * 24 * 60 * 60 * 1000){ //More than 1y
+                        text = duration.get('y') + " " + ajex.Lang.notify.year_ago
+                    }
 
                     const notify = `
                         <a href="${notifyItem.link}" class="notify-item">
