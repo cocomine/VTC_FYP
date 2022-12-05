@@ -23,7 +23,8 @@ interface IPage {
      *  401 => 需要登入<br>
      *  403 => 不可訪問<br>
      *  404 => 找不到<br>
-     *  200 => 可以訪問
+     *  200 => 可以訪問<br>
+     *  500 => 伺服器錯誤
      */
     public function access(bool $isAuth, int $role, bool $isPost): int;
 

@@ -532,7 +532,7 @@
           "Cant_EMPTY": "This place cannot be left blank~~",
           "Error_format": "The email format should not be like this"
         },
-        "EMAIL_FAIL": "<b>Ah Oh!</b> I can't send emails! Check for typos~~",
+        "EMAIL_FAIL": "<b>Ah Oh!</b> Email address have already registered.",
         "PASS_NOT_MATCH": "<b>Ah Oh!</b> The passwords entered twice are not the same!",
         "PASS_NOT_STRONG": "<b>Umm..</b> the password is not too strong!",
         "EMAIL_WRONG_FORMAT": "<b>Umm..</b> email address should not be like this!",

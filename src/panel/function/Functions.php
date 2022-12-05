@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-use cocomine\API\notifyAPI;
+use panel\api\notify;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
@@ -172,9 +172,8 @@ function getBrowser(string $user_agent = null) {
  * @param string $uuid 用戶id
  */
 function acc_activated_Hook(string $uuid, mysqli $sqlcon) {
-    require_once('./function/notifyAPI.php');
-    $notify = new notifyAPI($sqlcon);
-    $notify->Send_notify($uuid, "fa fa-thumbs-up", notifyAPI::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
+    $notify = new notify($sqlcon);
+    $notify->Send_notify($uuid, "fa fa-thumbs-up", notify::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
 }
 
 /**
