@@ -268,6 +268,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     </div>`
 
     return {
-        ajexLoad, loadModules, updateNavBar, formatPrice
+        ajexLoad, loadModules, updateNavBar, formatPrice, Lang
     }
 })

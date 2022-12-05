@@ -64,7 +64,9 @@
         "jquery.slimscroll.min",
         "jquery.slicknav.min",
         "plugins",
-        "scripts"
+        "scripts",
+        "moment.min",
+        "myself/notify"
     ], (toastr, ajex) => {
         toastr.options = {
             "progressBar": true,

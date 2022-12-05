@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-use panel\api\notify;
+use panel\apis\notify;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
@@ -169,11 +169,11 @@ function getBrowser(string $user_agent = null) {
 /**
  * 帳戶啟動後執行掛勾function
  * @param mysqli $sqlcon 數據庫連接[option]
- * @param string $uuid 用戶id
+ * @param array $code 用戶code
  */
-function acc_activated_Hook(string $uuid, mysqli $sqlcon) {
+function acc_activated_Hook(array $code, mysqli $sqlcon) {
     $notify = new notify($sqlcon);
-    $notify->Send_notify($uuid, "fa fa-thumbs-up", notify::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
+    $notify->Send_notify($code[0], "fa-regular fa-thumbs-up", notify::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
 }
 
 /**

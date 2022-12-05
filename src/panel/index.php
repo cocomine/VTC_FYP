@@ -49,15 +49,13 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     }
 
     /* API互動介面 (即係唔係俾人睇) */
-    if($path[0] === 'api'){
-        if (count($path) < 2) {
-            $access = 404;
-        }else {
+    if($path[0] == "api"){
+        if (count($path) >= 2) {
             //開始遍歴
-            for ($i = count($path); $i >= 0; $i--) {
+            for ($i = count($path); $i >= 1; $i--) {
                 //重組class路徑
-                $class = 'panel\\api';
-                for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
+                $class = 'panel\\apis';
+                for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
                 $up_path = array_slice($path, $i); //傳入在此之前的路徑
 
                 //建立頁面
@@ -112,6 +110,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                         ));
                         exit();
                     }
+                    break;
                 }
             }
         }
@@ -131,7 +130,10 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
                     //無法解釋json
                     if ($data === null) $access = 500;
-                    else echo json_encode($homePage->post($data));
+                    else {
+                        echo json_encode($homePage->post($data));
+                        exit();
+                    }
                 } else {
                     echo json_encode(array(
                         'title' => $homePage->get_Title(),
@@ -167,7 +169,10 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 
                         //無法解釋json
                         if ($data === null) $access = 500;
-                        else echo json_encode($page->post($data));
+                        else {
+                            echo json_encode($page->post($data));
+                            exit();
+                        }
                     } else {
                         echo json_encode(array(
                             'title' => $page->get_Title(),
@@ -175,9 +180,10 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                             'path' => $page->path(),
                             'content' => $page->showPage()
                         ));
+                        exit();
                     }
-                    exit();
                 }
+                break;
             }
         }
     }
@@ -191,14 +197,14 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         //需要登入
         http_response_code(401);
         echo json_encode(array('code' => 401, 'path' => '/panel/login'));
-    } else if ($access == 404) {
-        //Not Found
-        http_response_code(404);
-        echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
-    } else {
+    } else if ($access == 500){
         //Server Error
         http_response_code(500);
         echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
+    } else {
+        //Not Found
+        http_response_code(404);
+        echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
     }
     exit();
 }
@@ -383,11 +389,12 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                 <!-- Main content-->
                 <div class="row gy-4 pt-4" id="content"></div>
 
-                <!-- language translate -->
+                <!-- global language translate -->
                 <pre style="display: none" id="globalLang">
                     <?php
                     echo json_encode(array(
-                        'Error' => showText('Error')
+                        'Error' => showText('Error'),
+                        'notify' => showText('notify.Content.Time')
                     ))
                     ?>
                 </pre>

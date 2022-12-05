@@ -540,17 +540,21 @@
         "NAME_TOO_LONG": "<b>Ah Oh!</b> The name is too long to remember!",
         "COMPLETE": "Account has been successfully created."
       }
-    }
-  },
-  "JS": {
+    },
     "notify": {
-      "just_now": "Now",
-      "few_seconds": "A few seconds ago",
-      "minutes_ago": "minutes ago",
-      "hour_ago": "hour ago",
-      "day_ago": "The day before",
-      "week_ago": "week ago",
-      "month_ago": "month ago"
+      "Title": "",
+      "Head": "",
+      "Content": {
+        "Time": {
+          "just_now": "Now",
+          "few_seconds": "A few seconds ago",
+          "minutes_ago": "minutes ago",
+          "hour_ago": "hour ago",
+          "day_ago": "The day before",
+          "week_ago": "week ago",
+          "month_ago": "month ago"
+        }
+      }
     }
   }
 }

@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-namespace panel\api;
+namespace panel\apis;
 
 use cocomine\IApi;
 use Exception;
@@ -41,7 +41,7 @@ class notify implements IApi {
      * @return array 資料或狀態
      * @throws Exception Server error
      */
-    private function Show_notify(string $uuid, int $limit = 0): array {
+    public function Show_notify(string $uuid, int $limit = 0): array {
         $query = "SELECT * FROM notify WHERE UUID = ? ORDER BY Time DESC ";
         if($limit > 0) $query .= " LIMIT ".$limit;
 
@@ -63,7 +63,7 @@ class notify implements IApi {
      * @return bool 是否成功
      */
     public function Send_notify(string $uuid, string $icon, string $status, string $link, string $Msg): bool {
-        $icon = sprintf("<i class='%s %s'></i>", $icon, $status);
+        $icon = sprintf("<i class='btn %s %s'></i>", $icon, $status);
         $stmt = $this->sqlcon->prepare("INSERT INTO notify (UUID, Time, icon, link, Msg) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?)");
         $stmt->bind_param('ssss', $uuid, $icon, $link, $Msg);
         if(!$stmt -> execute()){
