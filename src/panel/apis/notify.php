@@ -16,20 +16,20 @@ use mysqli;
  */
 class notify implements IApi {
 
-    private $sqlcon;
-    private $upPath;
+    private mysqli $sqlcon;
+    private array $upPath;
 
-    static $Status_Primary  = "btn-primary";
-    static $Status_Success  = "btn-success";
-    static $Status_Danger   = "btn-danger";
-    static $Status_Warning  = "btn-warning";
-    static $Status_Info     = "btn-info";
+    static string $Status_Primary = "btn-primary";
+    static string $Status_Success = "btn-success";
+    static string $Status_Danger = "btn-danger";
+    static string $Status_Warning = "btn-warning";
+    static string $Status_Info = "btn-info";
 
     /**
      * notifyAPI constructor.
      * @param mysqli $sqlcon SQL連接
      */
-    public function __construct(mysqli $sqlcon, array $upPath = array()){
+    public function __construct(mysqli $sqlcon, array $upPath = array()) {
         $this->sqlcon = $sqlcon;
         $this->upPath = $upPath;
     }
@@ -43,13 +43,13 @@ class notify implements IApi {
      */
     public function Show_notify(string $uuid, int $limit = 0): array {
         $query = "SELECT * FROM notify WHERE UUID = ? ORDER BY Time DESC ";
-        if($limit > 0) $query .= " LIMIT ".$limit;
+        if ($limit > 0) $query .= " LIMIT " . $limit;
 
         $stmt = $this->sqlcon->prepare($query);
         $stmt->bind_param('s', $uuid);
-        if(!$stmt -> execute()) throw new Exception('SQL Error');
+        if (!$stmt->execute()) throw new Exception('SQL Error');
 
-        $result = $stmt -> get_result();
+        $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -66,9 +66,9 @@ class notify implements IApi {
         $icon = sprintf("<i class='btn %s %s'></i>", $icon, $status);
         $stmt = $this->sqlcon->prepare("INSERT INTO notify (UUID, icon, link, Msg) VALUES (?, ?, ?, ?)");
         $stmt->bind_param('ssss', $uuid, $icon, $link, $Msg);
-        if(!$stmt -> execute()){
+        if (!$stmt->execute()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -81,49 +81,49 @@ class notify implements IApi {
     public function Delete_notify(int $id): bool {
         $stmt = $this->sqlcon->prepare("DELETE FROM notify WHERE notifyID = ?");
         $stmt->bind_param('i', $id);
-        if(!$stmt -> execute()){
+        if (!$stmt->execute()) {
             return false;
         }
         return true;
     }
 
     public function access(bool $isAuth, int $role): int {
-        if(sizeof($this->upPath) > 0) return 403;
-        if($isAuth) return 200;
+        if (sizeof($this->upPath) > 0) return 403;
+        if ($isAuth) return 200;
         return 401;
     }
 
-    public function get(): array {
+    public function get() {
+        header("content-type: text/json; charset=utf-8");
         global $auth;
 
         // get notify
         try {
             $result = $this->Show_notify($auth->userdata['UUID'], 20);
-            return array(
+            echo json_encode(array(
                 'code' => 200,
                 'body' => $result
-            );
+            ));
         } catch (Exception $e) {
-            http_response_code(500);
-            return array(
-                'code' => 500,
-                'message' => showText('Error_Page.something_happened')
-            );
+            echo_error(500);
         }
     }
 
-    public function post(array $data): array {
+    public function post(array $data) {
+        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        return array('code' => 204);
+        echo json_encode(array('code' => 204));
     }
 
-    public function put(array $data): array {
+    public function put(array $data) {
+        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        return array('code' => 204);
+        echo json_encode(array('code' => 204));
     }
 
-    public function delete(): array {
+    public function delete() {
+        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        return array('code' => 204);
+        echo json_encode(array('code' => 204));
     }
 }

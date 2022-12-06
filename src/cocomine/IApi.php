@@ -24,30 +24,26 @@ interface IApi {
     /**
      * Get 請求
      * 用來讀取資源
-     * @return array 回傳資料
      */
-    public function get():array;
+    public function get();
 
     /**
      * Post 請求
      * 用來創建資源
-     * @param array $data 收到資料
-     * @return array 回傳資料
+     * @param array|null $data 收到資料
      */
-    public function post(array $data):array;
+    public function post(array $data);
 
     /**
      * Put 請求
      * 用來修改資源
-     * @param array $data 收到資料
-     * @return array 回傳資料
+     * @param array|null $data 收到資料
      */
-    public function put(array $data):array;
+    public function put(array $data);
 
     /**
      * Delete 請求
      * 用來刪除資源
-     * @return array 回傳資料
      */
-    public function delete():array;
+    public function delete();
 }

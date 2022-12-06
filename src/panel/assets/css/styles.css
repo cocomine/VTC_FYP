@@ -1950,8 +1950,6 @@ p.card-text {
 .form-control {
     font-size: 14px;
     border: 1px solid rgba(170, 170, 170, .3);
-    padding: 10.72px 12.8px;
-    padding: .67rem .8rem;
 }
 
 .form-control-sm,
@@ -1988,20 +1986,6 @@ label {
 
 .input-rounded {
     border-radius: 50px;
-}
-
-.custom-file-label,
-.custom-file-input,
-.custom-file {
-    height: calc(2.25rem + 7px);
-    padding: 10.8px 12px;
-    padding: .675rem .75rem;
-}
-
-.custom-file-label:after {
-    height: calc(calc(2.25rem + 7px) - 1px * 2);
-    padding: 10.8px 12px;
-    padding: .675rem .75rem;
 }
 
 .grid-col {

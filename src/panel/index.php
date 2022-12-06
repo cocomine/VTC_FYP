@@ -32,13 +32,26 @@ try {
     exit();
 }
 
+$path = fetch_path(); //取得路徑
+
+/* API互動介面 (即係唔係俾人睇) */
+if ($path[0] == "api") {
+    run_apis($path, $auth);
+    exit();
+}
+
 /* AJAX內容 */
 $_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH']);
 if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
-    ob_clean();
-    header("content-type: text/json; charset=utf-8");
-    $access = null; //
+    run_page($path, $auth);
+    exit();
+}
 
+/**
+ * 取得路徑
+ * @return array 路徑
+ */
+function fetch_path(): array {
     // 消毒/分割
     $path = strtolower(filter_var(trim($_GET['p']), FILTER_SANITIZE_STRING));
     $path = explode("/", $path);
@@ -48,81 +61,96 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
         $path = array_slice($path, 0, -1);
     }
 
-    /* API互動介面 (即係唔係俾人睇) */
-    if($path[0] == "api"){
-        if (count($path) >= 2) {
-            //開始遍歴
-            for ($i = count($path); $i >= 1; $i--) {
-                //重組class路徑
-                $class = 'panel\\apis';
-                for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
-                $up_path = array_slice($path, $i); //傳入在此之前的路徑
+    return $path;
+}
 
-                //建立頁面
-                try {
-                    $api = LoadPageFactory::createApi($class, __DIR__ . '/../', (array)$up_path);
-                } catch (Exception $e) {
-                    continue; //如不存在跳過
+/**
+ * 輸出錯誤回應
+ * @param int $code 錯誤代碼
+ * @return void
+ */
+function echo_error(int $code) {
+    if ($code == 403) {
+        //沒有權限
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(403);
+        echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
+    }
+    if ($code == 401) {
+        //需要登入
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(401);
+        echo json_encode(array('code' => 401, 'path' => '/panel/login'));
+    }
+    if ($code == 500) {
+        //Server Error
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(500);
+        echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
+    }
+    if ($code == 404) {
+        //Not Found
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(404);
+        echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
+    }
+}
+
+/**
+ * 展示頁面
+ * @param array $path 路徑
+ * @param MyAuth $auth MyAuth class
+ * @return void
+ */
+function run_page(array $path, MyAuth $auth) {
+    ob_clean();
+    header("content-type: text/json; charset=utf-8");
+    $access = 404; //錯誤代碼
+
+    //輸出頁面 home 頁面
+    if (count($path) < 1) {
+        require_once('./page/home.php');
+        $homePage = new home($auth->sqlcon);
+
+        //檢查權限
+        $access = $homePage->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
+        if ($access == 200) {  //正常訪問
+            //頁面輸出
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $data = json_decode(file_get_contents("php://input"), true);
+
+                //無法解釋json
+                if ($data === null) $access = 500;
+                else {
+                    echo json_encode($homePage->post($data));
                 }
-
-                //檢查權限
-                $access = $api->access($auth->islogin, $auth->userdata['Role'] ?? 0);
-                if ($access == 200) {  //正常訪問
-
-                    /* Get 請求 */
-                    if($_SERVER['REQUEST_METHOD'] === 'GET'){
-                        echo json_encode($api->get());
-                        exit();
-                    }
-                    /* Delete 請求 */
-                    else if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
-                        echo json_encode($api->delete());
-                        exit();
-                    }
-                    /* Post 請求 */
-                    else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                        $data = json_decode(file_get_contents("php://input"), true);
-
-                        //無法解釋json
-                        if ($data === null) $access = 500;
-                        else{
-                            echo json_encode($api->post($data));
-                            exit();
-                        }
-                    }
-                    /* Put 請求 */
-                    else if ($_SERVER['REQUEST_METHOD'] === 'PUT'){
-                        $data = json_decode(file_get_contents("php://input"), true);
-
-                        //無法解釋json
-                        if ($data === null) $access = 500;
-                        else{
-                            echo json_encode($api->put($data));
-                            exit();
-                        }
-                    }
-                    /* 不符合任何請求 */
-                    else {
-                        http_response_code(405);
-                        echo json_encode(array(
-                            'code' => 405,
-                            'message' => showText('Error')
-                        ));
-                        exit();
-                    }
-                    break;
-                }
+            } else {
+                echo json_encode(array(
+                    'title' => $homePage->get_Title(),
+                    'head' => $homePage->get_Head(),
+                    'path' => $homePage->path(),
+                    'content' => $homePage->showPage()
+                ));
             }
         }
-    }else {
+    } else {
 
-        //輸出頁面 home 頁面
-        if (count($path) < 1) {
-            require_once('./page/home.php');
-            $homePage = new home($auth->sqlcon);
+        /* 頁面搜尋 */
+        for ($i = count($path); $i >= 0; $i--) {
+            //重組class路徑
+            $class = 'panel\\page';
+            for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
+            $up_path = array_slice($path, $i); //傳入在此之前的路徑
+
+            //建立頁面
+            try {
+                $page = LoadPageFactory::createPage($class, __DIR__ . '/../', (array)$up_path);
+            } catch (Exception $e) {
+                continue; //如不存在跳過
+            }
 
             //檢查權限
-            $access = $homePage->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
+            $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
             if ($access == 200) {  //正常訪問
                 //頁面輸出
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -131,83 +159,101 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                     //無法解釋json
                     if ($data === null) $access = 500;
                     else {
-                        echo json_encode($homePage->post($data));
-                        exit();
+                        echo json_encode($page->post($data));
                     }
                 } else {
                     echo json_encode(array(
-                        'title' => $homePage->get_Title(),
-                        'head' => $homePage->get_Head(),
-                        'path' => $homePage->path(),
-                        'content' => $homePage->showPage()
+                        'title' => $page->get_Title(),
+                        'head' => $page->get_Head(),
+                        'path' => $page->path(),
+                        'content' => $page->showPage()
                     ));
-                    exit();
                 }
             }
+            break;
+        }
+    }
+    echo_error($access);
+}
 
-        /* 頁面搜尋 */
-        } else {
-            for ($i = count($path); $i >= 0; $i--) {
-                //重組class路徑
-                $class = 'panel\\page';
-                for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
-                $up_path = array_slice($path, $i); //傳入在此之前的路徑
+/**
+ * API互動介面 (即係唔係俾人睇)
+ * @param array $path 路徑
+ * @param MyAuth $auth MyAuth class
+ * @return void
+ */
+function run_apis(array $path, MyAuth $auth) {
+    ob_clean();
+    $access = 404; //錯誤代碼
 
-                //建立頁面
-                try {
-                    $page = LoadPageFactory::createPage($class, __DIR__ . '/../', (array)$up_path);
-                } catch (Exception $e) {
-                    continue; //如不存在跳過
-                }
+    if (count($path) >= 2) {
+        //開始遍歴
+        for ($i = count($path); $i >= 1; $i--) {
+            //重組class路徑
+            $class = 'panel\\apis';
+            for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
+            $up_path = array_slice($path, $i); //傳入在此之前的路徑
 
-                //檢查權限
-                $access = $page->access($auth->islogin, $auth->userdata['Role'] ?? 0, $_SERVER['REQUEST_METHOD'] == 'POST');
-                if ($access == 200) {  //正常訪問
-                    //頁面輸出
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            //建立頁面
+            try {
+                $api = LoadPageFactory::createApi($class, __DIR__ . '/../', (array)$up_path);
+            } catch (Exception $e) {
+                continue; //如不存在跳過
+            }
+
+            //檢查權限
+            $access = $api->access($auth->islogin, $auth->userdata['Role'] ?? 0);
+            if ($access == 200) {  //正常訪問
+
+                if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                    /* Get 請求 */
+                    $api->get();
+                } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                    /* Delete 請求 */
+                    $api->delete();
+                } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    /* Post 請求 */
+                    if ($_SERVER['HTTP_CONTENT_TYPE'] === 'text/json') {
+                        /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
-                        //無法解釋json
-                        if ($data === null) $access = 500;
-                        else {
-                            echo json_encode($page->post($data));
-                            exit();
+                        if ($data === null) {
+                            echo_error(500); //無法解釋json
+                        } else {
+                            $api->post($data);
                         }
                     } else {
-                        echo json_encode(array(
-                            'title' => $page->get_Title(),
-                            'head' => $page->get_Head(),
-                            'path' => $page->path(),
-                            'content' => $page->showPage()
-                        ));
-                        exit();
+                        $api->post(null);
                     }
+                } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                    /* Put 請求 */
+                    if ($_SERVER['HTTP_CONTENT_TYPE'] === 'text/json') {
+                        /* json type content */
+                        $data = json_decode(file_get_contents("php://input"), true);
+
+                        if ($data === null) {
+                            echo_error(500); //無法解釋json
+                        } else {
+                            $api->put($data);
+                        }
+                    } else {
+                        $api->put(null);
+                    }
+                } else {
+                    /* 不符合任何請求 */
+                    http_response_code(405);
+                    echo json_encode(array(
+                        'code' => 405,
+                        'message' => showText('Error_Page.405')
+                    ));
                 }
                 break;
             }
         }
     }
-
-    // 錯誤回應
-    if ($access == 403) {
-        //沒有權限
-        http_response_code(403);
-        echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
-    } else if ($access == 401) {
-        //需要登入
-        http_response_code(401);
-        echo json_encode(array('code' => 401, 'path' => '/panel/login'));
-    } else if ($access == 500){
-        //Server Error
-        http_response_code(500);
-        echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
-    } else {
-        //Not Found
-        http_response_code(404);
-        echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
-    }
-    exit();
+    echo_error($access);
 }
+
 ?>
 
     <!-- page container area start -->
@@ -243,6 +289,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                             }
                             if ($auth->userdata['Role'] >= 2) {
                                 echo '<li><a href="/panel/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
+                                echo '<li><a href="/panel/upload/"><i class="fa-solid fa-upload"></i><span>媒體上載</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 3) {
                                 echo '<li><a href="/panel/notify/"><i class="fa-solid fa-bell"></i><span>通知</span></a></li>';
