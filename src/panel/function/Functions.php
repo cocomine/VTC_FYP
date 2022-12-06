@@ -15,6 +15,19 @@ spl_autoload_register(function ($class) {
 });
 
 /**
+ * 過濾陣列字串
+ * @param array $array 陣列
+ * @return array 過濾後陣列
+ */
+function array_sanitize(array $array): array{
+    for($i = 0; $i< sizeof($array);$i++){
+        if(is_array($array[$i])) array_sanitize($array[$i]);
+        if(is_string($array[$i])) $array[$i] = filter_var(trim($array[$i]), FILTER_SANITIZE_STRING);
+    }
+    return $array;
+}
+
+/**
  * 檢查電郵格式
  * @param string $email 電郵地址
  * @return bool 是否正確

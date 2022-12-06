@@ -134,6 +134,7 @@ function run_page(array $path, MyAuth $auth) {
                 //無法解釋json
                 if ($data === null) $access = 500;
                 else {
+                    $data = array_sanitize($data);
                     echo json_encode($homePage->post($data));
                 }
             } else {
@@ -171,6 +172,7 @@ function run_page(array $path, MyAuth $auth) {
                     //無法解釋json
                     if ($data === null) $access = 500;
                     else {
+                        $data = array_sanitize($data);
                         echo json_encode($page->post($data));
                     }
                 } else {
@@ -232,6 +234,7 @@ function run_apis(array $path, MyAuth $auth) {
                         if ($data === null) {
                             echo_error(500); //無法解釋json
                         } else {
+                            $data = array_sanitize($data);
                             $api->post($data);
                         }
                     } else {
@@ -246,6 +249,7 @@ function run_apis(array $path, MyAuth $auth) {
                         if ($data === null) {
                             echo_error(500); //無法解釋json
                         } else {
+                            $data = array_sanitize($data);
                             $api->put($data);
                         }
                     } else {
