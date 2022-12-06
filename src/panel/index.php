@@ -156,7 +156,7 @@ function run_page(array $path, MyAuth $auth) {
 
             //建立頁面
             try {
-                $page = LoadPageFactory::createPage($class, __DIR__ . '/../', (array)$up_path);
+                $page = LoadPageFactory::createPage($class, __DIR__ . '/../', $up_path);
             } catch (Exception $e) {
                 continue; //如不存在跳過
             }
@@ -208,7 +208,7 @@ function run_apis(array $path, MyAuth $auth) {
 
             //建立頁面
             try {
-                $api = LoadPageFactory::createApi($class, __DIR__ . '/../', (array)$up_path);
+                $api = LoadPageFactory::createApi($class, __DIR__ . '/../', $up_path);
             } catch (Exception $e) {
                 continue; //如不存在跳過
             }

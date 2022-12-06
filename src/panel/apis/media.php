@@ -36,7 +36,11 @@ class media implements \cocomine\IApi {
      * @inheritDoc
      */
     public function get() {
-        // TODO: Implement get() method.
+        if(sizeof($this->upPath) < 1){
+            echo_error(400);
+            return;
+        }
+        //todo: show img
     }
 
     /**
@@ -47,21 +51,26 @@ class media implements \cocomine\IApi {
             echo_error(400);
             return;
         }
-
-
+        //todo: save img
     }
 
     /**
      * @inheritDoc
      */
     public function put(array $data) {
-        // TODO: Implement put() method.
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(204);
+        echo json_encode(array('code' => 204));
     }
 
     /**
      * @inheritDoc
      */
     public function delete() {
-        // TODO: Implement delete() method.
+        if(sizeof($this->upPath) < 1){
+            echo_error(400);
+            return;
+        }
+        //todo: delete img
     }
 }
