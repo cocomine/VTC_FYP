@@ -590,6 +590,19 @@
           "request_fail": "Something went wrong with the request! Check the url!"
         }
       }
+    },
+    "Media-upload": {
+      "Title": "Upload media | Global blacklist",
+      "Head": "Upload media",
+      "Content": {
+        "upload": "Upload",
+        "drag": "Drag files here",
+        "or": "Or",
+        "limit": "The maximum size of a single file is 8MB",
+        "respond": {
+
+        }
+      }
     }
   }
 }

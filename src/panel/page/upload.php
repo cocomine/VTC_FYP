@@ -30,11 +30,11 @@ class upload implements IPage {
     }
 
     public function get_Title(): string {
-        return showText("Media-upload.title");
+        return showText("Media-upload.Title");
     }
 
     public function get_Head(): string {
-        return showText("Media-upload.upload_media");
+        return showText("Media-upload.Head");
     }
 
     /**
@@ -43,7 +43,7 @@ class upload implements IPage {
      */
     function path(): string {
         return "<li><a href='/panel/'>" . showText("index.home") . "</a></li>
-                        <li><span>" . showText("Media-upload.upload_media") . "</span></li>";
+                        <li><span>" . showText("Media-upload.Head") . "</span></li>";
     }
 
     /**
@@ -149,21 +149,24 @@ class upload implements IPage {
      * @return string 輸出頁面內容
      */
     function showPage(): string {
+
+        $Text = showText("Media-upload.Content"); //文件翻譯
+
         return "
         <div class='col-12 mt-4'>
             <div class='card'>
                 <div class='card-body'>
-                    <h1 class='header-title'>" . showText("Media-upload.page.Upload") . "</h1>
-                    <div id='drop-area' class='row pb-5 pt-5 justify-content-center'>
-                        <h5 class='col-auto'>" . showText("Media-upload.page.Drag_here") . "</h5>
+                    <h1 class='header-title'>{$Text['upload']}</h1>
+                    <div id='drop-area' class='row py-5 justify-content-center'>
+                        <h5 class='col-auto'>{$Text['drag']}</h5>
                         <div class='w-100'></div>
-                        <p class='col-auto'>" . showText("Media-upload.page.Or") . "</p>
+                        <p class='col-auto'>{$Text['or']}</p>
                         <div class='w-100'></div>
                         <div class='col-12 col-sm-4 '>
                             <input type='file' class='form-control' id='file-sel' multiple accept='audio/*,video/*,image/*' />
                         </div>
                     </div>
-                    <p>" . showText("Media-upload.page.Limit_msg") . "</p>
+                    <p>{$Text['limit']}</p>
                     <ul class='list-group' id='file-upload-list'></ul>
                 </div>
             </div>
