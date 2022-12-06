@@ -544,9 +544,33 @@
       }
     },
     "notify": {
-      "Title": "",
-      "Head": "",
+      "Title": "Notification Management | Global blacklist",
+      "Head": "Notification Management",
       "Content": {
+        "Send_notify": "Send notification",
+        "User": "User",
+        "alert_state": "Alert state",
+        "Alert": {
+          "primary": "Default",
+          "success": "Success",
+          "danger": "Danger",
+          "warning": "Warning",
+          "info": "Info"
+        },
+        "Icon": "Icon",
+        "Content": "Content",
+        "Link": "Link",
+        "send": "Send",
+        "list_notify": "List notifications",
+        "select": "Please choose",
+        "table": {
+          "id": "ID",
+          "Icon": "Icon",
+          "Content": "Content",
+          "Link": "Link",
+          "Time": "Send time",
+          "action": "Action"
+        },
         "Time": {
           "just_now": "Now",
           "few_seconds": "A few seconds ago",
@@ -556,6 +580,14 @@
           "week_ago": "week ago",
           "month_ago": "month ago",
           "year_ago": "year ago"
+        },
+        "From": {
+          "empty": "Field cannot be left blank..",
+          "done": "Notification sent successfully!",
+          "fail": "Notification failed to send~~",
+          "clear": "Not have any Notification..",
+          "del_done": "Notification for successful deletion!",
+          "request_fail": "Something went wrong with the request! Check the url!"
         }
       }
     }

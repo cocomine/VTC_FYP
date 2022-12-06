@@ -299,7 +299,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 echo '<li><a href="/panel/upload/"><i class="fa-solid fa-upload"></i><span>媒體上載</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 3) {
-                                echo '<li><a href="/panel/notify/"><i class="fa-solid fa-bell"></i><span>通知</span></a></li>';
+                                echo '<li><a href="/panel/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>';
                             }
                             ?>
 

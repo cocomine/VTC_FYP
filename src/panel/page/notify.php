@@ -36,11 +36,11 @@ class notify implements IPage {
     }
 
     public function get_Title(): string {
-        return '通知 | Global blacklist';
+        return showText('notify.Title');
     }
 
     public function get_Head(): string {
-        return '通知';
+        return showText('notify.Head');
     }
 
     /**
@@ -59,55 +59,57 @@ class notify implements IPage {
             $user .= sprintf("<option value='%s'>%s - %s</option>", $row['UUID'], $row['Name'], $row['Email']);
         }
 
+        $Text = showText('notify.Content'); //翻譯文件
+
         return "<!--通知發送-->
                 <div class='col-12 mt-4'>
                     <div class='card'>
                         <div class='card-body'>
-                            <h1 class='header-title'>通知發送</h1>
+                            <h1 class='header-title'>{$Text['Send_notify']}</h1>
                             <form class='needs-validation' novalidate>
                                 <div class='col-12'>
-                                    <label class='form-label' for='User'>用戶</label>
+                                    <label class='form-label' for='User'>{$Text['User']}</label>
                                     <select style='font-size: 14px;' class='input-rounded form-select' name='User' id='User' required>
                                         {$user}
                                     </select>
                                 </div>
                                 <div class='col-12'>
-                                    <b class='text-muted mb-3 mt-1 d-block'>警示狀態</b>
+                                    <b class='text-muted mb-3 mt-1 d-block'>{$Text['alert_state']}</b>
                                     <div class='form-check form-check-inline'>
                                         <input type='radio' checked id='primary' name='status' class='form-check-input' value='0'>
-                                        <label class='form-check-label text-primary' for='primary'>預設</label>
+                                        <label class='form-check-label text-primary' for='primary'>{$Text['Alert']['primary']}</label>
                                     </div>
                                     <div class='form-check form-check-inline'>
                                         <input type='radio' id='success' name='status' class='form-check-input' value='1'>
-                                        <label class='form-check-label text-success' for='success'>成功</label>
+                                        <label class='form-check-label text-success' for='success'>{$Text['Alert']['success']}</label>
                                     </div>
                                     <div class='form-check form-check-inline'>
                                         <input type='radio' id='danger' name='status' class='form-check-input' value='2'>
-                                        <label class='form-check-label text-danger' for='danger'>危險</label>
+                                        <label class='form-check-label text-danger' for='danger'>{$Text['Alert']['danger']}</label>
                                     </div>
                                     <div class='form-check form-check-inline'>
                                         <input type='radio' id='warning' name='status' class='form-check-input' value='3'>
-                                        <label class='form-check-label text-warning' for='warning'>警告</label>
+                                        <label class='form-check-label text-warning' for='warning'>{$Text['Alert']['warning']}</label>
                                     </div>
                                     <div class='form-check form-check-inline'>
                                         <input type='radio' id='info' name='status' class='form-check-input' value='4'>
-                                        <label class='form-check-label text-info' for='info'>信息</label>
+                                        <label class='form-check-label text-info' for='info'>{$Text['Alert']['info']}</label>
                                     </div>
                                 </div>
                                 <div class='col-12'>
-                                    <label for='Icon' class='form-label'>圖標</label>
+                                    <label for='Icon' class='form-label'>{$Text['Icon']}</label>
                                     <input class='form-control input-rounded' type='text' id='Icon' name='Icon' required value='fa fa-exclamation'>
                                     <i id='Icon-show' class='fa-solid fa-exclamation'></i>
                                 </div>
                                 <div class='col-12'>
-                                    <label for='Content' class='form-label'>內容</label>
+                                    <label for='Content' class='form-label'>{$Text['Content']}</label>
                                     <textarea class='form-control input-rounded' type='text' id='Content' name='Content' required></textarea>
                                 </div>
                                 <div class='col-12'>
-                                    <label for='Link' class='form-label'>連結</label>
+                                    <label for='Link' class='form-label'>{$Text['Link']}</label>
                                     <input class='form-control input-rounded' type='text' id='Link' name='Link' required value='/panel/'>
                                 </div>
-                                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-rocket'></i>&nbsp;&nbsp;&nbsp;發送</button>
+                                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-rocket me-2'></i>{$Text['send']}</button>
                             </form>
                         </div>
                     </div>
@@ -117,9 +119,9 @@ class notify implements IPage {
                 <div class='col-12 mt-4'>
                     <div class='card'>
                         <div class='card-body'>
-                            <h1 class='header-title'>列出通知</h1>
+                            <h1 class='header-title'>{$Text['list_notify']}</h1>
                             <select style='font-size: 14px;' class='input-rounded form-select' id='uuid'>
-                                <option selected disabled>請選擇</option>
+                                <option selected disabled>{$Text['select']}</option>
                                 {$user}
                             </select><br><br>
                             <div class='single-table'>
@@ -127,12 +129,12 @@ class notify implements IPage {
                                     <table class='table table-hover progress-table text-center' id='list-notify'>
                                         <thead class='text-uppercase'>
                                             <tr>
-                                                <th scope='col'>ID</th>
-                                                <th scope='col'>圖標</th>
-                                                <th scope='col'>內容</th>
-                                                <th scope='col'>連結</th>
-                                                <th scope='col'>建立時間</th>
-                                                <th scope='col'>動作</th>
+                                                <th scope='col'>{$Text['table']['id']}</th>
+                                                <th scope='col'>{$Text['table']['Icon']}</th>
+                                                <th scope='col'>{$Text['table']['Content']}</th>
+                                                <th scope='col'>{$Text['table']['Link']}</th>
+                                                <th scope='col'>{$Text['table']['Time']}</th>
+                                                <th scope='col'>{$Text['table']['action']}</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -166,7 +168,7 @@ class notify implements IPage {
             if(empty($data['Content']) || empty($data['Icon']) || empty($data['Link']) || empty($data['User']) || !ctype_digit(strval($data['status']))){
                 return array(
                     'code' => 400,
-                    'Message' => '欄位不能留空!',
+                    'Message' => showText('notify.Content.From.empty'),
                 );
             }
 
@@ -193,12 +195,12 @@ class notify implements IPage {
             if($this->notify->Send_notify($data['User'], $data['Icon'], $data['status'], $data['Link'], $data['Content'])){
                 return array(
                     'code' => 200,
-                    'Message' => '通知發送成功!',
+                    'Message' => showText('notify.Content.From.done'),
                 );
             }else{
                 return array(
                     'code' => 500,
-                    'Message' => '通知發送失敗!',
+                    'Message' => showText('notify.Content.From.fail'),
                 );
             }
 
@@ -217,7 +219,7 @@ class notify implements IPage {
                 }else{
                     return array(
                         'code' => 201,
-                        'Message' => '沒有通知!',
+                        'Message' => showText('notify.Content.From.clear'),
                     );
                 }
             } catch (\Exception $e) {
@@ -235,7 +237,7 @@ class notify implements IPage {
             if(!ctype_digit(strval($data['id']))){
                 return array(
                     'code' => 400,
-                    'Message' => '欄位不能留空!'
+                    'Message' => showText('notify.Content.From.empty')
                 );
             }
 
@@ -243,7 +245,7 @@ class notify implements IPage {
             if($this->notify->Delete_notify($data['id'])){
                 return array(
                     'code' => 200,
-                    'Message' => '通知成功删除!',
+                    'Message' => showText('notify.Content.From.del_done'),
                 );
 
             }else{
@@ -255,8 +257,8 @@ class notify implements IPage {
         }
 
         return array(
-            'code' => 500,
-            'Message' => '請求出在錯! 檢查url!',
+            'code' => 400,
+            'Message' => showText('notify.Content.From.request_fail'),
         );
     }
 
@@ -266,6 +268,6 @@ class notify implements IPage {
      */
     public function path(): string {
         return "<li><a href='/panel/'>".showText("index.home")."</a></li>
-                        <li><span>通知</span></li>";
+                        <li><span>".showText('notify.Head')."</span></li>";
     }
 }

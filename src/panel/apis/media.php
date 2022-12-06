@@ -6,9 +6,10 @@
 
 namespace panel\apis;
 
+use cocomine\IApi;
 use mysqli;
 
-class media implements \cocomine\IApi {
+class media implements IApi {
 
     private array $upPath;
     private mysqli $sqlcon;
@@ -18,7 +19,7 @@ class media implements \cocomine\IApi {
      * @param array $upPath
      * @param mysqli $sqlcon
      */
-    public function __construct(array $upPath, mysqli $sqlcon) {
+    public function __construct(mysqli $sqlcon, array $upPath) {
         $this->upPath = $upPath;
         $this->sqlcon = $sqlcon;
     }
@@ -28,7 +29,7 @@ class media implements \cocomine\IApi {
      */
     public function access(bool $isAuth, int $role): int {
         if(!$isAuth) return 401;
-        if($role > 1) return 403;
+        if($role <= 1) return 403;
         return 200;
     }
 
