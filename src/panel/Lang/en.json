@@ -333,7 +333,8 @@
       "something_happened": "Ouch! Dead fire! Something happened!",
       "GoBack": "Go back",
       "400_title": "There was a problem with the request!",
-      "405": "Method Not Allowed"
+      "405": "Method Not Allowed",
+      "400": "Bad Request"
     },
     "Block_login": {
       "title": "Block login",

@@ -70,29 +70,41 @@ function fetch_path(): array {
  * @return void
  */
 function echo_error(int $code) {
-    if ($code == 403) {
+    if ($code === 403) {
         //沒有權限
         header("content-type: text/json; charset=utf-8");
         http_response_code(403);
         echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
     }
-    if ($code == 401) {
+    if ($code === 401) {
         //需要登入
         header("content-type: text/json; charset=utf-8");
         http_response_code(401);
         echo json_encode(array('code' => 401, 'path' => '/panel/login'));
     }
-    if ($code == 500) {
+    if ($code === 500) {
         //Server Error
         header("content-type: text/json; charset=utf-8");
         http_response_code(500);
         echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
     }
-    if ($code == 404) {
+    if ($code === 404) {
         //Not Found
         header("content-type: text/json; charset=utf-8");
         http_response_code(404);
         echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
+    }
+    if ($code === 405) {
+        /* 不符合任何請求 */
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(405);
+        echo json_encode(array('code' => 405, 'message' => showText('Error_Page.405')));
+    }
+    if ($code === 400) {
+        /* 不符合任何請求 */
+        header("content-type: text/json; charset=utf-8");
+        http_response_code(400);
+        echo json_encode(array('code' => 400, 'message' => showText('Error_Page.400')));
     }
 }
 
@@ -240,12 +252,7 @@ function run_apis(array $path, MyAuth $auth) {
                         $api->put(null);
                     }
                 } else {
-                    /* 不符合任何請求 */
-                    http_response_code(405);
-                    echo json_encode(array(
-                        'code' => 405,
-                        'message' => showText('Error_Page.405')
-                    ));
+                    echo_error(405); //不符合任何請求
                 }
                 break;
             }
