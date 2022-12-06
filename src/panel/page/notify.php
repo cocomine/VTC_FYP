@@ -207,21 +207,24 @@ class notify implements IPage {
         if($_GET['type'] == 'ShowNotify'){
             $data['uuid'] = filter_var(trim($data['uuid']), FILTER_SANITIZE_STRING);
 
-            $notify = $this->notify->Show_notify($data['uuid']);
-            if(!$notify){
+            try {
+                $notify = $this->notify->Show_notify($data['uuid']);
+                if(!empty($notify)){
+                    return array(
+                        'code' => 200,
+                        'data' => $notify
+                    );
+                }else{
+                    return array(
+                        'code' => 201,
+                        'Message' => '沒有通知!',
+                    );
+                }
+            } catch (\Exception $e) {
                 return array(
                     'code' => 500,
                     'Message' => 'Database Error!',
                 );
-            }else{
-                if(!empty($notify)){
-                    return $notify;
-                }else{
-                    return array(
-                        'code' => 200,
-                        'Message' => '沒有通知!',
-                    );
-                }
             }
         }
         /* 刪除通知 */
@@ -262,7 +265,7 @@ class notify implements IPage {
      * @return string 輸出
      */
     public function path(): string {
-        return "<li><a href='/panel/admin_background/notify' data-ajax='GET'>管理後台</a></li>
+        return "<li><a href='/panel/'>".showText("index.home")."</a></li>
                         <li><span>通知</span></li>";
     }
 }

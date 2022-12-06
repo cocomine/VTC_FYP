@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr'], function (jq, toastr){
+define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* 添加通知 */
     $('form').submit(function (e) {
@@ -48,65 +48,66 @@ define(['jquery', 'toastr'], function (jq, toastr){
     $('#list-notify').on('click', 'a[data-action="DeleteNotify"]', function (e) {
         e.preventDefault();
         let id = $(this).attr('data-row-id')
-        $.post({
-            url: '/panel/notify/?type=DelNotify',
+
+        /* send */
+        fetch('/panel/notify?type=DelNotify', {
+            method: 'POST',
+            redirect: 'error',
             headers: {
-                'AJAX': 'true'
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            data: JSON.stringify({id: id}),
-            contentType: "text/json",
-            success: function (data) {
-                if (data.code === 200) {
-                    toastr.success(data.Message);
-                }
-                if (data.code === 500) {
-                    toastr.error(data.Message);
-                }
-                if (data.modal !== true) {
+            body: JSON.stringify({id: id})
+        }).then((response) => {
+            response.json().then((json) => {
+
+                if (json.code === 200) {
+                    toastr.success(json.Message);
                     setTimeout(function () {
                         const val = $('#uuid').find(':selected').val();
                         load_table(val);
                     }, 100);
+                } else {
+                    toastr.error(json.Message);
                 }
-            }
+            })
+        }).catch((error) => {
+            console.log(error)
         })
     });
 
     /* 即時預覽圖標 */
-    $('#Icon').on("input focus", function (){
+    $('#Icon').on("input focus", function () {
         const val = $(this).val();
         $('#Icon-show').attr('class', val);
     })
 
     /* 自動偵測選擇User */
-    $('#uuid').change(function (){
+    $('#uuid').change(function () {
         const val = $(this).find(':selected').val();
         load_table(val);
     });
 
-    function load_table(val){
+    /* 載入通知列表 */
+    function load_table(val) {
         $('#list-notify').find('tbody').html("<tr><td colspan='6'> <div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div> </td></tr>")
 
-        $.post({
-            url: '/panel/notify/?type=ShowNotify',
+        /* send */
+        fetch('/panel/notify?type=ShowNotify', {
+            method: 'POST',
+            redirect: 'error',
             headers: {
-                'AJAX': 'true'
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            data: JSON.stringify({uuid: val}),
-            contentType: "text/json",
-            success: function (data){
-                if (data.code === 500) {
-                    toastr.error(data.Message);
-                    return
-                }
-                if (data.code === 200) {
-                    toastr.warning(data.Message);
-                    return
-                }
+            body: JSON.stringify({uuid: val})
+        }).then((response) => {
+            response.json().then((json) => {
 
-                let table = '';
-                data.forEach(function (raw){
-                    const tr = `<tr>
+                if (json.code === 200) {
+                    let table = '';
+                    json.data.forEach(function (raw) {
+                        const tr = `<tr>
                                     <td>${raw.notifyID}</td>
                                     <td><div class="notify-thumb">${raw.icon}</div></td>
                                     <td>${raw.Msg}</td>
@@ -118,10 +119,18 @@ define(['jquery', 'toastr'], function (jq, toastr){
                                         </ul>
                                     </td>
                                 </tr>`;
-                    table += tr;
-                });
-                $('#list-notify').find('tbody').html(table);
-            }
-        });
+                        table += tr;
+                    });
+                    $('#list-notify').find('tbody').html(table);
+
+                } else if (json.code === 201) {
+                    toastr.warning(json.Message);
+                } else {
+                    toastr.error(json.Message);
+                }
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 });

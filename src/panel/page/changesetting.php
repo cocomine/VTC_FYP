@@ -434,7 +434,7 @@ body2;
      * @return string 輸出
      */
     function path(): string {
-        return "<li><a href='/panel/' data-ajax='GET'>" . showText("index.home") . "</a></li>
+        return "<li><a href='/panel/'>" . showText("index.home") . "</a></li>
                 <li><span>" . showText("ChangeSetting.setting") . "</span></li>";
     }
 }

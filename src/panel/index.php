@@ -239,10 +239,13 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
                             <?php
                             /* NOTE: ⚠ 限制頁面 ⚠ */
                             if ($auth->userdata['Role'] >= 1) {
-                                echo '<li><a href="/panel/reserve/" data-ajax="GET"><i class="fa-solid fa-plane-circle-check"></i><span>' . showText("Reserve.Head") . '</span></a></li>';
+                                echo '<li><a href="/panel/reserve/"><i class="fa-solid fa-plane-circle-check"></i><span>' . showText("Reserve.Head") . '</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 2) {
-                                echo '<li><a href="/panel/account/" data-ajax="GET"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
+                                echo '<li><a href="/panel/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
+                            }
+                            if ($auth->userdata['Role'] >= 3) {
+                                echo '<li><a href="/panel/notify/"><i class="fa-solid fa-bell"></i><span>通知</span></a></li>';
                             }
                             ?>
 
