@@ -4,6 +4,11 @@
  */
 define(() => {
     class MapAutoFit {
+        /**
+         * Mapbox Auto fit button
+         * @param origin 起點
+         * @param destination 終點
+         */
         constructor(origin, destination) {
             this.origin = origin;
             this.destination = destination;

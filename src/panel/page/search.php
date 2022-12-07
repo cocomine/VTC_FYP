@@ -129,7 +129,7 @@ class search implements IPage {
                 forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
             },
         });
-        loadModules(['moment.min', 'myself/datatimepicker', 'myself/page/search', 'forge'])
+        loadModules(['myself/datatimepicker', 'myself/page/search', 'forge'])
         </script>
         body;
 

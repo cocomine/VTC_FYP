@@ -172,7 +172,7 @@ require.config({
         zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
     },
 });
-loadModules(['moment.min', 'myself/datatimepicker', 'myself/page/home', 'forge'])
+loadModules(['myself/datatimepicker', 'myself/page/home', 'forge'])
 </script>
 body;
     }

@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'myself/ajex', 'moment.min'], function (jq, ajex, moment) {
+define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
     let NotifyIDList = [];
 
     /* load notify when ready*/

@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'moment.min', 'forge', 'toastr'], function (jq, moment, forge, toastr) {
+define(['jquery', 'moment', 'forge', 'toastr'], function (jq, moment, forge, toastr) {
     "use strict";
 
     let Lang = $('#langJson').text();

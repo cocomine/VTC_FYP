@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'moment.min', 'forge', 'bootstrap', 'zxcvbn', 'toastr'], function (jq, moment, forge, bootstrap, zxcvbn, toastr) {
+define(['jquery', 'moment', 'forge', 'bootstrap', 'zxcvbn', 'toastr'], function (jq, moment, forge, bootstrap, zxcvbn, toastr) {
     "use strict";
 
     const Lang = JSON.parse($('#langJson').text());

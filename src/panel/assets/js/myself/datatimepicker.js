@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'moment.min', 'bootstrap'], function (jq, moment, bootstrap) {
+define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
     "use strict";
     let selectDate = moment();
     let activateDate = moment();
