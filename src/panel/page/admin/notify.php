@@ -1,10 +1,10 @@
 <?php
 /*
- * Copyright (c) 2020.
+ * Copyright (c) 2022.
  * Create by cocomine
  */
 
-namespace panel\page;
+namespace panel\page\admin;
 
 use cocomine\IPage;
 use mysqli;

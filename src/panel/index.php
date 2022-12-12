@@ -65,50 +65,6 @@ function fetch_path(): array {
 }
 
 /**
- * 輸出錯誤回應
- * @param int $code 錯誤代碼
- * @return void
- */
-function echo_error(int $code) {
-    if ($code === 403) {
-        //沒有權限
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(403);
-        echo json_encode(array('code' => 403, 'Message' => showText("Error_Page.Dont_Come")));
-    }
-    if ($code === 401) {
-        //需要登入
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(401);
-        echo json_encode(array('code' => 401, 'path' => '/panel/login'));
-    }
-    if ($code === 500) {
-        //Server Error
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(500);
-        echo json_encode(array('code' => 500, 'Message' => showText("Error_Page.something_happened")));
-    }
-    if ($code === 404) {
-        //Not Found
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(404);
-        echo json_encode(array('code' => 404, 'Message' => showText("Error_Page.Where_you_go")));
-    }
-    if ($code === 405) {
-        /* 不符合任何請求 */
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(405);
-        echo json_encode(array('code' => 405, 'message' => showText('Error_Page.405')));
-    }
-    if ($code === 400) {
-        /* 不符合任何請求 */
-        header("content-type: text/json; charset=utf-8");
-        http_response_code(400);
-        echo json_encode(array('code' => 400, 'message' => showText('Error_Page.400')));
-    }
-}
-
-/**
  * 展示頁面
  * @param array $path 路徑
  * @param MyAuth $auth MyAuth class
@@ -227,7 +183,7 @@ function run_apis(array $path, MyAuth $auth) {
                     $api->delete();
                 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
-                    if ($_SERVER['HTTP_CONTENT_TYPE'] === 'text/json') {
+                    if ($_SERVER['CONTENT_TYPE'] === 'text/json') {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -242,7 +198,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
-                    if ($_SERVER['HTTP_CONTENT_TYPE'] === 'text/json') {
+                    if ($_SERVER['CONTENT_TYPE'] === 'text/json') {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -294,16 +250,16 @@ function run_apis(array $path, MyAuth $auth) {
                             </li>
 
                             <?php
-                            /* NOTE: ⚠ 限制頁面 ⚠ */
+                            /* 導航 */
                             if ($auth->userdata['Role'] >= 1) {
                                 echo '<li><a href="/panel/reserve/"><i class="fa-solid fa-plane-circle-check"></i><span>' . showText("Reserve.Head") . '</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 2) {
-                                echo '<li><a href="/panel/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
-                                echo '<li><a href="/panel/upload/"><i class="fa-solid fa-upload"></i><span>媒體上載</span></a></li>';
+                                echo '<li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
+                                echo '<li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 3) {
-                                echo '<li><a href="/panel/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>';
+                                echo '<li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>';
                             }
                             ?>
 

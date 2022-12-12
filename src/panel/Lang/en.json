@@ -598,6 +598,7 @@
         "upload": "Upload",
         "drag": "Drag files here",
         "or": "Or",
+        "limit_type": "Accept: .jpg .png .webp .gif",
         "limit": "The maximum size of a single file is 8MB",
         "respond": {
 

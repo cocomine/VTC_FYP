@@ -39,16 +39,15 @@ define(['jquery'], function (){
             let progressBar = $(`#${id}`);
 
             //進行檢查(檔案類型 & 檔案大細)
-            if(/(audio\/.+)|(video\/.+)|(image\/.+)/.test(file.type)){ //檢查文件類型
+            if(/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/.test(file.type)){ //檢查文件類型
                 if(file.size <= 8388608){ //8MB 限制
-                    if(file.name.length <= 50) {//檔案名稱50字或以下
+                    if(file.name.length <= 20) {//檔案名稱20字或以下
 
                         //上傳1
                         let formData = new FormData();
                         formData.append("file", file);
-                        formData.append("data", JSON.stringify({test: 'test'}));
                         $.ajax({
-                            url: "/panel/upload",
+                            url: "/panel/api/media",
                             type: "POST",
                             processData: false,
                             contentType: false,
