@@ -20,10 +20,9 @@ class upload implements IPage {
     }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
-        return 200;
-        /*if(!$isAuth) return 401;
+        if(!$isAuth) return 401;
         if($role < 2) return 403;
-        return 200;*/
+        return 200;
     }
 
     public function get_Title(): string {

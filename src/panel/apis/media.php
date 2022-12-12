@@ -140,7 +140,6 @@ class media implements IApi {
         }
 
         /* 添加資料到數據庫 */
-        //todo:add to sql
         $try = 10;
         while (true) {
             $code = Generate_Code(6);
