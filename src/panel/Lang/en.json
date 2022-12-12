@@ -543,6 +543,9 @@
         "COMPLETE": "Account has been successfully created."
       }
     },
+    "admin": {
+      "Head": "Admin Control"
+    },
     "notify": {
       "Title": "Notification Management | Global blacklist",
       "Head": "Notification Management",
@@ -589,6 +592,13 @@
           "del_done": "Notification for successful deletion!",
           "request_fail": "Something went wrong with the request! Check the url!"
         }
+      }
+    },
+    "Media": {
+      "Title": "Media | Global blacklist",
+      "Head": "Media",
+      "Content": {
+
       }
     },
     "Media-upload": {

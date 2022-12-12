@@ -203,10 +203,6 @@
     font-size: 20px;
 }
 
-.metismenu li.mm-active>a:after {
-    content: '\f106';
-}
-
 .metismenu li a:only-child:after {
     content: '';
 }

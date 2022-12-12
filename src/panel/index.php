@@ -255,11 +255,22 @@ function run_apis(array $path, MyAuth $auth) {
                                 echo '<li><a href="/panel/reserve/"><i class="fa-solid fa-plane-circle-check"></i><span>' . showText("Reserve.Head") . '</span></a></li>';
                             }
                             if ($auth->userdata['Role'] >= 2) {
-                                echo '<li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>';
-                                echo '<li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>';
+                                echo '<li>
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a>
+                                    <ul>
+                                        <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a></li>
+                                        <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>
+                                    </ul>
+                                </li>';
                             }
                             if ($auth->userdata['Role'] >= 3) {
-                                echo '<li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>';
+                                echo '<li>
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
+                                    <ul>
+                                        <li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
+                                        <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>
+                                    </ul>
+                                </li>';
                             }
                             ?>
 

@@ -146,7 +146,7 @@ class notify implements IPage {
                 </div>
                  
                 <script>
-                loadModules(['myself/page/notify'])
+                loadModules(['myself/page/admin/notify'])
                 </script>";
     }
 
@@ -268,6 +268,7 @@ class notify implements IPage {
      */
     public function path(): string {
         return "<li><a href='/panel/'>".showText("index.home")."</a></li>
-                        <li><span>".showText('notify.Head')."</span></li>";
+            <li><span><a href='/panel/admin/account/'>" . showText("admin.Head") . "</a></span></li>
+            <li><span>".showText('notify.Head')."</span></li>";
     }
 }

@@ -39,7 +39,8 @@ class upload implements IPage {
      */
     function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-                        <li><span>" . showText("Media-upload.Head") . "</span></li>";
+            <li><a href='/panel/media'>" . showText("Media.Head") . "</a></li>
+            <li><span>" . showText("Media-upload.Head") . "</span></li>";
     }
 
     /**
@@ -86,7 +87,7 @@ class upload implements IPage {
     }
 </style>
 <script>
-    loadModules(['myself/page/upload'])
+    loadModules(['myself/page/media/upload'])
 </script>
 body;
     }
