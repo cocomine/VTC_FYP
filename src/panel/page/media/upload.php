@@ -58,8 +58,16 @@ class upload implements IPage {
     function showPage(): string {
 
         $Text = showText("Media-upload.Content"); //文件翻譯
+        $LangJson = json_encode(array(
+            'Unknown_Error' => showText('Error'),
+            'Timeout' => $Text['respond']['Timeout'],
+            'File_name_over' => $Text['respond']['File_name_over'],
+            'Over_size' => $Text['respond']['Over_size'],
+            'File_type_not_mach' => $Text['respond']['File_type_not_mach'],
+        ));
 
         return <<<body
+<pre id="LangJson" class="d-none">$LangJson</pre>
 <div class='col-12 mt-4'>
     <div class='card'>
         <div class='card-body'>

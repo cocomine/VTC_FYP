@@ -4,7 +4,9 @@
  */
 
 define(['jquery'], function () {
-    let drop_area = $('#drop-area');
+    const Lang = JSON.parse($('#LangJson').text());
+
+    const drop_area = $('#drop-area');
     drop_area.on('dragenter dragover dragleave drop', function (e) {
         e.preventDefault();
     });
@@ -40,32 +42,32 @@ define(['jquery'], function () {
 
             /* 進行檢查 */
             //檢查文件類型
-            if (/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/.test(file.type)) {
+            if (!/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/.test(file.type)) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text("Media-upload.File_type_not_mach");
+                progressBar.text(Lang.File_type_not_mach);
                 return;
             }
 
             //8MB 限制
-            if (file.size <= 8388608) {
+            if (file.size > 8388608) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text("Media-upload.Over_size");
+                progressBar.text(Lang.Over_size);
                 return;
             }
 
             //檔案名稱20字或以下
-            if (file.name.length <= 20) {
+            if (file.name.length > 100) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text("Media-upload.File_name_over");
+                progressBar.text(Lang.File_name_over);
                 return;
             }
 
@@ -112,9 +114,9 @@ define(['jquery'], function () {
                         let response = JSON.parse(xhr.responseText);
                         progressBar.text(response.Message);
                     } else if (textStatus === "timeout") {
-                        progressBar.text("Media-upload.Timeout");
+                        progressBar.text(Lang.Timeout);
                     } else {
-                        progressBar.text("Media-upload.Unknown_Error");
+                        progressBar.text(Lang.Unknown_Error);
                     }
                 }
             });

@@ -69,11 +69,7 @@ function echo_error(int $code) {
  * @return array 過濾後陣列
  */
 function array_sanitize(array $array): array{
-    for($i = 0; $i< sizeof($array);$i++){
-        if(is_array($array[$i])) array_sanitize($array[$i]);
-        if(is_string($array[$i])) $array[$i] = filter_var(trim($array[$i]), FILTER_SANITIZE_STRING);
-    }
-    return $array;
+    return filter_var_array($array, FILTER_SANITIZE_STRING);
 }
 
 /**

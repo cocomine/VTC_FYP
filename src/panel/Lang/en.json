@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "7/12/2022",
+  "Last_Update": "13/12/2022",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -599,6 +599,7 @@
       "Head": "Media",
       "Content": {
 
+
       }
     },
     "Media-upload": {
@@ -611,7 +612,16 @@
         "limit_type": "Accept: .jpg .png .webp .gif",
         "limit": "The maximum size of a single file is 8MB",
         "respond": {
-
+          "Over_size": "File too large",
+          "Not_complete": "Incomplete upload",
+          "Not_complete_upload": "Upload failed",
+          "File_type_not_mach": "File format does not match",
+          "File_name_over": "File name is too long",
+          "File_convert_fail": "File conversion failed",
+          "File_sql_fail": "Database update failed",
+          "File_save_fail": "File save failed",
+          "Uploaded": "Uploaded successfully",
+          "Timeout": "Upload timed out"
         }
       }
     }
