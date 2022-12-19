@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569</OriginalElement>
+  <nodes>
+    <node x="498.441489361702" y="1374.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review_img</node>
+    <node x="232.56648936170205" y="296.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_plan</node>
+    <node x="520.566489361702" y="284.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.notify</node>
+    <node x="552.0779661016949" y="-51.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Block_ip</node>
+    <node x="-29.404255319149" y="-166.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User</node>
+    <node x="93.56648936170205" y="307.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Toke_list</node>
+    <node x="584.875" y="566.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_schedule</node>
+    <node x="1013.566489361702" y="227.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event</node>
+    <node x="-195.0" y="238.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Mail_queue</node>
+    <node x="847.566489361702" y="319.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.ForgetPass</node>
+    <node x="587.941489361702" y="1094.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review</node>
+    <node x="1368.566489361702" y="319.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.2FA_BackupCode</node>
+    <node x="735.566489361702" y="1374.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_img</node>
+    <node x="-80.5" y="1083.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.media</node>
+    <node x="-87.5" y="1282.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User_detail_collabora</node>
+    <node x="586.941489361702" y="859.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event</node>
+    <node x="1142.095744680851" y="-39.5">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.category</node>
+    <node x="758.3382407741312" y="-51.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Block_login_code</node>
+    <node x="672.566489361702" y="296.0">f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User_detail</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_img" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event" relationship="REFERENCES">
+      <point x="64.49951063829803" y="0.0" />
+      <point x="995.0" y="1413.0" />
+      <point x="995.0" y="442.5" />
+      <point x="-167.50048936170197" y="73.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_img" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.media" relationship="REFERENCES">
+      <point x="-64.50048936170197" y="0.0" />
+      <point x="702.0" y="1413.0" />
+      <point x="702.0" y="1357.0" />
+      <point x="360.066" y="1357.0" />
+      <point x="360.066" y="1156.5" />
+      <point x="67.0" y="0.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review_img" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review" relationship="REFERENCES">
+      <point x="76.5" y="-38.5" />
+      <point x="-10.0" y="62.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User_detail_collabora" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="62.5" y="-131.0" />
+      <point x="71.0" y="247.0" />
+      <point x="494.5" y="247.0" />
+      <point x="494.5" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Mail_queue" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="0.0" y="-131.0" />
+      <point x="-109.5" y="-0.5" />
+      <point x="-85.5" y="0.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User_detail_collabora" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.media" relationship="REFERENCES">
+      <point x="-22.0" y="-131.0" />
+      <point x="0.0" y="73.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review_img" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.media" relationship="REFERENCES">
+      <point x="83.99951063829803" y="0.0" />
+      <point x="702.0" y="1413.0" />
+      <point x="702.0" y="1357.0" />
+      <point x="360.066" y="1357.0" />
+      <point x="360.066" y="1156.5" />
+      <point x="67.0" y="0.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_schedule" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_plan" relationship="REFERENCES">
+      <point x="-195.0" y="0.0" />
+      <point x="360.066" y="685.5" />
+      <point x="-6.50048936170208" y="73.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.notify" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="-85.0" />
+      <point x="586.566" y="247.0" />
+      <point x="494.5" y="247.0" />
+      <point x="494.5" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.ForgetPass" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="-50.5" />
+      <point x="920.566" y="247.0" />
+      <point x="494.5" y="247.0" />
+      <point x="494.5" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Toke_list" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.89361702051383E-4" y="-62.0" />
+      <point x="153.066" y="247.0" />
+      <point x="494.5" y="247.0" />
+      <point x="494.5" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_schedule" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event" relationship="REFERENCES">
+      <point x="195.0" y="0.0" />
+      <point x="995.0" y="685.5" />
+      <point x="995.0" y="442.5" />
+      <point x="-167.50048936170197" y="73.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="-142.5" />
+      <point x="1181.066" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="85.0" />
+      <point x="668.941" y="1056.0" />
+      <point x="41.096" y="1056.0" />
+      <point x="-14.999744680851002" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User_detail" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="-73.5" />
+      <point x="750.066" y="247.0" />
+      <point x="494.5" y="247.0" />
+      <point x="494.5" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event" relationship="REFERENCES">
+      <point x="82.0" y="0.0" />
+      <point x="1181.066489361702" y="944.0" />
+      <point x="0.0" y="142.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_review" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event" relationship="REFERENCES">
+      <point x="14.999510638298034" y="-62.0" />
+      <point x="14.999510638298034" y="85.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_schedule" relationship="REFERENCES">
+      <point x="0.0" y="-85.0" />
+      <point x="-110.933510638298" y="119.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.category" relationship="REFERENCES">
+      <point x="23.529255319149115" y="-142.5" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Book_event" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.Event_plan" relationship="REFERENCES">
+      <point x="-82.0" y="0.0" />
+      <point x="345.066" y="944.0" />
+      <point x="-21.50048936170208" y="73.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.2FA_BackupCode" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="-4.893617019661178E-4" y="-50.5" />
+      <point x="1450.066" y="196.0" />
+      <point x="56.096" y="196.0" />
+      <point x="2.553191489980122E-4" y="165.5" />
+    </edge>
+    <edge source="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.media" target="f3ec8d2d-cbe3-40d7-b5ea-ca5d2b020569.TABLE:itp4506.User" relationship="REFERENCES">
+      <point x="0.0" y="-73.5" />
+      <point x="-13.5" y="1056.0" />
+      <point x="41.096" y="1056.0" />
+      <point x="-14.999744680851002" y="165.5" />
+    </edge>
+  </edges>
+  <settings layout="分层" zoom="0.47786177105831534" showDependencies="false" x="783.0" y="760.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>列</Category>
+    <Category>注释</Category>
+    <Category>虚拟外键</Category>
+    <Category>键列</Category>
+  </Categories>
+</Diagram>
+

@@ -34,6 +34,7 @@ class media implements IApi {
     }
 
     /**
+     * 檢索媒體
      * @inheritDoc
      */
     public function get() {
@@ -41,7 +42,11 @@ class media implements IApi {
             echo_error(400);
             return;
         }
-        //todo: show img
+        if($this->upPath[0] === 'list'){
+            //todo: list img
+        }else{
+            //todo: show img
+        }
     }
 
     /**
@@ -77,16 +82,16 @@ class media implements IApi {
             http_response_code(400);
             switch ($_FILES["file"]["error"]) {
                 case UPLOAD_ERR_INI_SIZE:
-                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_INI_SIZE', 'Message' => showText("Media-upload.Content.response.Over_size"));
+                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_INI_SIZE', 'Message' => showText("Media-upload.Content.respond.Over_size"));
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
-                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_FORM_SIZE', 'Message' => showText("Media-upload.Content.response.Over_size"));
+                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_FORM_SIZE', 'Message' => showText("Media-upload.Content.respond.Over_size"));
                     break;
                 case  UPLOAD_ERR_PARTIAL:
-                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_PARTIAL', 'Message' => showText("Media-upload.Content.response.Not_complete"));
+                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_PARTIAL', 'Message' => showText("Media-upload.Content.respond.Not_complete"));
                     break;
                 case  UPLOAD_ERR_NO_FILE:
-                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_NO_FILE', 'Message' => showText("Media-upload.Content.response.Not_complete_upload"));
+                    $output = array('code' => 400, 'Error' => 'UPLOAD_ERR_NO_FILE', 'Message' => showText("Media-upload.Content.respond.Not_complete_upload"));
                     break;
                 default:
                     $output = array('code' => 400, 'Error' => $_FILES["file"]["error"], 'Message' => showText("Error"));
@@ -100,21 +105,21 @@ class media implements IApi {
         //檢查文件類型
         if (!preg_match('/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/', $mime)) {
             http_response_code(400);
-            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_FILE_TYPE', 'Message' => showText("Media-upload.Content.response.File_type_not_mach")));
+            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_FILE_TYPE', 'Message' => showText("Media-upload.Content.respond.File_type_not_mach")));
             return;
         }
 
         //8MB 限制
         if ($_FILES["file"]["size"] > 8388608) {
             http_response_code(400);
-            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_FORM_SIZE', 'Message' => showText("Media-upload.Content.response.Over_size")));
+            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_FORM_SIZE', 'Message' => showText("Media-upload.Content.respond.Over_size")));
             return;
         }
 
         //檔案名稱20個字或以下
         if (strlen($_FILES["file"]["name"]) > 100) {
             http_response_code(400);
-            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_NAME_SIZE', 'Message' => showText("Media-upload.Content.response.File_name_over")));
+            echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_NAME_SIZE', 'Message' => showText("Media-upload.Content.respond.File_name_over")));
             return;
         }
 
@@ -136,7 +141,7 @@ class media implements IApi {
                 $mime = "image/webp";
             } catch (ImagickException $e) {
                 http_response_code(500);
-                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_CONVERT', 'Message' => showText("Media-upload.Content.response.File_convert_fail")));
+                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_CONVERT', 'Message' => showText("Media-upload.Content.respond.File_convert_fail")));
                 return;
             }
         }
@@ -164,7 +169,7 @@ class media implements IApi {
             if ($stmt->execute()) break;
             if ($try <= 0) {
                 http_response_code(500);
-                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SQL', 'Message' => showText("Media-upload.Content.response.File_sql_fail")));
+                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SQL', 'Message' => showText("Media-upload.Content.respond.File_sql_fail")));
                 return;
             }
         }
@@ -173,20 +178,20 @@ class media implements IApi {
         if ($mime === "image/webp") {
             if (!file_put_contents(join('', $save_path), $blob)) {
                 http_response_code(500);
-                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SAVE', 'Message' => showText("Media-upload.Content.response.File_save_fail")));
+                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SAVE', 'Message' => showText("Media-upload.Content.respond.File_save_fail")));
                 return;
             }
         } else {
             if (!move_uploaded_file($_FILES["file"]["tmp_name"], join('', $save_path))) {
                 http_response_code(500);
-                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SAVE', 'Message' => showText("Media-upload.Content.response.File_save_fail")));
+                echo json_encode(array('code' => 500, 'Error' => 'UPLOAD_ERR_SAVE', 'Message' => showText("Media-upload.Content.respond.File_save_fail")));
                 return;
             }
         }
 
         /* 成功 */
         http_response_code(201);
-        echo json_encode(array('code' => 201, 'Success' => 'UPLOAD_ERR_OK', 'Message' => showText("Media-upload.Content.response.Uploaded")));
+        echo json_encode(array('code' => 201, 'Success' => 'UPLOAD_ERR_OK', 'Message' => showText("Media-upload.Content.respond.Uploaded")));
     }
 
     /**
