@@ -25,9 +25,42 @@ class media implements IPage {
     public function showPage(): string {
 
         $Text = showText('Media.Content');
+        $LangJson = "";
 
         return <<<body
-
+<pre id="LangJson" class="d-none">$LangJson</pre>
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <div class='row gy-4 justify-content-center align-items-center' id="media-list"></div>
+        </div>
+    </div>
+</div>
+<style>
+.center-img{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate(50%,50%);
+}
+.center-img img{
+    transform: translate(-50%,-50%);
+    height: 100%;
+    max-width: none;
+}
+.img-focus{
+    transition: all 300ms ease-in-out;
+}
+.img-focus:hover{
+    box-shadow: 0 0 5px 6px rgba(var(--bs-primary-rgb), 0.5);
+}
+</style>
+<script>
+    loadModules(['myself/page/media/media'])
+</script>
 body;
     }
 

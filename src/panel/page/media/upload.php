@@ -64,6 +64,7 @@ class upload implements IPage {
             'File_name_over' => $Text['respond']['File_name_over'],
             'Over_size' => $Text['respond']['Over_size'],
             'File_type_not_mach' => $Text['respond']['File_type_not_mach'],
+            'Waiting' => $Text['respond']['Waiting']
         ));
 
         return <<<body

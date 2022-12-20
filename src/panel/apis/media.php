@@ -42,10 +42,66 @@ class media implements IApi {
             echo_error(400);
             return;
         }
+
         if($this->upPath[0] === 'list'){
-            //todo: list img
+            /* 列出所有媒體 */
+            global $auth;
+            header("content-type: text/json; charset=utf-8");
+
+            /* 檢查權限 */
+            if (!$auth->islogin) {
+                echo_error(401);
+                return;
+            }
+            if ($auth->userdata['Role'] <= 1) {
+                echo_error(403);
+                return;
+            }
+
+            /* 取得所有媒體 */
+            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Scan FROM media WHERE User = ?');
+            $stmt->bind_param('s', $auth->userdata['UUID']);
+            if(!$stmt->execute()){
+                echo_error(500);
+                return;
+            }
+
+            /* 取得result */
+            $result = $stmt->get_result();
+            $data = [];
+            while ($row = $result->fetch_assoc()){
+                $data[] = array(
+                    'id'=>$row['ID'],
+                    'mime'=>$row['MIME'],
+                    'scan'=>$row['Scan']
+                );
+            }
+
+            /* 輸出 */
+            echo json_encode(array(
+                'code'=>200,
+                'body'=>$data
+            ));
         }else{
-            //todo: show img
+            /* 展示媒體 */
+            $stmt = $this->sqlcon->prepare('SELECT path FROM media WHERE ID = ?');
+            $stmt->bind_param('s', $this->upPath[0]);
+            if(!$stmt->execute()){
+                echo_error(500);
+                return;
+            }
+
+            /* 取得result */
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            if($result->num_rows <= 0){
+                //todo: 404
+                return;
+            }
+
+            /* 展示圖片 */
+            header("Content-type: image/webp");
+            readfile($row['path']);
         }
     }
 
@@ -198,9 +254,7 @@ class media implements IApi {
      * @inheritDoc
      */
     public function put(array $data) {
-        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        echo json_encode(array('code' => 204));
     }
 
     /**

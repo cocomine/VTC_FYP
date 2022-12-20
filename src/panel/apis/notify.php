@@ -110,20 +110,14 @@ class notify implements IApi {
     }
 
     public function post(array $data) {
-        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        echo json_encode(array('code' => 204));
     }
 
     public function put(array $data) {
-        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        echo json_encode(array('code' => 204));
     }
 
     public function delete() {
-        header("content-type: text/json; charset=utf-8");
         http_response_code(204);
-        echo json_encode(array('code' => 204));
     }
 }

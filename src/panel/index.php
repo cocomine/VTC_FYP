@@ -110,6 +110,7 @@ function run_page(array $path, MyAuth $auth) {
             $class = 'panel\\page';
             for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
+            $up_path = array_sanitize($up_path); //消毒
 
             //建立頁面
             try {
@@ -163,6 +164,7 @@ function run_apis(array $path, MyAuth $auth) {
             $class = 'panel\\apis';
             for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
+            $up_path = array_sanitize($up_path); //消毒
 
             //建立頁面
             try {
