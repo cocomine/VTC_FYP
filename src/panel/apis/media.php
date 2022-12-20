@@ -84,7 +84,7 @@ class media implements IApi {
             ));
         }else{
             /* 展示媒體 */
-            $stmt = $this->sqlcon->prepare('SELECT path FROM media WHERE ID = ?');
+            $stmt = $this->sqlcon->prepare('SELECT path, MIME FROM media WHERE ID = ?');
             $stmt->bind_param('s', $this->upPath[0]);
             if(!$stmt->execute()){
                 echo_error(500);
@@ -95,12 +95,13 @@ class media implements IApi {
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
             if($result->num_rows <= 0){
-                //todo: 404
+                header("Content-type: image/webp");
+                readfile('./assets/images/image_not_found.webp');
                 return;
             }
 
             /* 展示圖片 */
-            header("Content-type: image/webp");
+            header("Content-type: ".$row['MIME']);
             readfile($row['path']);
         }
     }

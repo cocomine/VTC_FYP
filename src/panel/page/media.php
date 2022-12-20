@@ -32,7 +32,7 @@ class media implements IPage {
 <div class='col-12 mt-4'>
     <div class='card'>
         <div class='card-body'>
-            <div class='row gy-4 justify-content-center align-items-center' id="media-list"></div>
+            <div class='row gy-4 align-items-center' id="media-list"></div>
         </div>
     </div>
 </div>

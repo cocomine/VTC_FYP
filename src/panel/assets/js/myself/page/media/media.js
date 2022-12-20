@@ -27,7 +27,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                         <div class="ratio ratio-1x1 position-relative img-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="center-img">
-                                    <img src="" draggable="false" alt="${value.id} Image" data-src="/panel/api/media/${value.id}" class="lazy"/>
+                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${value.id} Image" data-src="/panel/api/media/${value.id}" class="lazy"/>
                                 </div>
                             </div>
                         </div>
