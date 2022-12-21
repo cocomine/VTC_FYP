@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr'], function (jq, toastr) {
+define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
     let media_list;
     /* 沒有任何圖片 */
     const empty = `<div class="col-auto"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
@@ -28,7 +28,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                         <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="media-list-center">
-                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${value.id} Image" data-src="/panel/api/media/${value.id}" class="lazy"/>
+                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${'Media %s'.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
                                 </div>
                             </div>
                         </div>
@@ -70,23 +70,41 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     /* 選擇圖片 */
     let selected_list = [];
     $('#media-list').on('click', '.media-list-focus', function () {
-        if (!select_mod) return;
-
         const elm = $(this);
         const id = elm.data('id');
 
-        if (selected_list.includes(id)) {
-            //is selected
-            elm.removeClass('selected')
-            selected_list.splice(selected_list.indexOf(id), 1);
-        } else {
-            //not selected
-            elm.addClass('selected')
-            selected_list.push(id);
-        }
+        if (select_mod) {
+            /* 選取模式 */
+            if (selected_list.includes(id)) {
+                //is selected
+                elm.removeClass('selected')
+                selected_list.splice(selected_list.indexOf(id), 1);
+            } else {
+                //not selected
+                elm.addClass('selected')
+                selected_list.push(id);
+            }
 
-        $('#del-media').text('Delete %s Media'.replace('%s', selected_list.length.toString()))
-        console.log(selected_list) //debug
+            $('#del-media >span').text(selected_list.length)
+        } else {
+            /* 展示模式 */
+            const modal = $('#Media-modal')
+            const bs_modal = bootstrap.Modal.getOrCreateInstance(modal[0]);
+
+            modal.find('.modal-title > b > span').text(id)
+            modal.find('img').attr('src', '/panel/api/media/' + id).attr('alt', 'Media %s'.replace('%s', id))
+
+            const media = media_list.filter((value) => value.id === id)[0]
+            const detail = $('#Media-modal-detail');
+            detail.find('p:nth-child(1) > span').text(id)
+            detail.find('p:nth-child(2) > span').text(media.datetime)
+            detail.find('p:nth-child(3) > span').text(media.mime)
+            detail.find('p:nth-child(4) > code').text(location.origin + '/panel/api/media/' + id);
+            detail.find('a').attr('href', location.origin + '/panel/api/media/' + id);
+            detail.find('button').attr('data-id', id);
+
+            bs_modal.show()
+        }
     })
 
     /* 刪除圖片 */
@@ -109,7 +127,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             }
         }).then(async (response) => {
             const data = await response.json();
-            console.log(data) //debug
+
             if (data.code === 200) {
                 toastr.success(data.Message)
             } else if (data.code === 210) {
@@ -134,4 +152,34 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             bt.html(html).removeAttr('disabled');
         });
     });
+
+    /* 刪除單個 */
+    $('#Media-modal-detail > button').click(function () {
+        /* 封鎖按鈕 */
+        const bt = $(this)
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+        const id = bt.data('id');
+        fetch('/panel/api/media/'+id, {
+            method: 'DELETE',
+            redirect: 'error',
+        }).then(async (response) => {
+            const data = await response.json();
+
+            if (data.code === 200) {
+                toastr.success(data.Message)
+
+                $(`[data-id='${id}']`).parent().remove()
+                const bs_modal = bootstrap.Modal.getOrCreateInstance($('#Media-modal')[0]);
+                bs_modal.hide()
+            } else {
+                toastr.error(data.Message)
+            }
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            bt.html(html).removeAttr('disabled');
+        });
+    })
 })

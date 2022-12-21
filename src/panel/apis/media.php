@@ -31,7 +31,7 @@ class media implements IApi {
      * @param string $imgID 圖片ID
      * @return string $Img html element
      */
-    public static function Generate_img_html(string $imgID):string{
+    public static function Generate_img_html(string $imgID): string {
         return "<img src='/panel/assets/images/image_loading.webp' draggable='false' alt='$imgID Image' data-src='/panel/api/media/$imgID' class='lazy'/>";
     }
 
@@ -52,7 +52,7 @@ class media implements IApi {
             return;
         }
 
-        if($this->upPath[0] === 'list'){
+        if ($this->upPath[0] === 'list') {
             /* 列出所有媒體 */
             global $auth;
             header("content-type: text/json; charset=utf-8");
@@ -68,9 +68,9 @@ class media implements IApi {
             }
 
             /* 取得所有媒體 */
-            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Scan FROM media WHERE User = ?');
+            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Datetime FROM media WHERE User = ?');
             $stmt->bind_param('s', $auth->userdata['UUID']);
-            if(!$stmt->execute()){
+            if (!$stmt->execute()) {
                 echo_error(500);
                 return;
             }
@@ -78,24 +78,24 @@ class media implements IApi {
             /* 取得result */
             $result = $stmt->get_result();
             $data = [];
-            while ($row = $result->fetch_assoc()){
+            while ($row = $result->fetch_assoc()) {
                 $data[] = array(
-                    'id'=>$row['ID'],
-                    'mime'=>$row['MIME'],
-                    'scan'=>$row['Scan']
+                    'id' => $row['ID'],
+                    'mime' => $row['MIME'],
+                    'datetime' => $row['Datetime']
                 );
             }
 
             /* 輸出 */
             echo json_encode(array(
-                'code'=>200,
-                'body'=>$data
+                'code' => 200,
+                'body' => $data
             ));
-        }else{
+        } else {
             /* 展示媒體 */
             $stmt = $this->sqlcon->prepare('SELECT path, MIME FROM media WHERE ID = ?');
             $stmt->bind_param('s', $this->upPath[0]);
-            if(!$stmt->execute()){
+            if (!$stmt->execute()) {
                 echo_error(500);
                 return;
             }
@@ -103,14 +103,15 @@ class media implements IApi {
             /* 取得result */
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
-            if($result->num_rows <= 0){
+            if ($result->num_rows <= 0) {
+                http_response_code(404);
                 header("Content-type: image/webp");
                 readfile('./assets/images/image_not_found.webp');
                 return;
             }
 
             /* 展示圖片 */
-            header("Content-type: ".$row['MIME']);
+            header("Content-type: " . $row['MIME']);
             readfile($row['path']);
         }
     }
@@ -229,7 +230,7 @@ class media implements IApi {
             $save_path[1] = Generate_Code(6);
             $tmp = join('', $save_path);
 
-            $stmt = $this->sqlcon->prepare("INSERT INTO media (ID, path, User, MIME) VALUES (?, ?, ?, ?)");
+            $stmt = $this->sqlcon->prepare("INSERT INTO media (ID, path, User, MIME, Scan) VALUES (?, ?, ?, ?, TRUE)");
             $stmt->bind_param("ssss", $save_path[1], $tmp, $auth->userdata['UUID'], $mime);
             $try--;
             if ($stmt->execute()) break;
@@ -270,7 +271,7 @@ class media implements IApi {
     /**
      * @inheritDoc
      */
-    public function delete(array $data) {
+    public function delete($data) {
         global $auth;
         header("content-type: text/json; charset=utf-8");
 
@@ -285,40 +286,52 @@ class media implements IApi {
         }
 
         /* 檢查請求內容 */
-        if(sizeof($this->upPath) === 1 && $data != null){
+        if (sizeof($this->upPath) === 1 && $data === null) {
             /* 刪除單個 */
-            echo $this->upPath[0];
-        }else if (sizeof($this->upPath) < 1) {
+            $stmt = $this->sqlcon->prepare('DELETE FROM media WHERE ID = ? AND User = ?');
+            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                echo_error(500);
+                return;
+            }
+
+            /* 檢查刪除結果 */
+            if ($stmt->affected_rows >= 1) {
+                echo json_encode(array('code' => 200, 'Message' => 'Media have been successfully deleted'));
+            }else{
+                echo json_encode(array('code' => 400, 'Message' => 'Media deleted fail'));
+            }
+
+        } else if (sizeof($this->upPath) < 1) {
             /* 批量刪除 */
             $stmt = $this->sqlcon->prepare('DELETE FROM media WHERE ID = ? AND User = ?');
             $deleted_img = [];
 
             /* 刪除 */
-            foreach ($data as $id){
+            foreach ($data as $id) {
                 $stmt->bind_param('ss', $id, $auth->userdata['UUID']);
-                if(!$stmt->execute()){
+                if (!$stmt->execute()) {
                     echo_error(500);
                     return;
                 }
-                if($stmt->affected_rows >= 1) $deleted_img[] = $id;
+                if ($stmt->affected_rows >= 1) $deleted_img[] = $id;
             }
 
             /* 檢查刪除結果 */
-            if(sizeof($deleted_img) === sizeof($data)){
-                http_response_code(200);
+            if (sizeof($deleted_img) === sizeof($data)) {
                 echo json_encode(array(
                     'code' => 200,
                     'Message' => 'The selected media have been successfully deleted',
                     'body' => $deleted_img
                 ));
-            }else if(sizeof($deleted_img) > 0){
+            } else if (sizeof($deleted_img) > 0) {
                 http_response_code(210);
                 echo json_encode(array(
                     'code' => 210,
                     'Message' => 'Selected media partially deleted',
                     'body' => $deleted_img
                 ));
-            }else{
+            } else {
                 http_response_code(400);
                 echo json_encode(array(
                     'code' => 400,
@@ -326,10 +339,8 @@ class media implements IApi {
                     'body' => $deleted_img
                 ));
             }
-        }else{
+        } else {
             echo_error(400);
         }
-
-        //todo: delete img
     }
 }

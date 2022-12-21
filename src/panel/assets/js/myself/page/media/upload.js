@@ -28,7 +28,7 @@ define(['jquery'], function () {
     })
 
     function handleFiles(files) {
-        let limit = 6;
+        let limit = 4;
         let upload_queue = [];
 
         for (let file of files) {
@@ -79,17 +79,18 @@ define(['jquery'], function () {
         }
 
         /* 限制同時上載檔案數量 */
-        setInterval(() => {
-            if(limit > 0){
+        const Interval_id = setInterval(() => {
+            if (limit > 0) {
                 limit--;
                 const tmp = upload_queue.shift();
-                if(tmp !== undefined) upload(tmp.progressBar, tmp.file, () => limit++);
+                if (tmp !== undefined) upload(tmp.progressBar, tmp.file, () => limit++);
             }
+            if (upload_queue.length <= 0) clearInterval(Interval_id)
         }, 1000)
     }
 
     /* 上傳 */
-    function upload(progressBar, file, callback){
+    function upload(progressBar, file, callback) {
         progressBar.removeClass('bg-info');
 
         /* 包裝form-data */
@@ -131,7 +132,7 @@ define(['jquery'], function () {
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
 
-                if (textStatus === "error" && (xhr.status === 400 || xhr.status === 500) ) {
+                if (textStatus === "error" && (xhr.status === 400 || xhr.status === 500)) {
                     let response = JSON.parse(xhr.responseText);
                     progressBar.text(response.Message);
                 } else if (textStatus === "timeout") {

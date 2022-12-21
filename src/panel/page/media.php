@@ -37,7 +37,7 @@ class media implements IPage {
                     <button type="button" class="btn btn-outline-primary btn-rounded" id="switch-mode">Select Mode</button>
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-danger btn-rounded" id="del-media" style="display: none">Delete 0 media</button>
+                    <button type="button" class="btn btn-danger btn-rounded" id="del-media" style="display: none"><i class="fa-solid fa-trash me-2"></i>Delete <span>0</span> media</button>
                 </div>
             </div>
         </div>
@@ -47,6 +47,31 @@ class media implements IPage {
     <div class='card'>
         <div class='card-body'>
             <div class='row gy-4 align-items-center media-list' id="media-list"></div>
+        </div>
+    </div>
+</div>
+<div id='Media-modal' class='modal fade' tabindex='-1'>
+    <div class='modal-dialog modal-xl'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h5 class='modal-title'><b>Media <span>xxxxxx</span></b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class='modal-body'>
+                <div class="row">
+                    <div class="col text-center">
+                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx Image' style="max-width: 80%"/>
+                    </div>
+                    <div class="col-12 col-md-3" id="Media-modal-detail">
+                        <p>Media ID: <span>xxxx</span></p>
+                        <p>Upload Time: <span>xxxx</span></p>
+                        <p>MIME type: <span>xxxx</span></p>
+                        <p>URL: <code class="bg-light">xxxx</code></p>
+                        <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Show Original size</a>
+                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>Delete Media</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
