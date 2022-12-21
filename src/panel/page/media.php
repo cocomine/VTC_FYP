@@ -25,7 +25,12 @@ class media implements IPage {
     public function showPage(): string {
 
         $Text = showText('Media.Content');
-        $LangJson = json_encode(array());
+        $LangJson = json_encode(array(
+            'Select_on'=>$Text['Select_on'],
+            'Select_off'=>$Text['Select_off'],
+            'No_media'=>$Text['No_media'],
+            'Media'=>$Text['Media'].' %s',
+        ));
 
         return <<<body
 <pre id="LangJson" class="d-none">$LangJson</pre>
@@ -34,10 +39,10 @@ class media implements IPage {
         <div class='card-body'>
             <div class="row justify-content-between">
                 <div class="col-auto">
-                    <button type="button" class="btn btn-outline-primary btn-rounded" id="switch-mode">Select Mode</button>
+                    <button type="button" class="btn btn-outline-primary btn-rounded" id="switch-mode">{$Text['Select_on']}</button>
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-danger btn-rounded" id="del-media" style="display: none"><i class="fa-solid fa-trash me-2"></i>Delete <span>0</span> media</button>
+                    <button type="button" class="btn btn-danger btn-rounded" id="del-media" style="display: none"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} <span>0</span> {$Text['Delete'][1]}</button>
                 </div>
             </div>
         </div>
@@ -54,21 +59,21 @@ class media implements IPage {
     <div class='modal-dialog modal-xl'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title'><b>Media <span>xxxxxx</span></b></h5>
+                <h5 class='modal-title'><b>{$Text['Media']} <span>xxxxxx</span></b></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class='modal-body'>
                 <div class="row">
                     <div class="col text-center">
-                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx Image' style="max-width: 80%"/>
+                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-width: 80%"/>
                     </div>
                     <div class="col-12 col-md-3" id="Media-modal-detail">
-                        <p>Media ID: <span>xxxx</span></p>
-                        <p>Upload Time: <span>xxxx</span></p>
-                        <p>MIME type: <span>xxxx</span></p>
-                        <p>URL: <code class="bg-light">xxxx</code></p>
-                        <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Show Original size</a>
-                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>Delete Media</button>
+                        <p>{$Text['Media_ID']} <span>xxxx</span></p>
+                        <p>{$Text['Upload_Time']} <span>xxxx</span></p>
+                        <p>{$Text['MIME_type']} <span>xxxx</span></p>
+                        <p>{$Text['URL']} <code class="bg-light">xxxx</code></p>
+                        <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{$Text['Show_Original']}</a>
+                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} {$Text['Delete'][1]}</button>
                     </div>
                 </div>
             </div>

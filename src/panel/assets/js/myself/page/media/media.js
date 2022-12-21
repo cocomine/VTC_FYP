@@ -5,9 +5,10 @@
 
 define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
     let media_list;
-    /* 沒有任何圖片 */
+    const Lang = JSON.parse($('#LangJson').text());
+    //沒有任何圖片
     const empty = `<div class="col-auto"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
-                    <div class="col-auto h-auto"><h3 class="align-middle">No media</h3></div>`
+                    <div class="col-auto h-auto"><h3 class="align-middle">${Lang.No_media}</h3></div>`
 
     /* 圖片列表 */
     fetch('/panel/api/media/list', {
@@ -28,7 +29,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
                         <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="media-list-center">
-                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${'Media %s'.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
+                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${Lang.Media.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +55,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
         if (deleting) return;
 
         select_mod = !select_mod;
-        $('#switch-mode').text(select_mod ? 'Cancel Select Mode' : 'Select Mode');
+        $('#switch-mode').text(select_mod ? Lang.Select_off : Lang.Select_on);
 
         if (select_mod) {
             $('.media-list').addClass('select-mode');
@@ -62,7 +63,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
         } else {
             $('.media-list').removeClass('select-mode');
             $('.media-list .media-list-focus.selected').removeClass('selected');
-            $('#del-media').hide().text('Delete %s Media'.replace('%s', '0'));
+            $('#del-media').hide().children('span').text(0)
             selected_list = [];
         }
     }
@@ -85,7 +86,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
                 selected_list.push(id);
             }
 
-            $('#del-media >span').text(selected_list.length)
+            $('#del-media > span').text(selected_list.length)
         } else {
             /* 展示模式 */
             const modal = $('#Media-modal')
@@ -161,7 +162,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
         bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
         const id = bt.data('id');
-        fetch('/panel/api/media/'+id, {
+        fetch('/panel/api/media/' + id, {
             method: 'DELETE',
             redirect: 'error',
         }).then(async (response) => {

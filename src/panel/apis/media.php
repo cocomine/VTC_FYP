@@ -297,9 +297,9 @@ class media implements IApi {
 
             /* 檢查刪除結果 */
             if ($stmt->affected_rows >= 1) {
-                echo json_encode(array('code' => 200, 'Message' => 'Media have been successfully deleted'));
+                echo json_encode(array('code' => 200, 'Message' => showText('Media.Content.respond.single.success')));
             }else{
-                echo json_encode(array('code' => 400, 'Message' => 'Media deleted fail'));
+                echo json_encode(array('code' => 400, 'Message' => showText('Media.Content.respond.single.fail')));
             }
 
         } else if (sizeof($this->upPath) < 1) {
@@ -321,21 +321,21 @@ class media implements IApi {
             if (sizeof($deleted_img) === sizeof($data)) {
                 echo json_encode(array(
                     'code' => 200,
-                    'Message' => 'The selected media have been successfully deleted',
+                    'Message' => showText('Media.Content.respond.multi.success'),
                     'body' => $deleted_img
                 ));
             } else if (sizeof($deleted_img) > 0) {
                 http_response_code(210);
                 echo json_encode(array(
                     'code' => 210,
-                    'Message' => 'Selected media partially deleted',
+                    'Message' => showText('Media.Content.respond.multi.partially'),
                     'body' => $deleted_img
                 ));
             } else {
                 http_response_code(400);
                 echo json_encode(array(
                     'code' => 400,
-                    'Message' => 'Selected media deleted fail',
+                    'Message' => showText('Media.Content.respond.multi.fail'),
                     'body' => $deleted_img
                 ));
             }

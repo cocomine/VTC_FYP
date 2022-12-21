@@ -598,8 +598,29 @@
       "Title": "Media | Global blacklist",
       "Head": "Media",
       "Content": {
-
-
+        "Select_on": "Select Mode",
+        "Select_off": "Cancel Select Mode",
+        "Media": "Media",
+        "Delete": [
+          "Delete", "Media"
+        ],
+        "Show_Original": "Show Original size",
+        "Media_ID": "Media ID:",
+        "Upload_Time": "Upload Time:",
+        "MIME_type": "MIME type:",
+        "URL": "URL",
+        "No_media": "No Media",
+        "respond": {
+          "single": {
+            "success": "Media have been successfully deleted",
+            "fail": "Media deleted fail"
+          },
+          "multi": {
+            "success": "The selected media have been successfully deleted",
+            "partially": "The Selected media have partially deleted",
+            "fail": "The Selected media deleted fail"
+          }
+        }
       }
     },
     "Media-upload": {
