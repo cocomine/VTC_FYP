@@ -53,13 +53,13 @@ function echo_error(int $code) {
         /* 不符合任何請求 */
         header("content-type: text/json; charset=utf-8");
         http_response_code(405);
-        echo json_encode(array('code' => 405, 'message' => showText('Error_Page.405')));
+        echo json_encode(array('code' => 405, 'Message' => showText('Error_Page.405')));
     }
     if ($code === 400) {
         /* 錯誤請求 */
         header("content-type: text/json; charset=utf-8");
         http_response_code(400);
-        echo json_encode(array('code' => 400, 'message' => showText('Error_Page.400')));
+        echo json_encode(array('code' => 400, 'Message' => showText('Error_Page.400')));
     }
 }
 

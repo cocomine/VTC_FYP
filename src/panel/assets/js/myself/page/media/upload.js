@@ -82,7 +82,7 @@ define(['jquery'], function () {
         setInterval(() => {
             if(limit > 0){
                 limit--;
-                const tmp = upload_queue.pop();
+                const tmp = upload_queue.shift();
                 if(tmp !== undefined) upload(tmp.progressBar, tmp.file, () => limit++);
             }
         }, 1000)

@@ -10,23 +10,24 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     <div class="col-auto h-auto"><h3 class="align-middle">No media</h3></div>`
 
     /* 圖片列表 */
-    fetch('/panel/api/media/list',{
+    fetch('/panel/api/media/list', {
         method: 'GET',
         redirect: 'error'
     }).then(async (response) => {
         const data = await response.json();
-        if(data.code === 200){
-            /* 檢查是否沒有任何圖片 */
-            if(data.body.length <= 0){
+        if (data.code === 200) {
+            // 檢查是否沒有任何圖片
+            if (data.body.length <= 0) {
                 $('#media-list').html(empty);
                 return;
             }
 
-            const map = data.body.map((value)=>
+            //html
+            const map = data.body.map((value) =>
                 `<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                        <div class="ratio ratio-1x1 position-relative img-focus" data-id="${value.id}">
+                        <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
-                                <div class="center-img">
+                                <div class="media-list-center">
                                     <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${value.id} Image" data-src="/panel/api/media/${value.id}" class="lazy"/>
                                 </div>
                             </div>
@@ -34,40 +35,103 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                     </div>`
             )
 
+            //print out
             media_list = data.body
             $('#media-list').html(map)
-            lazy_load();
-        }else {
+            window.dispatchEvent(new Event('load'));
+        } else {
             toastr.error(data.Message)
         }
-    })
+    }).catch((error) => {
+        console.log(error)
+    });
 
-    /* 延遲載入圖片
-    * ref: https://web.dev/lazy-loading-images/
-    */
-    function lazy_load() {
-        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+    /* 選擇模式切換 */
+    let select_mod = false;
+    $('#switch-mode').click(switch_mode)
 
-        if ("IntersectionObserver" in window) {
-            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        let lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove("lazy");
-                        lazyImageObserver.unobserve(lazyImage);
-                    }
-                });
-            });
+    function switch_mode() {
+        if (deleting) return;
 
-            lazyImages.forEach(function(lazyImage) {
-                lazyImageObserver.observe(lazyImage);
-            });
-        }else{
-            lazyImages.forEach(function (lazyImage) {
-                lazyImage.src = lazyImage.dataset.src;
-                lazyImage.classList.remove("lazy");
-            })
+        select_mod = !select_mod;
+        $('#switch-mode').text(select_mod ? 'Cancel Select Mode' : 'Select Mode');
+
+        if (select_mod) {
+            $('.media-list').addClass('select-mode');
+            $('#del-media').show();
+        } else {
+            $('.media-list').removeClass('select-mode');
+            $('.media-list .media-list-focus.selected').removeClass('selected');
+            $('#del-media').hide().text('Delete %s Media'.replace('%s', '0'));
+            selected_list = [];
         }
     }
+
+    /* 選擇圖片 */
+    let selected_list = [];
+    $('#media-list').on('click', '.media-list-focus', function () {
+        if (!select_mod) return;
+
+        const elm = $(this);
+        const id = elm.data('id');
+
+        if (selected_list.includes(id)) {
+            //is selected
+            elm.removeClass('selected')
+            selected_list.splice(selected_list.indexOf(id), 1);
+        } else {
+            //not selected
+            elm.addClass('selected')
+            selected_list.push(id);
+        }
+
+        $('#del-media').text('Delete %s Media'.replace('%s', selected_list.length.toString()))
+        console.log(selected_list) //debug
+    })
+
+    /* 刪除圖片 */
+    let deleting = false;
+    $('#del-media').click(function () {
+        if (!select_mod) return;
+        deleting = true;
+
+        /* 封鎖按鈕 */
+        const bt = $(this)
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+        fetch('/panel/api/media', {
+            method: 'DELETE',
+            redirect: 'error',
+            body: JSON.stringify(selected_list),
+            headers: {
+                'Content-Type': 'text/json; charset=UTF-8'
+            }
+        }).then(async (response) => {
+            const data = await response.json();
+            console.log(data) //debug
+            if (data.code === 200) {
+                toastr.success(data.Message)
+            } else if (data.code === 210) {
+                toastr.warning(data.Message)
+            } else {
+                toastr.error(data.Message)
+            }
+
+            // 刪除圖片
+            if (data.body) {
+                data.body.forEach((value) => {
+                    $(`[data-id='${value}']`).parent().remove()
+                });
+            }
+
+            // 取消選取狀態
+            deleting = false;
+            switch_mode();
+        }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            bt.html(html).removeAttr('disabled');
+        });
+    });
 })

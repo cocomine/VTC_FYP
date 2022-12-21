@@ -27,6 +27,15 @@ class media implements IApi {
     }
 
     /**
+     * 產生圖片lazy load html element
+     * @param string $imgID 圖片ID
+     * @return string $Img html element
+     */
+    public static function Generate_img_html(string $imgID):string{
+        return "<img src='/panel/assets/images/image_loading.webp' draggable='false' alt='$imgID Image' data-src='/panel/api/media/$imgID' class='lazy'/>";
+    }
+
+    /**
      * @inheritDoc
      */
     public function access(bool $isAuth, int $role): int {
@@ -119,7 +128,7 @@ class media implements IApi {
             echo_error(401);
             return;
         }
-        if ($auth->userdata['Role'] <= 1) {
+        if ($auth->userdata['Role'] < 1) {
             echo_error(403);
             return;
         }
@@ -261,11 +270,66 @@ class media implements IApi {
     /**
      * @inheritDoc
      */
-    public function delete() {
-        if (sizeof($this->upPath) < 1) {
-            echo_error(400);
+    public function delete(array $data) {
+        global $auth;
+        header("content-type: text/json; charset=utf-8");
+
+        /* 檢查權限 */
+        if (!$auth->islogin) {
+            echo_error(401);
             return;
         }
+        if ($auth->userdata['Role'] < 2) {
+            echo_error(403);
+            return;
+        }
+
+        /* 檢查請求內容 */
+        if(sizeof($this->upPath) === 1 && $data != null){
+            /* 刪除單個 */
+            echo $this->upPath[0];
+        }else if (sizeof($this->upPath) < 1) {
+            /* 批量刪除 */
+            $stmt = $this->sqlcon->prepare('DELETE FROM media WHERE ID = ? AND User = ?');
+            $deleted_img = [];
+
+            /* 刪除 */
+            foreach ($data as $id){
+                $stmt->bind_param('ss', $id, $auth->userdata['UUID']);
+                if(!$stmt->execute()){
+                    echo_error(500);
+                    return;
+                }
+                if($stmt->affected_rows >= 1) $deleted_img[] = $id;
+            }
+
+            /* 檢查刪除結果 */
+            if(sizeof($deleted_img) === sizeof($data)){
+                http_response_code(200);
+                echo json_encode(array(
+                    'code' => 200,
+                    'Message' => 'The selected media have been successfully deleted',
+                    'body' => $deleted_img
+                ));
+            }else if(sizeof($deleted_img) > 0){
+                http_response_code(210);
+                echo json_encode(array(
+                    'code' => 210,
+                    'Message' => 'Selected media partially deleted',
+                    'body' => $deleted_img
+                ));
+            }else{
+                http_response_code(400);
+                echo json_encode(array(
+                    'code' => 400,
+                    'Message' => 'Selected media deleted fail',
+                    'body' => $deleted_img
+                ));
+            }
+        }else{
+            echo_error(400);
+        }
+
         //todo: delete img
     }
 }

@@ -74,7 +74,7 @@ define(['jquery', 'mapbox', 'mapboxSdk', 'turf', 'myself/map-auto-fit', 'bootstr
             method: 'POST',
             redirect: 'error',
             headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
+                'Content-Type': 'text/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({

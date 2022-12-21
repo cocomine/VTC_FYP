@@ -14,6 +14,7 @@ define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
         $.get({
             url: "/panel/api/notify",
             success: function (data) {
+                if(!data.body) return;
                 const seenNotifyID = (localStorage.getItem('seenNotifyID') !== null) ? JSON.parse(localStorage.getItem('seenNotifyID')) : [];
                 let notifyList = '';
                 let newNotifyCount = 0;

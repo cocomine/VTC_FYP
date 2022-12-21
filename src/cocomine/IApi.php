@@ -45,5 +45,5 @@ interface IApi {
      * Delete 請求
      * 用來刪除資源
      */
-    public function delete();
+    public function delete(array $data);
 }

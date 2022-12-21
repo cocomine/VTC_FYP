@@ -25,19 +25,33 @@ class media implements IPage {
     public function showPage(): string {
 
         $Text = showText('Media.Content');
-        $LangJson = "";
+        $LangJson = json_encode(array());
 
         return <<<body
 <pre id="LangJson" class="d-none">$LangJson</pre>
 <div class='col-12 mt-4'>
     <div class='card'>
         <div class='card-body'>
-            <div class='row gy-4 align-items-center' id="media-list"></div>
+            <div class="row justify-content-between">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-primary btn-rounded" id="switch-mode">Select Mode</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger btn-rounded" id="del-media" style="display: none">Delete 0 media</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <div class='row gy-4 align-items-center media-list' id="media-list"></div>
         </div>
     </div>
 </div>
 <style>
-.center-img{
+.media-list .media-list-center{
     cursor: pointer;
     position: absolute;
     top: 0;
@@ -46,15 +60,25 @@ class media implements IPage {
     height: 100%;
     transform: translate(50%,50%);
 }
-.center-img img{
+.media-list .media-list-center > img{
     transform: translate(-50%,-50%);
     height: 100%;
     max-width: none;
 }
-.img-focus{
-    transition: all 300ms ease-in-out;
+.media-list.select-mode .media-list-focus{
+    opacity: .6;
 }
-.img-focus:hover{
+.media-list .media-list-focus.selected{
+    border: #12a0ff 5px solid;
+    opacity: 1;
+}
+.media-list .media-list-focus{
+    opacity: 1;
+    position: relative;
+    border: #12a0ff 0 solid;
+    transition: all 100ms ease-in-out;
+}
+.media-list .media-list-focus:hover{
     box-shadow: 0 0 5px 6px rgba(var(--bs-primary-rgb), 0.5);
 }
 </style>
