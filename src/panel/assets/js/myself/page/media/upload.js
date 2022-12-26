@@ -33,15 +33,15 @@ define(['jquery'], function () {
 
         for (let file of files) {
             /* 顯示進度 */
-            const id = make_id(10)
-            $('#file-upload-list').append(`
+            const tmp = $(`
                     <li class='list-group-item d-flex justify-content-between'>
                         <span style="max-width: 50%; overflow: hidden; height: 19px" title="${file.name}">${file.name}</span>
                         <div class='progress w-50'>
-                            <div id='${id}' class='progress-bar progress-bar-striped progress-bar-animated bg-info' role='progressbar' style='width: 100%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100'>${Lang.Waiting}</div>
+                            <div class='progress-bar progress-bar-striped progress-bar-animated bg-info' role='progressbar' style='width: 100%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100'>${Lang.Waiting}</div>
                         </div>
                     </li>`);
-            const progressBar = $(`#${id}`);
+            $('#file-upload-list').append(tmp);
+            const progressBar = tmp.find('.progress-bar')
 
             /* 進行檢查 */
             //檢查文件類型
@@ -142,17 +142,5 @@ define(['jquery'], function () {
                 }
             }
         }).always(callback);
-    }
-
-    //random string
-    function make_id(length) {
-        var result = [];
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result.push(characters.charAt(Math.floor(Math.random() *
-                charactersLength)));
-        }
-        return result.join('');
     }
 });
