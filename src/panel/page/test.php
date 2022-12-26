@@ -24,13 +24,16 @@ class test implements \cocomine\IPage {
         $Text2 = showText('Media-upload.Content');
 
         $LangJson = json_encode(array(
-            'No_media'=>$Text['No_media'],
-            'Unknown_Error' => showText('Error'),
-            'Timeout' => $Text2['respond']['Timeout'],
-            'File_name_over' => $Text2['respond']['File_name_over'],
-            'Over_size' => $Text2['respond']['Over_size'],
+            'No_media'           => $Text['No_media'],
+            'Select_on'          => $Text['Select_on'],
+            'Select_off'         => $Text['Select_off'],
+            'Media'              => $Text['Media'] . ' %s',
+            'Unknown_Error'      => showText('Error'),
+            'Timeout'            => $Text2['respond']['Timeout'],
+            'File_name_over'     => $Text2['respond']['File_name_over'],
+            'Over_size'          => $Text2['respond']['Over_size'],
             'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
-            'Waiting' => $Text2['respond']['Waiting']
+            'Waiting'            => $Text2['respond']['Waiting'],
         ));
 
         return <<<body
@@ -41,7 +44,13 @@ class test implements \cocomine\IPage {
     <button id="select">select image</button>
 </div>
 <script>
-    loadModules(['myself/media-select', "myself/page/test"])
+    require.config({
+        paths:{
+            'media-select': 'myself/media-select',
+            'media-select.upload': 'myself/media-select.upload',
+        }
+    })
+    loadModules(['media-select', 'media-select.upload', "myself/page/test"])
 </script>
 body;
 

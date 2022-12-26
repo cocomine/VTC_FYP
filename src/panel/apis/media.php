@@ -68,7 +68,7 @@ class media implements IApi {
             }
 
             /* 取得所有媒體 */
-            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Datetime FROM media WHERE User = ?');
+            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Datetime FROM media WHERE User = ? ORDER BY Datetime DESC');
             $stmt->bind_param('s', $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 echo_error(500);
@@ -258,7 +258,7 @@ class media implements IApi {
 
         /* 成功 */
         http_response_code(201);
-        echo json_encode(array('code' => 201, 'Success' => 'UPLOAD_ERR_OK', 'Message' => showText("Media-upload.Content.respond.Uploaded")));
+        echo json_encode(array('code' => 201, 'Success' => 'UPLOAD_ERR_OK', 'Message' => showText("Media-upload.Content.respond.Uploaded"), 'body' => $save_path[1]));
     }
 
     /**

@@ -51,6 +51,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
     let select_mod = false;
     $('#switch-mode').click(switch_mode)
 
+    /* 選擇模式切換 */
     function switch_mode() {
         if (deleting) return;
 

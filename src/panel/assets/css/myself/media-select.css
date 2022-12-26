@@ -3,3 +3,41 @@
  * Create by cocomine
  */
 
+#Media-select-modal .media-list .media-list-center{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate(50%,50%);
+}
+#Media-select-modal .media-list .media-list-center > img{
+    transform: translate(-50%,-50%);
+    height: 100%;
+    max-width: none;
+}
+#Media-select-modal .media-list.select-mode .media-list-focus{
+    opacity: .6;
+}
+#Media-select-modal .media-list .media-list-focus.selected{
+    border: #12a0ff 5px solid;
+    opacity: 1;
+}
+#Media-select-modal .media-list .media-list-focus{
+    opacity: 1;
+    position: relative;
+    border: lightgrey 1px solid;
+    transition: all 100ms ease-in-out;
+}
+#Media-select-modal .media-list .media-list-focus:hover{
+    box-shadow: 0 0 5px 6px rgba(var(--bs-primary-rgb), 0.5);
+}
+#Media-select-modal .upload-overly{
+    position: absolute;
+    background-color: rgba(var(--bs-primary-rgb), .75);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
