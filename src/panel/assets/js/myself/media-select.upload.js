@@ -4,11 +4,36 @@
  */
 
 define(['media-select'], function (media_select) {
-    const jq_modal = media_select.data.jq_modal;
-    const Lang = JSON.parse($('#media-select-LangJson').text());
+    const jq_modal = media_select.data.jq_modal();
     let timeout;
-
     const drop_area = jq_modal.find('.modal-content')
+
+    /* 多語言處理 */
+    const Lang = {
+        Media: "Media %s",
+        upload: {
+            Timeout: "Upload timed out",
+            File_name_over: "File name is too long",
+            Over_size: "File too large",
+            File_type_not_mach: "File format does not match",
+            Waiting: "Waiting for upload...",
+            limit_type: "Accept: .jpg .png .webp .gif",
+            drag: "Drag files here to upload"
+        },
+        ...JSON.parse($('#media-select-LangJson').text())
+    };
+
+    /* 添加html */
+    drop_area.append(`
+        <div class="upload-overly" style="display: none">
+            <div class="row justify-content-center align-content-center h-100">
+                <h3 class='col-auto text-light'>${Lang.upload.drag}</h3>
+                <div class='w-100'></div>
+                <p class='col-auto text-light'>${Lang.upload.limit_type}</p>
+            </div>
+        </div>`)
+
+    /* 拖拉處理 */
     drop_area.on('dragenter dragover dragleave drop', function (e) {
         e.preventDefault();
     });
@@ -43,7 +68,7 @@ define(['media-select'], function (media_select) {
                         <div class="ratio ratio-1x1 media-list-focus">
                             <div class="overflow-hidden">
                                 <div class='progress h-100'>
-                                    <div class='progress-bar progress-bar-striped progress-bar-animated bg-info' role='progressbar' style='width: 100%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100'>${Lang.Waiting}</div>
+                                    <div class='progress-bar progress-bar-striped progress-bar-animated bg-info' role='progressbar' style='width: 100%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100'>${Lang.upload.Waiting}</div>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +84,7 @@ define(['media-select'], function (media_select) {
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text(Lang.File_type_not_mach);
+                progressBar.text(Lang.upload.File_type_not_mach);
                 continue;
             }
 
@@ -69,7 +94,7 @@ define(['media-select'], function (media_select) {
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text(Lang.Over_size);
+                progressBar.text(Lang.upload.Over_size);
                 continue;
             }
 
@@ -79,7 +104,7 @@ define(['media-select'], function (media_select) {
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
                 progressBar.removeClass('progress-bar-animated');
-                progressBar.text(Lang.File_name_over);
+                progressBar.text(Lang.upload.File_name_over);
                 continue;
             }
 

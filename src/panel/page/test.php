@@ -25,15 +25,20 @@ class test implements \cocomine\IPage {
 
         $LangJson = json_encode(array(
             'No_media'           => $Text['No_media'],
-            'Select_on'          => $Text['Select_on'],
-            'Select_off'         => $Text['Select_off'],
             'Media'              => $Text['Media'] . ' %s',
             'Unknown_Error'      => showText('Error'),
-            'Timeout'            => $Text2['respond']['Timeout'],
-            'File_name_over'     => $Text2['respond']['File_name_over'],
-            'Over_size'          => $Text2['respond']['Over_size'],
-            'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
-            'Waiting'            => $Text2['respond']['Waiting'],
+            'title' => $Text['Media_Select']['title'],
+            'Select' => $Text['Media_Select']['Select'],
+            'drag' => $Text['Media_Select']['drag'],
+            'upload' => array(
+                'Timeout'            => $Text2['respond']['Timeout'],
+                'File_name_over'     => $Text2['respond']['File_name_over'],
+                'Over_size'          => $Text2['respond']['Over_size'],
+                'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
+                'Waiting'            => $Text2['respond']['Waiting'],
+                'limit_type' => $Text2['limit_type'],
+                'drag' => $Text2['drag']
+            )
         ));
 
         return <<<body

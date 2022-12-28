@@ -608,7 +608,7 @@
         "Media_ID": "Media ID:",
         "Upload_Time": "Upload Time:",
         "MIME_type": "MIME type:",
-        "URL": "URL",
+        "URL": "URL:",
         "No_media": "No Media",
         "respond": {
           "single": {
@@ -620,6 +620,11 @@
             "partially": "The Selected media have partially deleted",
             "fail": "The Selected media deleted fail"
           }
+        },
+        "Media_Select": {
+          "title": "Select Media",
+          "Select": ["Select", "Media"],
+          "drag": "You can drag files here to upload"
         }
       }
     },
@@ -628,7 +633,7 @@
       "Head": "Upload media",
       "Content": {
         "upload": "Upload",
-        "drag": "Drag files here",
+        "drag": "Drag files here to upload",
         "or": "Or",
         "limit_type": "Accept: .jpg .png .webp .gif",
         "limit": "The maximum size of a single file is 8MB",

@@ -65,7 +65,7 @@ class media implements IPage {
             <div class='modal-body'>
                 <div class="row">
                     <div class="col text-center">
-                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-width: 80%"/>
+                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-height: 70vh"/>
                     </div>
                     <div class="col-12 col-md-3" id="Media-modal-detail">
                         <p>{$Text['Media_ID']} <span>xxxx</span></p>

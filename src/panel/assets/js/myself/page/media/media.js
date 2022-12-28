@@ -25,7 +25,7 @@ define(['jquery', 'toastr', 'bootstrap'], function (jq, toastr, bootstrap) {
 
             //html
             const map = data.body.map((value) =>
-                `<div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
                         <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="media-list-center">

@@ -6,7 +6,17 @@
 define(['jquery', 'bootstrap'], function (jq, bootstrap) {
     let max_sel, callback, filter_mime;
     let selected_list = [];
-    const Lang = JSON.parse($('#media-select-LangJson').text());
+
+    /* 多語言處理 */
+    const Lang = {
+        No_media: "No Media",
+        Media: "Media %s",
+        Unknown_Error: "An unknown error occurred!!",
+        title: "Select Media",
+        Select: ["Select", "Media"],
+        drag: "You can drag files here to upload",
+        ...JSON.parse($('#media-select-LangJson').text())
+    }
 
     //沒有任何圖片
     const empty = `<div class="col-auto"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
@@ -17,7 +27,7 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
             <div class='modal-dialog modal-xl modal-dialog-scrollable'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 class='modal-title'><b>Select Media</b></h5>
+                        <h5 class='modal-title'><b>${Lang.title}</b></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class='modal-body'>
@@ -26,27 +36,21 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-rounded" disabled>Select <span>0</span> Media</button>
-                    </div>
-                    <div class="upload-overly" style="display: none">
-                        <div class="row justify-content-center align-content-center h-100">
-                            <h3 class='col-auto text-light'>Drag files here to upload</h3>
-                            <div class='w-100'></div>
-                            <p class='col-auto text-light'>Accept: .jpg .png .webp .gif</p>
-                        </div>
+                        <p>${Lang.drag}</p>
+                        <button type="button" class="btn btn-primary btn-rounded" disabled>${Lang.Select[0]} <span>0</span> ${Lang.Select[1]}</button>
                     </div>
                 </div>
             </div>
         </div>`;
 
+    /* 如果存在 */
+    if (document.getElementById('Media-select-modal') !== null) $('#Media-select-modal').remove();
     //jquery
     const jq_modal = $(html);
     //bootstrap
     const bs_modal = bootstrap.Modal.getOrCreateInstance(jq_modal[0]);
     /* add in body */
-    if (document.getElementById('Media-select-modal') === null) {
-        $('body').append(jq_modal);
-    }
+    $('body').append(jq_modal);
 
     /* 當關閉彈出視窗 */
     jq_modal.on('hidden.bs.modal', () => {
@@ -68,7 +72,7 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
             selected_list.splice(selected_list.indexOf(id), 1);
         } else {
             //not selected
-            if(selected_list.length >= max_sel && max_sel !== 0) return; //超出數量
+            if (selected_list.length >= max_sel && max_sel !== 0) return; //超出數量
             elm.addClass('selected')
             selected_list.push(id);
         }
@@ -102,7 +106,7 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
 
                 //html
                 const map = data.body.map((value) =>
-                    `<div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
                         <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="media-list-center">
@@ -167,6 +171,6 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
 
     /* 外部function */
     return {
-        select_media, data: {jq_modal, filter_mime: () => filter_mime},
+        select_media, data: {jq_modal: () => jq_modal, filter_mime: () => filter_mime},
     }
 })

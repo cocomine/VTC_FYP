@@ -117,7 +117,7 @@ class notify implements IApi {
         http_response_code(204);
     }
 
-    public function delete() {
+    public function delete(array $data) {
         http_response_code(204);
     }
 }
