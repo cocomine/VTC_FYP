@@ -16,7 +16,8 @@
       "home": "首页",
       "Logout": "登出",
       "Login": "登入",
-      "visitor": "访客"
+      "visitor": "访客",
+      "Content": {}
     },
     "ChangeSetting": {
       "title": "设定 | IVE airline",
@@ -103,7 +104,9 @@
         "content": "这些就是你的安全代码, 请放在一个安全地方。如果可以将它加密当然是最好!（￣︶￣）↗　",
         "BackupCode": "安全代码"
       },
-      "AUTH_CHANGESETTING_2FA_OFF_OK": ["已经成功重设啦ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_2FA_OFF_OK": [
+        "已经成功重设啦ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "重设失败(┬┬﹏┬┬) 请重试~~",
         "若果情况持续请联络客服人员"
@@ -124,7 +127,9 @@
         "成功修改ヾ(^▽^*)))",
         "<b>最后一步!</b> 快点到你的邮箱查看吧!"
       ],
-      "AUTH_CHANGESETTING_DATA_OK": ["成功修改ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_DATA_OK": [
+        "成功修改ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_DATA_FAIL": [
         "修改失败(┬┬﹏┬┬) 请重试~~",
         "若情况持续请联络客服人员"
@@ -343,21 +348,9 @@
           "如果按钮点爆了都没有反应, 就直接把下方连结搬到浏览器吧!"
         ],
         "Unknown_Location": "地点不明",
-        "Äny-question": "如有任何问题请寄电邮至",
-        "privacy":
-        "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。"
+        "Any-question": "如有任何问题请寄电邮至",
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。"
       }
-    }
-  },
-  "JS": {
-    "notify": {
-      "just_now": "现在",
-      "few_seconds": "几秒前",
-      "minutes_ago": "分钟前",
-      "hour_ago": "小时前",
-      "day_ago": "日前",
-      "week_ago": "星期前",
-      "month_ago": "月前"
     }
   }
 }

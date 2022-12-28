@@ -266,7 +266,7 @@ function run_apis(array $path, MyAuth $auth) {
                             <?php
                             /* 導航 */
                             if ($auth->userdata['Role'] >= 1) {
-                                echo '<li><a href="/panel/reserve/"><i class="fa-solid fa-plane-circle-check"></i><span>' . showText("Reserve.Head") . '</span></a></li>';
+                                echo '';
                             }
                             if ($auth->userdata['Role'] >= 2) {
                                 echo '<li>

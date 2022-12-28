@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "13/12/2022",
+  "Last_Update": "28/12/2022",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -17,39 +17,7 @@
       "Logout": "Logout",
       "Login": "Login",
       "visitor": "Visitor",
-      "Content": {
-        "Title": "Search Flight",
-        "Departure": "Departure",
-        "Destination": "Destination",
-        "Date": "Departure date",
-        "Cabin": "Cabin",
-        "Cabin_type": [
-          "All class",
-          "Economy class",
-          "Business class"
-        ],
-        "Search": "Search",
-        "Form": {
-          "Cant_EMPTY": "This place cannot be left blank~~",
-          "min_date": "Date must be on or after today",
-          "Not_Match_Wrong": "Wrong password input twice~~"
-        },
-        "Pass": {
-          "title": "Set new password",
-          "description": "Since you are logging in for the first time and using the default password, please change your password first.",
-          "NewPass": "New Password",
-          "NewConfirmPass": "Confirm Password",
-          "NotMach": "The password entered twice is incorrect~~",
-          "passStrength": "Password Strength:",
-          "condition": [
-            "Condition",
-            "At least one uppercase english is required",
-            "At least one lowercase english is required",
-            "At least 8 characters are required",
-            "Cannot be the same as email address or name"
-          ]
-        }
-      }
+      "Content": {}
     },
     "ChangeSetting": {
       "title": "Settings | IVE airline",
@@ -382,122 +350,8 @@
           "If the button is clicked and there is no response, just move the link below to the browser!"
         ],
         "Unknown_Location": "Unknown location",
-        "Äny-question": "Email any questions to",
+        "Any-question": "Email any questions to",
         "privacy": "Produced by <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>. <a href=\"https://www.facebook.com /profile.php?id=100006297815529\">Cocomine</a> provides translations."
-      }
-    },
-    "Search": {
-      "Title": "Search Flight | IVE airline",
-      "Head": "Search Flight",
-      "Content": {
-        "Title": "Search Flight",
-        "Departure": "Departure",
-        "Destination": "Destination",
-        "Date": "Departure date",
-        "Cabin": "Cabin",
-        "Cabin_type": [
-          "All class",
-          "Economy class",
-          "Business class"
-        ],
-        "Search": "Search",
-        "Form": {
-          "Cant_EMPTY": "This place cannot be left blank",
-          "min_date": "Date must be on or after today"
-        },
-        "Not_match": "No matching results found <(＿　＿)>"
-      }
-    },
-    "Flight": {
-      "Title": "Flight | IVE airline",
-      "Head": "Flight",
-      "Content": {
-        "Reserve_Seat": "Reserve Seat",
-        "Cabin_type": [
-          "Economy class",
-          "Business class"
-        ],
-        "Reserve": "Reserve",
-        "Departure_time": "Departure time",
-        "Go_Reserve": "Go Reserve",
-        "reserve_meal": "Need to reserve a meal?",
-        "Remaining_Seats": "Remaining Seats",
-        "Confirm_Reserve": {
-          "title": "Confirm Reserve",
-          "description": "Please confirm the following information is correct.",
-          "Need_reserve": "Need reserve meal",
-          "No_Need_reserve": "No need reserve meal",
-          "Confirm": "Confirm"
-        },
-        "Need_login": {
-          "title": "Need Login",
-          "description": "You need to login first to reserve. (You will be redirected in 3 seconds)"
-        },
-        "alert": "<b>You have already reserve this flight.</b> If you need to modify or cancel it, please go to the <a href='/panel/reserve/'>Flight Reserved</a> page",
-        "Fail": [
-          "Reserve Failed",
-          "Failed to process request, please try again later"
-        ],
-        "Success": [
-          "Reserve Success",
-          "You have successfully reserved your seat!"
-        ]
-      }
-    },
-    "Reserve": {
-      "Title": "Flight Reserved | IVE airline",
-      "Head": "Flight Reserved",
-      "Content": {
-        "Cabin_type": [
-          "Economy class",
-          "Business class"
-        ],
-        "reserve_meal": "Need to reserve a meal?",
-        "Confirm_Reserve": {
-          "title": "Confirm Reserve",
-          "description": "Please confirm the following information is correct.",
-          "Need_reserve": "Need reserve meal",
-          "No_Need_reserve": "No need reserve meal",
-          "Confirm": "Confirm"
-        },
-        "table": [
-          "Your Reserve",
-          "Reserve Seat",
-          "Flight",
-          "Departure time",
-          "Departure",
-          "Destination",
-          "Business class",
-          "Economy class",
-          "Reserve meal",
-          "Total",
-          "Action"
-        ],
-        "editModal": {
-          "title": "Modify Reserve",
-          "description": "You are modifying <b><span id=\"flight\"></span></b> flight.",
-          "Save": "Save"
-        },
-        "Delete_modal": {
-          "title": "Confirm Cancel",
-          "description": "Are you sure you want to cancel this flight reservation?",
-          "Cancel": "Cancel",
-          "Confirm": "Confirm"
-        },
-        "Modify": "Modify",
-        "Cancel": "Cancel",
-        "Fail": [
-          "Process Failed",
-          "Failed to process request, please try again later"
-        ],
-        "Success_Modify": [
-          "Modify Success",
-          "You have successfully Modify your reserved!"
-        ],
-        "Success_Delete": [
-          "Modify Success",
-          "You have successfully Cancel your reserved!"
-        ]
       }
     },
     "Account": {
@@ -602,7 +456,8 @@
         "Select_off": "Cancel Select Mode",
         "Media": "Media",
         "Delete": [
-          "Delete", "Media"
+          "Delete",
+          "Media"
         ],
         "Show_Original": "Show Original size",
         "Media_ID": "Media ID:",
@@ -623,7 +478,10 @@
         },
         "Media_Select": {
           "title": "Select Media",
-          "Select": ["Select", "Media"],
+          "Select": [
+            "Select",
+            "Media"
+          ],
           "drag": "You can drag files here to upload"
         }
       }

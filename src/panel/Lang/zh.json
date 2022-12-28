@@ -16,7 +16,8 @@
       "home": "首頁",
       "Logout": "登出",
       "Login": "登入",
-      "visitor": "訪客"
+      "visitor": "訪客",
+      "Content": {}
     },
     "ChangeSetting": {
       "title": "設定 | IVE airline",
@@ -103,7 +104,9 @@
         "content": "這些就是你的安全代碼, 請放在一個安全地方。如果可以將它加密當然是最好!（￣︶￣）↗　",
         "BackupCode": "安全代碼"
       },
-      "AUTH_CHANGESETTING_2FA_OFF_OK": ["已經成功重設啦ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_2FA_OFF_OK": [
+        "已經成功重設啦ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
         "重設失敗(┬┬﹏┬┬) 請重試~~",
         "若果情況持續請聯絡客服人員"
@@ -124,7 +127,9 @@
         "成功修改ヾ(^▽^*)))",
         "<b>最後一步!</b> 快點到你的郵箱查看吧!"
       ],
-      "AUTH_CHANGESETTING_DATA_OK": ["成功修改ヾ(^▽^*)))"],
+      "AUTH_CHANGESETTING_DATA_OK": [
+        "成功修改ヾ(^▽^*)))"
+      ],
       "AUTH_CHANGESETTING_DATA_FAIL": [
         "修改失敗(┬┬﹏┬┬) 請重試~~",
         "若情況持續請聯絡客服人員"
@@ -295,7 +300,9 @@
       "500_title": "死火啦! | IVE airline",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧",
-      "400_title": "請求出現問題!"
+      "400_title": "請求出現問題!",
+      "405": "方法不允許",
+      "400": "錯誤的請求"
     },
     "Block_login": {
       "title": "封鎖登入",
@@ -343,21 +350,9 @@
           "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!"
         ],
         "Unknown_Location": "地點不明",
-        "Äny-question": "如有任何問題請寄電郵至",
-        "privacy":
-          "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
+        "Any-question": "如有任何問題請寄電郵至",
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
       }
-    }
-  },
-  "JS": {
-    "notify": {
-      "just_now": "現在",
-      "few_seconds": "幾秒前",
-      "minutes_ago": "分鐘前",
-      "hour_ago": "小時前",
-      "day_ago": "日前",
-      "week_ago": "星期前",
-      "month_ago": "月前"
     }
   }
 }
