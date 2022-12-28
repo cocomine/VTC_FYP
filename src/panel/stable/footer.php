@@ -33,7 +33,7 @@
         baseUrl: "/panel/assets/js",
         paths: {
             jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",
-            bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min",
+            bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min",
             toastr: "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min",
             moment: "moment.min"
         },

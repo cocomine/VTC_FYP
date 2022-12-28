@@ -43,7 +43,7 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <link rel="manifest" href="/panel/assets/manifest.json"/>
         <link rel="shortcut icon" type="image/png" href="/panel/assets/images/icon/favicon.png">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="/panel/assets/css/FA6/css/fontawesome.min.css">
         <link rel="stylesheet" href="/panel/assets/css/FA6/css/regular.min.css">
         <link rel="stylesheet" href="/panel/assets/css/FA6/css/brands.min.css">

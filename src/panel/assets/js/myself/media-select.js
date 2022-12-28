@@ -3,6 +3,15 @@
  * Create by cocomine
  */
 
+/*
+ * css must be loaded before each use
+ * <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+
+ * To use multiple languages, you must have the following html
+ * <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
+ * $LangJson => Place text in json format
+ * json must conform to the structure, you can refer to lines 21 to 26
+ */
 define(['jquery', 'bootstrap'], function (jq, bootstrap) {
     let max_sel, callback, filter_mime;
     let selected_list = [];

@@ -3,6 +3,15 @@
  * Create by cocomine
  */
 
+/*
+ * css must be loaded before each use
+ * <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+
+ * To use multiple languages, you must have the following html
+ * <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
+ * $LangJson => Place text in json format
+ * json must conform to the structure, you can refer to lines 22 to 31
+ */
 define(['media-select'], function (media_select) {
     const jq_modal = media_select.data.jq_modal();
     let timeout;

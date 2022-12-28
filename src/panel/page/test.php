@@ -44,9 +44,17 @@ class test implements \cocomine\IPage {
         return <<<body
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
 <div>
     <div id="show"></div>
     <button id="select">select image</button>
+    <div class="date-picker">
+        <input type="date" class="date-picker-toggle">
+    </div>
+    <div class="date-picker date-picker-inline">
+        <input type="date" class="date-picker-toggle">
+        <div class="date-calendar"></div>
+    </div>
 </div>
 <script>
     require.config({
@@ -55,7 +63,7 @@ class test implements \cocomine\IPage {
             'media-select.upload': 'myself/media-select.upload',
         }
     })
-    loadModules(['media-select', 'media-select.upload', "myself/page/test"])
+    loadModules(['media-select', 'media-select.upload', "myself/page/test", 'myself/datepicker'])
 </script>
 body;
 

@@ -3,6 +3,10 @@
  * Create by cocomine
  */
 
+/*
+ * css must be loaded before each use
+ * <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+ */
 define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
     "use strict";
     let selectDate = moment();
@@ -11,24 +15,49 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
     let maxDate = null;
 
     /* 初始化 */
-    const pickers = $('.date-picker').append('<div class="dropdown-menu date-calendar"></div>')
-    pickers.map((index, picker) => {
-        const children = $(picker).children('.date-picker-toggle');
-        new bootstrap.Dropdown(children[0], {autoClose: 'outside'});
+    const pickers = $('.date-picker')
+    pickers.each((index, picker) => {
+        picker = $(picker);
+        const children = picker.children('.date-picker-toggle');
+
+        /* 觸發 */
         children.val(activateDate.format('YYYY-MM-DD')).on('input focus', function () {
-            //更新 activate day
-            const temp = moment($(this).val());
-            if (temp.isValid()) {
-                activateDate = moment(temp)
-                selectDate = moment(temp);
-                minDate = $(this).attr('min')
-                minDate = minDate === undefined ? null : moment(minDate);
-                maxDate = $(this).attr('max')
-                maxDate = maxDate === undefined ? null : moment(maxDate);
-                $(picker).children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate));
-            }
+                update($(this));
         })
+
+        /* 是否使用dropdown */
+        if(!picker.hasClass('date-picker-inline')){
+            picker.append('<div class="dropdown-menu date-calendar"></div>')
+            new bootstrap.Dropdown(children[0], {autoClose: 'outside'});
+        }else{
+            update(children)
+        }
     })
+
+    /**
+     * 更新 html
+     * @param {jQuery<HTMLElement>} input
+     */
+    function update(input) {
+
+        /* 手機螢幕尺寸使用系統自帶 */
+        if(!input.parent('.date-picker').hasClass('date-picker-inline')){
+            if (window.innerWidth < 576) input.removeAttr('data-bs-toggle');
+            else input.attr('data-bs-toggle', 'dropdown');
+        }
+
+        //更新 activate day
+        const temp = moment(input.val());
+        if (temp.isValid()) {
+            activateDate = moment(temp)
+            selectDate = moment(temp);
+            minDate = input.attr('min')
+            minDate = minDate === undefined ? null : moment(minDate);
+            maxDate = input.attr('max')
+            maxDate = maxDate === undefined ? null : moment(maxDate);
+            input.parent('.date-picker').children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate));
+        }
+    }
 
     /* 上一個月 */
     pickers.on('click', '[data-dt-type="last"]', (e) => {
@@ -58,7 +87,14 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
         $(e.delegateTarget).children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
     })
 
-    /* 月曆 */
+    /**
+     * 月曆 html
+     * @param {moment.Moment} date
+     * @param {moment.Moment} activateDate
+     * @param {moment.Moment|null} minDate
+     * @param {moment.Moment|null} maxDate
+     * @return {string}
+     */
     function calendar(date, activateDate, minDate, maxDate) {
         let table = '<tr>'
         const endDay = moment(date).endOf('month');
