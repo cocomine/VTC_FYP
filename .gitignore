@@ -12,3 +12,4 @@ gen
 /src/panel/function/config.inc.php
 /template/
 /node_modules/
+/src/vendor/

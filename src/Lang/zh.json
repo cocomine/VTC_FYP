@@ -1,0 +1,358 @@
+{
+  "Lang": "zh",
+  "Last_Update": "13/10/2022",
+  "Translate": {
+    "Error": "發生未知錯誤!!",
+    "header": {
+      "browserupgrade": "我知道你對<b>IE</b>有一份特別的<b>忠誠</b>, 但是他實在有點太舊... 你至少也要把它<a href=\"http://browsehappy.com/\">升級成IE 11</a>吧!",
+      "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
+    },
+    "footer": {
+      "privacy": "© Chu Ho Ching & Law chun kit。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
+    },
+    "index": {
+      "title": "首頁 | IVE airline",
+      "Console": "控制台",
+      "home": "首頁",
+      "Logout": "登出",
+      "Login": "登入",
+      "visitor": "訪客",
+      "Content": {}
+    },
+    "ChangeSetting": {
+      "title": "設定 | IVE airline",
+      "setting": "帳號設定",
+      "ChangeData": "個人檔案",
+      "Gravatar": "前往Gravatar修改",
+      "Name": {
+        "Name": "名稱",
+        "limit": "最多16隻字"
+      },
+      "Email": {
+        "Email": "電郵地址",
+        "addMSG": "<b>修改需要重新確認電郵地址</b>, 在未確認前登出會無法再次登入, 需要確認後才可登入 (在未登出情況下仍可以再次修改)"
+      },
+      "Lang": {
+        "Lang": "語言",
+        "en": "英文",
+        "zh": "中文(繁體)",
+        "zh-CN": "中文(簡體)"
+      },
+      "Submit": "提交更改",
+      "Pass": {
+        "Pass": "更改密碼",
+        "OldPass": "舊密碼",
+        "NewPass": "新密碼",
+        "NewConfirmPass": "確認密碼",
+        "NotMach": "兩次密碼輸入不對喔~~",
+        "passStrength": "密碼強度:",
+        "condition": [
+          "條件",
+          "至少需要一個英文大楷",
+          "至少需要一個英文細楷",
+          "至少需要八隻字以上",
+          "不可和電郵地址或名稱相同"
+        ]
+      },
+      "2FA": {
+        "title": "雙重驗證(2FA)",
+        "Enable": "點擊啟用",
+        "is_not_Enable": "啟用雙重驗證! 為你的帳號加多一層保障, 少一份煩惱~ (～￣▽￣)～",
+        "is_Enable": [
+          "雙重驗證已經開啟!",
+          "記下安全代碼, 以便當你遺失手機時使用。保障你的安全。 ╰(￣ω￣ｏ)",
+          "沒有安全代碼帳號將無法使用, 你將需要聯絡客服人員找回帳號。 <(＿　＿)>"
+        ],
+        "show_BackupCode": "檢視安全代碼",
+        "reset": "重設2FA",
+        "2FA_register_modal": {
+          "body": [
+            "用你的手機上的<b>雙重驗證程式</b>(如 Google Authenticator)掃描下方QR Code啦!! (｡A｡)",
+            "故障了? 掃描不到? 可以自行試試輸入下方代碼! (๑•̀ㅂ•́)و✧"
+          ],
+          "Enter_code": "輸入產生出來的神秘代碼",
+          "No": "不需要了~",
+          "Enable": "啟用"
+        },
+        "TwoFA_confirm_off_modal": {
+          "title": "認真?",
+          "body": "重設之後, 帳戶就會少一層防護, 多一份煩惱。你真的要這樣做? (⊙﹏⊙)",
+          "NO": "還是算了~",
+          "YES": "是! 我認真的!"
+        },
+        "TwoFA_BackupCode_modal": {
+          "title": "安全代碼",
+          "body": "這些就是你的安全代碼, 請放在一個安全地方。如果可以將它加密當然是最好!（￣︶￣）↗　",
+          "download": "保存安全代碼"
+        }
+      },
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔~~",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~",
+        "Match_Old_Pass": "要與舊密碼不相同喔~~",
+        "Only_number": "只可以輸入數字哦~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ],
+      "BackupCode": {
+        "content": "這些就是你的安全代碼, 請放在一個安全地方。如果可以將它加密當然是最好!（￣︶￣）↗　",
+        "BackupCode": "安全代碼"
+      },
+      "AUTH_CHANGESETTING_2FA_OFF_OK": [
+        "已經成功重設啦ヾ(^▽^*)))"
+      ],
+      "AUTH_CHANGESETTING_2FA_OFF_FAIL": [
+        "重設失敗(┬┬﹏┬┬) 請重試~~",
+        "若果情況持續請聯絡客服人員"
+      ],
+      "AUTH_CHANGESETTING_2FA_CHECK_CODE_FAIL": [
+        "神秘代碼不對喲~~",
+        "重新掃描再輸入一次吧~ 或者你輸入錯了 (若果情況持續請聯絡客服人員)"
+      ],
+      "AUTH_CHANGESETTING_2FA_CHECK_CODE_OK": [
+        "已經成功啟動啦ヾ(^▽^*)))",
+        "下次登入的時候, 就需要輸入這串神秘代碼啦!"
+      ],
+      "AUTH_CHANGESETTING_2FA_SHOWBACKUPCODE_FAIL": [
+        "出錯啦!!(┬┬﹏┬┬)",
+        "若果情況持續請聯絡客服人員"
+      ],
+      "AUTH_CHANGESETTING_DATA_OK_EMAIL": [
+        "成功修改ヾ(^▽^*)))",
+        "<b>最後一步!</b> 快點到你的郵箱查看吧!"
+      ],
+      "AUTH_CHANGESETTING_DATA_OK": [
+        "成功修改ヾ(^▽^*)))"
+      ],
+      "AUTH_CHANGESETTING_DATA_FAIL": [
+        "修改失敗(┬┬﹏┬┬) 請重試~~",
+        "若情況持續請聯絡客服人員"
+      ],
+      "AUTH_CHANGESETTING_DATA_FAIL_NOT_MATCH": [
+        "修改失敗(┬┬﹏┬┬) 請重試~~",
+        "名字太長或電郵格式不正確..."
+      ],
+      "AUTH_CHANGESETTING_PASS_OK": [
+        "成功修改ヾ(^▽^*)))",
+        "記得使用新密碼登入啦!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL": [
+        "修改失敗(┬┬﹏┬┬) 請重試~~",
+        "若情況持續請聯絡客服人員"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_NOT_STRONG": [
+        "修改失敗(┬┬﹏┬┬)",
+        "密碼不太強哦!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_NOT_MATCH": [
+        "修改失敗(┬┬﹏┬┬)",
+        "兩次輸入的密碼不是一樣的哦!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_EMPTY": [
+        "修改失敗(┬┬﹏┬┬)",
+        "你什麼都沒有打過!"
+      ],
+      "AUTH_CHANGESETTING_PASS_FAIL_OLD_PASS_WRONG": [
+        "修改失敗(┬┬﹏┬┬)",
+        "你的舊密碼打錯囉~~"
+      ]
+    },
+    "Login": {
+      "title": "登入 | IVE airline",
+      "Login": "登入",
+      "welcome": "<b>Hello!</b> 登入就可以了",
+      "email": "電郵地址",
+      "password": "密碼",
+      "Remember_ME": "記住我",
+      "forgotpass": "忘記密碼?",
+      "go_register": "你沒有賬號又想用? <a href=\"register\">馬上註冊吧</a>",
+      "WRONG_PASS": "<b>Oh Nooooo!</b> 電郵或者密碼不對哦!",
+      "NOT_DOEN": "<b>Hey!</b> 這麼心急是不行的!快去檢查郵箱吧!",
+      "REGISTER_COMPLETE": "<b>Yes!</b> 你完成了! 馬上去登陸使用吧!",
+      "REGISTER_CODE_WRONG": "<b>Hey!</b> 失效啦!",
+      "AUTH_GOOGLE_ERROR": "發生錯誤! (っ °Д °;)っ",
+      "Login_with_google": "<i class=\"fa-brands fa-google me-2\"></i>登入",
+      "go_back_home": "暫時不想登入? <a href=\"/panel\" id=\"GoBack\">那麼先回去吧</a>",
+      "BLOCK_10": [
+        "<b>Sorry~~</b> 你失敗太多次啦! 先等10分鐘再嘗試吧~~",
+        "如果你把密碼忘記得一乾二淨, 你可以試一試<a href=\"forgotpass\">找回密碼</a>"
+      ],
+      "BLOCK_30": [
+        "<b>Sorry~~</b> 你失敗太多次啦! 先等30分鐘再嘗試吧~~ <br> ",
+        "如果你把密碼忘記得一乾二淨, 你可以試一試<a href=\"forgotpass\">找回密碼</a>"
+      ],
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔",
+        "Error_format": "電郵格式應該不是這樣的吧"
+      }
+    },
+    "TwoFA": {
+      "2FA_WRONG": "<b>Ah Oh!</b> 神秘代碼不對哦!",
+      "2FA_DUE": "<b>Time Up!</b> 要重新登入!",
+      "2FA": "雙重驗證(2FA)",
+      "welcome": "<b>Hello!</b> 從你的手機應用程式取得神秘代碼輸入就可以啦",
+      "2FACode": "2FA代碼",
+      "Login": "登入",
+      "ReDo": "帳號輸錯了? <a href=\"/panel/login?Reset2FA=1\">重新輸入吧</a>",
+      "Can't_use_phone": "手機用不了?<br>你可以直接輸入6個安全代碼的其中1個 （づ￣3￣）づ╭❤～",
+      "Form": {
+        "empty": "這裏是不能留空喔"
+      }
+    },
+    "Register": {
+      "title": "註冊 | IVE airline",
+      "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
+      "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
+      "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
+      "EMAIL_WRONG_FORMAT": "<b>Umm..</b> 電郵地址應該不是這樣的吧!",
+      "EMPTY": "<b>Hey!</b> 你什麼都沒有打過!",
+      "NAME_TOO_LONG": "<b>Ah Oh!</b> 名字太長很難記的呀!",
+      "LAST_STEP": "<b>最後一步!</b> 快點到你的郵箱查看吧!",
+      "NEED_AGREE": "<b>Hey!</b> 你需要同意<b>服務條款</b>和<b>私隱權政策</b>才能註冊哦!",
+      "YOUR_BOT": "<b>Ah Oh!</b> 你是機械人不能註冊哦! (或者你沒有驗證)",
+      "First_use": "<b>你是第一次使用!</b> 註冊了之後就可以直接使用google登入啦",
+      "Register": "註冊",
+      "welcome": "想用的話就註冊吧",
+      "Name": "名稱",
+      "email": "電郵地址",
+      "password": "密碼",
+      "confirmPass": "確認密碼",
+      "passStrength": "密碼強度:",
+      "condition": [
+        "條件",
+        "至少需要一個英文大楷",
+        "至少需要一個英文細楷",
+        "至少需要八隻字以上",
+        "不可和電郵地址或名稱相同"
+      ],
+      "Agree-Service": "我同意<a href=\"#\">服務條款</a>",
+      "Agree-privacy": "我同意<a href=\"#\">私隱權政策</a>",
+      "go_login": "已經註冊過了? <a href=\"login\">去登入吧!!</a>",
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Not_checked": "你不剔選, 我們就無法繼續了",
+        "Check_bot": "我需要知道你是誰",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ]
+    },
+    "ForgotPass": {
+      "title": "忘記密碼 | IVE airline",
+      "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
+      "LASTSTEP": "<b>最後兩步!</b> 快點到你的郵箱查看吧!",
+      "CODE_WRONG": "<b>Hey!</b> 失效啦!",
+      "COMPLETE": "<b>Yes!</b> 你完成了! 馬上用你的新密碼去登陸吧!",
+      "YOUR_BOT": "<b>Ah Oh!</b> 你是機械人不能註冊哦! (或者你沒有驗證)",
+      "ForgotPass": "忘記密碼",
+      "welcome": "把密碼忘記得一乾二淨? 快來拿回他!",
+      "Email": "電郵地址",
+      "Email_Tips": "你註冊帳號時所使用的電郵地址",
+      "FindPass": "找回密碼",
+      "go_login": "不需要了? <a href=\"login\">返回登入吧</a>",
+      "EMPTY": "<b>Hey!</b> 你什麼都沒有打過!",
+      "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
+      "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
+      "welcome2": "來! 輸入一個新密碼吧!",
+      "NewPass": "新密碼",
+      "ConfirmNewPass": "確認新密碼",
+      "Not_Match_Wrong": "兩次密碼輸入不對喔~~",
+      "passStrength": "密碼強度:",
+      "condition": [
+        "條件",
+        "至少需要一個英文大楷",
+        "至少需要一個英文細楷",
+        "至少需要八隻字以上",
+        "不可和電郵地址或名稱相同"
+      ],
+      "Change_Pass": "更換密碼",
+      "Form": {
+        "Cant_EMPTY": "這裏是不能留空喔",
+        "Error_format": "電郵格式應該不是這樣的吧",
+        "Check_bot": "我需要知道你是誰",
+        "Not_Match_Wrong": "兩次密碼輸入不對喔~~"
+      },
+      "strength": [
+        "太弱了!",
+        "有點弱..",
+        "中規中矩",
+        "嗯! 好點了~~",
+        "非常強大!!"
+      ]
+    },
+    "Error_Page": {
+      "403_title": "停!停! | IVE airline",
+      "Dont_Come": "喂喂喂! 你不應該來這裏!",
+      "404_title": "你去哪裏了! | IVE airline",
+      "Where_you_go": "等等! 你去哪裏了!",
+      "500_title": "死火啦! | IVE airline",
+      "something_happened": "哎吔! 死火啦! 出事喇!",
+      "GoBack": "回去吧",
+      "400_title": "請求出現問題!",
+      "405": "方法不允許",
+      "400": "錯誤的請求"
+    },
+    "Block_login": {
+      "title": "封鎖登入",
+      "status": "成功封鎖!!",
+      "detailed": "你已經迅速封鎖了本次登入!!<br>趕快趁對方沒有反應之前盡快改您的密碼!! (๑•̀ㅂ•́)و✧",
+      "go_login": "我馬上去改!!"
+    },
+    "Email": {
+      "activated": {
+        "subject": "最後一步! 就可以了!",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "最後一步了! 點下去! 就是了!",
+          "連結有效期只有1日! 把握時間!",
+          "點我驗證",
+          "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!",
+          "如有任何問題請寄電郵至"
+        ],
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
+      },
+      "forgetPass": {
+        "subject": "你請求的密碼重設, 已送到!",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "最後一步了! 點下去! 改密碼! 就是了!",
+          "連結有效期只有1小時! 把握時間!",
+          "點我改密碼",
+          "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!",
+          "如有任何問題請寄電郵至"
+        ],
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
+      },
+      "Wong-newIP": {
+        "subject": "有人登入你的帳號! Σ(っ °Д °;)っ",
+        "Hello": "Hello %NAME% ~~~",
+        "content": [
+          "有人在以往不一樣的地方登入你的帳號!",
+          "我們建議您馬上檢查以下資訊是否你本人登入",
+          "IP: %IP%",
+          "地區: %COUNTRY%",
+          "電訊商: %ISP%",
+          "平台: %BROWSER%",
+          "如果是你本人登入的話, 你無需理會。否則, 請馬上封鎖本次登入!ヽ（≧□≦）ノ",
+          "點我封鎖本次登入",
+          "如果按鈕點爆了都沒有反應, 就直接把下方連結搬到瀏覽器吧!"
+        ],
+        "Unknown_Location": "地點不明",
+        "Any-question": "如有任何問題請寄電郵至",
+        "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
+      }
+    }
+  }
+}

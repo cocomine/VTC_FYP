@@ -1,0 +1,3 @@
+<FilesMatch "\.html">
+    Require all denied
+</FilesMatch>

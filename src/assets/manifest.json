@@ -1,0 +1,25 @@
+{
+  "name" : "IVE airline",
+  "display" : "minimal-ui",
+  "start_url" : "/panel/",
+  "short_name" : "IVE airline",
+  "theme_color" : "#ff7112",
+  "description" : "IVE airline",
+  "background_color" : "#ff9e5b",
+  "icons" : [
+    {
+      "src": "/panel/assets/images/icon/favicon192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/panel/assets/images/icon/favicon.png",
+      "type": "image/png",
+      "sizes": "200x200"
+    },
+    {
+      "src": "/panel/assets/images/icon/favicon512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]}
