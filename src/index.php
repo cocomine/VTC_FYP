@@ -267,7 +267,7 @@ function run_apis(array $path, MyAuth $auth) {
                             </ul>
                         </div>
                         <div class="clearfix d-md-inline-block d-block">
-                            <div class="user-profile m-0">
+                            <div class="user-profile">
 
                                 <!-- user avatar -->
                                 <img class="avatar user-thumb"
