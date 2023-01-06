@@ -30,7 +30,7 @@
 <script src="/panel/assets/js/require.js"></script>
 <script>
     require.config({
-        baseUrl: "/panel/assets/js",
+        baseUrl: "/assets/js",
         paths: {
             jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",
             bootstrap: "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min",

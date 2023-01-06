@@ -4,14 +4,14 @@
  * Create by cocomine
  */
 
-use panel\apis\notify;
+use apis\notify;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 
 //自動載入器
 spl_autoload_register(function ($class) {
-    include_once '../' . str_replace('\\', '/', $class) . '.php';
+    include_once './' . str_replace('\\', '/', $class) . '.php';
 });
 
 /**

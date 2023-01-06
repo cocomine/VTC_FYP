@@ -1,24 +1,24 @@
 {
-  "name" : "IVE airline",
+  "name" : "X-Travel",
   "display" : "minimal-ui",
-  "start_url" : "/panel/",
-  "short_name" : "IVE airline",
+  "start_url" : "/",
+  "short_name" : "X-Travel",
   "theme_color" : "#ff7112",
-  "description" : "IVE airline",
+  "description" : "X-Travel",
   "background_color" : "#ff9e5b",
   "icons" : [
     {
-      "src": "/panel/assets/images/icon/favicon192x192.png",
+      "src": "/assets/images/icon/favicon192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/panel/assets/images/icon/favicon.png",
+      "src": "/assets/images/icon/favicon.png",
       "type": "image/png",
       "sizes": "200x200"
     },
     {
-      "src": "/panel/assets/images/icon/favicon512x512.png",
+      "src": "/assets/images/icon/favicon512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-use panel\apis\notify;
+use apis\notify;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;

@@ -246,7 +246,7 @@ function run_apis(array $path, MyAuth $auth) {
             <!-- sidebar header -->
             <div class="sidebar-header">
                 <div class="logo">
-                    <a href=".."><img src="/panel/assets/images/icon/logo.png" alt="logo"></a>
+                    <a href="/panel/"><img src="/panel/assets/images/icon/logo.png" alt="logo"></a>
                 </div>
             </div>
 
@@ -262,9 +262,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                 </a>
                             </li>
-
-                            <?php
-                            /* 導航 */
+                            <?php /* 導航 */
                             if ($auth->userdata['Role'] >= 1) {
                                 echo '';
                             }
@@ -287,6 +285,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 </li>';
                             }
                             ?>
+                            <!-- sidebar content End-->
 
                         </ul>
                     </nav>
@@ -320,7 +319,7 @@ function run_apis(array $path, MyAuth $auth) {
                             <li class="dropdown">
                                 <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
                                 <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title">通知</span>
+                                    <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
                                     <div class="nofity-list" id="notify">
                                         <!-- notify-item -->
                                     </div>

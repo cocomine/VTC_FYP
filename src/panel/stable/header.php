@@ -85,8 +85,7 @@ if(empty($_COOKIE['_ID'])){
     echo '<div id="g_id_onload"
      data-client_id="415107965516-cv5638cgsp5hcau4i5ts1ub9otktu3sp.apps.googleusercontent.com"
      data-login_uri="https://fyp.cocomine.cc/panel/login"
-     data-login="google"
-     data-auto_select="true">
+     data-login="google">
      </div>';
 }
 

@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "28/12/2022",
+  "Last_Update": "7/1/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -404,6 +404,7 @@
       "Title": "Notification Management | Global blacklist",
       "Head": "Notification Management",
       "Content": {
+        "Notify": "Notify",
         "Send_notify": "Send notification",
         "User": "User",
         "alert_state": "Alert state",

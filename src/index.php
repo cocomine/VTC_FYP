@@ -107,7 +107,7 @@ function run_page(array $path, MyAuth $auth) {
         /* 頁面搜尋 */
         for ($i = count($path); $i >= 0; $i--) {
             //重組class路徑
-            $class = 'panel\\page';
+            $class = '\\page';
             for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
             $up_path = array_sanitize($up_path); //消毒
@@ -161,7 +161,7 @@ function run_apis(array $path, MyAuth $auth) {
         //開始遍歴
         for ($i = count($path); $i >= 1; $i--) {
             //重組class路徑
-            $class = 'panel\\apis';
+            $class = '\\apis';
             for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
             $up_path = array_sanitize($up_path); //消毒
@@ -237,147 +237,120 @@ function run_apis(array $path, MyAuth $auth) {
 
 ?>
 
-    <!-- page container area start -->
-    <div class="page-container">
-
-        <!-- sidebar menu area start -->
-        <div class="sidebar-menu">
-
-            <!-- sidebar header -->
-            <div class="sidebar-header">
-                <div class="logo">
-                    <a href=".."><img src="/panel/assets/images/icon/logo.png" alt="logo"></a>
-                </div>
-            </div>
-
-            <!-- sidebar body -->
-            <div class="main-menu">
-                <div class="menu-inner">
-                    <nav>
-                        <ul class="metismenu" id="menu">
-
-                            <!-- sidebar content -->
-                            <li>
-                                <a href="/panel/">
-                                    <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
-                                </a>
-                            </li>
-
-                            <?php
-                            /* 導航 */
-                            if ($auth->userdata['Role'] >= 1) {
-                                echo '';
-                            }
-                            if ($auth->userdata['Role'] >= 2) {
-                                echo '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a>
-                                    <ul>
-                                        <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a></li>
-                                        <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>
-                                    </ul>
-                                </li>';
-                            }
-                            if ($auth->userdata['Role'] >= 3) {
-                                echo '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
-                                    <ul>
-                                        <li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
-                                        <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>
-                                    </ul>
-                                </li>';
-                            }
-                            ?>
-
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-
-        </div>
-        <!-- sidebar menu area end -->
-
-        <!-- main content area start -->
-        <div class="main-content">
-
-            <!-- header area start -->
-            <div class="header-area">
+    <!-- main wrapper start -->
+    <div class="horizontal-main-wrapper">
+        <!-- main header area start -->
+        <div class="mainheader-area">
+            <div class="container">
                 <div class="row align-items-center">
-
-                    <!-- left content-->
-                    <div class="col-md-6 col-sm-8 clearfix">
-                        <div class="nav-btn fa-pull-left">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                    <div class="col-md-3">
+                        <div class="logo">
+                            <a href="/"><img src="/assets/images/icon/logo.png" alt="logo"></a>
                         </div>
                     </div>
+                    <!-- profile info & task notification -->
+                    <div class="col-md-9 clearfix text-end">
+                        <div class="d-md-inline-block d-block me-md-4">
+                            <ul class="notification-area">
 
-                    <!-- right content-->
-                    <div class="col-md-6 col-sm-4 clearfix">
-                        <ul class="notification-area fa-pull-right">
-
-                            <!-- notify -->
-                            <li class="dropdown">
-                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title">通知</span>
-                                    <div class="nofity-list" id="notify">
-                                        <!-- notify-item -->
+                                <!-- notify -->
+                                <li class="dropdown">
+                                    <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                    <div class="dropdown-menu bell-notify-box notify-box">
+                                        <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
+                                        <div class="nofity-list" id="notify">
+                                            <!-- notify-item -->
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
 
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- header area end -->
-
-            <!-- page title area start -->
-            <div class="page-title-area">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="breadcrumbs-area clearfix">
-
-                            <!-- title content -->
-                            <h4 class="page-title fa-pull-left" id="title"></h4>
-                            <ul class="breadcrumbs fa-pull-left" id="path"></ul>
-
+                            </ul>
                         </div>
-                    </div>
-                    <div class="col-sm-6 clearfix">
-                        <div class="user-profile fa-pull-right">
+                        <div class="clearfix d-md-inline-block d-block">
+                            <div class="user-profile m-0">
 
-                            <!-- user avatar -->
-                            <img class="avatar user-thumb"
-                                 src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
-                                 alt="avatar">
-                            <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
-                            </h4>
-                            <div class="dropdown-menu" style="z-index: 1030">
+                                <!-- user avatar -->
+                                <img class="avatar user-thumb"
+                                     src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
+                                     alt="avatar">
+                                <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
+                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
+                                </h4>
+                                <div class="dropdown-menu" style="z-index: 1030">
 
-                                <!-- dropdown menu content -->
-                                <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
-                                    <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
-                                </a>
-                                <?php
-                                if ($auth->islogin) {
-                                    echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
+                                    <!-- dropdown menu content -->
+                                    <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
+                                        <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
+                                    </a>
+                                    <?php
+                                    if ($auth->islogin) {
+                                        echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
                                                     <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
-                                        "</a>";
-                                } else {
-                                    echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
+                                            "</a>";
+                                    } else {
+                                        echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
                                                     <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
-                                        "</a>";
-                                }
-                                ?>
-                            </div>
+                                            "</a>";
+                                    }
+                                    ?>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- main header area end -->
+        <!-- header area start -->
+        <div class="header-area header-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-9  d-none d-lg-block">
+                        <div class="horizontal-menu">
+                            <nav>
+                                <ul id="nav_menu">
+
+                                    <!-- sidebar content -->
+                                    <li>
+                                        <a href="/">
+                                            <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
+                                        </a>
+                                    </li>
+                                    <?php /* 導航 */
+                                    if ($auth->userdata['Role'] >= 1) {
+                                        echo '';
+                                    }
+                                    if ($auth->userdata['Role'] >= 2) {
+                                        echo '';
+                                    }
+                                    if ($auth->userdata['Role'] >= 3) {
+                                        echo '';
+                                    }
+                                    ?>
+                                    <!-- sidebar content End-->
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- nav and search button -->
+                    <div class="col-lg-3 clearfix">
+                        <div class="search-box">
+                            <form action="#">
+                                <input type="text" name="search" placeholder="Search..." required>
+                                <i class="ti-search"></i>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- mobile_menu -->
+                    <div class="col-12 d-block d-lg-none">
+                        <div id="mobile_menu"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header area end -->
             <!-- page title area end -->
 
             <!-- Broadcast -->
@@ -425,11 +398,10 @@ function run_apis(array $path, MyAuth $auth) {
                         */
             ?>
             </div>-->
+            <!-- Broadcast End -->
 
             <!-- Main area start -->
             <div class="main-content-inner">
-                <!-- Main content-->
-                <div class="row gy-4 pt-4" id="content"></div>
 
                 <!-- global language translate -->
                 <pre style="display: none" id="globalLang">
@@ -440,6 +412,10 @@ function run_apis(array $path, MyAuth $auth) {
                     ))
                     ?>
                 </pre>
+                <!-- global language translate End -->
+
+                <!-- Main content-->
+                <div class="row gy-4 pt-4" id="content"></div>
 
             </div>
             <!-- Main area end -->

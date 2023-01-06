@@ -16,7 +16,7 @@ use mysqli;
 class notify implements IPage {
     private mysqli $sqlcon;
     private array $UpPath;
-    private \panel\apis\notify $notify;
+    private \apis\notify $notify;
 
     /**
      * notify constructor.
@@ -26,7 +26,7 @@ class notify implements IPage {
     public function __construct(mysqli $sqlcon, array $UpPath){
         $this->sqlcon = $sqlcon;
         $this->UpPath = $UpPath;
-        $this->notify = new \panel\apis\notify($sqlcon);
+        $this->notify = new \apis\notify($sqlcon);
     }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
@@ -175,19 +175,19 @@ class notify implements IPage {
             /* 狀態翻譯 */
             switch($data['status']){
                 case 1:
-                    $data['status'] = \panel\apis\notify::$Status_Success;
+                    $data['status'] = \apis\notify::$Status_Success;
                     break;
                 case 2:
-                    $data['status'] = \panel\apis\notify::$Status_Danger;
+                    $data['status'] = \apis\notify::$Status_Danger;
                     break;
                 case 3:
-                    $data['status'] = \panel\apis\notify::$Status_Warning;
+                    $data['status'] = \apis\notify::$Status_Warning;
                     break;
                 case 4:
-                    $data['status'] = \panel\apis\notify::$Status_Info;
+                    $data['status'] = \apis\notify::$Status_Info;
                     break;
                 default:
-                    $data['status'] = \panel\apis\notify::$Status_Primary;
+                    $data['status'] = \apis\notify::$Status_Primary;
                     break;
             }
 

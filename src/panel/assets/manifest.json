@@ -1,10 +1,10 @@
 {
-  "name" : "IVE airline",
+  "name" : "X-Travel Control Panel",
   "display" : "minimal-ui",
   "start_url" : "/panel/",
-  "short_name" : "IVE airline",
+  "short_name" : "X-Travel Panel",
   "theme_color" : "#ff7112",
-  "description" : "IVE airline",
+  "description" : "X-Travel Control Panel",
   "background_color" : "#ff9e5b",
   "icons" : [
     {
