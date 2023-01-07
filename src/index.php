@@ -401,7 +401,7 @@ function run_apis(array $path, MyAuth $auth) {
             <!-- Broadcast End -->
 
             <!-- Main area start -->
-            <div class="main-content-inner">
+            <div class="main-content-inner main-content">
 
                 <!-- global language translate -->
                 <pre style="display: none" id="globalLang">
@@ -414,9 +414,19 @@ function run_apis(array $path, MyAuth $auth) {
                 </pre>
                 <!-- global language translate End -->
 
-                <!-- Main content-->
-                <div class="row gy-4 pt-4" id="content"></div>
+                <div class="heard-area pt-4 pb-3">
+                    <div class="container">
+                        <h4 class="page-title" id="title"></h4>
+                        <nav class="pt-2" aria-label="breadcrumb">
+                            <ol class="breadcrumb" id="path"></ol>
+                        </nav>
+                    </div>
+                </div>
 
+                <!-- Main content-->
+                <div class="container mt-4">
+                    <div class="row gy-4" id="content"></div>
+                </div>
             </div>
             <!-- Main area end -->
         </div>

@@ -428,6 +428,7 @@ function run_apis(array $path, MyAuth $auth) {
             <!-- Main area start -->
             <div class="main-content-inner">
                 <!-- Main content-->
+
                 <div class="row gy-4 pt-4" id="content"></div>
 
                 <!-- global language translate -->

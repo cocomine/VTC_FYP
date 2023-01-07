@@ -178,7 +178,7 @@
       "REGISTER_CODE_WRONG": "<b>Hey!</b> code is wrong!",
       "AUTH_GOOGLE_ERROR": "An error occurred! (っ °Д °;)っ",
       "Login_with_google": "<i class=\"fa-brands fa-google me-2\"></i>Login",
-      "go_back_home": "Don't want to log in yet? <a href=\"/panel\" id=\"GoBack\">Then go back first</a>",
+      "go_back_home": ["Don't want to log in yet?", "Then go back first"],
       "BLOCK_10": [
         "<b>Sorry~~</b> You failed too many times! Wait 10 minutes and try again~~",
         "If you forget your password, you can try <a href=\"forgotpass\">recover it</a>"

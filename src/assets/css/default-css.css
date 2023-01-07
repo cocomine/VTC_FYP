@@ -417,9 +417,9 @@ img {
 /* Colors */
 
 :root {
-    --primary-color: #ff7112;
-    --bs-primary: #ff7112;
-    --bs-primary-rgb: 225, 113, 18;
+    --primary-color: #12a0ff;
+    --bs-primary: #12a0ff;
+    --bs-primary-rgb: 18, 160, 255;
 }
 
 .form-check-input:checked{
@@ -684,46 +684,6 @@ img {
     display: flex;
 }
 
-/* fly-arrow */
-
-.fly-arrow {
-    height: 4px;
-    position: relative;
-}
-
-.fly-arrow:before {
-    content: '';
-    width: 24px;
-    height: 24px;
-    background-color: var(--bs-dark);
-    position: absolute;
-    right: 0;
-    top: -10px;
-    clip-path: polygon(0 0, 0% 100%, 100% 50%);
-}
-
-.fly-arrow > div {
-    background-color: var(--bs-dark);
-    width: 100%;
-    height: 4px;
-}
-
-.fly-arrow > i {
-    position: absolute;
-    left: 10px;
-    top: -20px;
-    font-size: 1.2rem;
-    opacity: 0;
-    transition: left 1.5s ease;
-    color: var(--primary-color);
-    text-shadow: grey 2px 2px 3px;
-}
-
-.fly-arrow > i.activate{
-    opacity: 1;
-    left: calc(100% - 1.2rem - 28px);
-}
-
 /* card-highlight */
 .card-highlight{
     animation: card-highlight 1s ease-in-out;
@@ -763,6 +723,19 @@ img {
     bottom: 0;
     left: 0;
     z-index: 1;
+}
+
+/* page-title-area */
+.heard-area{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-image: url("/assets/images/heard_bg.webp");
+    --bs-breadcrumb-divider: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8'><path d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='#{$breadcrumb-divider-color}'/></svg>");
+}
+
+.heard-area .page-title{
+    font-size: 30px;
 }
 
 /* needs-validation IDE auto complete */

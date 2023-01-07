@@ -41,6 +41,11 @@ class home implements IPage {
         return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <div class='col-12 mt-4'>
+    <div class="card">
+        <div class="card-body">
+            dsfdsfdf
+        </div>
+    </div>
 </div>
 <script>
 loadModules(['myself/datepicker', 'myself/page/home'])
@@ -57,7 +62,7 @@ body;
 
     /* path輸出 */
     function path(): string {
-        return "<li><span>" . showText("index.home") . "</span></li>";
+        return '<li class="breadcrumb-item active">'.showText("index.home").'</li>';
     }
 
     /* 取得頁面標題 */
