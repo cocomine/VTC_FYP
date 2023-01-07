@@ -178,7 +178,7 @@
       "REGISTER_CODE_WRONG": "<b>Hey!</b> 失效啦!",
       "AUTH_GOOGLE_ERROR": "发生错误! (っ °Д °;)っ",
       "Login_with_google": "<i class=\"fa-brands fa-google me-2\"></i>登入",
-      "go_back_home": "暂时不想登入? <a href=\"/panel\" id=\"GoBack\">那么先回去吧</a>",
+      "go_back_home": ["暂时不想登入?", " 那么先回去吧"],
       "BLOCK_10": [
         "<b>Sorry~~</b> 你失败太多次啦! 先等10分钟再尝试吧~~",
         "如果你把密码忘记得一干二净, 你可以试一试<a href=\"forgotpass\">找回密码</a>"

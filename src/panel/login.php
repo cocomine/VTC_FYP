@@ -250,7 +250,7 @@ function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
                     </div>
                     <div class="form-footer text-center mt-5">
                         <p class="text-muted">{$Text['go_register']}</p>
-                        <p class="text-muted">{$Text['go_back_home']}</p>
+                        <p class="text-muted">{$Text['go_back_home'][0]}<a href="/" id="GoBack">{$Text['go_back_home'][1]}</a></p>
                     </div>
                 </div>
             </form>

@@ -1,7 +1,7 @@
 IApi php library
 ===
 用作全域用途, 多個頁面使用一個php
-> 需要遵守RESTAPI標準(不嚴格), 對應操作對應http method, 結果狀態回應對應http status code
+> 需要遵守RESTful API標準(不嚴格), 對應操作對應http method, 結果狀態回應對應http status code
 
 用法
 ---
