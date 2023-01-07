@@ -53,10 +53,10 @@ json必須符合結構
     });
     ```
    將會有個彈出式視框讓用戶可以選擇
-   >參數:
-   > * `max` 數據類型`number`; 最多可選擇媒體, 0=無限
-   > * `mime` 數據類型`RegExp`; 列表過濾MIME媒體類型
-   > * `selected_media` 數據類型`function`; 回傳選擇媒體id
+   > 參數:
+   > * `max`; 類型`number`; 最多可選擇媒體, 0=無限
+   > * `mime`; 類型`RegExp`; 列表過濾MIME媒體類型
+   > * `selected_media`; 類型`function`; 回傳選擇媒體id
 
 3. 處理緩存數據
    ```javascript

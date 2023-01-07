@@ -39,13 +39,13 @@ interface IPage {
      * @param array $data json數據
      * @return array 返回內容
      */
-    function post(array $data):array;
+    public function post(array $data):array;
 
     /**
      * path html輸出
      * @return string html輸出
      */
-    function path(): string;
+    public function path(): string;
 
     /**
      * 取得頁面標題

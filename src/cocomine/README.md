@@ -5,3 +5,4 @@ Cocomine library 用法
   - [media-select.upload javascript library](/doc/js/media-selecr.upload.js.md)
 - [IPage php library](/doc/php/IPage.php.md)
 - [IApi php library](/doc/php/IApi.php.md)
+- [Functions php library](/doc/php/Functions.php.md)

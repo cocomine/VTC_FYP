@@ -90,6 +90,7 @@ function VerifyEmail(string $email): bool {
  * utf-8轉換
  * @param string $str 字串
  * @return string 轉換後字串
+ * @deprecated
  */
 function EncodeHeader(string $str): string {
     mb_internal_encoding('utf-8');
@@ -97,7 +98,7 @@ function EncodeHeader(string $str): string {
 }
 
 /**
- *產生亂數
+ * 產生亂數
  * @param int $length 長度
  * @return string 亂數
  */
@@ -117,14 +118,15 @@ const MAIL_ACTIVATE = 101;
 const MAIL_WONG_NEWIP = 102;
 
 /**
- *電郵隊列
+ * 發送電郵,電郵隊列
  * @param string $To 收件者電郵
  * @param string $html 內容
- * @param int $type 類型
+ * @param int $type 類型, 請輸入0
  * @param mysqli $sqlcon sql連結
- * @return bool 是否已經放入
+ * @param string|null $subject 主旨
+ * @return bool 是否已經放入隊列
  */
-function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
+function SendMail(string $To, string $html, int $type, mysqli $sqlcon, string $subject = null): bool {
 
     switch ($type) {
         case MAIL_RESET:
@@ -143,7 +145,9 @@ function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
             $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
         default:
-            return false;
+            $From = 'note@cocopixelmc.com;'.Cfg_site_title;
+            $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
+            break;
     }
 
     /* 放入隊列 */
@@ -217,8 +221,8 @@ function getISP(string $ip = null): string {
 
 /**
  * 取得瀏覽器
- * @param string|null $user_agent
- * @return array|object 回傳Browscap資料
+ * @param string|null $user_agent 用戶資料, 由http header取得
+ * @return array|false|object 回傳Browscap資料
  */
 function getBrowser(string $user_agent = null) {
     return get_browser($user_agent, true);
