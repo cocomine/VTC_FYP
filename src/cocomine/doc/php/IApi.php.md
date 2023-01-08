@@ -5,7 +5,7 @@ IApi php library
 
 用法
 ---
-+ `access(bool $isAuth, int $role, bool $isPost)`
+#### `access(bool $isAuth, int $role, bool $isPost)`
   > 作用: 是否有權進入
   ```php
   public function access(bool $isAuth, int $role): int;
@@ -35,14 +35,14 @@ IApi php library
   ```
   
 ---
-+ `get()`
+#### `get()`
     > 作用: Get 請求, 用來讀取資源
     ```php
     public function get();
     ```
 
 ---
-+ `post(array $data)`
+#### `post(array $data)`
     > 作用: Post 請求, 用來創建資源
     ```php
     public function post(array $data);
@@ -51,7 +51,7 @@ IApi php library
      * `array|null` $data 收到資料, null = 非json資料,如:二進制檔案(圖片,影片,文件),所以用另外方式獲取
   
 ---
-+ `put(array $data)`
+#### `put(array $data)`
     > 作用: Put 請求, 用來修改已存在的資源
     ```php
     public function put(array $data);
@@ -60,7 +60,7 @@ IApi php library
     * `array|null` $data 收到資料, null = 非json資料,如:二進制檔案(圖片,影片,文件),所以用另外方式獲取
 
 ---
-+ `delete(array $data)`
+#### `delete(array $data)`
     > 作用: Delete 請求, 用來刪除已存在的資源
     ```php
     public function delete(array $data);

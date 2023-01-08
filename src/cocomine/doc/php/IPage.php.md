@@ -4,7 +4,7 @@ IPage php library
 
 用法
 ---
-+ `access(bool $isAuth, int $role, bool $isPost)`
+#### `access(bool $isAuth, int $role, bool $isPost)`
   > 作用: 是否有權進入
   ```php
   public function access(bool $isAuth, int $role, bool $isPost): int;
@@ -35,7 +35,7 @@ IPage php library
   ```
 
 ---
-+ `showPage()`
+#### `showPage()`
   > 作用: 輸出頁面
   ```php
   public function showPage(): string;
@@ -72,7 +72,7 @@ IPage php library
   ```
 
 ---
-+ `post(array $data)`
+#### `post(array $data)`
   > 作用: POST請求, 瀏覽器必須使用json數據格式傳送資料
   ```php
   public function post(array $data):array;
@@ -95,15 +95,17 @@ IPage php library
   ```
 
 ---
-+ `path()`
+#### `path()`
   > 作用: 頁面路徑, html輸出
+  > 
+  > ![example](./1.png)
   ```php
   public function path(): string;
   ```
   接受回傳: `string` html輸出
 
 ---
-+ `get_Title()`
+#### `get_Title()`
   > 作用: 頁面標題, `<title>`element 內的文字
   ```php
   public function get_Title(): string;
@@ -111,8 +113,10 @@ IPage php library
   接受回傳: `string` 頁面標題
 
 ---
-+ `get_Head()`
-  > 作用: 頁首標題 (暫時沒有作用)
+#### `get_Head()`
+  > 作用: 頁首標題, 使用 [Bootstrap Breadcrumb](https://getbootstrap.com/docs/5.2/components/breadcrumb/)
+  >
+  > ![example](./2.png)
   ```php
   public function get_Head(): string;
   ```
