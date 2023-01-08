@@ -18,12 +18,14 @@ interface IApi {
      *  404 => 找不到<br>
      *  200 => 可以訪問<br>
      *  500 => 伺服器錯誤
+     * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#accessbool-isauth-int-role-bool-ispost
      */
     public function access(bool $isAuth, int $role):int;
 
     /**
      * Get 請求
      * 用來讀取資源
+     * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#get
      */
     public function get();
 
@@ -31,6 +33,7 @@ interface IApi {
      * Post 請求
      * 用來創建資源
      * @param array|null $data 收到資料
+     * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#postarray-data
      */
     public function post(array $data);
 
@@ -38,12 +41,15 @@ interface IApi {
      * Put 請求
      * 用來修改資源
      * @param array|null $data 收到資料
+     * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#putarray-data
      */
     public function put(array $data);
 
     /**
      * Delete 請求
      * 用來刪除資源
+     * @param array|null $data 收到資料
+     * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#deletearray-data
      */
     public function delete(array $data);
 }
