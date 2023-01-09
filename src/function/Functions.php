@@ -11,7 +11,7 @@ use MaxMind\Db\Reader\InvalidDatabaseException;
 
 //自動載入器
 spl_autoload_register(function ($class) {
-    include_once '../' . str_replace('\\', '/', $class) . '.php';
+    include_once './' . str_replace('\\', '/', $class) . '.php';
 });
 
 /**
