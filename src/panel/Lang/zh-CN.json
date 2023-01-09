@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "13/10/2022",
+  "Last_Update": "9/1/2023",
   "Translate": {
     "Error": "发生未知错误!!",
     "header": {
@@ -8,7 +8,7 @@
       "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Law chun kit。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
       "title": "首页 | IVE airline",
@@ -350,6 +350,163 @@
         "Unknown_Location": "地点不明",
         "Any-question": "如有任何问题请寄电邮至",
         "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>制作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。"
+      }
+    },
+    "Account": {
+      "Title": "帐户管理 | X-Travel",
+      "Head": "帐户管理",
+      "Content": {
+        "Name": {
+          "Name": "名称",
+          "limit": "最多 16 个字"
+        },
+        "Email": "电邮地址",
+        "password": {
+          "password": "密码",
+          "limit": "这是默认密码。"
+        },
+        "Role": {
+          "Role": "身份组",
+          "Normal": "普通用户",
+          "collaborator": "合作者",
+          "Administrator": "管理员"
+        },
+        "Create": "创建账户",
+        "List": {
+          "List": "帐户列表",
+          "ID": "用户ID",
+          "Name": "用户名",
+          "Email": "用户邮箱",
+          "Time": "上次登录时间",
+          "Active": "帐户状态",
+          "Activated": "启用",
+          "Not_activated": "未启用"
+        },
+        "Form": {
+          "Cant_EMPTY": "这里是不能留空喔",
+          "Error_format": "电邮格式应该不是这样的吧"
+        },
+        "EMAIL_FAIL": "<b>Ah Oh!</b> 这个电邮地址已经被注册",
+        "PASS_NOT_MATCH": "<b>Ah Oh!</b> 两次输入的密码不是一样的哦!",
+        "PASS_NOT_STRONG": "<b>Umm..</b> 密码不太强哦!",
+        "EMAIL_WRONG_FORMAT": "<b>Umm..</b> 电邮地址应该不是这样的吧!",
+        "EMPTY": "<b>Hey!</b> 你什么都没有打过!",
+        "NAME_TOO_LONG": "<b>Ah Oh!</b> 名字太长很难记的呀!",
+        "COMPLETE": "帐户已成功创建!"
+      }
+    },
+    "admin": {
+      "Head": "管理员控制"
+    },
+    "notify": {
+      "Title": "通知管理 | X-Travel",
+      "Head": "通知管理",
+      "Content": {
+        "Notify": "通知",
+        "Send_notify": "发送通知",
+        "User": "用户",
+        "alert_state": "警报状态",
+        "Alert": {
+          "primary": "默认",
+          "success": "成功",
+          "danger": "危险",
+          "warning": "警告",
+          "info": "资讯"
+        },
+        "Icon": "图标",
+        "Content": "内容",
+        "Link": "链结",
+        "send": "发送",
+        "list_notify": "通知列表",
+        "select": "请选择",
+        "table": {
+          "id": "ID",
+          "Icon": "图标",
+          "Content": "内容",
+          "Link": "链结",
+          "Time": "发送时间",
+          "action": "行动"
+        },
+        "Time": {
+          "just_now": "现在",
+          "few_seconds": "几秒钟前",
+          "minutes_ago": "分钟前",
+          "hour_ago": "小时前",
+          "day_ago": "天前",
+          "week_ago": "周前",
+          "month_ago": "月前",
+          "year_ago": "年前"
+        },
+        "From": {
+          "empty": "栏位不能留空..",
+          "done": "通知发送成功！",
+          "fail": "通知发送失败~~",
+          "clear": "没有任何通知..",
+          "del_done": "删除成功通知！",
+          "request_fail": "请求出了点问题！ 检查网址！"
+        }
+      }
+    },
+    "Media": {
+      "Title": "媒体 | X-Travel",
+      "Head": "媒体",
+      "Content": {
+        "Select_on": "选择模式",
+        "Select_off": "取消选择模式",
+        "Media": "媒体",
+        "Delete": [
+          "删除",
+          "个媒体"
+        ],
+        "Show_Original": "显示原始尺寸",
+        "Media_ID": "媒体 ID:",
+        "Upload_Time": "上传时间:",
+        "MIME_type": "MIME 类型:",
+        "URL": "网址:",
+        "No_media": "没有媒体",
+        "respond": {
+          "single": {
+            "success": "媒体已成功删除",
+            "fail": "媒体删除失败"
+          },
+          "multi": {
+            "success": "所选媒体已成功删除",
+            "partially": "所选媒体已部分删除",
+            "fail": "所选媒体删除失败"
+          }
+        },
+        "Media_Select": {
+          "title": "选择媒体",
+          "Select": [
+            "选择",
+            "个媒体"
+          ],
+          "drag": "您可以将文件拖到这里上传"
+        }
+      }
+    },
+    "Media-upload": {
+      "Title": "上传媒体 | X-Travel",
+      "Head": "上传媒体",
+      "Content": {
+        "upload": "上传",
+        "drag": "将文件拖到这里上传",
+        "or": "或者",
+        "limit_type": "接受：.jpg .png .webp .gif",
+        "limit": "单个文件的最大大小为 8MB",
+        "respond": {
+          "Over_size": "文件过大",
+          "Not_complete": "上传不完整",
+          "Not_complete_upload": "上传失败",
+          "File_type_not_mach": "文件格式不匹配",
+          "File_name_over": "文件名太长",
+          "File_convert_fail": "文件转换失败",
+          "File_sql_fail": "数据库更新失败",
+          "File_save_fail": "文件保存失败",
+          "Uploaded": "上传成功",
+          "Timeout": "上传超时",
+          "Waiting": "等待上传..."
+        }
       }
     }
   }

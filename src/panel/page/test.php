@@ -29,7 +29,6 @@ class test implements \cocomine\IPage {
             'Unknown_Error'      => showText('Error'),
             'title' => $Text['Media_Select']['title'],
             'Select' => $Text['Media_Select']['Select'],
-            'drag' => $Text['Media_Select']['drag'],
             'upload' => array(
                 'Timeout'            => $Text2['respond']['Timeout'],
                 'File_name_over'     => $Text2['respond']['File_name_over'],

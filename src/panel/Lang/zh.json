@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "13/10/2022",
+  "Last_Update": "9/1/2023",
   "Translate": {
     "Error": "發生未知錯誤!!",
     "header": {
@@ -8,10 +8,10 @@
       "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Law chun kit。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
-      "title": "首頁 | IVE airline",
+      "title": "首頁 | X-Travel",
       "Console": "控制台",
       "home": "首頁",
       "Logout": "登出",
@@ -20,7 +20,7 @@
       "Content": {}
     },
     "ChangeSetting": {
-      "title": "設定 | IVE airline",
+      "title": "設定 | X-Travel",
       "setting": "帳號設定",
       "ChangeData": "個人檔案",
       "Gravatar": "前往Gravatar修改",
@@ -164,7 +164,7 @@
       ]
     },
     "Login": {
-      "title": "登入 | IVE airline",
+      "title": "登入 | X-Travel",
       "Login": "登入",
       "welcome": "<b>Hello!</b> 登入就可以了",
       "email": "電郵地址",
@@ -206,7 +206,7 @@
       }
     },
     "Register": {
-      "title": "註冊 | IVE airline",
+      "title": "註冊 | X-Travel",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
       "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
@@ -250,7 +250,7 @@
       ]
     },
     "ForgotPass": {
-      "title": "忘記密碼 | IVE airline",
+      "title": "忘記密碼 | X-Travel",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "LASTSTEP": "<b>最後兩步!</b> 快點到你的郵箱查看吧!",
       "CODE_WRONG": "<b>Hey!</b> 失效啦!",
@@ -293,11 +293,11 @@
       ]
     },
     "Error_Page": {
-      "403_title": "停!停! | IVE airline",
+      "403_title": "停!停! | X-Travel",
       "Dont_Come": "喂喂喂! 你不應該來這裏!",
-      "404_title": "你去哪裏了! | IVE airline",
+      "404_title": "你去哪裏了! | X-Travel",
       "Where_you_go": "等等! 你去哪裏了!",
-      "500_title": "死火啦! | IVE airline",
+      "500_title": "死火啦! | X-Travel",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧",
       "400_title": "請求出現問題!",
@@ -352,6 +352,163 @@
         "Unknown_Location": "地點不明",
         "Any-question": "如有任何問題請寄電郵至",
         "privacy": "由<a href=\"https://www.facebook.com/profile.php?id=100006297815529\">cocomine</a>製作。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。"
+      }
+    },
+    "Account": {
+      "Title": "帳戶管理 | X-Travel",
+      "Head": "帳戶管理",
+      "Content": {
+        "Name": {
+          "Name": "名稱",
+          "limit": "最多 16 個字"
+        },
+        "Email": "電郵地址",
+        "password": {
+          "password": "密碼",
+          "limit": "這是默認密碼。"
+        },
+        "Role": {
+          "Role": "身份組",
+          "Normal": "普通用戶",
+          "collaborator": "合作者",
+          "Administrator": "管理員"
+        },
+        "Create": "創建賬戶",
+        "List": {
+          "List": "帳戶列表",
+          "ID": "用戶ID",
+          "Name": "用戶名",
+          "Email": "用戶郵箱",
+          "Time": "上次登錄時間",
+          "Active": "帳戶狀態",
+          "Activated": "啟用",
+          "Not_activated": "未啟用"
+        },
+        "Form": {
+          "Cant_EMPTY": "這裏是不能留空喔",
+          "Error_format": "電郵格式應該不是這樣的吧"
+        },
+        "EMAIL_FAIL": "<b>Ah Oh!</b> 這個電郵地址已經被註冊",
+        "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
+        "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
+        "EMAIL_WRONG_FORMAT": "<b>Umm..</b> 電郵地址應該不是這樣的吧!",
+        "EMPTY": "<b>Hey!</b> 你什麼都沒有打過!",
+        "NAME_TOO_LONG": "<b>Ah Oh!</b> 名字太長很難記的呀!",
+        "COMPLETE": "帳戶已成功創建!"
+      }
+    },
+    "admin": {
+      "Head": "管理員控制"
+    },
+    "notify": {
+      "Title": "通知管理 | X-Travel",
+      "Head": "通知管理",
+      "Content": {
+        "Notify": "通知",
+        "Send_notify": "發送通知",
+        "User": "用戶",
+        "alert_state": "警報狀態",
+        "Alert": {
+          "primary": "默認",
+          "success": "成功",
+          "danger": "危險",
+          "warning": "警告",
+          "info": "資訊"
+        },
+        "Icon": "圖標",
+        "Content": "內容",
+        "Link": "鏈結",
+        "send": "發送",
+        "list_notify": "通知列表",
+        "select": "請選擇",
+        "table": {
+          "id": "ID",
+          "Icon": "圖標",
+          "Content": "內容",
+          "Link": "鏈結",
+          "Time": "發送時間",
+          "action": "行動"
+        },
+        "Time": {
+          "just_now": "現在",
+          "few_seconds": "幾秒鐘前",
+          "minutes_ago": "分鐘前",
+          "hour_ago": "小時前",
+          "day_ago": "天前",
+          "week_ago": "周前",
+          "month_ago": "月前",
+          "year_ago": "年前"
+        },
+        "From": {
+          "empty": "欄位不能留空..",
+          "done": "通知發送成功！",
+          "fail": "通知發送失敗~~",
+          "clear": "沒有任何通知..",
+          "del_done": "刪除成功通知！",
+          "request_fail": "請求出了點問題！ 檢查網址！"
+        }
+      }
+    },
+    "Media": {
+      "Title": "媒體 | X-Travel",
+      "Head": "媒體",
+      "Content": {
+        "Select_on": "選擇模式",
+        "Select_off": "取消選擇模式",
+        "Media": "媒體",
+        "Delete": [
+          "刪除",
+          "個媒體"
+        ],
+        "Show_Original": "顯示原始尺寸",
+        "Media_ID": "媒體 ID:",
+        "Upload_Time": "上傳時間:",
+        "MIME_type": "MIME 類型:",
+        "URL": "網址:",
+        "No_media": "沒有媒體",
+        "respond": {
+          "single": {
+            "success": "媒體已成功刪除",
+            "fail": "媒體刪除失敗"
+          },
+          "multi": {
+            "success": "所選媒體已成功刪除",
+            "partially": "所選媒體已部分刪除",
+            "fail": "所選媒體刪除失敗"
+          }
+        },
+        "Media_Select": {
+          "title": "選擇媒體",
+          "Select": [
+            "選擇",
+            "個媒體"
+          ],
+          "drag": "您可以將文件拖到這裡上傳"
+        }
+      }
+    },
+    "Media-upload": {
+      "Title": "上傳媒體 | X-Travel",
+      "Head": "上傳媒體",
+      "Content": {
+        "upload": "上傳",
+        "drag": "將文件拖到這裡上傳",
+        "or": "或者",
+        "limit_type": "接受：.jpg .png .webp .gif",
+        "limit": "單個文件的最大大小為 8MB",
+        "respond": {
+          "Over_size": "文件過大",
+          "Not_complete": "上傳不完整",
+          "Not_complete_upload": "上傳失敗",
+          "File_type_not_mach": "文件格式不匹配",
+          "File_name_over": "文件名太長",
+          "File_convert_fail": "文件轉換失敗",
+          "File_sql_fail": "數據庫更新失敗",
+          "File_save_fail": "文件保存失敗",
+          "Uploaded": "上傳成功",
+          "Timeout": "上傳超時",
+          "Waiting": "等待上傳..."
+        }
       }
     }
   }
