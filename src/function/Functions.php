@@ -11,7 +11,7 @@ use MaxMind\Db\Reader\InvalidDatabaseException;
 
 //自動載入器
 spl_autoload_register(function ($class) {
-    include_once './' . str_replace('\\', '/', $class) . '.php';
+    include_once '../' . str_replace('\\', '/', $class) . '.php';
 });
 
 /**
@@ -23,6 +23,7 @@ spl_autoload_register(function ($class) {
  *  404 = 路徑錯誤<br>
  *  405 = 不接受請求方式<br>
  *  500 = 伺服器錯誤
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#echo_errorint-code
  */
 function echo_error(int $code) {
     if ($code === 403) {
@@ -67,6 +68,7 @@ function echo_error(int $code) {
  * 過濾陣列字串
  * @param array $array 陣列
  * @return array 過濾後陣列
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#array_sanitizearray-array
  */
 function array_sanitize(array $array): array{
     return filter_var_array($array, FILTER_SANITIZE_STRING);
@@ -76,6 +78,7 @@ function array_sanitize(array $array): array{
  * 檢查電郵格式
  * @param string $email 電郵地址
  * @return bool 是否正確
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#verifyemailstring-email
  */
 function VerifyEmail(string $email): bool {
     $pattern = "/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/";
@@ -90,6 +93,8 @@ function VerifyEmail(string $email): bool {
  * utf-8轉換
  * @param string $str 字串
  * @return string 轉換後字串
+ * @deprecated
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#encodeheaderstring-str
  */
 function EncodeHeader(string $str): string {
     mb_internal_encoding('utf-8');
@@ -97,9 +102,10 @@ function EncodeHeader(string $str): string {
 }
 
 /**
- *產生亂數
+ * 產生亂數
  * @param int $length 長度
  * @return string 亂數
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#generate_codeint-length
  */
 function Generate_Code(int $length = 32): string {
     $chars = 'qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM';
@@ -117,14 +123,16 @@ const MAIL_ACTIVATE = 101;
 const MAIL_WONG_NEWIP = 102;
 
 /**
- *電郵隊列
+ * 發送電郵,電郵隊列
  * @param string $To 收件者電郵
  * @param string $html 內容
- * @param int $type 類型
+ * @param int $type 類型, 請輸入0
  * @param mysqli $sqlcon sql連結
- * @return bool 是否已經放入
+ * @param string|null $subject 主旨
+ * @return bool 是否已經放入隊列
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#sendmailstring-to-string-html-int-type-mysqli-sqlcon-string-subject
  */
-function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
+function SendMail(string $To, string $html, int $type, mysqli $sqlcon, string $subject = null): bool {
 
     switch ($type) {
         case MAIL_RESET:
@@ -143,7 +151,9 @@ function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
             $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
             break;
         default:
-            return false;
+            $From = 'note@cocopixelmc.com;'.Cfg_site_title;
+            $Reply_To = 'support@cocopixelmc.com;'.Cfg_site_title;
+            break;
     }
 
     /* 放入隊列 */
@@ -159,6 +169,7 @@ function SendMail(string $To, string $html, int $type, mysqli $sqlcon): bool {
  * 取得城市
  * @param string|null $ip IP地址
  * @return string 回傳城市資料
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#getcitystring-ip
  */
 function getCity(string $ip = null): string {
     if ($ip == null) $ip = $_SERVER['REMOTE_ADDR'];
@@ -199,6 +210,7 @@ function getCity(string $ip = null): string {
  * 取得ISP
  * @param string|null $ip IP地址
  * @return string 回傳ISP資料
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#getispstring-ip
  */
 function getISP(string $ip = null): string {
     if ($ip == null) $ip = $_SERVER['REMOTE_ADDR'];
@@ -217,8 +229,9 @@ function getISP(string $ip = null): string {
 
 /**
  * 取得瀏覽器
- * @param string|null $user_agent
- * @return array|object 回傳Browscap資料
+ * @param string|null $user_agent 用戶資料, 由http header取得
+ * @return array|false|object 回傳Browscap資料
+ * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/Functions.php.md#getbrowserstring-user_agent
  */
 function getBrowser(string $user_agent = null) {
     return get_browser($user_agent, true);
