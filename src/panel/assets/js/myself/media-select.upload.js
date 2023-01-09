@@ -41,6 +41,7 @@ define(['media-select'], function (media_select) {
                 <p class='col-auto text-light'>${Lang.upload.limit_type}</p>
             </div>
         </div>`)
+    drop_area.children('.modal-footer').prepend(`<p>${Lang.upload.drag}</p>`)
 
     /* 拖拉處理 */
     drop_area.on('dragenter dragover dragleave drop', function (e) {

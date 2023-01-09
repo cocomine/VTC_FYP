@@ -10,7 +10,7 @@
  * To use multiple languages, you must have the following html
  * <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
  * $LangJson => Place text in json format
- * json must conform to the structure, you can refer to lines 21 to 26
+ * json must conform to the structure, you can refer to lines 21 to 25
  */
 define(['jquery', 'bootstrap'], function (jq, bootstrap) {
     let max_sel, callback, filter_mime;
@@ -23,7 +23,6 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
         Unknown_Error: "An unknown error occurred!!",
         title: "Select Media",
         Select: ["Select", "Media"],
-        drag: "You can drag files here to upload",
         ...JSON.parse($('#media-select-LangJson').text())
     }
 
@@ -45,7 +44,6 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <p>${Lang.drag}</p>
                         <button type="button" class="btn btn-primary btn-rounded" disabled>${Lang.Select[0]} <span>0</span> ${Lang.Select[1]}</button>
                     </div>
                 </div>
@@ -119,7 +117,7 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
                         <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
                             <div class="overflow-hidden">
                                 <div class="media-list-center">
-                                    <img src="/assets/images/image_loading.webp" draggable="false" alt="${Lang.Media.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
+                                    <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${Lang.Media.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
                                 </div>
                             </div>
                         </div>
