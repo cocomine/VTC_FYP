@@ -35,7 +35,7 @@ $default = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/
  * 取得語言文字
  *
  * @param string $Path 路徑
- * @param bool $localCode 語言代碼
+ * @param string|null $localCode 語言代碼
  * @return string|array 輸出文字
  */
 function showText(string $Path, string $localCode = null) {

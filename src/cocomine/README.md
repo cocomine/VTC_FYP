@@ -6,3 +6,4 @@ Cocomine library 用法
 - [IPage php library](./doc/php/IPage.php.md)
 - [IApi php library](./doc/php/IApi.php.md)
 - [Functions php library](./doc/php/Functions.php.md)
+- [Multi Language](./doc/php/multi_language.md)
