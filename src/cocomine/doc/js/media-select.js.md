@@ -25,6 +25,28 @@ json必須符合結構
 ```
 > 你可以參考第21到26行
 
+例子:
+```php
+$Text = showText('Media.Content');
+$Text2 = showText('Media-upload.Content');
+
+$LangJson = json_encode(array(
+    'No_media'           => $Text['No_media'],
+    'Media'              => $Text['Media'] . ' %s',
+    'Unknown_Error'      => showText('Error'),
+    'title' => $Text['Media_Select']['title'],
+    'Select' => $Text['Media_Select']['Select'],
+    'upload' => array(
+        'Timeout'            => $Text2['respond']['Timeout'],
+        'File_name_over'     => $Text2['respond']['File_name_over'],
+        'Over_size'          => $Text2['respond']['Over_size'],
+        'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
+        'Waiting'            => $Text2['respond']['Waiting'],
+        'limit_type' => $Text2['limit_type'],
+        'drag' => $Text2['drag']
+    )
+));
+```
 用法
 ---
 1. 載入插件 `media-select`

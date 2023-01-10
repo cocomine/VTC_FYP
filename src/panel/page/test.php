@@ -6,7 +6,15 @@
 
 namespace panel\page;
 
+use mysqli;
+
 class test implements \cocomine\IPage {
+
+    private array $UpPath;
+    function __construct(mysqli $sqlcon, array $UpPath) {
+        //$this->sqlcon = $sqlcon;
+        $this->UpPath = $UpPath;
+    }
 
     /**
      * @inheritDoc

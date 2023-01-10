@@ -2,27 +2,37 @@ IPage php library
 ===
 用作顯示頁面, 一個頁面對應一個php
 
+Construct (可選)
+---
+```php
+function __construct(mysqli $sqlcon, array $UpPath) { }
+```
+參數:
+ + `mysqli` $sqlcon mysql連結
+ + `array` $UpPath 之前的路徑, ex. 網址係`/test/abc/def` test.php 會收到 `array('abc', 'def')`
+
+---
 用法
 ---
 #### `access(bool $isAuth, int $role, bool $isPost)`
-  > 作用: 是否有權進入
-  ```php
-  public function access(bool $isAuth, int $role, bool $isPost): int;
-  ```
-  參數:
-    * `bool` $isAuth 是否已登入
-    * `int` $role 身份組
-    * `bool` $isPost 是否post請求
-  <br><br>
+> 作用: 是否有權進入
+```php
+public function access(bool $isAuth, int $role, bool $isPost): int;
+```
+參數:
+  * `bool` $isAuth 是否已登入
+  * `int` $role 身份組
+  * `bool` $isPost 是否post請求
+<br><br>
 
-  接受回傳: `int` 授權狀態<br>
-  接受數值:
-    *  401 => 需要登入<br>
-    *  403 => 不可訪問<br>
-    *  404 => 找不到<br>
-    *  200 => 可以訪問<br>
-    *  500 => 伺服器錯誤
-  <br><br>
+接受回傳: `int` 授權狀態<br>
+接受數值:
+  *  401 => 需要登入<br>
+  *  403 => 不可訪問<br>
+  *  404 => 找不到<br>
+  *  200 => 可以訪問<br>
+  *  500 => 伺服器錯誤
+<br><br>
 
   例子:
   沒有登入回傳401, 身份組低於2回傳403, 其餘通行回傳200
@@ -96,9 +106,9 @@ IPage php library
 
 ---
 #### `path()`
-  > 作用: 頁面路徑, html輸出
-  > 
-  > ![example](./1.png)
+  > 作用: 頁面路徑, 使用 [Bootstrap Breadcrumb](https://getbootstrap.com/docs/5.2/components/breadcrumb/)
+  >
+  > ![example](./2.png)
   ```php
   public function path(): string;
   ```
@@ -114,9 +124,9 @@ IPage php library
 
 ---
 #### `get_Head()`
-  > 作用: 頁首標題, 使用 [Bootstrap Breadcrumb](https://getbootstrap.com/docs/5.2/components/breadcrumb/)
+  > 作用: 頁首標題, html輸出
   >
-  > ![example](./2.png)
+  > ![example](./1.png)
   ```php
   public function get_Head(): string;
   ```
