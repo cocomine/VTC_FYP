@@ -41,30 +41,30 @@ class test implements \cocomine\IPage {
         ));
 
         return <<<body
-<pre id="media-select-LangJson" class="d-none">$LangJson</pre>
-<link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
-<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
-<div>
-    <div id="show"></div>
-    <button id="select">select image</button>
-    <div class="date-picker">
-        <input type="date" class="date-picker-toggle">
+    <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
+    <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+    <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+    <div>
+        <div id="show"></div>
+        <button id="select">select image</button>
+        <div class="date-picker">
+            <input type="date" class="date-picker-toggle" min="01-10-2023" max="01-20-2023">
+        </div>
+        <div class="date-picker date-picker-inline">
+            <input type="date" class="date-picker-toggle">
+            <div class="date-calendar"></div>
+        </div>
     </div>
-    <div class="date-picker date-picker-inline">
-        <input type="date" class="date-picker-toggle">
-        <div class="date-calendar"></div>
-    </div>
-</div>
-<script>
-    require.config({
-        paths:{
-            'media-select': 'myself/media-select',
-            'media-select.upload': 'myself/media-select.upload',
-        }
-    })
-    loadModules(['media-select', 'media-select.upload', "myself/page/test", 'myself/datepicker'])
-</script>
-body;
+    <script>
+        require.config({
+            paths:{
+                'media-select': 'myself/media-select',
+                'media-select.upload': 'myself/media-select.upload',
+            }
+        })
+        loadModules(['media-select', 'media-select.upload', "myself/page/test", 'myself/datepicker'])
+    </script>
+    body;
 
     }
 

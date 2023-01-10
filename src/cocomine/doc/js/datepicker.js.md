@@ -20,10 +20,12 @@ datepicker javascript library
          <input type="date" class="date-picker-toggle">
     </div>
     ```
-    > 如果想使用嵌入式則 class 加上 `date-picker-inline`
+    > 如果想使用嵌入式則 class 加上 `date-picker-inline`, <br>
+   > 和在`input` element上方或者下方加上`<div class="date-calendar"></div>`
     >```html
     ><div class="date-picker date-picker-inline">
     >   <input type="date" class="date-picker-toggle">
+    >   <div class="date-calendar"></div>
     ></div>
     >```
 
