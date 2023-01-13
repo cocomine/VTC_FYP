@@ -129,18 +129,17 @@ button {
 */
 /* blockquote */
 blockquote{
-    padding: 60px;
+    padding: 40px 60px 40px 60px;
     position: relative;
-    background: #853BFA;
+    background: var(--primary-color);
 }
 blockquote:before{
     content: '\f10d';
-    font-family: fontawesome;
+    font: var(--fa-font-solid);
     color: #fff;
     font-size: 32px;
     position: absolute;
     left: 16px;
-    top: 46px;
 }
 blockquote p{
     font-size: 17px;

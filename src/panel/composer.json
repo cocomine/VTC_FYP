@@ -7,6 +7,7 @@
         "google/apiclient": "^2.4",
         "robthree/twofactorauth": "^1.8",
         "bacon/bacon-qr-code": "^2.0",
-        "geoip2/geoip2": "~2.0"
+        "geoip2/geoip2": "~2.0",
+        "ezyang/htmlpurifier": "^4.16"
     }
 }

@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
                 if ($auth->google_login($profile->getEmail())) header("Location: /panel");
                 else {
-                    header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . $profile->getName());
+                    header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . urlencode($profile->getName()));
                     exit();
                 }
             } else {

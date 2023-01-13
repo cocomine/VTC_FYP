@@ -45,12 +45,12 @@ img {
 /*custome css*/
 
 ::selection {
-    background: #FF7112;
+    background: var(--primary-color);
     color: #fff;
 }
 
 ::-moz-selection {
-    background: #FF7112;
+    background: var(--primary-color);
     color: #fff;
 }
 

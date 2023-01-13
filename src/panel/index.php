@@ -267,16 +267,25 @@ function run_apis(array $path, MyAuth $auth) {
                                 echo '';
                             }
                             if ($auth->userdata['Role'] >= 2) {
-                                echo '<li>
+                                echo
+                                '<li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a>
                                     <ul>
                                         <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a></li>
                                         <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>
                                     </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
+                                    <ul>
+                                        <li><a href="/panel/event/"><i class="fa-regular fa-calendar-check"></i><span>全部活動</span></a></li>
+                                        <li><a href="/panel/event/newevent/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
+                                    </ul>
                                 </li>';
                             }
                             if ($auth->userdata['Role'] >= 3) {
-                                echo '<li>
+                                echo
+                                '<li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
                                     <ul>
                                         <li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>

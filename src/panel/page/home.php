@@ -15,6 +15,7 @@ use mysqli;
  */
 class home implements IPage {
     private mysqli $sqlcon;
+    private int $role;
 
     /**
      * home constructor.
@@ -27,6 +28,9 @@ class home implements IPage {
 
     /* 是否有權進入 */
     function access(bool $isAuth, int $role, bool $isPost): int {
+        $this->role = $role;
+        if(!$isAuth) return 401;
+        if($role < 1) return 403;
         return 200;
     }
 
@@ -38,7 +42,10 @@ class home implements IPage {
         /* json 語言 */
         $jsonLang = json_encode(array());
 
-        return <<<body
+        if($this->role < 2){
+            return "<script>location.replace('/')</script>";
+        }else{
+            return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <div class='col-12 mt-4'>
 </div>
@@ -46,6 +53,8 @@ class home implements IPage {
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>
 body;
+        }
+
     }
 
     /* POST請求 */
