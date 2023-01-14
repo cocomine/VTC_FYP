@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'simplemde', 'showdown', 'xss'], function (jq, SimpleMDE, showdown, xss) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload'], function (jq, EasyMDE, Showdown, xss, media_select) {
     "use strict";
 
     /* Count content length */
@@ -12,50 +12,171 @@ define(['jquery', 'simplemde', 'showdown', 'xss'], function (jq, SimpleMDE, show
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
 
-    /* markdown editor */
-    const jq_description = $('#event-description')
-    const md_description = new SimpleMDE({
-        element: jq_description[0],
-        forceSync: true,
-        autoDownloadFontAwesome: false,
-        spellChecker: false,
-        promptURLs: true,
-        toolbar: [
-            "bold", "italic", "heading", "strikethrough", "|",
-            "heading-1", "heading-2", "heading-3", "|",
-            "quote", "unordered-list", "ordered-list", "table", "|",
-            "horizontal-rule", "link", {
-                name: "Image",
-                action: function (editor) {
+    /* HTML filter xss */
+    const filterXSS_description = new xss.FilterXSS({
+        stripIgnoreTag: true,
+        whiteList: {
+            h1: [],
+            h2: [],
+            h3: [],
+            h4: [],
+            h5: [],
+            h6: [],
+            a: ["href", 'target'],
+            strong: [],
+            em: [],
+            del: [],
+            br: [],
+            p: [],
+            ul: ['class'],
+            ol: [],
+            li: [],
+            table: [],
+            thead: [],
+            th: [],
+            tbody: [],
+            td: [],
+            tr: [],
+            blockquote: [],
+            img: ["src", "alt"],
+            hr:[]
+        }
+    });
+    const filterXSS_precautions = new xss.FilterXSS({
+        stripIgnoreTag: true,
+        whiteList: {
+            strong: [],
+            em: [],
+            del: [],
+            br: [],
+            p: [],
+            ul: ['class'],
+            ol: [],
+            li: []
+        }
+    });
 
-                },
-                className: "fa-solid fa-image",
-                title: "Add Image"
-            }, "|",
-            "preview", "side-by-side", "fullscreen", "guide"],
+    /* markdown converter */
+    const MD_converter = new Showdown.Converter({
+        excludeTrailingPunctuationFromURLs: true,
+        simplifiedAutoLink: true,
+        noHeaderId: true,
+        strikethrough: true,
+        tables: true,
+        smoothLivePreview: true,
+        extensions: [{
+            type: 'output',
+            regex: new RegExp(`<ul(.*)>`, 'g'),
+            replace: `<ul class="disc" $1>`
+        },{
+            type: 'output',
+            regex: new RegExp(`<a(.*)>`, 'g'),
+            replace: `<a target="_blank" $1>`
+        }]
+    });
+
+    /**
+     * markdown editor options
+     * @param {XSS.FilterXSS} filterXSS
+     * @param {JQuery<HTMLElement>} jq_elm
+     * @param {Showdown.Converter} converter
+     * @return EasyMDE.Options
+     */
+    const editor_options = (filterXSS, jq_elm, converter) => {
+        return {
+            forceSync: true,
+            autoDownloadFontAwesome: false,
+            spellChecker: false,
+            unorderedListStyle: "+",
+            maxHeight: "500px",
+            uploadImage: true,
+            sideBySideFullscreen: false,
+            tabSize: 4,
+            styleSelectedText: false,
+            toolbarButtonClassPrefix: "mde",
+            previewRender: (text) => {
+                return filterXSS.process(converter.makeHtml(text))
+            },
+            toolbar: [
+                "bold", "italic", "heading", "strikethrough", "|",
+                "quote", "unordered-list", "ordered-list", "table", "|",
+                "horizontal-rule", "link", {
+                    name: "Image",
+                    action: function (editor) {
+                        if (!editor.codemirror || editor.isPreviewActive()) return;
+
+                        const doc = editor.codemirror.getDoc();
+                        media_select.select_media((ids) => {
+                            if (doc.somethingSelected()) {
+                                const text = doc.getSelection();
+                                doc.replaceSelection('![' + text + '](/panel/api/media/' + ids + ')', 'around')
+                                editor.codemirror.focus()
+                            } else {
+                                const cur = doc.getCursor()
+                                const end_cur = doc.getCursor('end')
+                                const text = '![](/panel/api/media/' + ids + ')'
+                                doc.replaceRange(text, cur)
+                                editor.codemirror.focus()
+                            }
+                        }, 1)
+                    },
+                    className: "fa-solid fa-image",
+                    title: "Add Image"
+                }, "|",
+                "preview", "side-by-side", "fullscreen", "guide"],
+            shortcuts: {
+                "Image": "Ctrl-Alt-I",
+            },
+            blockStyles: {
+                italic: "_"
+            },
+            renderingConfig: {
+                sanitizerFunction: (renderedHTML) => {
+                    return filterXSS.process(renderedHTML)
+                }
+            },
+            status: [
+                "autosave", "lines", "words", "cursor", {
+                    className: "count",
+                    defaultValue: (el) => {
+                        el.innerHTML = "0/" + jq_elm.attr('maxlength');
+                    },
+                    onUpdate: (el) => {
+                        const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
+                        el.innerHTML = length + "/" + maxlength;
+                        if (length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`)
+                    }
+                }]
+        }
+    }
+
+    /* description markdown editor */
+    const jq_description = $('#event-description')
+    const md_description = new EasyMDE({
+        ...editor_options(filterXSS_description, jq_description, MD_converter),
+        element: jq_description[0],
         autosave: {
             enabled: true,
-            delay: 20000,
-            uniqueId: "event-description"
+            uniqueId: "event-description",
         },
-        insertTexts: {
-            image: ["![", "](//panel/api/media/)"],
-        },
-        previewRender: function (text) {
-            const c = new showdown.Converter();
-            return xss(c.makeHtml(text));
-        },
-        status: [
-            "autosave", "lines", "words", "cursor", {
-                className: "count",
-                defaultValue: (el) => {
-                    el.innerHTML = "0/" + jq_description.attr('maxlength');
-                },
-                onUpdate: (el) => {
-                    const length = jq_description.val().length, maxlength = jq_description.attr('maxlength');
-                    el.innerHTML = length + "/" + maxlength;
-                    if(length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`)
-                }
-            }]
+        placeholder:"活動描述"
     })
+    md_description.codemirror.setValue($('#event-description-data').val())
+
+    /* precautions markdown editor */
+    const jq_precautions = $('#event-precautions')
+    const md_precautions = new EasyMDE({
+        ...editor_options(filterXSS_precautions, jq_precautions, MD_converter),
+        element: jq_precautions[0],
+        autosave: {
+            enabled: true,
+            uniqueId: "event-precautions"
+        },
+        toolbar: ["bold", "italic", "heading", "strikethrough", "|",
+            "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide"],
+        placeholder:"活動注意事項",
+        maxHeight:"100px",
+    })
+    md_precautions.codemirror.setValue($('#event-precautions-data').val())
+
 })

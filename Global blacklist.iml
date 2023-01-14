@@ -25,5 +25,6 @@
     <orderEntry type="library" name="bootstrap" level="application" />
     <orderEntry type="library" name="toastr" level="application" />
     <orderEntry type="library" name="simplemde" level="application" />
+    <orderEntry type="library" name="easymde" level="application" />
   </component>
 </module>

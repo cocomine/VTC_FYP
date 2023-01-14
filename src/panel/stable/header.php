@@ -43,11 +43,12 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com *.google.com;
-              style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com *.google.com;
-              connect-src 'self' google.com *.google.com *.lottiefiles.com;
-              img-src 'self' www.gravatar.com;
-              font-src 'self' fonts.gstatic.com" />
+              script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com;
+              style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com;
+              connect-src 'self' accounts.google.com *.lottiefiles.com;
+              img-src 'self' data: www.gravatar.com;
+              font-src 'self' fonts.gstatic.com;
+              frame-src 'self' accounts.google.com" />
         <link rel="manifest" href="/panel/assets/manifest.json"/>
         <link rel="shortcut icon" type="image/png" href="/panel/assets/images/icon/favicon.png">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">

@@ -39,36 +39,37 @@ header('Content-Type:text/html; charset=utf-8');
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title><?php echo showText(title); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#12a0ff"/>
+        <meta name="theme-color" content="#ff7112"/>
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com *.google.com;
-              style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com *.google.com;
-              connect-src 'self' google.com *.google.com *.lottiefiles.com;
-              img-src 'self' www.gravatar.com;
-              font-src 'self' fonts.gstatic.com" />
-        <link rel="manifest" href="/assets/manifest.json"/>
-        <link rel="shortcut icon" type="image/png" href="/assets/images/icon/favicon.png">
+              script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com;
+              style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com;
+              connect-src 'self' accounts.google.com *.lottiefiles.com;
+              img-src 'self' data: www.gravatar.com;
+              font-src 'self' fonts.gstatic.com;
+              frame-src 'self' accounts.google.com" />
+        <link rel="manifest" href="/panel/assets/manifest.json"/>
+        <link rel="shortcut icon" type="image/png" href="/panel/assets/images/icon/favicon.png">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <link rel="stylesheet" href="/assets/css/FA6/css/fontawesome.min.css">
-        <link rel="stylesheet" href="/assets/css/FA6/css/regular.min.css">
-        <link rel="stylesheet" href="/assets/css/FA6/css/brands.min.css">
-        <link rel="stylesheet" href="/assets/css/FA6/css/solid.min.css">
-        <link rel="stylesheet" href="/assets/css/themify-icons.min.css">
-        <link rel="stylesheet" href="/assets/css/metisMenu.min.css">
-        <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
-        <link rel="stylesheet" href="/assets/css/slicknav.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/FA6/css/fontawesome.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/FA6/css/regular.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/FA6/css/brands.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/FA6/css/solid.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/themify-icons.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/metisMenu.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/slicknav.min.css">
         <!-- others css -->
-        <link rel="stylesheet" href="/assets/css/typography.css">
-        <link rel="stylesheet" href="/assets/css/default-css.css">
-        <link rel="stylesheet" href="/assets/css/styles.css">
-        <link rel="stylesheet" href="/assets/css/responsive.css">
-        <link rel="stylesheet" href="/assets/css/myself/LoadingBar.min.css"/>
+        <link rel="stylesheet" href="/panel/assets/css/typography.css">
+        <link rel="stylesheet" href="/panel/assets/css/default-css.css">
+        <link rel="stylesheet" href="/panel/assets/css/styles.css">
+        <link rel="stylesheet" href="/panel/assets/css/responsive.css">
+        <link rel="stylesheet" href="/panel/assets/css/myself/LoadingBar.min.css"/>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
         <!-- modernizr css -->
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-        <script async src="/assets/js/vendor/modernizr-custom.js"></script>
+        <script async src="/panel/assets/js/vendor/modernizr-custom.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
     </head>

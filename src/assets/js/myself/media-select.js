@@ -142,7 +142,7 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
      * @param {RegExp} mime 列表過濾MIME媒體類型
      * @param {([string])=>void} selected_media 回傳選擇媒體id
      */
-    function select_media(max = 0, mime = /.*/, selected_media) {
+    function select_media(selected_media, max = 0, mime = /.*/) {
         max_sel = max;
         filter_mime = mime;
         callback = selected_media;
