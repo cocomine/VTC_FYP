@@ -39,8 +39,12 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class='modal-body'>
-                        <div class="row gy-4 align-items-center media-list select-mode">
-                            <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" role="tabpanel" id="Media-select-pane">
+                                <div class="row gy-4 align-items-center media-list select-mode">
+                                    <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -142,11 +146,11 @@ define(['jquery', 'bootstrap'], function (jq, bootstrap) {
      * @param {RegExp} mime 列表過濾MIME媒體類型
      * @param {([string])=>void} selected_media 回傳選擇媒體id
      */
-    function select_media(selected_media, max = 0, mime = /.*/) {
+    const select_media = function(selected_media, max = 0, mime = /.*/) {
         max_sel = max;
         filter_mime = mime;
         callback = selected_media;
-        load_list();
+        load_list()
         bs_modal.show();
     }
 

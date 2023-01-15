@@ -69,9 +69,9 @@ $LangJson = json_encode(array(
 2. 接受選擇媒體 `media_select.select_media`
     ```javascript
     define(['jquery', 'media-select'], function (jq, media_select) {
-        media_select.select_media(max, mime, function (ids){
+        media_select.select_media(function (ids){
             //ids = 用戶選擇的圖片id array
-        });
+        }, max, mime);
     });
     ```
    將會有個彈出式視框讓用戶可以選擇
@@ -98,10 +98,10 @@ $LangJson = json_encode(array(
 define(['jquery', 'media-select'], function (jq, media_select) {
     $('#select').click(function () {
         //用戶可以選擇無限將圖, 接受任何檔案類型
-        media_select.select_media(0, /.*/, (ids) => {
+        media_select.select_media((ids) => {
             ids.forEach((id)=>{
                 $('#show').append(`<img src="/panel/api/media/${id}" alt="${id}"/>`)
-            })
+            }, 0, /.*/)
         });
     })
 })

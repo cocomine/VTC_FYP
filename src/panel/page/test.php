@@ -44,7 +44,10 @@ class test implements \cocomine\IPage {
                 'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
                 'Waiting'            => $Text2['respond']['Waiting'],
                 'limit_type' => $Text2['limit_type'],
-                'drag' => $Text2['drag']
+                'drag' => $Text2['drag'],
+                'upload' => $Text2['upload'],
+                'or' => $Text2['or'],
+                'limit' => $Text2['respond.']
             )
         ));
 

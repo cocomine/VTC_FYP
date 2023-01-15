@@ -63,19 +63,19 @@ class newevent implements IPage {
                         <form class="needs-validation" novalidate>
                             <div class="col-12 mb-3">
                                 <label for="event-summary" class="form-label">活動摘要</label>
-                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="50" required></textarea>
-                                <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="45" required></textarea>
+                                <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/45</span>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="event-summary" class="form-label">活動注意事項</label>
-                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200" required></textarea>
+                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="180" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 <textarea id="event-precautions-data" class="d-none" readonly>Hello world</textarea>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
-                                <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="1000" required></textarea>
+                                <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="950" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 <textarea id="event-description-data" class="d-none" readonly>Hello world</textarea>
                             </div>

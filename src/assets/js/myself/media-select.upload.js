@@ -20,6 +20,7 @@ define(['media-select'], function (media_select) {
     /* 多語言處理 */
     const Lang = {
         Media: "Media %s",
+        title: "Select Media",
         upload: {
             Timeout: "Upload timed out",
             File_name_over: "File name is too long",
@@ -27,11 +28,13 @@ define(['media-select'], function (media_select) {
             File_type_not_mach: "File format does not match",
             Waiting: "Waiting for upload...",
             limit_type: "Accept: .jpg .png .webp .gif",
-            drag: "Drag files here to upload"
+            drag: "Drag files here to upload",
+            upload: "Upload",
+            or: "Or",
+            limit: 'The maximum size of a single file is 8MB'
         },
         ...JSON.parse($('#media-select-LangJson').text())
     };
-
     /* 添加html */
     drop_area.append(`
         <div class="upload-overly" style="display: none">
@@ -42,6 +45,29 @@ define(['media-select'], function (media_select) {
             </div>
         </div>`)
     drop_area.children('.modal-footer').prepend(`<p>${Lang.upload.drag}</p>`)
+    drop_area.children('.modal-body').prepend(`
+        <ul class="nav nav-tabs mb-1" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#Media-select-pane" type="button" role="tab" aria-controls="Media-select-pane" aria-selected="true">${Lang.title}</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#Media-upload-pane" type="button" role="tab" aria-controls="Media-upload-pane" aria-selected="false">${Lang.upload.upload}</button>
+            </li>
+        </ul>`)
+    .children('.tab-content').append(`
+        <div class="tab-pane fade" role="tabpanel" id="Media-upload-pane">
+            <div class='row py-5 justify-content-center' style="border: 5px dashed #ccc; border-radius: 20px;">
+                <h5 class='col-auto'>${Lang.upload.drag}</h5>
+                <div class='w-100'></div>
+                <p class='col-auto'>${Lang.upload.or}</p>
+                <div class='w-100'></div>
+                <div class='col-12 col-sm-4 '>
+                    <input type='file' class='form-control' id='file-sel' multiple accept='${media_select.data}' />
+                    <label for="file-sel" class="form-label">${Lang.upload.limit_type}</label>
+                </div>
+            </div>
+            <p>${Lang.upload.limit}</p>
+        </div>`)
 
     /* 拖拉處理 */
     drop_area.on('dragenter dragover dragleave drop', function (e) {
@@ -59,8 +85,13 @@ define(['media-select'], function (media_select) {
         }, 100);
     })
 
+    /* Upload */
     drop_area.on('drop', function (e) {
         handleFiles((e.originalEvent && e.originalEvent.dataTransfer.files));
+    })
+    $('#file-sel').change(function (e) {
+        handleFiles(e.target.files);
+        $('#file-sel').val('');
     })
 
     /**
