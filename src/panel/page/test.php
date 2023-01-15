@@ -59,10 +59,10 @@ class test implements \cocomine\IPage {
         <div id="show"></div>
         <button id="select">select image</button>
         <div class="date-picker">
-            <input type="date" class="date-picker-toggle" min="01-10-2023" max="01-20-2023">
+            <input type="date" class="date-picker-toggle" min="01-10-2023" max="01-20-2023" id="abc">
         </div>
         <div class="date-picker date-picker-inline">
-            <input type="date" class="date-picker-toggle">
+            <input type="date" class="date-picker-toggle" id="ccc">
             <div class="date-calendar"></div>
         </div>
     </div>

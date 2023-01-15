@@ -35,3 +35,60 @@ datepicker javascript library
          <input type="date" class="date-picker-toggle" min="" max="">
     </div>
     ```
+
+
+禁用個別日期
+---
+使用方法是在HTMLelement上面設置`disableDate`屬性
+
+1. 在input element上面設置`id`屬性
+   ```html
+   <div class="date-picker">
+      <input type="date" class="date-picker-toggle" id="abc">
+   </div>
+   ```
+   
+2. javascript選擇該input element, 可以使用jquery方法或者原生方法
+   ```javascript
+   //原生
+   document.getElementById('ccc')
+   
+   //jquery
+   $('#ccc')
+   ```
+
+3. 設置`disableDate`屬性, 屬性類型是`string[]`
+   ```javascript
+   //原生
+   document.getElementById('ccc').disableDate = []
+   
+   //jquery
+   $('#ccc')[0].disableDate = []
+   ```
+   
+4. 設置要禁用日期(`dd-MM-yyy`), 
+   ```javascript
+   //原生
+   document.getElementById('ccc').disableDate = ["01-02-2023"]
+   
+   //jquery
+   $('#ccc')[0].disableDate = ["01-02-2023"]
+   ```
+   
+5. 要禁用更多日期, 則在array上增加數值
+   ```javascript
+   //原生
+   document.getElementById('ccc').disableDate = ["01-02-2023", "01-03-2023"]
+   
+   //jquery
+   $('#ccc')[0].disableDate = ["01-02-2023", "01-03-2023"]
+   ```
+   
+> 如發現設置後仍沒有反應, 請嘗試之後使用`drawDatePicker()`function
+> ```javascript
+> //原生
+> document.getElementById('ccc').drawDatePicker()
+> 
+> //jquery
+> $('#ccc')[0].drawDatePicker()
+> ```
