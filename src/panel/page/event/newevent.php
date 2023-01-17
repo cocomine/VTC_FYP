@@ -28,13 +28,16 @@ class newevent implements IPage {
             'title' => $Text['Media_Select']['title'],
             'Select' => $Text['Media_Select']['Select'],
             'upload' => array(
-                'Timeout'            => $Text2['respond']['Timeout'],
-                'File_name_over'     => $Text2['respond']['File_name_over'],
-                'Over_size'          => $Text2['respond']['Over_size'],
+                'Timeout' => $Text2['respond']['Timeout'],
+                'File_name_over' => $Text2['respond']['File_name_over'],
+                'Over_size' => $Text2['respond']['Over_size'],
                 'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
-                'Waiting'            => $Text2['respond']['Waiting'],
+                'Waiting' => $Text2['respond']['Waiting'],
                 'limit_type' => $Text2['limit_type'],
-                'drag' => $Text2['drag']
+                'drag' => $Text2['drag'],
+                'upload' => $Text2['upload'],
+                'or' => $Text2['or'],
+                'limit' => $Text2['limit']
             )
         ));
 
@@ -90,7 +93,7 @@ class newevent implements IPage {
                 <div class="card-body">
                     <h4 class="card-title">Event Image</h4>
                     <div class="card-text">
-                        <div class="media-list row mb-2" id="image-list"></div>                        </div>
+                        <div class="media-list row mb-2" id="image-list"></div>
                         <button type="button" class="btn btn-rounded btn-primary" id="image-select">Select Image</button>
                         <small>You can select 5 image.</small>
                     </div>

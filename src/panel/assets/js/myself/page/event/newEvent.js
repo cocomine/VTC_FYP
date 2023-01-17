@@ -3,8 +3,10 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload'], function (jq, EasyMDE, Showdown, xss, media_select) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload) {
     "use strict";
+
+    media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
     $('#event-summary, #event-precautions').on('input focus', function (e) {
@@ -192,6 +194,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                     </div>
                 </div>`)
             $('#image-list').html(img_html)
-        }, 5)
+        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
     })
 })
