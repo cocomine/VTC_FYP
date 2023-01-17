@@ -40,10 +40,18 @@ media-select.upload javascript library
 ```javascript
 //HTML script tag內
 require.config({
-    paths:{
+    paths: {
         'media-select': 'myself/media-select',
         'media-select.upload': 'myself/media-select.upload',
     }
 })
 loadModules(['media-select', 'media-select.upload'])
+```
+
+hbhb
+---
+> jjj
+
+ ```javascript
+function setInputAccept(mime)
 ```
