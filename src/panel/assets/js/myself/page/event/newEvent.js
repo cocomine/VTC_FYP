@@ -39,7 +39,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             tr: [],
             blockquote: [],
             img: ["src", "alt"],
-            hr:[]
+            hr: []
         }
     });
     const filterXSS_precautions = new xss.FilterXSS({
@@ -59,7 +59,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     /* markdown converter */
     const MD_converter = new Showdown.Converter({
         excludeTrailingPunctuationFromURLs: true,
-        simplifiedAutoLink: true,
         noHeaderId: true,
         strikethrough: true,
         tables: true,
@@ -68,7 +67,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             type: 'output',
             regex: new RegExp(`<ul(.*)>`, 'g'),
             replace: `<ul class="disc" $1>`
-        },{
+        }, {
             type: 'output',
             regex: new RegExp(`<a(.*)>`, 'g'),
             replace: `<a target="_blank" $1>`
@@ -159,7 +158,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             enabled: true,
             uniqueId: "event-description",
         },
-        placeholder:"活動描述"
+        placeholder: "活動描述"
     })
     md_description.codemirror.setValue($('#event-description-data').val())
 
@@ -174,9 +173,25 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         },
         toolbar: ["bold", "italic", "heading", "strikethrough", "|",
             "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide"],
-        placeholder:"活動注意事項",
-        maxHeight:"100px",
+        placeholder: "活動注意事項",
+        maxHeight: "100px",
     })
     md_precautions.codemirror.setValue($('#event-precautions-data').val())
 
+    /* Image select */
+    $('#image-select').click(() => {
+        media_select.select_media((images) => {
+            const img_html = images.map((id) => `
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+                    <div class="ratio ratio-1x1 media-list-focus" data-image-id="${id}">
+                        <div class="overflow-hidden">
+                            <div class="media-list-center">
+                                <img src="/panel/api/media/${id}" draggable="true" alt="${id}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>`)
+            $('#image-list').html(img_html)
+        }, 5)
+    })
 })
