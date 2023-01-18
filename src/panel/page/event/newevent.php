@@ -28,13 +28,16 @@ class newevent implements IPage {
             'title' => $Text['Media_Select']['title'],
             'Select' => $Text['Media_Select']['Select'],
             'upload' => array(
-                'Timeout'            => $Text2['respond']['Timeout'],
-                'File_name_over'     => $Text2['respond']['File_name_over'],
-                'Over_size'          => $Text2['respond']['Over_size'],
+                'Timeout' => $Text2['respond']['Timeout'],
+                'File_name_over' => $Text2['respond']['File_name_over'],
+                'Over_size' => $Text2['respond']['Over_size'],
                 'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
-                'Waiting'            => $Text2['respond']['Waiting'],
+                'Waiting' => $Text2['respond']['Waiting'],
                 'limit_type' => $Text2['limit_type'],
-                'drag' => $Text2['drag']
+                'drag' => $Text2['drag'],
+                'upload' => $Text2['upload'],
+                'or' => $Text2['or'],
+                'limit' => $Text2['limit']
             )
         ));
 
@@ -58,7 +61,7 @@ class newevent implements IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title">活動資料</div>
+                    <h4 class="card-title">活動資料</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate>
                             <div class="col-12 mb-3">
@@ -84,11 +87,44 @@ class newevent implements IPage {
                 </div>
             </div>
         </div>
+        <!-- Image select-->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Event Image</h4>
+                    <div class="card-text">
+                        <div class="media-list row mb-2" id="image-list"></div>
+                        <button type="button" class="btn btn-rounded btn-primary" id="image-select">Select Image</button>
+                        <small>You can select 5 image.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="col-3">
     
 </div>
+<style>
+#image-list.media-list{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+.media-list .media-list-center{
+    cursor: grab;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate(50%,50%);
+}
+.media-list .media-list-center > img{
+    transform: translate(-50%,-50%);
+    height: 100%;
+    max-width: none;
+}
+</style>
 <script>
     require.config({
         paths:{

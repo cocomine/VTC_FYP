@@ -288,7 +288,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 '<li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
                                     <ul>
-                                        <li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
+                                        <li><a href="/panel/admin/notify_mg/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
                                         <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>
                                     </ul>
                                 </li>';
