@@ -9,7 +9,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
-    $('#event-summary, #event-precautions').on('input focus', function (e) {
+    $('#event-summary, #event-precautions, #event-location').on('input focus', function (e) {
         const length = $(this).val().length
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
@@ -181,25 +181,71 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     md_precautions.codemirror.setValue($('#event-precautions-data').val())
 
     /* Image select */
+    let img_items = [];
+    const dropZone = $('#event-image-list')
     $('#image-select').click(() => {
         media_select.select_media((images) => {
-            const img_html = images.map((id) => `
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+            const tmp = images.map((id) =>
+                $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
                     <div class="ratio ratio-1x1 media-list-focus">
                         <div class="overflow-hidden">
                             <div class="media-list-center">
-                                <img src="/panel/api/media/${id}" draggable="true" alt="${id}" data-image-id="${id}"/>
+                                <img src="/panel/api/media/${id}" draggable="true" data-image-id="${id}" alt="${id}" />
                             </div>
                         </div>
                     </div>
-                </div>`)
-            $('#image-list').html(img_html)
+                </div>`));
+            dropZone.html(tmp);
+
+            img_items = tmp.map((value) => value.find('img')[0])
         }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
     })
 
     /* Image drag drop */
+    //Thx: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
+    let adjacentItem;
+    let prevAdjacentItem;
+    let selectedItem;
 
-    $('#image-list').on('dragstart', 'img[data-image-id="*"]', function (e) {
-        e.data
+    //dragstart
+    dropZone.on('dragstart', 'img', function (e) {
+        selectedItem = e.target;
+        $(e.target).parents('.item').css('opacity', 0.4)
+        e.originalEvent.dataTransfer.effectAllowed = 'move';
+    })
+    //dragover
+    dropZone.on('dragover', function (e) {
+        e.preventDefault();
+        e.originalEvent.dataTransfer.dropEffect = "move"
+
+        if(img_items.includes(e.target)){
+            adjacentItem = e.target;
+
+            if(adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined){
+                $(prevAdjacentItem).parents('.item').css('marginLeft', '0')
+            }
+
+            if(adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))){
+                const item = $(adjacentItem).parents('.item')
+                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth()+'px')
+            }
+
+            prevAdjacentItem = adjacentItem;
+        }
+    })
+    //drop
+    dropZone.on('drop', function (e) {
+        e.preventDefault();
+
+        if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))) {
+            console.log(dropZone.find(adjacentItem).parents('.item'))
+            dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1))
+            $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0')
+        }
+    })
+    //dragend
+    dropZone.on('dragend', function (e) {
+        $(selectedItem).parents('.item').css('opacity', 1)
+        $(adjacentItem).parents('.item').css('marginLeft', '0')
     })
 })

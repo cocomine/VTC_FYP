@@ -45,7 +45,7 @@ class newevent implements IPage {
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <link rel="stylesheet" href="/assets/css/myself/media-select.css">
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
-<div class="col-9">
+<div class="col-12 col-lg-9">
     <div class="row gy-4">
         <!--活動標題-->
         <div class="col-12">
@@ -66,21 +66,21 @@ class newevent implements IPage {
                         <form class="needs-validation" novalidate>
                             <div class="col-12 mb-3">
                                 <label for="event-summary" class="form-label">活動摘要</label>
-                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="45" required></textarea>
-                                <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/45</span>
+                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="50" required></textarea>
+                                <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="event-summary" class="form-label">活動注意事項</label>
-                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="180" required></textarea>
+                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
-                                <textarea id="event-precautions-data" class="d-none" readonly>Hello world</textarea>
+                                <textarea id="event-precautions-data" class="d-none" readonly></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
-                                <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="950" required></textarea>
+                                <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="1000" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
-                                <textarea id="event-description-data" class="d-none" readonly>Hello world</textarea>
+                                <textarea id="event-description-data" class="d-none" readonly></textarea>
                             </div>
                         </form>
                     </div>
@@ -93,16 +93,39 @@ class newevent implements IPage {
                 <div class="card-body">
                     <h4 class="card-title">Event Image</h4>
                     <div class="card-text">
-                        <div class="media-list row mb-2" id="image-list"></div>
+                        <div class="media-list row mb-2" id="event-image-list"></div>
+                        <p class="d-none d-lg-block">你可以拖拉改變次序</p>
                         <button type="button" class="btn btn-rounded btn-primary" id="image-select">Select Image</button>
                         <small>You can select 5 image.</small>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 活動位置 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動位置</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate>
+                            <div class="col-12 mb-3">
+                                <label for="event-location" class="form-label">活動詳細地址</label>
+                                <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
+                                <span class="fa-pull-right text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                            </div>
+                        </form>
+                        <label class="form-label">地圖位置</label>
+                        <div class="w-100 rounded bg-primary" style="height: 30rem">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="col-3">
+body . <<<body
+<div class="col-12 col-lg-3">
     
 </div>
 <style>
