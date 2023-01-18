@@ -116,7 +116,7 @@ class newevent implements IPage {
                         </form>
                         <label class="form-label">地圖位置</label>
                         <div class="w-100 rounded bg-primary" style="height: 30rem">
-                            
+                            test gpg
                         </div>
                     </div>
                 </div>
