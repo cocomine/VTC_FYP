@@ -185,15 +185,21 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         media_select.select_media((images) => {
             const img_html = images.map((id) => `
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
-                    <div class="ratio ratio-1x1 media-list-focus" data-image-id="${id}">
+                    <div class="ratio ratio-1x1 media-list-focus">
                         <div class="overflow-hidden">
                             <div class="media-list-center">
-                                <img src="/panel/api/media/${id}" draggable="true" alt="${id}"/>
+                                <img src="/panel/api/media/${id}" draggable="true" alt="${id}" data-image-id="${id}"/>
                             </div>
                         </div>
                     </div>
                 </div>`)
             $('#image-list').html(img_html)
         }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
+    })
+
+    /* Image drag drop */
+
+    $('#image-list').on('dragstart', 'img[data-image-id="*"]', function (e) {
+        e.data
     })
 })
