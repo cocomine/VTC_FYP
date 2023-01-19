@@ -3,9 +3,9 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox', 'mapbox-gl-geocoder'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder) {
     "use strict";
-
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
@@ -163,6 +163,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         placeholder: "活動描述"
     })
     md_description.codemirror.setValue($('#event-description-data').val())
+    md_description.codemirror.on('blur', () => md_description.toTextArea())
 
     /* precautions markdown editor */
     const jq_precautions = $('#event-precautions')
@@ -179,6 +180,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         maxHeight: "100px",
     })
     md_precautions.codemirror.setValue($('#event-precautions-data').val())
+    md_precautions.codemirror.on('blur', () => md_precautions.toTextArea())
 
     /* Image select */
     let img_items = [];
@@ -198,11 +200,11 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             dropZone.html(tmp);
 
             img_items = tmp.map((value) => value.find('img')[0])
-        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
+        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)/)
     })
 
     /* Image drag drop */
-    //Thx: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
+    //Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
     let adjacentItem;
     let prevAdjacentItem;
     let selectedItem;
@@ -248,4 +250,31 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $(selectedItem).parents('.item').css('opacity', 1)
         $(adjacentItem).parents('.item').css('marginLeft', '0')
     })
+
+    /* Map */
+    /* Load map */
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        zoom: 1,
+    });
+
+    /* Enable stars with reduced atmosphere */
+    map.on('style.load', () => {
+        map.setFog({'horizon-blend': 0.05});
+    });
+
+    /* Add Map Control */
+    const map_geo = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        marker:{
+            color: 'red',
+            draggable: true},
+        mapboxgl: mapboxgl,
+    });
+    map.addControl(map_geo);
+    map.addControl(new mapboxgl.GeolocateControl());
+    map.addControl(new mapboxgl.ScaleControl());
+    map.addControl(new mapboxgl.NavigationControl());
+
 })

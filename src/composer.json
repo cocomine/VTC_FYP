@@ -8,10 +8,6 @@
         "robthree/twofactorauth": "^1.8",
         "bacon/bacon-qr-code": "^2.0",
         "geoip2/geoip2": "~2.0",
-      "ext-fileinfo": "*",
-      "ext-json": "*",
-      "ext-mbstring": "*",
-      "ext-mysqli": "*",
-      "ext-intl": "*"
+        "ezyang/htmlpurifier": "^4.16"
     }
 }

@@ -44,7 +44,10 @@ class newevent implements IPage {
         return <<<body
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <link rel="stylesheet" href="/assets/css/myself/media-select.css">
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
+body . <<<body
 <div class="col-12 col-lg-9">
     <div class="row gy-4">
         <!--活動標題-->
@@ -91,12 +94,13 @@ class newevent implements IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Event Image</h4>
+                    <h4 class="card-title">活動圖片</h4>
                     <div class="card-text">
                         <div class="media-list row mb-2" id="event-image-list"></div>
                         <p class="d-none d-lg-block">你可以拖拉改變次序</p>
-                        <button type="button" class="btn btn-rounded btn-primary" id="image-select">Select Image</button>
-                        <small>You can select 5 image.</small>
+                        <br>
+                        <button type="button" class="btn btn-rounded btn-primary" id="image-select">選擇圖片</button>
+                        <small>你最多可以選擇五張圖片</small>
                     </div>
                 </div>
             </div>
@@ -115,9 +119,7 @@ class newevent implements IPage {
                             </div>
                         </form>
                         <label class="form-label">地圖位置</label>
-                        <div class="w-100 rounded bg-primary" style="height: 30rem">
-                            
-                        </div>
+                        <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
                     </div>
                 </div>
             </div>
@@ -132,6 +134,9 @@ body . <<<body
 #image-list.media-list{
     flex-wrap: nowrap;
     overflow-x: auto;
+}
+.media-list .media-list-focus{
+    border: lightgrey 1px solid;
 }
 .media-list .media-list-center{
     cursor: grab;
@@ -151,6 +156,8 @@ body . <<<body
 <script>
     require.config({
         paths:{
+            mapbox: ['https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl'],
+            'mapbox-gl-geocoder': ['https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min'],
             easymde: ['https://unpkg.com/easymde/dist/easymde.min'],
             showdown: ['https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min'],
             xss:['xss.min'],
@@ -161,7 +168,7 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload'])
+    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox', 'mapbox-gl-geocoder'])
 </script>
 body;
 
