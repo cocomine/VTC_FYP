@@ -163,7 +163,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         placeholder: "活動描述"
     })
     md_description.codemirror.setValue($('#event-description-data').val())
-    md_description.codemirror.on('blur', () => md_description.toTextArea())
 
     /* precautions markdown editor */
     const jq_precautions = $('#event-precautions')
@@ -180,7 +179,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         maxHeight: "100px",
     })
     md_precautions.codemirror.setValue($('#event-precautions-data').val())
-    md_precautions.codemirror.on('blur', () => md_precautions.toTextArea())
 
     /* Image select */
     let img_items = [];
@@ -257,7 +255,9 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v12',
         zoom: 1,
+        center: [0, 0]
     });
+    const jq_location = $('#event-location')
 
     /* Enable stars with reduced atmosphere */
     map.on('style.load', () => {
@@ -265,16 +265,33 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     });
 
     /* Add Map Control */
+    const map_marker = new mapboxgl.Marker({
+        color: 'red',
+        draggable: true
+    }).setLngLat([0, 0]).addTo(map);
     const map_geo = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        marker:{
-            color: 'red',
-            draggable: true},
+        marker: false,
         mapboxgl: mapboxgl,
+        proximity: "ip"
     });
     map.addControl(map_geo);
-    map.addControl(new mapboxgl.GeolocateControl());
+    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false});
+    map.addControl(map_track);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
 
+    /* Update map marker */
+    map_geo.on('result', ({result}) => {
+        console.log(result);
+        map_marker.setLngLat(result.center);
+        jq_location.val(result.place_name)
+    })
+    map_marker.on('dragend', ({target}) => {
+        console.log(target, target.getLngLat())
+    })
+    map_track.on('geolocate', ({coords}) => {
+        console.log(coords)
+        map_marker.setLngLat([coords.longitude, coords.latitude])
+    })
 })
