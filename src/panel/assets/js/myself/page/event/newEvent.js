@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
@@ -340,17 +340,17 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                 <div class="w-100"></div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-max-${id}" class="form-label">計劃最大人數</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" required>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" min="1" required>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="col-6 col-md-3">
                     <label for="event-plan-max-each-${id}" class="form-label">每個預約最大人數</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" required>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" min="1" required>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" required>
+                    <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" required>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
@@ -372,5 +372,106 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     })
 
     /* ============活動時段============== */
+    /* 增加時段 */
+    const jq_schedule = $('#event-form-schedule')
+    $('#event-schedule-add').click(function () {
+        const id = Math.floor(Math.random() * 9999);
+        const min = moment().format('YYYY-MM-DD')
+        const tmp = $(
+            `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="${id}">
+                      <div class="col-12 col-sm-6 col-md-3">
+                          <div class="date-picker form-floating">
+                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}">
+                              <label for="event-schedule-start-${id}">開始日期</label>
+                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
+                          <div class="date-picker form-floating">
+                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required>
+                              <label for="event-schedule-end-${id}">結束日期</label>
+                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                          </div>
+                      </div>
+                      <div class="col col-md-auto">
+                          <div class="form-check form-switch float-end">
+                              <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-${id}" id="event-schedule-type-${id}">
+                              <label class="form-check-label" for="event-schedule-type-${id}">重複</label>
+                          </div>
+                      </div>
+                      <div class="w-100"></div>
+                      <div class="col-12 col-sm-6 col-md-3">
+                          <div class="form-floating">
+                              <input type="time" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required">
+                              <label for="event-schedule-time-start-${id}">開始時間</label>
+                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-sm-6 col-md-3">
+                          <div class="form-floating">
+                              <input type="time" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required">
+                              <label for="event-schedule-time-end-${id}">結束時間</label>
+                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md event-schedule-week" style="display: none;">
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-0-${id}" value="0">
+                              <label class="form-check-label" for="event-schedule-week-0-${id}">週日</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-1-${id}" value="1">
+                              <label class="form-check-label" for="event-schedule-week-1-${id}">週一</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-2-${id}" value="2">
+                              <label class="form-check-label" for="event-schedule-week-2-${id}">週二</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-3-${id}" value="3">
+                              <label class="form-check-label" for="event-schedule-week-3-${id}">週三</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-4-${id}" value="4">
+                              <label class="form-check-label" for="event-schedule-week-4-${id}">週四</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-5-${id}" value="5">
+                              <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6">
+                              <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
+                          </div>
+                      </div>
+                      <div class="w-100"></div>
+                      <div class="col-12 col-md-6">
+                          <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}">
+                              <option selected disabled value="">選擇計劃</option>
+                          </select>
+                          <div class="invalid-feedback">這裏不能留空哦~~</div>
+                      </div>
+                      <div class="col text-end align-self-end">
+                          <button type="button" class="btn-close" aria-label="Close"></button>
+                      </div>
+                  </div>`)
 
+        tmp.appendTo(jq_schedule)
+        datepicker.addPicker(tmp.find('.date-picker')) //add date-picker
+    })
+
+    /* 刪除時段 */
+    jq_schedule.on('click', 'button', function () {
+        $(this).parents('[data-schedule]').remove()
+    })
+
+    /* 切換時段類型 */
+    jq_schedule.on('change', "[name^='event-schedule-type']", function () {
+        const parent = $(this).parents('[data-schedule]')
+        if(this.checked){
+            //重複
+        }else {
+            //單日
+        }
+    })
 })

@@ -14,10 +14,14 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
     let activateDate = moment();
     let minDate = null;
     let maxDate = null;
+    const pickers = $('.date-picker')
 
     /* 初始化 */
-    const pickers = $('.date-picker')
     pickers.each((index, picker) => {
+        setup(picker)
+    });
+
+    function setup(picker) {
         picker = $(picker);
         const children = picker.children('.date-picker-toggle');
 
@@ -41,7 +45,50 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             children.click((e) => e.preventDefault())
             update(children)
         }
-    })
+
+        /* click event */
+        /* 上一個月 */
+        picker.on('click', '[data-dt-type="last"]', (e) => {
+            selectDate.subtract(1, 'months')
+            const target = $(e.delegateTarget)
+            target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
+        })
+
+        /* 下一個月 */
+        picker.on('click', '[data-dt-type="next"]', (e) => {
+            selectDate.add(1, 'months')
+            const target = $(e.delegateTarget)
+            $(e.delegateTarget).children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
+        })
+
+        /* 選擇日期 */
+        picker.on('click', '.day:not(.disable)', function (e) {
+            const day = $(this).text();
+            const target = $(e.delegateTarget)
+            activateDate = moment(selectDate).set('date', parseInt(day));
+            target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate));
+            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
+        })
+
+        /* 本月 */
+        picker.on('click', '[data-dt-type="today"]', (e) => {
+            const target = $(e.delegateTarget)
+            selectDate = moment();
+            activateDate = moment();
+            target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
+            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
+        })
+    }
+
+    /**
+     * 添加新 date-picker
+     * @param {jQuery<HTMLElement>} pickers
+     */
+    function addPicker(pickers) {
+        pickers.each((index, picker) => {
+            setup(picker)
+        });
+    }
 
     /**
      * 更新 html
@@ -66,38 +113,6 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             input.parent('.date-picker').children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, input[0].disableDate));
         }
     }
-
-    /* 上一個月 */
-    pickers.on('click', '[data-dt-type="last"]', (e) => {
-        selectDate.subtract(1, 'months')
-        const target = $(e.delegateTarget)
-        target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
-    })
-
-    /* 下一個月 */
-    pickers.on('click', '[data-dt-type="next"]', (e) => {
-        selectDate.add(1, 'months')
-        const target = $(e.delegateTarget)
-        $(e.delegateTarget).children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
-    })
-
-    /* 選擇日期 */
-    pickers.on('click', '.day:not(.disable)', function (e) {
-        const day = $(this).text();
-        const target = $(e.delegateTarget)
-        activateDate = moment(selectDate).set('date', parseInt(day));
-        target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate));
-        target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
-    })
-
-    /* 本月 */
-    pickers.on('click', '[data-dt-type="today"]', (e) => {
-        const target = $(e.delegateTarget)
-        selectDate = moment();
-        activateDate = moment();
-        target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
-        target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
-    })
 
     /**
      * 檢查日期是否禁用
@@ -175,4 +190,6 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             </div>
         </div>`;
     }
+
+    return {addPicker}
 })

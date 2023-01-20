@@ -76,7 +76,7 @@ body . <<<body
                             <div class="col-12 mb-4">
                                 <label for="event-summary" class="form-label">活動摘要</label>
                                 <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="50" required></textarea>
-                                <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                <span class="float-end text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-2">
@@ -110,19 +110,19 @@ body . <<<body
                                 <div class="w-100"></div>
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-max-1" class="form-label">計劃最大人數</label>
-                                    <input type="number" class="form-control form-rounded" name="event-plan-max-1" id="event-plan-max-1" required>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-1" id="event-plan-max-1" min="1" required>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="event-plan-max-each-1" class="form-label">每個預約最大人數</label>
-                                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-1" id="event-plan-max-each-1" required>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-1" id="event-plan-max-each-1" min="1" required>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-price-1" class="form-label">計劃金額</label>
                                     <div class="input-group">
                                         <span class="input-group-text form-rounded">$</span>
-                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" required>
+                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" min="0" required>
                                     </div>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
@@ -141,35 +141,82 @@ body . <<<body
                     <h4 class="card-title">活動時段</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-schedule">
-                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-schedule="1">
-                                <div class="col-3">
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="1">
+                                <div class="col-12 col-sm-6 col-md-3">
                                     <div class="date-picker form-floating">
                                         <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required min="{$today->format('o-m-d')}">
-                                        <label for="event-schedule-start">開始日期</label>
+                                        <label for="event-schedule-start-1">開始日期</label>
                                         <div class="invalid-feedback">這裏不能留空哦~~</div>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
                                     <div class="date-picker form-floating">
-                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required>
-                                        <label for="event-schedule-start">結束日期</label>
+                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-1" id="event-schedule-end-1" required>
+                                        <label for="event-schedule-end-1">結束日期</label>
                                         <div class="invalid-feedback">這裏不能留空哦~~</div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="event-schedule-type-1" id="event-schedule-type-s-1" value="0" checked>
-                                        <label class="form-check-label" for="event-schedule-type-s-1">單日</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="event-schedule-type-1" id="event-schedule-type-r-1" value="1">
-                                        <label class="form-check-label" for="event-schedule-type-r-1">重複</label>
+                                <div class="col col-md-auto">
+                                    <div class="form-check form-switch float-end">
+                                        <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-1" id="event-schedule-type-1">
+                                        <label class="form-check-label" for="event-schedule-type-1">重複</label>
                                     </div>
                                 </div>
                                 <div class="w-100"></div>
-                                
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="form-floating">
+                                        <input type="time" class="form-control form-rounded" name="event-schedule-time-start-1" id="event-schedule-time-start-1" required">
+                                        <label for="event-schedule-time-start-1">開始時間</label>
+                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="form-floating">
+                                        <input type="time" class="form-control form-rounded" name="event-schedule-time-end-1" id="event-schedule-time-end-1" required">
+                                        <label for="event-schedule-time-end-1">結束時間</label>
+                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md event-schedule-week" style="display: none;">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-0-1" value="0">
+                                        <label class="form-check-label" for="event-schedule-week-0-1">週日</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-1-1" value="1">
+                                        <label class="form-check-label" for="event-schedule-week-1-1">週一</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-2-1" value="2">
+                                        <label class="form-check-label" for="event-schedule-week-2-1">週二</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-3-1" value="3">
+                                        <label class="form-check-label" for="event-schedule-week-3-1">週三</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-4-1" value="4">
+                                        <label class="form-check-label" for="event-schedule-week-4-1">週四</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-5-1" value="5">
+                                        <label class="form-check-label" for="event-schedule-week-5-1">週五</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-1" value="6">
+                                        <label class="form-check-label" for="event-schedule-week-6-1">週六</label>
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col-12 col-md-6">
+                                    <select class="form-select form-rounded" name="event-schedule-plan-1" id="event-schedule-plan-1">
+                                        <option selected disabled value="">選擇計劃</option>
+                                    </select>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
                             </div>
                         </form>
+                        <button type="button" class="btn btn-rounded btn-primary" id="event-schedule-add"><i class="fa-solid fa-calendar-plus me-2"></i>增加時段</button>
                     </div>
                 </div>
             </div>
@@ -181,8 +228,8 @@ body . <<<body
                     <h4 class="card-title">活動圖片</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-image">
+                            <p class="d-none d-lg-block">你可以拖拉改變次序</p>
                             <div class="media-list row mb-2" id="event-image-list"></div>
-                            <p class="d-none d-lg-block">你可以拖拉改變次序</p><br>
                             <button type="button" class="btn btn-rounded btn-primary" id="event-image-select"><i class="fa-regular fa-object-ungroup me-2"></i>選擇圖片</button>
                             <small>你最多可以選擇五張圖片</small><br>
                             <div class="col-12">
@@ -204,13 +251,13 @@ body . <<<body
                             <div class="col-12 mb-4">
                                 <label for="event-location" class="form-label">活動詳細地址</label>
                                 <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
-                                <span class="fa-pull-right text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label">地圖位置</label>
                                 <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
-                                <p>移動標記選擇位置</p>
+                                <span style="bottom: 5rem;" class="position-absolute start-50"><span class="position-relative text-white bg-black bg-opacity-50 p-2 rounded" style="left: -50%;">移動標記選擇位置</span></span>
                                 <input type="number" class="d-none" name="event-longitude" id="event-longitude" required readonly>
                                 <input type="number" class="d-none" name="event-latitude" id="event-latitude" required readonly>
                                 <div class="invalid-feedback">這裏未選擇位置哦~~</div>
