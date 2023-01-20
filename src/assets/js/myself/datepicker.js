@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * 1.0
+ * 1.0.1
  */
 
 /*
@@ -22,9 +22,11 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
         const children = picker.children('.date-picker-toggle');
 
         /* 觸發 */
-        children.val(activateDate.format('YYYY-MM-DD')).on('input focus', function () {
-            update($(this));
-        })
+        if (!children.val().length) {
+            children.val(activateDate.format('YYYY-MM-DD')).on('input focus', function () {
+                update($(this));
+            })
+        }
 
         /* 強制重新繪製 */
         children[0].drawDatePicker = function () {
@@ -173,6 +175,4 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             </div>
         </div>`;
     }
-
-    return {}
 })
