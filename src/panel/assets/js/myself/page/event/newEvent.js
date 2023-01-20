@@ -3,13 +3,13 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk) {
     "use strict";
-
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
-    $('#event-summary, #event-precautions').on('input focus', function (e) {
+    $('#event-summary, #event-precautions, #event-location').on('input focus', function () {
         const length = $(this).val().length
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
@@ -89,7 +89,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             autoDownloadFontAwesome: false,
             spellChecker: false,
             unorderedListStyle: "+",
-            maxHeight: "500px",
+            maxHeight: "30rem",
             uploadImage: true,
             sideBySideFullscreen: false,
             tabSize: 4,
@@ -114,7 +114,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                                 editor.codemirror.focus()
                             } else {
                                 const cur = doc.getCursor()
-                                const end_cur = doc.getCursor('end')
                                 const text = '![](/panel/api/media/' + ids + ')'
                                 doc.replaceRange(text, cur)
                                 editor.codemirror.focus()
@@ -153,53 +152,174 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
     /* description markdown editor */
     const jq_description = $('#event-description')
-    const md_description = new EasyMDE({
+    new EasyMDE({
         ...editor_options(filterXSS_description, jq_description, MD_converter),
         element: jq_description[0],
-        autosave: {
-            enabled: true,
-            uniqueId: "event-description",
-        },
-        placeholder: "活動描述"
+        autosave: {enabled: false},
+        placeholder: "活動描述",
+        initialValue: jq_description.val()
     })
-    md_description.codemirror.setValue($('#event-description-data').val())
 
     /* precautions markdown editor */
     const jq_precautions = $('#event-precautions')
-    const md_precautions = new EasyMDE({
+    new EasyMDE({
         ...editor_options(filterXSS_precautions, jq_precautions, MD_converter),
         element: jq_precautions[0],
-        autosave: {
-            enabled: true,
-            uniqueId: "event-precautions"
-        },
+        autosave: {enabled: false},
         toolbar: ["bold", "italic", "heading", "strikethrough", "|",
             "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide"],
         placeholder: "活動注意事項",
-        maxHeight: "100px",
+        maxHeight: "5rem",
+        initialValue: jq_precautions.val()
     })
-    md_precautions.codemirror.setValue($('#event-precautions-data').val())
 
     /* Image select */
+    let img_items = [];
+    const jq_dropZone = $('#event-image-list');
+    const jq_image = $('#event-image');
     $('#image-select').click(() => {
         media_select.select_media((images) => {
-            const img_html = images.map((id) => `
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+            const tmp = images.map((id) =>
+                $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
                     <div class="ratio ratio-1x1 media-list-focus">
                         <div class="overflow-hidden">
                             <div class="media-list-center">
-                                <img src="/panel/api/media/${id}" draggable="true" alt="${id}" data-image-id="${id}"/>
+                                <img src="/panel/api/media/${id}" draggable="true" data-image-id="${id}" alt="${id}" />
                             </div>
                         </div>
                     </div>
-                </div>`)
-            $('#image-list').html(img_html)
+                </div>`));
+            jq_dropZone.html(tmp);
+
+            //list up
+            const tmp_img = tmp.map((value) => value.find('img'))
+            img_items = tmp_img.map((value) => value[0])
+            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))))
         }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
     })
 
     /* Image drag drop */
+    //Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
+    let adjacentItem;
+    let prevAdjacentItem;
+    let selectedItem;
 
-    $('#image-list').on('dragstart', 'img[data-image-id="*"]', function (e) {
-        e.data
+    //dragstart
+    jq_dropZone.on('dragstart', 'img', function (e) {
+        selectedItem = e.target;
+        $(e.target).parents('.item').css('opacity', 0.4)
+        e.originalEvent.dataTransfer.effectAllowed = 'move';
     })
+    //dragover
+    jq_dropZone.on('dragover', function (e) {
+        e.preventDefault();
+        e.originalEvent.dataTransfer.dropEffect = "move"
+
+        if(img_items.includes(e.target)){
+            adjacentItem = e.target;
+
+            if(adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined){
+                $(prevAdjacentItem).parents('.item').css('marginLeft', '0')
+            }
+
+            if(adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))){
+                const item = $(adjacentItem).parents('.item')
+                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth()+'px')
+            }
+
+            prevAdjacentItem = adjacentItem;
+        }
+    })
+    //drop
+    jq_dropZone.on('drop', function (e) {
+        e.preventDefault();
+
+        if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))) {
+            console.log(jq_dropZone.find(adjacentItem).parents('.item'))
+            jq_dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1))
+            $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0')
+
+            //list up
+            jq_image.val(JSON.stringify(
+                jq_dropZone.find('[data-image-id]').map(
+                    (index, elm) => elm.dataset.imageId).toArray()
+            ))
+        }
+    })
+    //dragend
+    jq_dropZone.on('dragend', function () {
+        $(selectedItem).parents('.item').css('opacity', 1)
+        $(adjacentItem).parents('.item').css('marginLeft', '0')
+    })
+
+    /* Map */
+    /* Load map */
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        zoom: 1,
+        center: [0, 0]
+    });
+    const map_client = mapboxSdk({accessToken: mapboxgl.accessToken});
+    const jq_location = $('#event-location'), jq_longitude = $('#event-longitude'), jq_latitude = $('#event-latitude');
+
+    /* Enable stars with reduced atmosphere */
+    map.on('style.load', () => {
+        map.setFog({'horizon-blend': 0.05});
+    });
+
+    /* Add Map Control */
+    const map_marker = new mapboxgl.Marker({
+        color: 'red',
+        draggable: true
+    }).setLngLat([0, 0]).addTo(map);
+    const map_geo = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        marker: false,
+        mapboxgl: mapboxgl,
+        proximity: "ip",
+    });
+    map.addControl(map_geo);
+    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false, fitBoundsOptions: {zoom:15}});
+    map.addControl(map_track);
+    map.addControl(new mapboxgl.ScaleControl());
+    map.addControl(new mapboxgl.NavigationControl());
+
+    /* Update map marker */
+    map_geo.on('result', ({result}) => {
+        map_marker.setLngLat(result.center);
+        jq_location.val(result.place_name);
+        jq_longitude.val(result.center[0]);
+        jq_latitude.val(result.center[1]);
+    })
+    map_marker.on('dragend', ({target}) => {
+        jq_longitude.val(target.getLngLat().lng);
+        jq_latitude.val(target.getLngLat().lat);
+        getPoi(target.getLngLat().toArray()).then((poi) => {
+            if (poi) jq_location.val(poi.place_name)
+        })
+    })
+    map_track.on('geolocate', ({coords}) => {
+        map_marker.setLngLat([coords.longitude, coords.latitude])
+        jq_longitude.val(coords.longitude);
+        jq_latitude.val(coords.latitude);
+        getPoi([coords.longitude, coords.latitude]).then((poi) => {
+            if (poi) jq_location.val(poi.place_name)
+        })
+    })
+
+    /**
+     * get Poi with longitude & latitude
+     * @param {number[]} LngLat
+     * @returns {Promise<null|Object>}
+     */
+    async function getPoi(LngLat) {
+        const response = await map_client.geocoding.reverseGeocode({
+            query: LngLat,
+            types: ["poi"]
+        }).send()
+
+        return (response || response.body || response.body.features || response.body.features.length)
+            ? response.body.features[0] : null;
+    }
 })

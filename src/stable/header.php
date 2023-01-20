@@ -65,7 +65,7 @@ header('Content-Type:text/html; charset=utf-8');
         <link rel="stylesheet" href="/assets/css/default-css.css">
         <link rel="stylesheet" href="/assets/css/styles.css">
         <link rel="stylesheet" href="/assets/css/responsive.css">
-        <link rel="stylesheet" href="/assets/css/myself/LoadingBar.min.css"/>
+        <link rel="stylesheet" href="/assets/css/myself/LoadingBar.css"/>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
         <!-- modernizr css -->
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>

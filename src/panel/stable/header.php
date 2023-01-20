@@ -19,7 +19,7 @@ if (strpos($_SERVER['REQUEST_URI'], '.php') !== false) {
 /* header */
 ob_start();
 session_start();
-require_once('./vendor/autoload.php');
+require_once('./../vendor/autoload.php');
 require_once('./function/Functions.php');
 require_once('./../../secret/config.inc.php');
 require_once('./Lang/Lang.php');
@@ -43,12 +43,14 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com cdn.datatables.net;
-              style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com unpkg.com cdn.jsdelivr.net *.googleapis.com accounts.google.com cdn.datatables.net;
-              connect-src 'self' accounts.google.com *.lottiefiles.com;
-              img-src 'self' data: www.gravatar.com;
-              font-src 'self' fonts.gstatic.com;
-              frame-src 'self' accounts.google.com" />
+              script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://accounts.google.com https://cdn.datatables.net https://api.mapbox.com;
+              style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://accounts.google.com https://cdn.datatables.net https://api.mapbox.com;
+              connect-src 'self' https://accounts.google.com https://*.lottiefiles.com https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com;
+              img-src 'self' data: blob: https://www.gravatar.com;
+              font-src 'self' https://fonts.gstatic.com;
+              frame-src 'self' https://accounts.google.com;
+              worker-src 'self' blob:;
+              child-src blob:;" />
         <link rel="manifest" href="/panel/assets/manifest.json"/>
         <link rel="shortcut icon" type="image/png" href="/panel/assets/images/icon/favicon.png">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
