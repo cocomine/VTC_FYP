@@ -66,8 +66,8 @@ body . <<<body
                 <div class="card-body">
                     <h4 class="card-title">活動資料</h4>
                     <div class="card-text">
-                        <form class="needs-validation" novalidate>
-                            <div class="col-12 mb-3">
+                        <form class="needs-validation" novalidate id="event-form-data">
+                            <div class="col-12 mb-4">
                                 <label for="event-summary" class="form-label">活動摘要</label>
                                 <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="50" required></textarea>
                                 <span class="fa-pull-right text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
@@ -77,13 +77,11 @@ body . <<<body
                                 <label for="event-summary" class="form-label">活動注意事項</label>
                                 <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
-                                <textarea id="event-precautions-data" class="d-none" readonly></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
                                 <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="1000" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
-                                <textarea id="event-description-data" class="d-none" readonly></textarea>
                             </div>
                         </form>
                     </div>
@@ -96,12 +94,14 @@ body . <<<body
                 <div class="card-body">
                     <h4 class="card-title">活動圖片</h4>
                     <div class="card-text">
-                        <div class="media-list row mb-2" id="event-image-list"></div>
-                        <p class="d-none d-lg-block">你可以拖拉改變次序</p>
-                        <br>
-                        <button type="button" class="btn btn-rounded btn-primary" id="image-select">選擇圖片</button>
-                        <small>你最多可以選擇五張圖片</small><br>
-                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                        <form class="needs-validation" novalidate id="event-form-image">
+                            <div class="media-list row mb-2" id="event-image-list"></div>
+                            <p class="d-none d-lg-block">你可以拖拉改變次序</p><br>
+                            <button type="button" class="btn btn-rounded btn-primary" id="image-select">選擇圖片</button>
+                            <small>你最多可以選擇五張圖片</small><br>
+                            <input type="text" class="d-none" id="event-image" name="event-image" required readonly>
+                            <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -112,16 +112,20 @@ body . <<<body
                 <div class="card-body">
                     <h4 class="card-title">活動位置</h4>
                     <div class="card-text">
-                        <form class="needs-validation" novalidate>
-                            <div class="col-12 mb-3">
+                        <form class="needs-validation" novalidate id="event-form-location">
+                            <div class="col-12 mb-4">
                                 <label for="event-location" class="form-label">活動詳細地址</label>
                                 <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
-                                <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 <span class="fa-pull-right text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label">地圖位置</label>
                                 <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
+                                <p>移動標記選擇位置</p>
+                                <input type="number" class="d-none" name="event-longitude" id="event-longitude" required readonly>
+                                <input type="number" class="d-none" name="event-latitude" id="event-latitude" required readonly>
+                                <div class="invalid-feedback">這裏未選擇位置哦~~</div>
                             </div>
                         </form>
                     </div>

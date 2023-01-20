@@ -9,7 +9,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
-    $('#event-summary, #event-precautions, #event-location').on('input focus', function (e) {
+    $('#event-summary, #event-precautions, #event-location').on('input focus', function () {
         const length = $(this).val().length
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
@@ -89,7 +89,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             autoDownloadFontAwesome: false,
             spellChecker: false,
             unorderedListStyle: "+",
-            maxHeight: "500px",
+            maxHeight: "30rem",
             uploadImage: true,
             sideBySideFullscreen: false,
             tabSize: 4,
@@ -114,7 +114,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                                 editor.codemirror.focus()
                             } else {
                                 const cur = doc.getCursor()
-                                const end_cur = doc.getCursor('end')
                                 const text = '![](/panel/api/media/' + ids + ')'
                                 doc.replaceRange(text, cur)
                                 editor.codemirror.focus()
@@ -153,36 +152,31 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
     /* description markdown editor */
     const jq_description = $('#event-description')
-    const md_description = new EasyMDE({
+    new EasyMDE({
         ...editor_options(filterXSS_description, jq_description, MD_converter),
         element: jq_description[0],
-        autosave: {
-            enabled: true,
-            uniqueId: "event-description",
-        },
-        placeholder: "活動描述"
+        autosave: {enabled: false},
+        placeholder: "活動描述",
+        initialValue: jq_description.val()
     })
-    md_description.codemirror.setValue($('#event-description-data').val())
 
     /* precautions markdown editor */
     const jq_precautions = $('#event-precautions')
-    const md_precautions = new EasyMDE({
+    new EasyMDE({
         ...editor_options(filterXSS_precautions, jq_precautions, MD_converter),
         element: jq_precautions[0],
-        autosave: {
-            enabled: true,
-            uniqueId: "event-precautions"
-        },
+        autosave: {enabled: false},
         toolbar: ["bold", "italic", "heading", "strikethrough", "|",
             "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide"],
         placeholder: "活動注意事項",
-        maxHeight: "100px",
+        maxHeight: "5rem",
+        initialValue: jq_precautions.val()
     })
-    md_precautions.codemirror.setValue($('#event-precautions-data').val())
 
     /* Image select */
     let img_items = [];
-    const dropZone = $('#event-image-list')
+    const jq_dropZone = $('#event-image-list');
+    const jq_image = $('#event-image');
     $('#image-select').click(() => {
         media_select.select_media((images) => {
             const tmp = images.map((id) =>
@@ -195,10 +189,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                         </div>
                     </div>
                 </div>`));
-            dropZone.html(tmp);
+            jq_dropZone.html(tmp);
 
-            img_items = tmp.map((value) => value.find('img')[0])
-        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)/)
+            //list up
+            const tmp_img = tmp.map((value) => value.find('img'))
+            img_items = tmp_img.map((value) => value[0])
+            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))))
+        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
     })
 
     /* Image drag drop */
@@ -208,13 +205,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     let selectedItem;
 
     //dragstart
-    dropZone.on('dragstart', 'img', function (e) {
+    jq_dropZone.on('dragstart', 'img', function (e) {
         selectedItem = e.target;
         $(e.target).parents('.item').css('opacity', 0.4)
         e.originalEvent.dataTransfer.effectAllowed = 'move';
     })
     //dragover
-    dropZone.on('dragover', function (e) {
+    jq_dropZone.on('dragover', function (e) {
         e.preventDefault();
         e.originalEvent.dataTransfer.dropEffect = "move"
 
@@ -234,17 +231,23 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         }
     })
     //drop
-    dropZone.on('drop', function (e) {
+    jq_dropZone.on('drop', function (e) {
         e.preventDefault();
 
         if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))) {
-            console.log(dropZone.find(adjacentItem).parents('.item'))
-            dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1))
+            console.log(jq_dropZone.find(adjacentItem).parents('.item'))
+            jq_dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1))
             $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0')
+
+            //list up
+            jq_image.val(JSON.stringify(
+                jq_dropZone.find('[data-image-id]').map(
+                    (index, elm) => elm.dataset.imageId).toArray()
+            ))
         }
     })
     //dragend
-    dropZone.on('dragend', function (e) {
+    jq_dropZone.on('dragend', function () {
         $(selectedItem).parents('.item').css('opacity', 1)
         $(adjacentItem).parents('.item').css('marginLeft', '0')
     })
@@ -258,7 +261,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         center: [0, 0]
     });
     const map_client = mapboxSdk({accessToken: mapboxgl.accessToken});
-    const jq_location = $('#event-location')
+    const jq_location = $('#event-location'), jq_longitude = $('#event-longitude'), jq_latitude = $('#event-latitude');
 
     /* Enable stars with reduced atmosphere */
     map.on('style.load', () => {
@@ -274,41 +277,40 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         accessToken: mapboxgl.accessToken,
         marker: false,
         mapboxgl: mapboxgl,
-        proximity: "ip"
+        proximity: "ip",
     });
     map.addControl(map_geo);
-    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false});
+    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false, fitBoundsOptions: {zoom:15}});
     map.addControl(map_track);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
 
     /* Update map marker */
     map_geo.on('result', ({result}) => {
-        console.log(result);
         map_marker.setLngLat(result.center);
-        jq_location.val(result.place_name)
+        jq_location.val(result.place_name);
+        jq_longitude.val(result.center[0]);
+        jq_latitude.val(result.center[1]);
     })
     map_marker.on('dragend', ({target}) => {
-        console.log(target)
+        jq_longitude.val(target.getLngLat().lng);
+        jq_latitude.val(target.getLngLat().lat);
         getPoi(target.getLngLat().toArray()).then((poi) => {
-            if (poi) {
-                jq_location.val(poi.place_name)
-            }
+            if (poi) jq_location.val(poi.place_name)
         })
     })
     map_track.on('geolocate', ({coords}) => {
-        console.log(coords)
         map_marker.setLngLat([coords.longitude, coords.latitude])
+        jq_longitude.val(coords.longitude);
+        jq_latitude.val(coords.latitude);
         getPoi([coords.longitude, coords.latitude]).then((poi) => {
-            if (poi) {
-                jq_location.val(poi.place_name)
-            }
+            if (poi) jq_location.val(poi.place_name)
         })
     })
 
     /**
      * get Poi with longitude & latitude
-     * @param {double[]} LngLat
+     * @param {number[]} LngLat
      * @returns {Promise<null|Object>}
      */
     async function getPoi(LngLat) {
@@ -317,9 +319,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             types: ["poi"]
         }).send()
 
-        if (response || response.body || response.body.features || response.body.features.length) {
-            return response.body.features[0]
-        }
-        return null;
+        return (response || response.body || response.body.features || response.body.features.length)
+            ? response.body.features[0] : null;
     }
 })
