@@ -14,6 +14,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
 
+    /* ============活動資料============== */
     /* HTML filter xss */
     const filterXSS_description = new xss.FilterXSS({
         stripIgnoreTag: true,
@@ -173,11 +174,12 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         initialValue: jq_precautions.val()
     })
 
+    /* =============活動圖片============== */
     /* Image select */
     let img_items = [];
     const jq_dropZone = $('#event-image-list');
     const jq_image = $('#event-image');
-    $('#image-select').click(() => {
+    $('#event-image-select').click(() => {
         media_select.select_media((images) => {
             const tmp = images.map((id) =>
                 $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
@@ -252,7 +254,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $(adjacentItem).parents('.item').css('marginLeft', '0')
     })
 
-    /* Map */
+    /* =================活動地址================= */
     /* Load map */
     const map = new mapboxgl.Map({
         container: 'map',
@@ -307,7 +309,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             if (poi) jq_location.val(poi.place_name)
         })
     })
-
+    
     /**
      * get Poi with longitude & latitude
      * @param {number[]} LngLat
@@ -322,4 +324,53 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         return (response || response.body || response.body.features || response.body.features.length)
             ? response.body.features[0] : null;
     }
+
+    /* ============計劃========== */
+    /* 增加計劃 */
+    const jq_plan = $('#event-form-plan')
+    $('#event-plan-add').click(function () {
+        const id = Math.floor(Math.random() * 9999);
+        jq_plan.append(
+            `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
+                <div class="col-12 col-lg-7">
+                    <label for="event-plan-name-${id}" class="form-label">計畫名稱</label>
+                    <input type="text" class="form-control form-rounded" name="event-plan-name-${id}" id="event-plan-name-${id}" maxlength="20" required>
+                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-6 col-md-2">
+                    <label for="event-plan-max-${id}" class="form-label">計劃最大人數</label>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" required>
+                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="event-plan-max-each-${id}" class="form-label">每個預約最大人數</label>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" required>
+                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
+                    <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" required>
+                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                </div>
+                <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+            </div>`)
+    })
+
+    /* 刪除計劃 */
+    jq_plan.on('click', 'button', function () {
+        $(this).parents('[data-plan]').remove()
+        //todo:
+    })
+
+    /* 計劃轉移 */
+    jq_plan.on('blur', `[name^='event-plan-name']`, function () {
+        const plan_name = $(this).val()
+        //todo:
+    })
+
+    /* ============活動時段============== */
+
 })

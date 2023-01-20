@@ -7,6 +7,9 @@
 namespace panel\page\event;
 
 use cocomine\IPage;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 
 class newevent implements IPage {
 
@@ -17,6 +20,8 @@ class newevent implements IPage {
     }
 
     public function showPage(): string {
+        $time_zone = new DateTimeZone("Asia/Hong_Kong");
+        $today = new DateTime('now', $time_zone);
 
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');
@@ -43,9 +48,10 @@ class newevent implements IPage {
 
         return <<<body
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-<link rel="stylesheet" href="/assets/css/myself/media-select.css">
+<link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
+<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body . <<<body
 <div class="col-12 col-lg-9">
@@ -88,7 +94,87 @@ body . <<<body
                 </div>
             </div>
         </div>
-        <!-- Image select-->
+        <!-- 活動計劃 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動計劃</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate id="event-form-plan">
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="1">
+                                <div class="col-12 col-lg-7">
+                                    <label for="event-plan-name-1" class="form-label">計畫名稱</label>
+                                    <input type="text" class="form-control form-rounded" name="event-plan-name-1" id="event-plan-name-1" maxlength="20" required>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col-6 col-md-2">
+                                    <label for="event-plan-max-1" class="form-label">計劃最大人數</label>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-1" id="event-plan-max-1" required>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label for="event-plan-max-each-1" class="form-label">每個預約最大人數</label>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-1" id="event-plan-max-each-1" required>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-6 col-md-2">
+                                    <label for="event-plan-price-1" class="form-label">計劃金額</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text form-rounded">$</span>
+                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" required>
+                                    </div>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                            </div>
+                        </form>
+                        <button type="button" class="btn btn-rounded btn-primary" id="event-plan-add"><i class="fa-solid fa-plus me-2"></i>增加計劃</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+body . <<<body
+        <!-- 活動時段 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動時段</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate id="event-form-schedule">
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-schedule="1">
+                                <div class="col-3">
+                                    <div class="date-picker form-floating">
+                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required min="{$today->format('o-m-d')}">
+                                        <label for="event-schedule-start">開始日期</label>
+                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="date-picker form-floating">
+                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required>
+                                        <label for="event-schedule-start">結束日期</label>
+                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="event-schedule-type-1" id="event-schedule-type-s-1" value="0" checked>
+                                        <label class="form-check-label" for="event-schedule-type-s-1">單日</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="event-schedule-type-1" id="event-schedule-type-r-1" value="1">
+                                        <label class="form-check-label" for="event-schedule-type-r-1">重複</label>
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 活動圖片 -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -97,10 +183,12 @@ body . <<<body
                         <form class="needs-validation" novalidate id="event-form-image">
                             <div class="media-list row mb-2" id="event-image-list"></div>
                             <p class="d-none d-lg-block">你可以拖拉改變次序</p><br>
-                            <button type="button" class="btn btn-rounded btn-primary" id="image-select">選擇圖片</button>
+                            <button type="button" class="btn btn-rounded btn-primary" id="event-image-select"><i class="fa-regular fa-object-ungroup me-2"></i>選擇圖片</button>
                             <small>你最多可以選擇五張圖片</small><br>
-                            <input type="text" class="d-none" id="event-image" name="event-image" required readonly>
-                            <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
+                            <div class="col-12">
+                                <input type="text" class="d-none" id="event-image" name="event-image" required readonly>
+                                <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -177,7 +265,7 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk'])
+    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker'])
 </script>
 body;
 
