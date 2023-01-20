@@ -100,7 +100,8 @@ body . <<<body
                         <p class="d-none d-lg-block">你可以拖拉改變次序</p>
                         <br>
                         <button type="button" class="btn btn-rounded btn-primary" id="image-select">選擇圖片</button>
-                        <small>你最多可以選擇五張圖片</small>
+                        <small>你最多可以選擇五張圖片</small><br>
+                        <div class="invalid-feedback">這裏不能留空哦~~</div>
                     </div>
                 </div>
             </div>
@@ -115,11 +116,14 @@ body . <<<body
                             <div class="col-12 mb-3">
                                 <label for="event-location" class="form-label">活動詳細地址</label>
                                 <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
+                                <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 <span class="fa-pull-right text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
                             </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">地圖位置</label>
+                                <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
+                            </div>
                         </form>
-                        <label class="form-label">地圖位置</label>
-                        <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
                     </div>
                 </div>
             </div>
@@ -156,8 +160,9 @@ body . <<<body
 <script>
     require.config({
         paths:{
-            mapbox: ['https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl'],
-            'mapbox-gl-geocoder': ['https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min'],
+            'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl'],
+            '@mapbox/mapbox-gl-geocoder': ['https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min'],
+            '@mapbox/mapbox-sdk':['https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min'],
             easymde: ['https://unpkg.com/easymde/dist/easymde.min'],
             showdown: ['https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min'],
             xss:['xss.min'],
@@ -168,7 +173,7 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox', 'mapbox-gl-geocoder'])
+    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk'])
 </script>
 body;
 

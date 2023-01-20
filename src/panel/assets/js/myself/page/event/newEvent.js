@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox', 'mapbox-gl-geocoder'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
@@ -257,6 +257,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         zoom: 1,
         center: [0, 0]
     });
+    const map_client = mapboxSdk({accessToken: mapboxgl.accessToken});
     const jq_location = $('#event-location')
 
     /* Enable stars with reduced atmosphere */
@@ -288,10 +289,37 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         jq_location.val(result.place_name)
     })
     map_marker.on('dragend', ({target}) => {
-        console.log(target, target.getLngLat())
+        console.log(target)
+        getPoi(target.getLngLat().toArray()).then((poi) => {
+            if (poi) {
+                jq_location.val(poi.place_name)
+            }
+        })
     })
     map_track.on('geolocate', ({coords}) => {
         console.log(coords)
         map_marker.setLngLat([coords.longitude, coords.latitude])
+        getPoi([coords.longitude, coords.latitude]).then((poi) => {
+            if (poi) {
+                jq_location.val(poi.place_name)
+            }
+        })
     })
+
+    /**
+     * get Poi with longitude & latitude
+     * @param {double[]} LngLat
+     * @returns {Promise<null|Object>}
+     */
+    async function getPoi(LngLat) {
+        const response = await map_client.geocoding.reverseGeocode({
+            query: LngLat,
+            types: ["poi"]
+        }).send()
+
+        if (response || response.body || response.body.features || response.body.features.length) {
+            return response.body.features[0]
+        }
+        return null;
+    }
 })
