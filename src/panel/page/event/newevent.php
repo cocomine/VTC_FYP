@@ -352,12 +352,12 @@ body . <<<body
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-thumbnail">
                             <div class="col-12">
-                                <img src="" alt="">
+                                <img src="" alt="" id="event-thumbnail-img">
                             </div>
                             <input type="text" class="form-control d-none" name="event-thumbnail" id="event-thumbnail" required>
                             <div class="invalid-feedback">這裏不能留空哦~~</div>
                         </form>
-                        <a class="text-primary text-decoration-underline" href="#" id="event-recycle">設定/更改 封面圖片</a>
+                        <a class="text-primary text-decoration-underline" href="#" id="event-thumbnail-change">設定/更改 封面圖片</a>
                     </div>
                 </div>
             </div>

@@ -542,5 +542,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         //todo
     })
 
-    /* =========== */
+    /* ===========活動封面=============== */
+    /* 更改封面圖片 */
+    $('#event-thumbnail-change').click(function (e) {
+        e.preventDefault()
+
+        media_select.select_media(function (img) {
+            $('#event-thumbnail-img').attr('src', '/panel/api/media/' + img[0]).attr('alt', img[0])
+        }, 1, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
+    })
 })
