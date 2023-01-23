@@ -65,7 +65,6 @@ body. <<<body
                     <label for="event-title">活動標題</label>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
-                
             </form>
         </div>
         <!--活動資料-->
@@ -131,7 +130,6 @@ body. <<<body
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
-                            
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-plan-add"><i class="fa-solid fa-plus me-2"></i>增加計劃</button>
                     </div>
@@ -220,7 +218,6 @@ body . <<<body
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
-                            
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-schedule-add"><i class="fa-solid fa-calendar-plus me-2"></i>增加時段</button>
                     </div>
@@ -242,7 +239,6 @@ body . <<<body
                                 <input type="text" class="d-none" id="event-image" name="event-image" required>
                                 <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
@@ -273,7 +269,6 @@ body . <<<body
                                 <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
                                 <div class="invalid-feedback">這裏未選擇位置哦~~</div>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
@@ -283,15 +278,87 @@ body . <<<body
 </div>
 body . <<<body
 <div class="col-12 col-lg-3">
-    <!-- 活動狀態 -->
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">活動狀態</h4>
-                <div class="card-text">
-                    <form class="needs-validation" novalidate id="event-form-status">
-                        
-                    </form>
+    <div class="row gy-4">
+        <!-- 活動狀態 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動狀態</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate id="event-form-status">
+                            <div class="col-12 mb-3">
+                                <label for="event-status" class="form-label"><i class="fa-solid fa-eye me-1"></i>狀態</label>
+                                <select class="form-select form-rounded form-control-sm" id="event-status" name="event-status">
+                                    <option value="0">不公開</option>
+                                    <option value="1">開放報名</option>
+                                    <option value="2">暫停報名</option>
+                                </select>
+                            </div>
+                            <div class="col-12 row g-0">
+                                <label for="event-post-date" class="form-label"><i class="fa-regular fa-calendar-days me-1"></i>發佈日期</label>
+                                <div class="date-picker col-7">
+                                    <input type="date" class="form-control form-rounded date-picker-toggle" name="event-post-date" id="event-post-date" required>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" class="form-control form-rounded" name="event-post-time" id="event-post-time" required>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-rounded btn-secondary btn-sm" id="event-daft">儲存草稿</button>
+                            <button type="button" class="btn btn-rounded btn-primary btn-sm" id="event-post">發佈</button>
+                            <div class="float-start float-lg-end d-none">
+                                <a class="text-danger text-decoration-underline" href="#" id="event-recycle">移到回收桶</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 活動分類 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動分類</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate id="event-form-category">
+                            <div class="col-12 mb-3">
+                                <label for="event-type" class="form-label"><i class="fa-solid fa-eye me-1"></i>活動種類</label>
+                                <select class="form-select form-rounded form-control-sm" id="event-type" name="event-type">
+                                    <option value="0">水上活動</option>
+                                    <option value="1">陸上活動</option>
+                                    <option value="2">空中活動</option>
+                                </select>
+                            </div>
+                            <label for="event-type" class="form-label"><i class="fa-solid fa-folder-open me-1"></i>分類</label>
+                            <div class="col-12 border border border-1 rounded px-2 pt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="xxx" id="event-category-xxx" name="event-category" data-category="xxx">
+                                    <label class="form-check-label" for="event-category-xxx">xxx</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 活動封面 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">活動封面</h4>
+                    <div class="card-text">
+                        <form class="needs-validation" novalidate id="event-form-thumbnail">
+                            <div class="col-12">
+                                <img src="" alt="">
+                            </div>
+                            <input type="text" class="form-control d-none" name="event-thumbnail" id="event-thumbnail" required>
+                            <div class="invalid-feedback">這裏不能留空哦~~</div>
+                        </form>
+                        <a class="text-primary text-decoration-underline" href="#" id="event-recycle">設定/更改 封面圖片</a>
+                    </div>
                 </div>
             </div>
         </div>

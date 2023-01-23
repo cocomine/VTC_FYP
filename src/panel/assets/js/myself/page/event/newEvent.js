@@ -14,6 +14,14 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
 
+    /* jquery timepicker */
+    $("input[name^='event-schedule-time'], #event-post-time").timepicker({
+        show2400: true,
+        className: "dropdown-menu",
+        closeOnScroll: true,
+        timeFormat: "H:i"
+    })
+
     /* ============活動資料============== */
     /* HTML filter xss */
     const filterXSS_description = new xss.FilterXSS({
@@ -515,11 +523,24 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         }
     })
 
-    /* jquery timepicker */
-    $("input[name^='event-schedule-time']").timepicker({
-        show2400: true,
-        className: "dropdown-menu",
-        closeOnScroll: true,
-        timeFormat: "H:i"
+    /* ==============活動狀態=============== */
+    /* set post time to today */
+    $('#event-post-time').timepicker('setTime', new Date());
+
+    /* 儲存草稿 */
+    $('#event-daft').click(function () {
+        //todo
     })
+
+    /* 發佈 */
+    $('#event-post').click(function () {
+        //todo
+    })
+
+    /* 移到回收桶 */
+    $('#event-recycle').click(function () {
+        //todo
+    })
+
+    /* =========== */
 })
