@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker) {
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'timepicker'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker) {
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
@@ -217,16 +217,16 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         e.preventDefault();
         e.originalEvent.dataTransfer.dropEffect = "move"
 
-        if(img_items.includes(e.target)){
+        if (img_items.includes(e.target)) {
             adjacentItem = e.target;
 
-            if(adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined){
+            if (adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined) {
                 $(prevAdjacentItem).parents('.item').css('marginLeft', '0')
             }
 
-            if(adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))){
+            if (adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))) {
                 const item = $(adjacentItem).parents('.item')
-                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth()+'px')
+                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth() + 'px')
             }
 
             prevAdjacentItem = adjacentItem;
@@ -282,7 +282,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         proximity: "ip",
     });
     map.addControl(map_geo);
-    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false, fitBoundsOptions: {zoom:15}});
+    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false, fitBoundsOptions: {zoom: 15}});
     map.addControl(map_track);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
@@ -309,7 +309,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             if (poi) jq_location.val(poi.place_name)
         })
     })
-    
+
     /**
      * get Poi with longitude & latitude
      * @param {number[]} LngLat
@@ -335,6 +335,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         const id = Math.floor(Math.random() * 9999);
         jq_plan.append(
             `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
+                <h5 class="col-12 text-muted"># ${id}</h5>
                 <div class="col-12 col-lg-7">
                     <label for="event-plan-name-${id}" class="form-label">計畫名稱</label>
                     <input type="text" class="form-control form-rounded" name="event-plan-name-${id}" id="event-plan-name-${id}" maxlength="20" required>
@@ -385,10 +386,10 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
         // 時段計劃
         const tmp = plan.filter((value) => value.plan_id === plan_id)
-        if(tmp.length > 0){
-            plan_select.find(`[value='${plan_id}']`).text(plan_name); //存在
-        }else{
-            plan_select.append(`<option value="${plan_id}">${plan_name}</option>`); //不存在
+        if (tmp.length > 0) {
+            plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
+        } else {
+            plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
             plan.push({plan_id, plan_name});
         }
         console.log(plan)
@@ -424,14 +425,14 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                       <div class="w-100"></div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="time" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required>
+                              <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required>
                               <label for="event-schedule-time-start-${id}">開始時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>
                       </div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="time" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required>
+                              <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required>
                               <label for="event-schedule-time-end-${id}">結束時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>
@@ -470,7 +471,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                       <div class="col-12 col-md-6">
                           <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}">
                               <option selected disabled value="">選擇計劃</option>
-                              ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_name}</option>`)}
+                              ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
                           </select>
                           <div class="invalid-feedback">這裏不能留空哦~~</div>
                       </div>
@@ -481,6 +482,12 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
         tmp.appendTo(jq_schedule)
         datepicker.addPicker(tmp.find('.date-picker')) //add date-picker
+        tmp.find("[name^='event-schedule-time']").timepicker({
+            show2400: true,
+            className: "dropdown-menu",
+            closeOnScroll: true,
+            timeFormat: "H:i"
+        }) //add timepicker
     })
 
     /* 刪除時段 */
@@ -492,7 +499,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     jq_schedule.on('change', "[name^='event-schedule-type']", function () {
         const parent = $(this).parents('[data-schedule]');
         const elm = parent.find('.event-schedule-end, .event-schedule-week');
-        if(this.checked){
+        if (this.checked) {
             //重複
             elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', false); //Enable 結束日期
 
@@ -501,10 +508,18 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             elm.find(`[value='${sel_date.weekday()}']`).prop('checked', true)
 
             elm.show()
-        }else {
+        } else {
             //單日
             elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', true); //Enable 結束日期
             elm.hide()
         }
+    })
+
+    /* jquery timepicker */
+    $("input[name^='event-schedule-time']").timepicker({
+        show2400: true,
+        className: "dropdown-menu",
+        closeOnScroll: true,
+        timeFormat: "H:i"
     })
 })

@@ -14,8 +14,8 @@ use DateTimeZone;
 class newevent implements IPage {
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
-        if(!$isAuth) return 401;
-        if($role < 2) return 403;
+        if (!$isAuth) return 401;
+        if ($role < 2) return 403;
         return 200;
     }
 
@@ -27,9 +27,9 @@ class newevent implements IPage {
         $Text2 = showText('Media-upload.Content');
 
         $LangJson = json_encode(array(
-            'No_media'           => $Text['No_media'],
-            'Media'              => $Text['Media'] . ' %s',
-            'Unknown_Error'      => showText('Error'),
+            'No_media' => $Text['No_media'],
+            'Media' => $Text['Media'] . ' %s',
+            'Unknown_Error' => showText('Error'),
             'title' => $Text['Media_Select']['title'],
             'Select' => $Text['Media_Select']['Select'],
             'upload' => array(
@@ -52,8 +52,9 @@ class newevent implements IPage {
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
-body . <<<body
+body. <<<body
 <div class="col-12 col-lg-9">
     <div class="row gy-4">
         <!--活動標題-->
@@ -64,7 +65,7 @@ body . <<<body
                     <label for="event-title">活動標題</label>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
-                <button type="submit">test</button>
+                
             </form>
         </div>
         <!--活動資料-->
@@ -90,7 +91,7 @@ body . <<<body
                                 <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="1000" required></textarea>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
-                            <button type="submit">test</button>
+                            
                         </form>
                     </div>
                 </div>
@@ -103,7 +104,8 @@ body . <<<body
                     <h4 class="card-title">活動計劃</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-plan">
-                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="1">
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="0001">
+                                <h5 class="col-12 text-muted"># 0001</h5>
                                 <div class="col-12 col-lg-7">
                                     <label for="event-plan-name-1" class="form-label">計畫名稱</label>
                                     <input type="text" class="form-control form-rounded" name="event-plan-name-1" id="event-plan-name-1" maxlength="20" required>
@@ -129,7 +131,7 @@ body . <<<body
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
-                            <button type="submit">test</button>
+                            
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-plan-add"><i class="fa-solid fa-plus me-2"></i>增加計劃</button>
                     </div>
@@ -168,14 +170,14 @@ body . <<<body
                                 <div class="w-100"></div>
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="form-floating">
-                                        <input type="time" class="form-control form-rounded" name="event-schedule-time-start-1" id="event-schedule-time-start-1" required>
+                                        <input type="text" class="form-control form-rounded" name="event-schedule-time-start-1" id="event-schedule-time-start-1" required>
                                         <label for="event-schedule-time-start-1">開始時間</label>
                                         <div class="invalid-feedback">這裏不能留空哦~~</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="form-floating">
-                                        <input type="time" class="form-control form-rounded" name="event-schedule-time-end-1" id="event-schedule-time-end-1" required>
+                                        <input type="text" class="form-control form-rounded" name="event-schedule-time-end-1" id="event-schedule-time-end-1" required>
                                         <label for="event-schedule-time-end-1">結束時間</label>
                                         <div class="invalid-feedback">這裏不能留空哦~~</div>
                                     </div>
@@ -218,7 +220,7 @@ body . <<<body
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
-                            <button type="submit">test</button>
+                            
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-schedule-add"><i class="fa-solid fa-calendar-plus me-2"></i>增加時段</button>
                     </div>
@@ -240,7 +242,7 @@ body . <<<body
                                 <input type="text" class="d-none" id="event-image" name="event-image" required>
                                 <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
                             </div>
-                            <button type="submit">test</button>
+                            
                         </form>
                     </div>
                 </div>
@@ -271,7 +273,7 @@ body . <<<body
                                 <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
                                 <div class="invalid-feedback">這裏未選擇位置哦~~</div>
                             </div>
-                            <button type="submit">test</button>
+                            
                         </form>
                     </div>
                 </div>
@@ -281,7 +283,19 @@ body . <<<body
 </div>
 body . <<<body
 <div class="col-12 col-lg-3">
-    
+    <!-- 活動狀態 -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">活動狀態</h4>
+                <div class="card-text">
+                    <form class="needs-validation" novalidate id="event-form-status">
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <style>
 #image-list.media-list{
@@ -317,12 +331,13 @@ body . <<<body
             xss:['xss.min'],
             'media-select': ['myself/media-select'],
             'media-select.upload': ['myself/media-select.upload'],
+            'timepicker': ['https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min']
         },
         shim: {
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker'])
+    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker'])
 </script>
 body;
 
