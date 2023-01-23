@@ -291,20 +291,20 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     map_geo.on('result', ({result}) => {
         map_marker.setLngLat(result.center);
         jq_location.val(result.place_name);
-        jq_longitude.val(result.center[0]);
-        jq_latitude.val(result.center[1]);
+        jq_longitude.val(result.center[0].toFixed(4));
+        jq_latitude.val(result.center[1].toFixed(4));
     })
     map_marker.on('dragend', ({target}) => {
-        jq_longitude.val(target.getLngLat().lng);
-        jq_latitude.val(target.getLngLat().lat);
+        jq_longitude.val(target.getLngLat().lng.toFixed(4));
+        jq_latitude.val(target.getLngLat().lat.toFixed(4));
         getPoi(target.getLngLat().toArray()).then((poi) => {
             if (poi) jq_location.val(poi.place_name)
         })
     })
     map_track.on('geolocate', ({coords}) => {
         map_marker.setLngLat([coords.longitude, coords.latitude])
-        jq_longitude.val(coords.longitude);
-        jq_latitude.val(coords.latitude);
+        jq_longitude.val(coords.longitude.toFixed(4));
+        jq_latitude.val(coords.latitude.toFixed(4));
         getPoi([coords.longitude, coords.latitude]).then((poi) => {
             if (poi) jq_location.val(poi.place_name)
         })
@@ -325,9 +325,12 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             ? response.body.features[0] : null;
     }
 
+    const jq_plan = $('#event-form-plan') //計劃
+    const jq_schedule = $('#event-form-schedule') //時段
+    const plan = [];
+
     /* ============計劃========== */
     /* 增加計劃 */
-    const jq_plan = $('#event-form-plan')
     $('#event-plan-add').click(function () {
         const id = Math.floor(Math.random() * 9999);
         jq_plan.append(
@@ -350,7 +353,10 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                 </div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" required>
+                    <div class="input-group">
+                        <span class="input-group-text form-rounded">$</span>
+                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" required>
+                    </div>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
@@ -361,19 +367,35 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
     /* 刪除計劃 */
     jq_plan.on('click', 'button', function () {
+        const plan_id = $(this).parents('[data-plan]').data('plan');
+        const plan_select = jq_schedule.find("[name^='event-schedule-plan']")
         $(this).parents('[data-plan]').remove()
-        //todo:
+
+        // 時段計劃
+        const index = plan.findIndex((value) => value.plan_id === plan_id)
+        plan.splice(index, 1);
+        plan_select.find(`[value='${plan_id}']`).remove()
+        console.log(plan)
     })
 
     /* 計劃轉移 */
     jq_plan.on('blur', `[name^='event-plan-name']`, function () {
-        const plan_name = $(this).val()
-        //todo:
+        const plan_name = $(this).val(), plan_id = $(this).parents('[data-plan]').data('plan');
+        const plan_select = jq_schedule.find("[name^='event-schedule-plan']")
+
+        // 時段計劃
+        const tmp = plan.filter((value) => value.plan_id === plan_id)
+        if(tmp.length > 0){
+            plan_select.find(`[value='${plan_id}']`).text(plan_name); //存在
+        }else{
+            plan_select.append(`<option value="${plan_id}">${plan_name}</option>`); //不存在
+            plan.push({plan_id, plan_name});
+        }
+        console.log(plan)
     })
 
     /* ============活動時段============== */
     /* 增加時段 */
-    const jq_schedule = $('#event-form-schedule')
     $('#event-schedule-add').click(function () {
         const id = Math.floor(Math.random() * 9999);
         const min = moment().format('YYYY-MM-DD')
@@ -402,14 +424,14 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                       <div class="w-100"></div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="time" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required">
+                              <input type="time" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required>
                               <label for="event-schedule-time-start-${id}">開始時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>
                       </div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="time" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required">
+                              <input type="time" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required>
                               <label for="event-schedule-time-end-${id}">結束時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>
@@ -448,6 +470,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                       <div class="col-12 col-md-6">
                           <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}">
                               <option selected disabled value="">選擇計劃</option>
+                              ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_name}</option>`)}
                           </select>
                           <div class="invalid-feedback">這裏不能留空哦~~</div>
                       </div>
@@ -467,11 +490,21 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
     /* 切換時段類型 */
     jq_schedule.on('change', "[name^='event-schedule-type']", function () {
-        const parent = $(this).parents('[data-schedule]')
+        const parent = $(this).parents('[data-schedule]');
+        const elm = parent.find('.event-schedule-end, .event-schedule-week');
         if(this.checked){
             //重複
+            elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', false); //Enable 結束日期
+
+            //auto set select week
+            const sel_date = moment(parent.find("[name^='event-schedule-start']").val());
+            elm.find(`[value='${sel_date.weekday()}']`).prop('checked', true)
+
+            elm.show()
         }else {
             //單日
+            elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', true); //Enable 結束日期
+            elm.hide()
         }
     })
 })
