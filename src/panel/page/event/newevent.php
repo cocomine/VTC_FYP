@@ -83,14 +83,13 @@ body. <<<body
                             <div class="col-12 mb-2">
                                 <label for="event-summary" class="form-label">活動注意事項</label>
                                 <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200" required></textarea>
-                                <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                <div class="invalid-feedback">活動注意不能留空哦~~</div>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
                                 <textarea class="form-control" name="event-description" id="event-description" rows="5" maxlength="1000" required></textarea>
-                                <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                <div class="invalid-feedback">活動描述不能留空哦~~</div>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
@@ -114,20 +113,20 @@ body. <<<body
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-max-1" class="form-label">計劃最大人數</label>
                                     <input type="number" class="form-control form-rounded" name="event-plan-max-1" id="event-plan-max-1" min="1" required>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    <div class="invalid-feedback">至少需要一位以上~~</div>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="event-plan-max-each-1" class="form-label">每個預約最大人數</label>
                                     <input type="number" class="form-control form-rounded" name="event-plan-max-each-1" id="event-plan-max-each-1" min="1" required>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    <div class="invalid-feedback">至少需要一位以上~~</div>
                                 </div>
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-price-1" class="form-label">計劃金額</label>
-                                    <div class="input-group">
+                                    <div class="input-group has-validation">
                                         <span class="input-group-text form-rounded">$</span>
-                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" min="0" required>
+                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" min="0" value="0" step="0.01" required>
+                                        <div class="invalid-feedback">正數必須約簡至兩位小數</div>
                                     </div>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
                         </form>
@@ -149,14 +148,14 @@ body . <<<body
                                     <div class="date-picker form-floating">
                                         <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required min="{$today->format('o-m-d')}">
                                         <label for="event-schedule-start-1">開始日期</label>
-                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                        <div class="invalid-feedback">必需要今天之後~~</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
                                     <div class="date-picker form-floating">
-                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-1" id="event-schedule-end-1" required disabled>
+                                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-1" id="event-schedule-end-1" required disabled min="{$today->format('o-m-d')}">
                                         <label for="event-schedule-end-1">結束日期</label>
-                                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                        <div class="invalid-feedback">必需要開始日期之後~~</div>
                                     </div>
                                 </div>
                                 <div class="col col-md-auto">
@@ -209,15 +208,17 @@ body . <<<body
                                         <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-1" value="6" disabled>
                                         <label class="form-check-label" for="event-schedule-week-6-1">週六</label>
                                     </div>
+                                    <div class="invalid-feedback">至少選取一天</div>
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col-12 col-md-6">
                                     <select class="form-select form-rounded" name="event-schedule-plan-1" id="event-schedule-plan-1" required>
                                         <option selected disabled value="">選擇計劃</option>
                                     </select>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    <div class="invalid-feedback">這裏必須選擇哦~~</div>
                                 </div>
                             </div>
+                            <input type="submit">
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-schedule-add"><i class="fa-solid fa-calendar-plus me-2"></i>增加時段</button>
                     </div>
@@ -288,7 +289,7 @@ body . <<<body
                         <form class="needs-validation" novalidate id="event-form-status">
                             <div class="col-12 mb-3">
                                 <label for="event-status" class="form-label"><i class="fa-solid fa-eye me-1"></i>狀態</label>
-                                <select class="form-select form-rounded form-control-sm" id="event-status" name="event-status">
+                                <select class="form-select form-rounded form-control-sm" id="event-status" name="event-status" required>
                                     <option value="0">不公開</option>
                                     <option value="1">開放報名</option>
                                     <option value="2">暫停報名</option>
@@ -325,18 +326,19 @@ body . <<<body
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-category">
                             <div class="col-12 mb-3">
-                                <label for="event-type" class="form-label"><i class="fa-solid fa-eye me-1"></i>活動種類</label>
-                                <select class="form-select form-rounded form-control-sm" id="event-type" name="event-type">
+                                <label for="event-type" class="form-label"><i class="fa-solid fa-bars-staggered me-1"></i>活動種類</label>
+                                <select class="form-select form-rounded form-control-sm" id="event-type" name="event-type" required>
                                     <option value="0">水上活動</option>
                                     <option value="1">陸上活動</option>
                                     <option value="2">空中活動</option>
                                 </select>
                             </div>
                             <label for="event-type" class="form-label"><i class="fa-solid fa-folder-open me-1"></i>分類</label>
-                            <div class="col-12 border border border-1 rounded px-2 pt-2">
+                            <div class="col-12 border border-1 rounded px-2 pt-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="xxx" id="event-category-xxx" name="event-category" data-category="xxx">
                                     <label class="form-check-label" for="event-category-xxx">xxx</label>
+                                    <!-- todo -->
                                 </div>
                             </div>
                         </form>
@@ -351,11 +353,11 @@ body . <<<body
                     <h4 class="card-title">活動封面</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-thumbnail">
-                            <div class="col-12">
-                                <img src="" alt="" id="event-thumbnail-img">
+                            <div class="col-12 text-center">
+                                <img src="" alt="" class="border border-1" id="event-thumbnail-img" draggable="false" style="max-height: 10rem">
                             </div>
                             <input type="text" class="form-control d-none" name="event-thumbnail" id="event-thumbnail" required>
-                            <div class="invalid-feedback">這裏不能留空哦~~</div>
+                            <div class="invalid-feedback">這裏至少需要選擇圖片哦~~</div>
                         </form>
                         <a class="text-primary text-decoration-underline" href="#" id="event-thumbnail-change">設定/更改 封面圖片</a>
                     </div>
