@@ -43,7 +43,7 @@ class home implements IPage {
 <div class='col-12 mt-4'>
     <div class="card">
         <div class="card-body">
-            dsfdsfdf
+            test
         </div>
     </div>
 </div>

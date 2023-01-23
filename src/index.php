@@ -317,6 +317,14 @@ function run_apis(array $path, MyAuth $auth) {
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="/">分類</a>
+                                    </li>
+                                    <li>
+                                        <a href="/">精選</a>
+                                    </li>
+                                    <li><a href="/">關於我們</a></li>
+                                    <li><a href="/">聯絡我們</a></li>
                                     <?php /* 導航 */
                                     if ($auth->userdata['Role'] >= 1) {
                                         echo '';
