@@ -14,6 +14,19 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
     })
 
+    /* jquery timepicker */
+    $("input[name^='event-schedule-time'], #event-post-time").timepicker({
+        show2400: true,
+        className: "dropdown-menu",
+        closeOnScroll: true,
+        timeFormat: "H:i",
+    })
+
+    /* set time to today */
+    $('#event-post-time').timepicker('setTime', new Date());
+    $('#event-schedule-time-start-1').timepicker('setTime', new Date());
+    $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
+
     /* ============活動資料============== */
     /* HTML filter xss */
     const filterXSS_description = new xss.FilterXSS({
@@ -345,20 +358,20 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                 <div class="col-6 col-md-2">
                     <label for="event-plan-max-${id}" class="form-label">計劃最大人數</label>
                     <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" min="1" required>
-                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                    <div class="invalid-feedback">至少需要一位以上~~</div>
                 </div>
                 <div class="col-6 col-md-3">
                     <label for="event-plan-max-each-${id}" class="form-label">每個預約最大人數</label>
                     <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" min="1" required>
-                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                    <div class="invalid-feedback">至少需要一位以上~~</div>
                 </div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text form-rounded">$</span>
-                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" required>
+                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" value="0" required>
+                        <div class="invalid-feedback">正數必須約簡至兩位小數</div>
                     </div>
-                    <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
                     <button type="button" class="btn-close" aria-label="Close"></button>
@@ -406,14 +419,14 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                           <div class="date-picker form-floating">
                               <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}">
                               <label for="event-schedule-start-${id}">開始日期</label>
-                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                              <div class="invalid-feedback">必需要今天之後~~</div>
                           </div>
                       </div>
                       <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
                           <div class="date-picker form-floating">
-                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required>
+                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required min="${min}">
                               <label for="event-schedule-end-${id}">結束日期</label>
-                              <div class="invalid-feedback">這裏不能留空哦~~</div>
+                              <div class="invalid-feedback">必需要開始日期之後~~</div>
                           </div>
                       </div>
                       <div class="col col-md-auto">
@@ -466,6 +479,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                               <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6">
                               <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
                           </div>
+                          <div class="invalid-feedback">至少選取一天</div>
                       </div>
                       <div class="w-100"></div>
                       <div class="col-12 col-md-6">
@@ -473,7 +487,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                               <option selected disabled value="">選擇計劃</option>
                               ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
                           </select>
-                          <div class="invalid-feedback">這裏不能留空哦~~</div>
+                          <div class="invalid-feedback">這裏必須選擇哦~~</div>
                       </div>
                       <div class="col text-end align-self-end">
                           <button type="button" class="btn-close" aria-label="Close"></button>
@@ -515,11 +529,36 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         }
     })
 
-    /* jquery timepicker */
-    $("input[name^='event-schedule-time']").timepicker({
-        show2400: true,
-        className: "dropdown-menu",
-        closeOnScroll: true,
-        timeFormat: "H:i"
+    /* 結束日期min調整 */
+    //todo
+
+    /* 週期選擇提醒 (必須要至少選擇一天) */
+    //todo: 必須要至少選擇一天
+
+    /* ==============活動狀態=============== */
+    /* 儲存草稿 */
+    $('#event-daft').click(function () {
+        //todo
+    })
+
+    /* 發佈 */
+    $('#event-post').click(function () {
+        //todo
+    })
+
+    /* 移到回收桶 */
+    $('#event-recycle').click(function () {
+        //todo
+    })
+
+    /* ===========活動封面=============== */
+    /* 更改封面圖片 */
+    $('#event-thumbnail-change').click(function (e) {
+        e.preventDefault()
+
+        media_select.select_media(function (img) {
+            $('#event-thumbnail-img').attr('src', '/panel/api/media/' + img[0]).attr('alt', img[0]);
+            $('#event-thumbnail').val(img[0]);
+        }, 1, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
     })
 })
