@@ -53,8 +53,10 @@ class test implements \cocomine\IPage {
 
         return <<<body
     <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
-    <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+    
+    <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">    
     <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+    
     <div>
         <div id="show"></div>
         <button id="select">select image</button>
