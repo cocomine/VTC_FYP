@@ -536,7 +536,6 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     //todo: 必須要至少選擇一天
 
     /* ==============活動狀態=============== */
-
     /* 儲存草稿 */
     $('#event-daft').click(function () {
         //todo
