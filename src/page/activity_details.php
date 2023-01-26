@@ -3,6 +3,7 @@
 namespace page;
 
 use mysqli;
+use cocomine\IPage;
 
 class activity_details implements \cocomine\IPage {
 
