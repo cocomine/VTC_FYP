@@ -79,7 +79,7 @@ class upload implements IPage {
                 <p class='col-auto'>{$Text['or']}</p>
                 <div class='w-100'></div>
                 <div class='col-12 col-sm-4 '>
-                    <input type='file' class='form-control' id='file-sel' multiple accept='image/jpeg,image/png,image/webp,image/gif' />
+                    <input type='file' class='form-control' id='file-sel' multiple accept='image/jpeg,image/png,image/webp,image/gif,application/pdf' />
                     <label for="file-sel" class="form-label">{$Text['limit_type']}</label>
                 </div>
             </div>

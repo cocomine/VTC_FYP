@@ -53,12 +53,18 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
  */
 function fetch_path(): array {
     // 消毒/分割
-    $path = strtolower(filter_var(trim($_GET['p']), FILTER_SANITIZE_STRING));
+    $path = strtolower(filter_var(trim($_SERVER['REQUEST_URI']), FILTER_SANITIZE_STRING));
     $path = explode("/", $path);
 
     //清除多餘數組
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
+    }
+    if($path[0] === ""){
+        $path = array_slice($path, 1);
+    }
+    if($path[0] === "panel"){
+        $path = array_slice($path, 1);
     }
 
     return $path;
@@ -288,7 +294,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 '<li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
                                     <ul>
-                                        <li><a href="/panel/admin/notify/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
+                                        <li><a href="/panel/admin/notify_mg/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
                                         <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>
                                     </ul>
                                 </li>';

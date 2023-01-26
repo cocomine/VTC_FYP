@@ -53,12 +53,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
  */
 function fetch_path(): array {
     // 消毒/分割
-    $path = strtolower(filter_var(trim($_GET['p']), FILTER_SANITIZE_STRING));
+    $path = strtolower(filter_var(trim($_SERVER['REQUEST_URI']), FILTER_SANITIZE_STRING));
     $path = explode("/", $path);
 
     //清除多餘數組
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
+    }
+    if($path[0] === ""){
+        $path = array_slice($path, 1);
     }
 
     return $path;
@@ -107,14 +110,14 @@ function run_page(array $path, MyAuth $auth) {
         /* 頁面搜尋 */
         for ($i = count($path); $i >= 0; $i--) {
             //重組class路徑
-            $class = '\\page';
+            $class = 'page';
             for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
             $up_path = array_sanitize($up_path); //消毒
 
             //建立頁面
             try {
-                $page = LoadPageFactory::createPage($class, __DIR__ . '/../', $up_path);
+                $page = LoadPageFactory::createPage($class, __DIR__ . '/', $up_path);
             } catch (Exception $e) {
                 continue; //如不存在跳過
             }
