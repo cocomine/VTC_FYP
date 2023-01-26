@@ -48,12 +48,6 @@ class activity_details implements \cocomine\IPage {
         ));
 
         return <<<body
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"> </script>
     <div class="center">
         <p class="title">迪欣湖</p>
 
@@ -92,13 +86,13 @@ class activity_details implements \cocomine\IPage {
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="img\img1.jpg" class="d-block w-100" alt="" width="200" height="350">
+                        <img src="media\activity_img\img1.jpg" class="d-block w-100" alt="" width="200" height="350">
                     </div>
                     <div class="carousel-item">
-                        <img src="img\img2.jpg" class="d-block w-100" alt="" width="200" height="350">
+                        <img src="media\activity_img\img2.jpg" class="d-block w-100" alt="" width="200" height="350">
                     </div>
                     <div class="carousel-item">
-                        <img src="img\img3.jpg" class="d-block w-100" alt="" width="200" height="350">
+                        <img src="media\activity_img\img3.jpg" class="d-block w-100" alt="" width="200" height="350">
                     </div>
                 </div>
 
