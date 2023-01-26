@@ -8,6 +8,9 @@ ErrorDocument 403 /panel/stable/403.php
 RewriteEngine On
 RewriteBase /
 
+#RewriteCond %{REQUEST_URL} !^(.*)/$
+#RewriteRule ^(.+)$ $1/ [L,R=302]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
@@ -15,7 +18,12 @@ RewriteRule ^(.+)$ $1.php [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.+)$ index.php?p=$1 [L,QSA,NC]
+RewriteRule ^panel.*$ /panel/index.php [L,QSA]
+
+RewriteCond %{REQUEST_URL} !^panel/.*$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /index.php [L,QSA]
 
 #RewriteCond %{SERVER_PORT} 80t
 #RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R,L]
