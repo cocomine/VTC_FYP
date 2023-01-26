@@ -320,14 +320,20 @@ function run_apis(array $path, MyAuth $auth) {
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="/">分類</a>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Things to do
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/">Water Activities</a></li>
+                                            <li><a class="dropdown-item" href="/">Land Activities</a></li>
+                                            <li><a class="dropdown-item" href="/">Air Activities<</a></li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <a href="/">精選</a>
-                                    </li>
-                                    <li><a href="/">關於我們</a></li>
-                                    <li><a href="/">聯絡我們</a></li>
+                                    <li><a href="/">About Us</a></li>
+                                    <li><a href="/">Contact Us</a></li>
+
+
                                     <?php /* 導航 */
                                     if ($auth->userdata['Role'] >= 1) {
                                         echo '';

@@ -43,10 +43,31 @@ class home implements IPage {
 <div class='col-12 mt-4'>
     <div class="card">
         <div class="card-body">
-            test
+            <div id="carouselExample" class="carousel slide">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="/assets/images/background/skiing-back.jpg" class="d-block w-100" alt="Skiing">
+                </div>
+                <div class="carousel-item">
+                  <img src="/assets/images/background/diving-back.jpg" class="d-block w-100" alt="Diving">
+                </div>
+                <div class="carousel-item">
+                  <img src="/assets/images/background/climbing-back.jpg" class="d-block w-100" alt="Climbing">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
         </div>
     </div>
 </div>
+
 <script>
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>
