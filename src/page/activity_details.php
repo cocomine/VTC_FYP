@@ -188,6 +188,7 @@ class activity_details implements \cocomine\IPage {
                         <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                 </div>
+                
 
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                     data-bs-slide="prev">
