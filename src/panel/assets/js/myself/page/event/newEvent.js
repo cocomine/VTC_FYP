@@ -408,20 +408,28 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         // 時段計劃
         const index = plan.findIndex((value) => value.plan_id === plan_id);
-        plan.splice(index, 1);
-        plan_select.find(`[value='${plan_id}']`).remove();
-        console.log(plan);
+        if (index >= 0){
+            plan.splice(index, 1);
+            plan_select.find(`[value='${plan_id}']`).remove();
+        }
     });
 
     /* 計劃轉移 */
     jq_plan.on('blur', `[name^='event-plan-name']`, function (){
         const plan_name = $(this).val(), plan_id = $(this).parents('[data-plan]').data('plan');
         const plan_select = jq_schedule.find("[name^='event-schedule-plan']");
+        const index = plan.findIndex((value) => value.plan_id === plan_id);
 
         // 時段計劃
-        const tmp = plan.filter((value) => value.plan_id === plan_id);
-        if (tmp.length > 0){
-            plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
+        if (index >= 0){
+            if(plan_name === ""){
+                //if blank
+                plan_select.find(`[value='${plan_id}']`).remove()
+                plan.splice(index, 1);
+            }else{
+                plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
+                plan[index] = {plan_id, plan_name}
+            }
         }else{
             plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
             plan.push({ plan_id, plan_name });

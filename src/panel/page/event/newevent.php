@@ -102,8 +102,8 @@ body. <<<body
                     <h4 class="card-title">活動計劃</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-plan">
-                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="0001">
-                                <h5 class="col-12 text-muted"># 0001</h5>
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="1000">
+                                <h5 class="col-12 text-muted"># 1000</h5>
                                 <div class="col-12 col-lg-7">
                                     <label for="event-plan-name-1" class="form-label">計畫名稱</label>
                                     <input type="text" class="form-control form-rounded" name="event-plan-name-1" id="event-plan-name-1" maxlength="20" required>
