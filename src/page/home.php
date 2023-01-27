@@ -40,45 +40,127 @@ class home implements IPage {
 
         return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<div class='col-12 mt-4'>
-    <div class="card">
-        <div class="card-body">
+<div class='col-12 mt-12'>
+
         
-            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img src="/assets/images/background/skiing-back.jpg" class="d-block w-100" alt="Skiing">
-                  <div class="carousel-caption d-none d-md-block">
-                    <button type="button" class="btn btn-primary btn-lg">See More</button>
-                    <h5>Into white world</h5>
-                  </div>
+        <div id="carouselExample" class="carousel slide">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="/assets/images/background/hot-air-balloon-back.jpg" class="d-block w-100" alt="Welcome to X-Travel">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Explore places and other experiences</h5>
+
+                <div class="dropdown">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    Choose Location Or Activities
+                  </button>
+                  <form class="dropdown-menu p-4">
+                    <div class="mb-3">
+                        <div class="search-box">
+                            <input type="text" name="search" placeholder="Search Location" required>
+                            <i class="ti-search"></i>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                          <div class="btn-group dropend">
+                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Hong Kong
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                                <li><a class="dropdown-item" href="#">Climbing</a></li>
+                                <li><a class="dropdown-item" href="#">Diving</a></li>
+                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                                <li><a class="dropdown-item" href="#">Trekking</a></li>
+                              </ul>
+                          </div>
+                          
+                          <div class="btn-group dropend">
+                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                China
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                                <li><a class="dropdown-item" href="#">Climbing</a></li>
+                                <li><a class="dropdown-item" href="#">Hot air balloon flight</a></li>
+                                <li><a class="dropdown-item" href="#">Mountaineering</a></li>
+                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                                <li><a class="dropdown-item" href="#">Skiing</a></li>
+                                <li><a class="dropdown-item" href="#">Trekking</a></li>
+                              </ul>
+                          </div>
+                          
+                          <div class="btn-group dropend">
+                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Macao
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Bungee Jumping</a></li>
+                                <li><a class="dropdown-item" href="#">Climbing</a></li>
+                              </ul>
+                          </div>
+                          
+                          <div class="btn-group dropend">
+                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Taiwan
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                                <li><a class="dropdown-item" href="#">Climbing</a></li>
+                                <li><a class="dropdown-item" href="#">Diving</a></li>
+                                <li><a class="dropdown-item" href="#">Mountaineering</a></li>
+                                <li><a class="dropdown-item" href="#">Parachute</a></li>
+                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                                <li><a class="dropdown-item" href="#">Trekking</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-                <div class="carousel-item">
-                  <img src="/assets/images/background/diving-back.jpg" class="d-block w-100" alt="Diving">
-                  <div class="carousel-caption d-none d-md-block">
-                    <button type="button" class="btn btn-primary btn-lg">See More</button>
-                    <h5>Close to inhabitants of the sea</h5>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <img src="/assets/images/background/climbing-back.jpg" class="d-block w-100" alt="Climbing">
-                  <div class="carousel-caption d-none d-md-block">
-                    <button type="button" class="btn btn-primary btn-lg">See More</button>
-                    <h5>Rock and Roll</h5>
-                  </div>
-                </div>
+
+                
+                
               </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
             </div>
+          </div>
         </div>
-    </div>
+        
+        
+        <!--<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="/assets/images/background/skiing-back.jpg" class="d-block w-100" alt="Skiing">
+              <div class="carousel-caption d-none d-md-block">
+                <button type="button" class="btn btn-primary btn-lg">See More</button>
+                <h5>Into white world</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="/assets/images/background/diving-back.jpg" class="d-block w-100" alt="Diving">
+              <div class="carousel-caption d-none d-md-block">
+                <button type="button" class="btn btn-primary btn-lg">See More</button>
+                <h5>Close to inhabitants of the sea</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="/assets/images/background/climbing-back.jpg" class="d-block w-100" alt="Climbing">
+              <div class="carousel-caption d-none d-md-block">
+                <button type="button" class="btn btn-primary btn-lg">See More</button>
+                <h5>Rock and Roll</h5>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>-->
 </div>
 
 <script>
