@@ -3,10 +3,13 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'timepicker' ], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker){
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'timepicker' ],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
+    crs.init();
+    const support_country = ['hk', 'mo', 'tw', 'cn']
 
     /* Count content length */
     $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
@@ -209,7 +212,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //list up
             const tmp_img = tmp.map((value) => value.find('img'));
             img_items = tmp_img.map((value) => value[0]);
-            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))));
+            jq_image.val((tmp_img.map((value) => value.data('image-id'))).join(','));
         }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
     });
 
@@ -255,10 +258,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0');
 
             //list up
-            jq_image.val(JSON.stringify(
+            jq_image.val((
                 jq_dropZone.find('[data-image-id]').map(
                     (index, elm) => elm.dataset.imageId).toArray()
-            ));
+            ).join(','));
         }
     });
     //dragend
@@ -340,7 +343,20 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
      */
     function setLocalValue(poi){
         console.log(poi) //debug
-        jq_location.val(poi[0].place_name);
+        const country = poi.filter((val) => val.place_type.includes('country'))
+        if(country.length > 0 && support_country.includes(country[0].properties.short_code)){
+            //set country
+            $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', {"bubbles":true}))
+            jq_location.val(poi[0].place_name.slice(0,50))[0].dispatchEvent(new Event('input', {"bubbles":true}));
+
+            //set region
+            const region = poi.filter((val) => val.place_type.includes('region'))
+            if(region.length > 0) $('#event-region').val(region[0].text)
+
+            $('#invalid-feedback').hide()
+        }else{
+            $('#invalid-feedback').show()
+        }
     }
 
     /* ============計劃========== */
@@ -636,6 +652,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     function updateTag(){
         const tag_elm = jq_tagList.children('[data-tag]');
         const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray()
-        $('#event-tag').val(JSON.stringify(list))
+        $('#event-tag').val(list.join(','))
     }
 });

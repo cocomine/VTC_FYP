@@ -34,7 +34,7 @@
 
     // included during grunt build step (run `grunt generate` on the command line)
     //
-var _data = [["China","CN","Anhui~34|Beijing~11|Chongqing~50|Fujian~35|Gansu~62|Guangdong~44|Guangxi~45|Guizhou~52|Hainan~46|Hebei~13|Heilongjiang~23|Henan~41|Hong Kong~91|Hubei~42|Hunan~43|Inner Mongolia~15|Jiangsu~32|Jiangxi~36|Jilin~22|Liaoning~21|Macau~92|Ningxia~64|Qinghai~63|Shaanxi~61|Shandong~37|Shanghai~31|Shanxi~14|Sichuan~51|Tianjin~12|Tibet~54|Xinjiang~65|Yunnan~53|Zhejiang~33"],["Hong Kong","HK","Hong Kong"],["Macao","MO","Macao"],["Taiwan","TW","Chang-hua~CHA|Chia-i~CYQ|Hsin-chu~HSQ|Hua-lien~HUA|Kao-hsiung~KHH|Keelung~KEE|Kinmen~KIN|Lienchiang~LIE|Miao-li~MIA|Nan-t'ou~NAN|P'eng-hu~PEN|New Taipei~NWT|P'ing-chung~PIF|T'ai-chung~TXG|T'ai-nan~TNN|T'ai-pei~TPE|T'ai-tung~TTT|T'ao-yuan~TAO|Yi-lan~ILA|Yun-lin~YUN"]]
+var _data = [["China","CN","Anhui~34|Beijing~11|Chongqing~50|Fujian~35|Gansu~62|Guangdong~44|Guangxi~45|Guizhou~52|Hainan~46|Hebei~13|Heilongjiang~23|Henan~41|Hong Kong~91|Hubei~42|Hunan~43|Inner Mongolia~15|Jiangsu~32|Jiangxi~36|Jilin~22|Liaoning~21|Macau~92|Ningxia~64|Qinghai~63|Shaanxi~61|Shandong~37|Shanghai~31|Shanxi~14|Sichuan~51|Tianjin~12|Tibet~54|Xinjiang~65|Yunnan~53|Zhejiang~33"],["Hong Kong","HK","Hong Kong"],["Macao","MO","Macao"],["Taiwan","TW","Changhua~CHA|Chiai~CYQ|Hsinchu~HSQ|Hualien~HUA|Kaohsiung~KHH|Keelung~KEE|Kinmen~KIN|Lienchiang~LIE|Miaoli~MIA|Nantou~NAN|Penghu~PEN|New Taipei~NWT|Pingchung~PIF|Taichung~TXG|Tainan~TNN|Taipei~TPE|Taitung~TTT|Taoyuan~TAO|Yilan~ILA|Yunlin~YUN"]]
 
     var _init = function () {
         $("." + _countryClass).each(_populateCountryFields);
