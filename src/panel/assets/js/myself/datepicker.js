@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * 1.0.1
+ * 1.0.2
  */
 
 /*
@@ -67,7 +67,7 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             const target = $(e.delegateTarget)
             activateDate = moment(selectDate).set('date', parseInt(day));
             target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate));
-            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
+            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD')).focus();
         })
 
         /* 本月 */
@@ -76,7 +76,7 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
             selectDate = moment();
             activateDate = moment();
             target.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, target.children('.date-picker-toggle')[0].disableDate))
-            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD'));
+            target.children('.date-picker-toggle').val(activateDate.format('YYYY-MM-DD')).focus();
         })
     }
 

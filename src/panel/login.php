@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
                 $payload = $gclient->verifyIdToken($_POST['credential']);
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
-                if ($auth->google_login($payload['email'])) header("Location: /panel");
+                if ($auth->google_login($payload['email'])) header("Location: /panel/login");
                 else header('Location: /panel/register?email=' . $payload['email'] . '&name=' . $payload['name']);
             } catch (Exception $e) {
                 header("Location: /panel/login");
@@ -131,7 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     /* 已經登入 */
     if ($auth->islogin) {
         ob_clean();
-        header("Location: /panel");
+        if($auth->userdata['Role'] > 1) header("Location: /panel");
+        else header("Location: /");
         exit();
     }
 
@@ -166,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $profile = $oauth->userinfo->get();
 
                 $auth->add_Hook('acc_Check_NewIP', 'acc_NewIP_Hook');
-                if ($auth->google_login($profile->getEmail())) header("Location: /panel");
+                if ($auth->google_login($profile->getEmail())) header("Location: /panel/login");
                 else {
                     header('Location: /panel/register?email=' . $profile->getEmail() . '&name=' . urlencode($profile->getName()));
                     exit();
