@@ -151,24 +151,9 @@ class activity_details implements \cocomine\IPage {
     <meta charset="utf-8">
      <!-- main 1 -->
     <div class="center">
-        <p class="title"></p>
-
-        <div style="width:50%; height:415px; float:left; border-style: ridge; border-radius: 5px;" class="">
-
-            <p class="normal_text"><a href="#" id="show_detail" data-bs-target="#exampleModal"
-                    data-bs-toggle="modal">營業時間:</a> 9:00 - 19:00</p>
-            <p class="normal_text"><a href="#map_title">地址:</a> 香港竹篙灣</p>
-            <br /><br /><br />
-            <p class="Price_txt">價格: $168</p>
-
-            <button type="button" class="btn btn-primary btn-lg" style="width: 90%; margin-left: 15px; margin-top: 25px;">立刻預訂</button>
-
-
-        </div>
-
         <!-- Carousel -->
-        <div style="width:50%; height: 430px; float:right; " class="">
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+        <div style="width:100%; float:right; " class="">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true" style="padding: 20px">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
                         class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -179,16 +164,16 @@ class activity_details implements \cocomine\IPage {
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" class="d-block w-100" alt="" style="max-height:50vh;">
                     </div>
                     <div class="carousel-item">
-                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" class="d-block w-100" alt="" style="max-height:50vh;">
                     </div>
                     <div class="carousel-item">
-                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" class="d-block w-100" alt="" style="max-height:50vh;">
                     </div>
                 </div>           
-
+                
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                     data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -207,19 +192,31 @@ class activity_details implements \cocomine\IPage {
     <!-- main 1 End -->
 
     <br />
-    <!-- main 2 -->
+    <!-- activity -->
     <div class="center">
         <p class="title">活動介紹</p>
         無論是在湖邊散步、慢跑，還是騎著腳踏遊覽車在湖邊遊覽，皆可飽覽迪欣湖恬靜優美的湖面風光，
         最適合一家大小一同來呼吸新鮮空氣，好好舒展身心。這個名為迪欣湖的人工湖有著波光粼粼的湖水、
         動感十足的噴泉和優美怡人的山景，絕對是你與摯愛重拾昔日樂趣、盡情玩樂的好地方。
     </div>
-    <!-- main 2 End -->
+    <!-- activity  End -->
+
+    <!-- Noted -->
+    
+    <div class="center">
+     <p class="title">注意事項</p>
+        溫馨提示：
+        <ul style="list-style-type:disc">
+        <li>為保持社交距離，樂園會控制入園人數。你需在到訪樂園前90日內憑有效門票、會員卡、門票、換領憑證或確認通知預先透過預約到訪日子。</li>
+        <li>照片只供參考。度假區內所有活動、娛樂設施及表演安排會視乎實際情況而定，如有任何變動，恕不另行通知。請瀏覽香港迪士尼樂園度假區的官方網頁及手機應用程式以查閱最新資訊或時間表，以便輕鬆出行開展奇妙旅程</li>
+        </ul>   
+    </div>
+    <!-- Noted End -->
+    
+    <!-- Price -->
 
 
-
-
-
+    <!-- Price End-->
 
 
     <br />
