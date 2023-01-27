@@ -3,16 +3,16 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'timepicker'], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker) {
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'timepicker' ], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
 
     /* Count content length */
-    $('#event-summary, #event-precautions, #event-location').on('input focus', function () {
-        const length = $(this).val().length
+    $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
+        const length = $(this).val().length;
         $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
-    })
+    });
 
     /* jquery timepicker */
     $("input[name^='event-schedule-time'], #event-post-time").timepicker({
@@ -20,7 +20,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         className: "dropdown-menu",
         closeOnScroll: true,
         timeFormat: "H:i",
-    })
+    });
 
     /* set time to today */
     $('#event-post-time').timepicker('setTime', new Date());
@@ -38,13 +38,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             h4: [],
             h5: [],
             h6: [],
-            a: ["href", 'target'],
+            a: [ "href", 'target' ],
             strong: [],
             em: [],
             del: [],
             br: [],
             p: [],
-            ul: ['class'],
+            ul: [ 'class' ],
             ol: [],
             li: [],
             table: [],
@@ -54,7 +54,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             td: [],
             tr: [],
             blockquote: [],
-            img: ["src", "alt"],
+            img: [ "src", "alt" ],
             hr: []
         }
     });
@@ -66,7 +66,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             del: [],
             br: [],
             p: [],
-            ul: ['class'],
+            ul: [ 'class' ],
             ol: [],
             li: []
         }
@@ -79,7 +79,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         strikethrough: true,
         tables: true,
         smoothLivePreview: true,
-        extensions: [{
+        extensions: [ {
             type: 'output',
             regex: new RegExp(`<ul(.*)>`, 'g'),
             replace: `<ul class="disc" $1>`
@@ -87,7 +87,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             type: 'output',
             regex: new RegExp(`<a(.*)>`, 'g'),
             replace: `<a target="_blank" $1>`
-        }]
+        } ]
     });
 
     /**
@@ -110,34 +110,34 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             styleSelectedText: false,
             toolbarButtonClassPrefix: "mde",
             previewRender: (text) => {
-                return filterXSS.process(converter.makeHtml(text))
+                return filterXSS.process(converter.makeHtml(text));
             },
             toolbar: [
                 "bold", "italic", "heading", "strikethrough", "|",
                 "quote", "unordered-list", "ordered-list", "table", "|",
                 "horizontal-rule", "link", {
                     name: "Image",
-                    action: function (editor) {
+                    action: function (editor){
                         if (!editor.codemirror || editor.isPreviewActive()) return;
 
                         const doc = editor.codemirror.getDoc();
                         media_select.select_media((ids) => {
-                            if (doc.somethingSelected()) {
+                            if (doc.somethingSelected()){
                                 const text = doc.getSelection();
-                                doc.replaceSelection('![' + text + '](/panel/api/media/' + ids + ')', 'around')
-                                editor.codemirror.focus()
-                            } else {
-                                const cur = doc.getCursor()
-                                const text = '![](/panel/api/media/' + ids + ')'
-                                doc.replaceRange(text, cur)
-                                editor.codemirror.focus()
+                                doc.replaceSelection('![' + text + '](/panel/api/media/' + ids + ')', 'around');
+                                editor.codemirror.focus();
+                            }else{
+                                const cur = doc.getCursor();
+                                const text = '![](/panel/api/media/' + ids + ')';
+                                doc.replaceRange(text, cur);
+                                editor.codemirror.focus();
                             }
-                        }, 1)
+                        }, 1);
                     },
                     className: "fa-solid fa-image",
                     title: "Add Image"
                 }, "|",
-                "preview", "side-by-side", "fullscreen", "guide"],
+                "preview", "side-by-side", "fullscreen", "guide" ],
             shortcuts: {
                 "Image": "Ctrl-Alt-I",
             },
@@ -146,7 +146,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             },
             renderingConfig: {
                 sanitizerFunction: (renderedHTML) => {
-                    return filterXSS.process(renderedHTML)
+                    return filterXSS.process(renderedHTML);
                 }
             },
             status: [
@@ -158,34 +158,34 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                     onUpdate: (el) => {
                         const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
                         el.innerHTML = length + "/" + maxlength;
-                        if (length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`)
+                        if (length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
                     }
-                }]
-        }
-    }
+                } ]
+        };
+    };
 
     /* description markdown editor */
-    const jq_description = $('#event-description')
+    const jq_description = $('#event-description');
     new EasyMDE({
         ...editor_options(filterXSS_description, jq_description, MD_converter),
         element: jq_description[0],
-        autosave: {enabled: false},
+        autosave: { enabled: false },
         placeholder: "活動描述",
         initialValue: jq_description.val()
-    })
+    });
 
     /* precautions markdown editor */
-    const jq_precautions = $('#event-precautions')
+    const jq_precautions = $('#event-precautions');
     new EasyMDE({
         ...editor_options(filterXSS_precautions, jq_precautions, MD_converter),
         element: jq_precautions[0],
-        autosave: {enabled: false},
-        toolbar: ["bold", "italic", "heading", "strikethrough", "|",
-            "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide"],
+        autosave: { enabled: false },
+        toolbar: [ "bold", "italic", "heading", "strikethrough", "|",
+            "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide" ],
         placeholder: "活動注意事項",
         maxHeight: "5rem",
         initialValue: jq_precautions.val()
-    })
+    });
 
     /* =============活動圖片============== */
     /* Image select */
@@ -207,11 +207,11 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             jq_dropZone.html(tmp);
 
             //list up
-            const tmp_img = tmp.map((value) => value.find('img'))
-            img_items = tmp_img.map((value) => value[0])
-            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))))
-        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/)
-    })
+            const tmp_img = tmp.map((value) => value.find('img'));
+            img_items = tmp_img.map((value) => value[0]);
+            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))));
+        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
+    });
 
     /* Image drag drop */
     //Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
@@ -220,52 +220,52 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
     let selectedItem;
 
     //dragstart
-    jq_dropZone.on('dragstart', 'img', function (e) {
+    jq_dropZone.on('dragstart', 'img', function (e){
         selectedItem = e.target;
-        $(e.target).parents('.item').css('opacity', 0.4)
+        $(e.target).parents('.item').css('opacity', 0.4);
         e.originalEvent.dataTransfer.effectAllowed = 'move';
-    })
+    });
     //dragover
-    jq_dropZone.on('dragover', function (e) {
+    jq_dropZone.on('dragover', function (e){
         e.preventDefault();
-        e.originalEvent.dataTransfer.dropEffect = "move"
+        e.originalEvent.dataTransfer.dropEffect = "move";
 
-        if (img_items.includes(e.target)) {
+        if (img_items.includes(e.target)){
             adjacentItem = e.target;
 
-            if (adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined) {
-                $(prevAdjacentItem).parents('.item').css('marginLeft', '0')
+            if (adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined){
+                $(prevAdjacentItem).parents('.item').css('marginLeft', '0');
             }
 
-            if (adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))) {
-                const item = $(adjacentItem).parents('.item')
-                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth() + 'px')
+            if (adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))){
+                const item = $(adjacentItem).parents('.item');
+                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth() + 'px');
             }
 
             prevAdjacentItem = adjacentItem;
         }
-    })
+    });
     //drop
-    jq_dropZone.on('drop', function (e) {
+    jq_dropZone.on('drop', function (e){
         e.preventDefault();
 
-        if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))) {
-            console.log(jq_dropZone.find(adjacentItem).parents('.item'))
-            jq_dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1))
-            $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0')
+        if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))){
+            console.log(jq_dropZone.find(adjacentItem).parents('.item'));
+            jq_dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1));
+            $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0');
 
             //list up
             jq_image.val(JSON.stringify(
                 jq_dropZone.find('[data-image-id]').map(
                     (index, elm) => elm.dataset.imageId).toArray()
-            ))
+            ));
         }
-    })
+    });
     //dragend
-    jq_dropZone.on('dragend', function () {
-        $(selectedItem).parents('.item').css('opacity', 1)
-        $(adjacentItem).parents('.item').css('marginLeft', '0')
-    })
+    jq_dropZone.on('dragend', function (){
+        $(selectedItem).parents('.item').css('opacity', 1);
+        $(adjacentItem).parents('.item').css('marginLeft', '0');
+    });
 
     /* =================活動地址================= */
     /* Load map */
@@ -273,21 +273,21 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v12',
         zoom: 1,
-        center: [0, 0]
+        center: [ 0, 0 ]
     });
-    const map_client = mapboxSdk({accessToken: mapboxgl.accessToken});
+    const map_client = mapboxSdk({ accessToken: mapboxgl.accessToken });
     const jq_location = $('#event-location'), jq_longitude = $('#event-longitude'), jq_latitude = $('#event-latitude');
 
     /* Enable stars with reduced atmosphere */
     map.on('style.load', () => {
-        map.setFog({'horizon-blend': 0.05});
+        map.setFog({ 'horizon-blend': 0.05 });
     });
 
     /* Add Map Control */
     const map_marker = new mapboxgl.Marker({
         color: 'red',
         draggable: true
-    }).setLngLat([0, 0]).addTo(map);
+    }).setLngLat([ 0, 0 ]).addTo(map);
     const map_geo = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         marker: false,
@@ -295,56 +295,59 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         proximity: "ip",
     });
     map.addControl(map_geo);
-    const map_track = new mapboxgl.GeolocateControl({showUserLocation: false, fitBoundsOptions: {zoom: 15}});
+    const map_track = new mapboxgl.GeolocateControl({ showUserLocation: false, fitBoundsOptions: { zoom: 15 } });
     map.addControl(map_track);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
 
     /* Update map marker */
-    map_geo.on('result', ({result}) => {
+    map_geo.on('result', ({ result }) => {
         map_marker.setLngLat(result.center);
+        console.log(result) //debug
         jq_location.val(result.place_name);
         jq_longitude.val(result.center[0].toFixed(4));
         jq_latitude.val(result.center[1].toFixed(4));
-    })
-    map_marker.on('dragend', ({target}) => {
+    });
+    map_marker.on('dragend', ({ target }) => {
         jq_longitude.val(target.getLngLat().lng.toFixed(4));
         jq_latitude.val(target.getLngLat().lat.toFixed(4));
         getPoi(target.getLngLat().toArray()).then((poi) => {
-            if (poi) jq_location.val(poi.place_name)
-        })
-    })
-    map_track.on('geolocate', ({coords}) => {
-        map_marker.setLngLat([coords.longitude, coords.latitude])
+            console.log(poi) //debug
+            if (poi) jq_location.val(poi[0].place_name);
+        });
+    });
+    map_track.on('geolocate', ({ coords }) => {
+        map_marker.setLngLat([ coords.longitude, coords.latitude ]);
         jq_longitude.val(coords.longitude.toFixed(4));
         jq_latitude.val(coords.latitude.toFixed(4));
-        getPoi([coords.longitude, coords.latitude]).then((poi) => {
-            if (poi) jq_location.val(poi.place_name)
-        })
-    })
+        getPoi([ coords.longitude, coords.latitude ]).then((poi) => {
+            console.log(poi) //debug
+            if (poi) jq_location.val(poi[0].place_name);
+        });
+    });
 
     /**
      * get Poi with longitude & latitude
      * @param {number[]} LngLat
      * @returns {Promise<null|Object>}
      */
-    async function getPoi(LngLat) {
+    async function getPoi(LngLat){
         const response = await map_client.geocoding.reverseGeocode({
             query: LngLat,
-            types: ["poi"]
-        }).send()
+            types: [ "poi", "region" ]
+        }).send();
 
         return (response || response.body || response.body.features || response.body.features.length)
-            ? response.body.features[0] : null;
+            ? response.body.features : null;
     }
 
-    const jq_plan = $('#event-form-plan') //計劃
-    const jq_schedule = $('#event-form-schedule') //時段
+    const jq_plan = $('#event-form-plan'); //計劃
+    const jq_schedule = $('#event-form-schedule'); //時段
     const plan = [];
 
     /* ============計劃========== */
     /* 增加計劃 */
-    $('#event-plan-add').click(function () {
+    $('#event-plan-add').click(function (){
         const id = Math.floor(Math.random() * 9999);
         jq_plan.append(
             `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
@@ -376,43 +379,43 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
                     <button type="button" class="btn-close" aria-label="Close"></button>
                 </div>
-            </div>`)
-    })
+            </div>`);
+    });
 
     /* 刪除計劃 */
-    jq_plan.on('click', 'button', function () {
+    jq_plan.on('click', 'button', function (){
         const plan_id = $(this).parents('[data-plan]').data('plan');
-        const plan_select = jq_schedule.find("[name^='event-schedule-plan']")
-        $(this).parents('[data-plan]').remove()
+        const plan_select = jq_schedule.find("[name^='event-schedule-plan']");
+        $(this).parents('[data-plan]').remove();
 
         // 時段計劃
-        const index = plan.findIndex((value) => value.plan_id === plan_id)
+        const index = plan.findIndex((value) => value.plan_id === plan_id);
         plan.splice(index, 1);
-        plan_select.find(`[value='${plan_id}']`).remove()
-        console.log(plan)
-    })
+        plan_select.find(`[value='${plan_id}']`).remove();
+        console.log(plan);
+    });
 
     /* 計劃轉移 */
-    jq_plan.on('blur', `[name^='event-plan-name']`, function () {
+    jq_plan.on('blur', `[name^='event-plan-name']`, function (){
         const plan_name = $(this).val(), plan_id = $(this).parents('[data-plan]').data('plan');
-        const plan_select = jq_schedule.find("[name^='event-schedule-plan']")
+        const plan_select = jq_schedule.find("[name^='event-schedule-plan']");
 
         // 時段計劃
-        const tmp = plan.filter((value) => value.plan_id === plan_id)
-        if (tmp.length > 0) {
+        const tmp = plan.filter((value) => value.plan_id === plan_id);
+        if (tmp.length > 0){
             plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
-        } else {
+        }else{
             plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
-            plan.push({plan_id, plan_name});
+            plan.push({ plan_id, plan_name });
         }
-        console.log(plan)
-    })
+        console.log(plan);
+    });
 
     /* ============活動時段============== */
     /* 增加時段 */
-    $('#event-schedule-add').click(function () {
+    $('#event-schedule-add').click(function (){
         const id = Math.floor(Math.random() * 9999);
-        const min = moment().format('YYYY-MM-DD')
+        const min = moment().format('YYYY-MM-DD');
         const tmp = $(
             `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="${id}">
                       <div class="col-12 col-sm-6 col-md-3">
@@ -492,44 +495,48 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                       <div class="col text-end align-self-end">
                           <button type="button" class="btn-close" aria-label="Close"></button>
                       </div>
-                  </div>`)
+                  </div>`);
 
-        tmp.appendTo(jq_schedule)
-        datepicker.addPicker(tmp.find('.date-picker')) //add date-picker
+        tmp.appendTo(jq_schedule);
+        datepicker.addPicker(tmp.find('.date-picker')); //add date-picker
         tmp.find("[name^='event-schedule-time']").timepicker({
             show2400: true,
             className: "dropdown-menu",
             closeOnScroll: true,
             timeFormat: "H:i"
-        }) //add timepicker
-    })
+        }); //add timepicker
+    });
 
     /* 刪除時段 */
-    jq_schedule.on('click', 'button', function () {
-        $(this).parents('[data-schedule]').remove()
-    })
+    jq_schedule.on('click', 'button', function (){
+        $(this).parents('[data-schedule]').remove();
+    });
 
     /* 切換時段類型 */
-    jq_schedule.on('change', "[name^='event-schedule-type']", function () {
+    jq_schedule.on('change', "[name^='event-schedule-type']", function (){
         const parent = $(this).parents('[data-schedule]');
         const elm = parent.find('.event-schedule-end, .event-schedule-week');
-        if (this.checked) {
+        if (this.checked){
             //重複
             elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', false); //Enable 結束日期
 
             //auto set select week
             const sel_date = moment(parent.find("[name^='event-schedule-start']").val());
-            elm.find(`[value='${sel_date.weekday()}']`).prop('checked', true)
+            elm.find(`[value='${sel_date.weekday()}']`).prop('checked', true);
 
-            elm.show()
-        } else {
+            elm.show();
+        }else{
             //單日
             elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', true); //Enable 結束日期
-            elm.hide()
+            elm.hide();
         }
-    })
+    });
 
     /* 結束日期min調整 */
+    jq_schedule.on('blur', "[name^='event-schedule-start']", function (){
+        const value = $(this).val();
+        console.log(value)
+    })
     //todo
 
     /* 週期選擇提醒 (必須要至少選擇一天) */
@@ -537,28 +544,85 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
     /* ==============活動狀態=============== */
     /* 儲存草稿 */
-    $('#event-daft').click(function () {
+    $('#event-daft').click(function (){
         //todo
-    })
+    });
 
     /* 發佈 */
-    $('#event-post').click(function () {
+    $('#event-post').click(function (){
         //todo
-    })
+    });
 
     /* 移到回收桶 */
-    $('#event-recycle').click(function () {
+    $('#event-recycle').click(function (){
         //todo
-    })
+    });
 
     /* ===========活動封面=============== */
     /* 更改封面圖片 */
-    $('#event-thumbnail-change').click(function (e) {
-        e.preventDefault()
+    $('#event-thumbnail-change').click(function (e){
+        e.preventDefault();
 
-        media_select.select_media(function (img) {
+        media_select.select_media(function (img){
             $('#event-thumbnail-img').attr('src', '/panel/api/media/' + img[0]).attr('alt', img[0]);
             $('#event-thumbnail').val(img[0]);
         }, 1, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
-    })
-})
+    });
+
+    /* =============活動屬性============== */
+    /* add tag */
+    const jq_addTag = $('#event-add-tag');
+    jq_addTag.on('input focus', function (){
+        const elm = $(this);
+        const val = elm.val();
+
+        if (/(.+),/.test(val)){
+            addTag(val.slice(0, -1));
+            elm.val('');
+        }else if (val === ","){
+            elm.val('');
+        }
+    }).blur(function (){
+        const elm = $(this);
+        const val = elm.val();
+
+        if (/(.+)/.test(val)){
+            addTag(val);
+            elm.val('');
+        }
+    }).keyup(function (e){
+        const elm = $(this);
+        const val = elm.val();
+
+        if (e.key === "Enter"){
+            if (/(.+)/.test(val)){
+                addTag(val);
+                elm.val('');
+            }
+        }
+    });
+
+    /**
+     * add Tag
+     * @param {string} name
+     */
+    function addTag(name){
+        jq_addTag.before(
+            `<div class="col-auto event-tag" data-tag="${name}">${name}<i class="ms-2 fa-regular fa-circle-xmark"></i></div>`);
+        updateTag();
+    }
+
+    /* delete tag */
+    const jq_tagList = $('#event-tag-list');
+    jq_tagList.on('click', '[data-tag] > i', function (){
+        $(this).parent().remove();
+        updateTag()
+    });
+
+    /* update tag value */
+    function updateTag(){
+        const tag_elm = jq_tagList.children('[data-tag]');
+        const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray()
+        $('#event-tag').val(JSON.stringify(list))
+    }
+});

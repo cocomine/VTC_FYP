@@ -218,7 +218,6 @@ body . <<<body
                                     <div class="invalid-feedback">這裏必須選擇哦~~</div>
                                 </div>
                             </div>
-                            <input type="submit">
                         </form>
                         <button type="button" class="btn btn-rounded btn-primary" id="event-schedule-add"><i class="fa-solid fa-calendar-plus me-2"></i>增加時段</button>
                     </div>
@@ -318,28 +317,29 @@ body . <<<body
                 </div>
             </div>
         </div>
-        <!-- 活動分類 -->
+        <!-- 活動屬性 -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">活動分類</h4>
+                    <h4 class="card-title">活動屬性</h4>
                     <div class="card-text">
-                        <form class="needs-validation" novalidate id="event-form-category">
+                        <form class="needs-validation" novalidate id="event-form-attribute">
                             <div class="col-12 mb-3">
                                 <label for="event-type" class="form-label"><i class="fa-solid fa-bars-staggered me-1"></i>活動種類</label>
                                 <select class="form-select form-rounded form-control-sm" id="event-type" name="event-type" required>
+                                    <option selected disabled value="">選擇種類</option>
                                     <option value="0">水上活動</option>
                                     <option value="1">陸上活動</option>
                                     <option value="2">空中活動</option>
                                 </select>
+                                <div class="invalid-feedback">這裏必須選擇哦~~</div>
                             </div>
-                            <label for="event-type" class="form-label"><i class="fa-solid fa-folder-open me-1"></i>分類</label>
-                            <div class="col-12 border border-1 rounded px-2 pt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="xxx" id="event-category-xxx" name="event-category" data-category="xxx">
-                                    <label class="form-check-label" for="event-category-xxx">xxx</label>
-                                    <!-- todo -->
+                            <label for="event-type" class="form-label"><i class="fa-solid fa-tags me-1"></i>標籤</label>
+                            <div class="col-12 border border-1 rounded">
+                                <div class="row m-0" id="event-tag-list">
+                                    <input type="text" id="event-add-tag" class="col">
                                 </div>
+                                <input type="text" id="event-tag" name="event-tag" class="d-none">
                             </div>
                         </form>
                     </div>
@@ -367,6 +367,28 @@ body . <<<body
     </div>
 </div>
 <style>
+.event-tag{
+    background-color: var(--bs-gray-300);
+    border-radius: 50px;
+    font-size: 1.15em;
+    margin: 4px;
+}
+.event-tag > i{
+    cursor: pointer;
+    transition: color 200ms;
+}
+.event-tag > i:hover{
+    color: var(--bs-red);
+}
+#event-add-tag{
+    width: 100%;
+    min-width: 40px;
+    background: transparent;
+    border: none;
+    margin: 4px;
+    padding: 0;
+    font-size: 1.15em;
+}
 #image-list.media-list{
     flex-wrap: nowrap;
     overflow-x: auto;
