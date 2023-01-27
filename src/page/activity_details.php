@@ -151,7 +151,7 @@ class activity_details implements \cocomine\IPage {
     <meta charset="utf-8">
      <!-- main 1 -->
     <div class="center">
-        <p class="title">迪欣湖</p>
+        <p class="title"></p>
 
         <div style="width:50%; height:415px; float:left; border-style: ridge; border-radius: 5px;" class="">
 
@@ -179,13 +179,13 @@ class activity_details implements \cocomine\IPage {
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                     <div class="carousel-item">
-                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                     <div class="carousel-item">
-                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                 </div>
 
@@ -226,7 +226,7 @@ class activity_details implements \cocomine\IPage {
     <!-- main 3 -->
     <div class="center">
         <p class="title" id="map_title">地圖位置</p>
-        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" width="500" height="800" style="padding: 30px;">
+        <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" width="500" height="800" style="padding: 30px;">
     </div>
     <!-- main 3 End-->
 
@@ -320,20 +320,20 @@ class activity_details implements \cocomine\IPage {
      * @inheritDoc
      */
     function path(): string {
-        return 'test';
+        return '迪欣湖';
     }
 
     /**
      * @inheritDoc
      */
     public function get_Title(): string {
-        return 'test';
+        return '迪欣湖';
     }
 
     /**
      * @inheritDoc
      */
     public function get_Head(): string {
-        return 'test';
+        return '迪欣湖';
     }
 }
