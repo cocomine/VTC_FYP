@@ -303,49 +303,51 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     /* Update map marker */
     map_geo.on('result', ({ result }) => {
         map_marker.setLngLat(result.center);
-        console.log(result) //debug
-        jq_location.val(result.place_name);
         jq_longitude.val(result.center[0].toFixed(4));
         jq_latitude.val(result.center[1].toFixed(4));
+        getPoi(result.center).then(setLocalValue);
     });
     map_marker.on('dragend', ({ target }) => {
         jq_longitude.val(target.getLngLat().lng.toFixed(4));
         jq_latitude.val(target.getLngLat().lat.toFixed(4));
-        getPoi(target.getLngLat().toArray()).then((poi) => {
-            console.log(poi) //debug
-            if (poi) jq_location.val(poi[0].place_name);
-        });
+        getPoi(target.getLngLat().toArray()).then(setLocalValue);
     });
     map_track.on('geolocate', ({ coords }) => {
         map_marker.setLngLat([ coords.longitude, coords.latitude ]);
         jq_longitude.val(coords.longitude.toFixed(4));
         jq_latitude.val(coords.latitude.toFixed(4));
-        getPoi([ coords.longitude, coords.latitude ]).then((poi) => {
-            console.log(poi) //debug
-            if (poi) jq_location.val(poi[0].place_name);
-        });
+        getPoi([ coords.longitude, coords.latitude ]).then(setLocalValue);
     });
 
     /**
      * get Poi with longitude & latitude
      * @param {number[]} LngLat
-     * @returns {Promise<null|Object>}
+     * @returns {Promise<any[] | any | null>}
      */
     async function getPoi(LngLat){
         const response = await map_client.geocoding.reverseGeocode({
             query: LngLat,
-            types: [ "poi", "region" ]
+            types: [ "poi", "region", 'country' ]
         }).send();
 
         return (response || response.body || response.body.features || response.body.features.length)
             ? response.body.features : null;
     }
 
+    /**
+     * 設置地區輸入欄
+     * @param {any[] | any} poi
+     */
+    function setLocalValue(poi){
+        console.log(poi) //debug
+        jq_location.val(poi[0].place_name);
+    }
+
+    /* ============計劃========== */
     const jq_plan = $('#event-form-plan'); //計劃
     const jq_schedule = $('#event-form-schedule'); //時段
     const plan = [];
 
-    /* ============計劃========== */
     /* 增加計劃 */
     $('#event-plan-add').click(function (){
         const id = Math.floor(Math.random() * 9999);
@@ -408,7 +410,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
             plan.push({ plan_id, plan_name });
         }
-        console.log(plan);
     });
 
     /* ============活動時段============== */
@@ -533,14 +534,26 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     });
 
     /* 結束日期min調整 */
-    jq_schedule.on('blur', "[name^='event-schedule-start']", function (){
+    jq_schedule.on('focus', "[name^='event-schedule-start']", function (){
         const value = $(this).val();
-        console.log(value)
+        const parent = $(this).parents('[data-schedule]');
+        const elm = parent.find("[name^='event-schedule-end']");
+        elm.attr('min', value);
     })
-    //todo
 
     /* 週期選擇提醒 (必須要至少選擇一天) */
-    //todo: 必須要至少選擇一天
+    jq_schedule.on('change', "[name^='event-schedule-week']", function (){
+        const parent = $(this).parents('.event-schedule-week');
+        const chiller = parent.find("[name^='event-schedule-week']");
+        const checked = chiller.filter((index, elm) => elm.checked)
+        if(checked.length <= 0){
+            parent.children('.invalid-feedback').show()
+            chiller.each(function(){this.setCustomValidity('error')})
+        }else{
+            chiller.each(function(){this.setCustomValidity('')})
+            parent.children('.invalid-feedback').hide()
+        }
+    })
 
     /* ==============活動狀態=============== */
     /* 儲存草稿 */
