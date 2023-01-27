@@ -40,92 +40,95 @@ class home implements IPage {
 
         return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
+<style>
+div.ActivityOverflow {
+  width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+</style>
 <div class='col-12 mt-12'>
-
-        
-        <div id="carouselExample" class="carousel slide">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="/assets/images/background/hot-air-balloon-back.jpg" class="d-block w-100" alt="Welcome to X-Travel">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Explore places and other experiences</h5>
-
-                <div class="dropdown">
-                  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    Choose Location Or Activities
-                  </button>
-                  <form class="dropdown-menu p-4">
-                    <div class="mb-3">
-                        <div class="search-box">
-                            <input type="text" name="search" placeholder="Search Location" required>
-                            <i class="ti-search"></i>
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                          <div class="btn-group dropend">
-                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Hong Kong
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                                <li><a class="dropdown-item" href="#">Climbing</a></li>
-                                <li><a class="dropdown-item" href="#">Diving</a></li>
-                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                                <li><a class="dropdown-item" href="#">Trekking</a></li>
-                              </ul>
-                          </div>
-                          
-                          <div class="btn-group dropend">
-                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                China
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                                <li><a class="dropdown-item" href="#">Climbing</a></li>
-                                <li><a class="dropdown-item" href="#">Hot air balloon flight</a></li>
-                                <li><a class="dropdown-item" href="#">Mountaineering</a></li>
-                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                                <li><a class="dropdown-item" href="#">Skiing</a></li>
-                                <li><a class="dropdown-item" href="#">Trekking</a></li>
-                              </ul>
-                          </div>
-                          
-                          <div class="btn-group dropend">
-                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Macao
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Bungee Jumping</a></li>
-                                <li><a class="dropdown-item" href="#">Climbing</a></li>
-                              </ul>
-                          </div>
-                          
-                          <div class="btn-group dropend">
-                              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Taiwan
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                                <li><a class="dropdown-item" href="#">Climbing</a></li>
-                                <li><a class="dropdown-item" href="#">Diving</a></li>
-                                <li><a class="dropdown-item" href="#">Mountaineering</a></li>
-                                <li><a class="dropdown-item" href="#">Parachute</a></li>
-                                <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                                <li><a class="dropdown-item" href="#">Trekking</a></li>
-                              </ul>
-                          </div>
-                      </div>
-                    </div>
-                  </form>
+    <div id="carouselExample" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="/assets/images/background/hot-air-balloon-back.jpg" class="d-block w-100" alt="Welcome to X-Travel">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Explore places and other experiences</h5>
+    
+            <div class="dropdown">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                Choose Location Or Activities
+              </button>
+              <form class="dropdown-menu p-4">
+                <div class="mb-3">
+                    <div class="search-box">
+                        <input type="text" name="search" placeholder="Search Location" required>
+                        <i class="ti-search"></i>
+                  </div>
                 </div>
-
-                
-                
-              </div>
-            </div>
+                <div class="mb-3">
+                  <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                      <div class="btn-group dropend">
+                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hong Kong
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                            <li><a class="dropdown-item" href="#">Climbing</a></li>
+                            <li><a class="dropdown-item" href="#">Diving</a></li>
+                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                            <li><a class="dropdown-item" href="#">Trekking</a></li>
+                          </ul>
+                      </div>
+                      
+                      <div class="btn-group dropend">
+                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            China
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                            <li><a class="dropdown-item" href="#">Climbing</a></li>
+                            <li><a class="dropdown-item" href="#">Hot air balloon flight</a></li>
+                            <li><a class="dropdown-item" href="#">Mountaineering</a></li>
+                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                            <li><a class="dropdown-item" href="#">Skiing</a></li>
+                            <li><a class="dropdown-item" href="#">Trekking</a></li>
+                          </ul>
+                      </div>
+                      
+                      <div class="btn-group dropend">
+                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Macao
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Bungee Jumping</a></li>
+                            <li><a class="dropdown-item" href="#">Climbing</a></li>
+                          </ul>
+                      </div>
+                      
+                      <div class="btn-group dropend">
+                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Taiwan
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
+                            <li><a class="dropdown-item" href="#">Climbing</a></li>
+                            <li><a class="dropdown-item" href="#">Diving</a></li>
+                            <li><a class="dropdown-item" href="#">Mountaineering</a></li>
+                            <li><a class="dropdown-item" href="#">Parachute</a></li>
+                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
+                            <li><a class="dropdown-item" href="#">Trekking</a></li>
+                          </ul>
+                      </div>
+                  </div>
+                </div>
+              </form>
+            </div>      
           </div>
         </div>
+      </div>
+    </div>
         
         
         <!--<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -161,6 +164,55 @@ class home implements IPage {
             <span class="visually-hidden">Next</span>
           </button>
         </div>-->
+</div></br>
+
+<div class='col-12 mt-2'>
+    <h2>Latest Activities in Hong Kong <span class="badge bg-secondary">New</span></h2></br>
+    <div class="ActivityOverflow">
+        <div class="row">
+            <div class="card" style="width: 18rem;">
+              <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card with stretched link</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+              </div>
+            </div></br>
+            <div class="card" style="width: 18rem;">
+              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card with stretched link</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+              </div>
+            </div></br>
+            <div class="card" style="width: 18rem;">
+              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card with stretched link</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+              </div>
+            </div></br>
+            <div class="card" style="width: 18rem;">
+              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card with stretched link</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+              </div>
+            </div></br>
+            <div class="card" style="width: 18rem;">
+              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">Card with stretched link</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
+              </div>
+            </div></br>
+            
+        </div>
+    </div>
 </div>
 
 <script>
