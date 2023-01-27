@@ -136,13 +136,13 @@ class activity_details implements \cocomine\IPage {
         margin: 0;
         cursor: pointer;
         font: var(--fa-font-solid);
-        content: '\f005';
+        content: "\\f005";
         /* full star */
     }
 
     /* Half star trick */
     .rate .half:before {
-        content: '\f089';
+        content: "\\f089";
         /* half star no outline */
         position: absolute;
         padding-right: 0;
