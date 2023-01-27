@@ -3,10 +3,13 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'timepicker' ], function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker){
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'timepicker' ],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
+    crs.init();
+    const support_country = ['hk', 'mo', 'tw', 'cn']
 
     /* Count content length */
     $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
@@ -209,7 +212,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //list up
             const tmp_img = tmp.map((value) => value.find('img'));
             img_items = tmp_img.map((value) => value[0]);
-            jq_image.val(JSON.stringify(tmp_img.map((value) => value.data('image-id'))));
+            jq_image.val((tmp_img.map((value) => value.data('image-id'))).join(','));
         }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
     });
 
@@ -255,10 +258,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0');
 
             //list up
-            jq_image.val(JSON.stringify(
+            jq_image.val((
                 jq_dropZone.find('[data-image-id]').map(
                     (index, elm) => elm.dataset.imageId).toArray()
-            ));
+            ).join(','));
         }
     });
     //dragend
@@ -303,49 +306,64 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     /* Update map marker */
     map_geo.on('result', ({ result }) => {
         map_marker.setLngLat(result.center);
-        console.log(result) //debug
-        jq_location.val(result.place_name);
         jq_longitude.val(result.center[0].toFixed(4));
         jq_latitude.val(result.center[1].toFixed(4));
+        getPoi(result.center).then(setLocalValue);
     });
     map_marker.on('dragend', ({ target }) => {
         jq_longitude.val(target.getLngLat().lng.toFixed(4));
         jq_latitude.val(target.getLngLat().lat.toFixed(4));
-        getPoi(target.getLngLat().toArray()).then((poi) => {
-            console.log(poi) //debug
-            if (poi) jq_location.val(poi[0].place_name);
-        });
+        getPoi(target.getLngLat().toArray()).then(setLocalValue);
     });
     map_track.on('geolocate', ({ coords }) => {
         map_marker.setLngLat([ coords.longitude, coords.latitude ]);
         jq_longitude.val(coords.longitude.toFixed(4));
         jq_latitude.val(coords.latitude.toFixed(4));
-        getPoi([ coords.longitude, coords.latitude ]).then((poi) => {
-            console.log(poi) //debug
-            if (poi) jq_location.val(poi[0].place_name);
-        });
+        getPoi([ coords.longitude, coords.latitude ]).then(setLocalValue);
     });
 
     /**
      * get Poi with longitude & latitude
      * @param {number[]} LngLat
-     * @returns {Promise<null|Object>}
+     * @returns {Promise<any[] | any | null>}
      */
     async function getPoi(LngLat){
         const response = await map_client.geocoding.reverseGeocode({
             query: LngLat,
-            types: [ "poi", "region" ]
+            types: [ "poi", "region", 'country' ]
         }).send();
 
         return (response || response.body || response.body.features || response.body.features.length)
             ? response.body.features : null;
     }
 
+    /**
+     * 設置地區輸入欄
+     * @param {any[] | any} poi
+     */
+    function setLocalValue(poi){
+        console.log(poi) //debug
+        const country = poi.filter((val) => val.place_type.includes('country'))
+        if(country.length > 0 && support_country.includes(country[0].properties.short_code)){
+            //set country
+            $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', {"bubbles":true}))
+            jq_location.val(poi[0].place_name.slice(0,50))[0].dispatchEvent(new Event('input', {"bubbles":true}));
+
+            //set region
+            const region = poi.filter((val) => val.place_type.includes('region'))
+            if(region.length > 0) $('#event-region').val(region[0].text)
+
+            $('#invalid-feedback').hide()
+        }else{
+            $('#invalid-feedback').show()
+        }
+    }
+
+    /* ============計劃========== */
     const jq_plan = $('#event-form-plan'); //計劃
     const jq_schedule = $('#event-form-schedule'); //時段
     const plan = [];
 
-    /* ============計劃========== */
     /* 增加計劃 */
     $('#event-plan-add').click(function (){
         const id = Math.floor(Math.random() * 9999);
@@ -390,25 +408,32 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         // 時段計劃
         const index = plan.findIndex((value) => value.plan_id === plan_id);
-        plan.splice(index, 1);
-        plan_select.find(`[value='${plan_id}']`).remove();
-        console.log(plan);
+        if (index >= 0){
+            plan.splice(index, 1);
+            plan_select.find(`[value='${plan_id}']`).remove();
+        }
     });
 
     /* 計劃轉移 */
     jq_plan.on('blur', `[name^='event-plan-name']`, function (){
         const plan_name = $(this).val(), plan_id = $(this).parents('[data-plan]').data('plan');
         const plan_select = jq_schedule.find("[name^='event-schedule-plan']");
+        const index = plan.findIndex((value) => value.plan_id === plan_id);
 
         // 時段計劃
-        const tmp = plan.filter((value) => value.plan_id === plan_id);
-        if (tmp.length > 0){
-            plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
+        if (index >= 0){
+            if(plan_name === ""){
+                //if blank
+                plan_select.find(`[value='${plan_id}']`).remove()
+                plan.splice(index, 1);
+            }else{
+                plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
+                plan[index] = {plan_id, plan_name}
+            }
         }else{
             plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
             plan.push({ plan_id, plan_name });
         }
-        console.log(plan);
     });
 
     /* ============活動時段============== */
@@ -533,14 +558,26 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     });
 
     /* 結束日期min調整 */
-    jq_schedule.on('blur', "[name^='event-schedule-start']", function (){
+    jq_schedule.on('focus', "[name^='event-schedule-start']", function (){
         const value = $(this).val();
-        console.log(value)
+        const parent = $(this).parents('[data-schedule]');
+        const elm = parent.find("[name^='event-schedule-end']");
+        elm.attr('min', value);
     })
-    //todo
 
     /* 週期選擇提醒 (必須要至少選擇一天) */
-    //todo: 必須要至少選擇一天
+    jq_schedule.on('change', "[name^='event-schedule-week']", function (){
+        const parent = $(this).parents('.event-schedule-week');
+        const chiller = parent.find("[name^='event-schedule-week']");
+        const checked = chiller.filter((index, elm) => elm.checked)
+        if(checked.length <= 0){
+            parent.children('.invalid-feedback').show()
+            chiller.each(function(){this.setCustomValidity('error')})
+        }else{
+            chiller.each(function(){this.setCustomValidity('')})
+            parent.children('.invalid-feedback').hide()
+        }
+    })
 
     /* ==============活動狀態=============== */
     /* 儲存草稿 */
@@ -623,6 +660,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
     function updateTag(){
         const tag_elm = jq_tagList.children('[data-tag]');
         const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray()
-        $('#event-tag').val(JSON.stringify(list))
+        $('#event-tag').val(list.join(','))
     }
 });

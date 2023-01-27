@@ -102,8 +102,8 @@ body. <<<body
                     <h4 class="card-title">活動計劃</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-plan">
-                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="0001">
-                                <h5 class="col-12 text-muted"># 0001</h5>
+                            <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="1000">
+                                <h5 class="col-12 text-muted"># 1000</h5>
                                 <div class="col-12 col-lg-7">
                                     <label for="event-plan-name-1" class="form-label">計畫名稱</label>
                                     <input type="text" class="form-control form-rounded" name="event-plan-name-1" id="event-plan-name-1" maxlength="20" required>
@@ -251,23 +251,38 @@ body . <<<body
                     <h4 class="card-title">活動位置</h4>
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-location">
-                            <div class="col-12 mb-4">
-                                <label for="event-location" class="form-label">活動詳細地址</label>
-                                <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
-                                <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
-                                <div class="invalid-feedback">這裏不能留空哦~~</div>
-                            </div>
-                            <div class="col-12 mb-3 position-relative">
-                                <label class="form-label">地圖位置</label>
-                                <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
-                                <span style="bottom: 5rem;" class="position-absolute start-50">
-                                    <span class="position-relative text-white bg-black bg-opacity-50 p-2 rounded" style="left: -50%;">移動標記選擇位置</span>
-                                </span>
-                            </div>
-                            <div class="col-12">
-                                <input type="number" class="d-none form-control" name="event-longitude" id="event-longitude" step="0.0001" required>
-                                <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
-                                <div class="invalid-feedback">這裏未選擇位置哦~~</div>
+                            <div class="row">
+                                <div class="col-12 mb-1">
+                                    <label for="event-location" class="form-label">活動詳細地址</label>
+                                    <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
+                                    <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-4 mb-4">
+                                    <label for="event-location" class="form-label">國家/地區</label>
+                                    <select class="form-select form-rounded crs-country" name="event-country" id="event-country" data-region-id="event-region" data-value="shortcode" data-default-option="請選擇" required>
+                                    </select>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-4 mb-4">
+                                    <label for="event-location" class="form-label">省/州</label>
+                                    <select class="form-select form-rounded" name="event-region" id="event-region" data-default-option="請選擇" required>
+                                    </select>
+                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                </div>
+                                <div class="col-12 mb-3 position-relative">
+                                    <label class="form-label">地圖位置</label>
+                                    <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
+                                    <span style="bottom: 5rem;" class="position-absolute start-50">
+                                        <span class="position-relative text-white bg-black bg-opacity-50 p-2 rounded" style="left: -50%;">移動標記選擇位置</span>
+                                        <span id="invalid-feedback" class="position-relative text-white bg-danger bg-opacity-75 p-2 rounded" style="left: -50%; display: none">國家/地區 尚未支持</span>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <input type="number" class="d-none form-control" name="event-longitude" id="event-longitude" step="0.0001" required>
+                                    <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
+                                    <div class="invalid-feedback">這裏未選擇位置哦~~</div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -428,7 +443,7 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker'])
+    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker', 'jquery.crs.min'])
 </script>
 body;
 
