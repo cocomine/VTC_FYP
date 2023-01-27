@@ -65,8 +65,8 @@ datepicker javascript library
    //jquery
    $('#ccc')[0].disableDate = []
    ```
-   
-4. 設置要禁用日期(`dd-MM-yyy`), 
+
+4. 設置要禁用日期(`MM-dd-yyyy`),
    ```javascript
    //原生
    document.getElementById('ccc').disableDate = ["01-02-2023"]
@@ -74,7 +74,7 @@ datepicker javascript library
    //jquery
    $('#ccc')[0].disableDate = ["01-02-2023"]
    ```
-   
+
 5. 要禁用更多日期, 則在array上增加數值
    ```javascript
    //原生

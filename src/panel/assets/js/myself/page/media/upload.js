@@ -45,7 +45,7 @@ define(['jquery'], function () {
 
             /* 進行檢查 */
             //檢查文件類型
-            if (!/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/.test(file.type)) {
+            if (!/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)|(application\/pdf)/.test(file.type)) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');

@@ -84,10 +84,10 @@ $LangJson = json_encode(array(
    ```javascript
    //例子
     define(['jquery', 'media-select'], function (jq, media_select) {
-        media_select.select_media(max, mime, function (ids){
+        media_select.select_media(function (ids){
             ids.forEach((id)=>{
                 //type something...
-            });
+            },max, mime);
         });
     });
     ```

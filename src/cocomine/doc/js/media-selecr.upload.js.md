@@ -40,10 +40,30 @@ media-select.upload javascript library
 ```javascript
 //HTML script tag內
 require.config({
-    paths:{
+    paths: {
         'media-select': 'myself/media-select',
         'media-select.upload': 'myself/media-select.upload',
     }
 })
 loadModules(['media-select', 'media-select.upload'])
+```
+
+設置接受檔案類型
+---
+> 作用: 設置file input element接受檔案類型
+
+ ```javascript
+function setInputAccept(mime)
+```
+
+參數:
+
+* `string` mine 接受檔案類型, [接受參數](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)
+
+例子:
+
+```javascript
+define(['jquery', 'media-select', 'media-select.upload'], function (jq, media_select, media_upload) {
+    media_upload.setInputAccept("image/*, voide/*")
+})
 ```
