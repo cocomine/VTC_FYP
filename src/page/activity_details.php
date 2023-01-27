@@ -51,11 +51,8 @@ class activity_details implements \cocomine\IPage {
         return <<<body
     <style>
     .center {
-        margin: auto;
-        width: 65%;
         padding: 10px;
         background-color: #FFFFFF;
-        display: table;
         border-radius: 15px;
     }
 
@@ -106,7 +103,8 @@ class activity_details implements \cocomine\IPage {
     .Price_txt {
         font-size: 50px;
         font-weight: 700;
-        margin-left: 30px;
+        margin-left: 5%;
+        padding-bottom: 10px;
     }
 
 
@@ -136,13 +134,13 @@ class activity_details implements \cocomine\IPage {
         margin: 0;
         cursor: pointer;
         font: var(--fa-font-solid);
-        content: '\f005';
+        content: '\\f005';
         /* full star */
     }
 
     /* Half star trick */
     .rate .half:before {
-        content: '\f089';
+        content: '\\f089';
         /* half star no outline */
         position: absolute;
         padding-right: 0;
@@ -163,7 +161,7 @@ class activity_details implements \cocomine\IPage {
             <br /><br /><br />
             <p class="Price_txt">價格: $168</p>
 
-            <button type="button" class="btn btn-primary btn-lg" style="width: 500px; margin-left: 45px; ">立刻預訂</button>
+            <button type="button" class="btn btn-primary btn-lg" style="width: 90%; margin-left: 15px; margin-top: 25px;">立刻預訂</button>
 
 
         </div>
@@ -181,13 +179,13 @@ class activity_details implements \cocomine\IPage {
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="img\img1.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                     <div class="carousel-item">
-                        <img src="img\img2.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                     <div class="carousel-item">
-                        <img src="img\img3.jpg" class="d-block w-100" alt="" width="250" height="415">
+                        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" alt="" width="250" height="415">
                     </div>
                 </div>
 
@@ -228,7 +226,7 @@ class activity_details implements \cocomine\IPage {
     <!-- main 3 -->
     <div class="center">
         <p class="title" id="map_title">地圖位置</p>
-        <img src="img\map_temp.png" class="d-block w-100" width="500" height="800" style="padding: 30px;">
+        <img src="https://www.tsc.taipei/wp-content/uploads/%E6%B4%BB%E5%8B%95%E5%9C%96%E6%A8%99.jpg" class="d-block w-100" width="500" height="800" style="padding: 30px;">
     </div>
     <!-- main 3 End-->
 
