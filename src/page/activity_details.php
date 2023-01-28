@@ -232,8 +232,6 @@ class activity_details implements \cocomine\IPage {
 
 
 
-
-
     <br />
     <!-- main 4 -->
     <div class="center">
