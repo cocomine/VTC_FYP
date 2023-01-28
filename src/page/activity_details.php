@@ -54,6 +54,7 @@ class activity_details implements \cocomine\IPage {
         padding: 10px;
         background-color: #FFFFFF;
         border-radius: 15px;
+       /*width: 100vh;  */
     }
 
     .background {
@@ -101,10 +102,37 @@ class activity_details implements \cocomine\IPage {
     }
 
     .Price_txt {
-        font-size: 50px;
+        font-size: 3.5vh;
         font-weight: 700;
-        margin-left: 5%;
-        padding-bottom: 10px;
+        margin-left: 3vh;
+        margin-bottom: 1vh;
+    }
+    
+    .Div_Price_activity_numb{
+        background-color: #F3F8FB;
+        padding: 3vh;
+        margin: 4vh;
+        height: 10vh;
+    }
+    .ti-plus{
+        background-color: #EFF4F7;
+        font-size: 3vh;
+
+    }
+    
+    .ti-minus{
+        background-color: #EFF4F7;
+        font-size: 3vh;
+
+    }
+    
+    .Div_Plus_Minus{
+        float: right;
+    }
+    
+    .txt_Num{
+        font-size: 2.5vh;
+        padding: 2vh;
     }
 
 
@@ -216,7 +244,16 @@ class activity_details implements \cocomine\IPage {
     <!-- Price -->
     <div class="center">
       <p class="title">預訂活動</p>
-      
+      <div class="Div_Price_activity_numb">
+        <span style="font-size: 2vh">數量</span>
+        <div class="Div_Plus_Minus">
+            <sapn class="ti-plus" ></sapn>
+            <span class="txt_Num">1</span>
+             <sapn class="ti-minus" ></sapn>
+        </div>
+      </div>
+      <span class="Price_txt">$150</span>
+      <button type="button" class="btn btn-primary btn-lg" style="width:15vh; float:right;margin-right: 1vh;margin-bottom: 1vh">立刻預訂</button>
     </div>
 
     <!-- Price End-->
