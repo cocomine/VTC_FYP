@@ -41,12 +41,15 @@ class home implements IPage {
         return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <style>
-div.ActivityOverflow {
-  width: 100%;
-  overflow-x: auto;
-  white-space: pre-wrap;
+#hkCardList img {
+    width: 300px;
+    height: 200px;
 }
 
+#hkCardList a {
+    position: absolute;
+    top: 88%;
+}
 </style>
 <div class='col-12 mt-12'>
     <div id="carouselExample" class="carousel slide">
@@ -63,7 +66,7 @@ div.ActivityOverflow {
               <form class="dropdown-menu p-4">
                 <div class="mb-3">
                     <div class="search-box">
-                        <input type="text" name="search" placeholder="Search Location" required>
+                        <input type="text" name="search" placeholder="Search Location or Activities" required>
                         <i class="ti-search"></i>
                   </div>
                 </div>
@@ -168,53 +171,63 @@ div.ActivityOverflow {
 
 <div class='col-12 mt-2'>
     <h2>Latest Activities in Hong Kong <span class="badge bg-secondary">New</span></h2></br>
-    <div class="ActivityOverflow">
-        <div class="row">
-            <div class="card" style="width: 18rem;">
-              <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card with stretched link</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
-              </div>
-            </div></br>
-            <div class="card" style="width: 18rem;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card with stretched link</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
-              </div>
-            </div></br>
-            <div class="card" style="width: 18rem;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card with stretched link</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
-              </div>
-            </div></br>
-            <div class="card" style="width: 18rem;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card with stretched link</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
-              </div>
-            </div></br>
-            <div class="card" style="width: 18rem;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card with stretched link</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary stretched-link">Go somewhere</a>
-              </div>
-            </div></br>
-            
+
+    <div class="d-flex flex-row flex-nowrap overflow-auto" id="hkCardList">
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Seaer Canoeing Adventure</h5>
+            <p class="card-text">Summer water activities.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
+        </div>
+
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">CampFive Climbing Funday</h5>
+            <p class="card-text">Rock climbing along the beautiful harbor.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
+        </div>
+        
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Diving_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">UnderSea Diving</h5>
+            <p class="card-text">The beautiful seabed of Hong Kong.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
+        </div>
+        
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Climbing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">FunUp Climbing Funday</h5>
+            <p class="card-text">Rock climbing in Hong Kong's super volcano.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
+        </div>
+        
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Canoeing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">JoJo Canoeing</h5>
+            <p class="card-text">Cooling off event.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
+        </div>
+        
+        <div class="card card-block mx-2" style="min-width: 300px;">
+          <img src="/assets/images/event/Trekking_Hong_Kong_01.jpg" class="card-img-top" alt="..." width="300" height="200">
+          <div class="card-body">
+            <h5 class="card-title">Kiver Hiking</h5>
+            <p class="card-text">Enjoy Hong Kong Hiking Trails.</p>
+            <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+          </div>
         </div>
     </div>
 </div>
-
 <script>
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>
