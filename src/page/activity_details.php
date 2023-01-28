@@ -257,6 +257,9 @@ class activity_details implements \cocomine\IPage {
     <div class="center">
         <p class="title">預訂活動</p>
         <div class="Div_Price_activity_numb">
+
+        
+        
             <span style="font-size: 2vh">數量</span>
             <div class="Div_Plus_Minus">
                 <button class="ti-plus"></button>
@@ -266,7 +269,7 @@ class activity_details implements \cocomine\IPage {
         </div>
         <span class="Price_Sign">$</span><span class="Price_txt">150</span>
         <button type="button" class="btn btn-primary btn-lg"
-            style="width:15vh; float:right;margin-right: 1vh;margin-bottom: 1vh">立刻預訂</button>
+            style="width:15vh; float:right;margin-right: 1vh;margin-bottom: 1vh" id="order">立刻預訂</button>
     </div>
     
     <!-- Price End-->
@@ -355,23 +358,20 @@ class activity_details implements \cocomine\IPage {
             $(".ti-plus").click(function () {
                 num = parseInt($(".txt_Num").text()) + 1;
                 $(".txt_Num").text(num);
-                
+
                 $(".Price_txt").text(parseInt(total) * num);
             });
-            
+
             $(".ti-minus").click(function () {
-                if(parseInt($(".txt_Num").text())>0){
+                if (parseInt($(".txt_Num").text()) > 1) {
                     num = parseInt($(".txt_Num").text()) - 1;
                     $(".txt_Num").text(num);
-                    
+
                     $(".Price_txt").text(parseInt(total) * num);
                 }
             });
-            $(".btn btn-primary btn-lg").click(function () {
-                if(parseInt($(".txt_Num").text())==0){
-                
-            });
         });
+
     </script>
     
     body;
