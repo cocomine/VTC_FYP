@@ -214,7 +214,10 @@ class activity_details implements \cocomine\IPage {
     <!-- Noted End -->
     
     <!-- Price -->
-
+    <div class="center">
+      <p class="title">預訂活動</p>
+      
+    </div>
 
     <!-- Price End-->
 
