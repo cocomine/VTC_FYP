@@ -342,7 +342,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
      * @param {any[] | any} poi
      */
     function setLocalValue(poi){
-        console.log(poi) //debug
         const country = poi.filter((val) => val.place_type.includes('country'))
         if(country.length > 0 && support_country.includes(country[0].properties.short_code)){
             //set country
@@ -466,14 +465,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                       <div class="w-100"></div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required>
+                              <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required value="${moment().format("HH:mm")}">
                               <label for="event-schedule-time-start-${id}">開始時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>
                       </div>
                       <div class="col-12 col-sm-6 col-md-3">
                           <div class="form-floating">
-                              <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required>
+                              <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required value="${moment().add(30, 'm').format("HH:mm")}">
                               <label for="event-schedule-time-end-${id}">結束時間</label>
                               <div class="invalid-feedback">這裏不能留空哦~~</div>
                           </div>

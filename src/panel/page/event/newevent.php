@@ -258,13 +258,13 @@ body . <<<body
                                     <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
-                                <div class="col-4 mb-4">
+                                <div class="col-6 col-sm-4 mb-4">
                                     <label for="event-location" class="form-label">國家/地區</label>
                                     <select class="form-select form-rounded crs-country" name="event-country" id="event-country" data-region-id="event-region" data-value="shortcode" data-default-option="請選擇" required>
                                     </select>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
-                                <div class="col-4 mb-4">
+                                <div class="col-6 col-sm-4 mb-4">
                                     <label for="event-location" class="form-label">省/州</label>
                                     <select class="form-select form-rounded" name="event-region" id="event-region" data-default-option="請選擇" required>
                                     </select>
