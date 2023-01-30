@@ -82,8 +82,7 @@ body. <<<body
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="event-summary" class="form-label">活動注意事項</label>
-                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200" required></textarea>
-                                <div class="invalid-feedback">活動注意不能留空哦~~</div>
+                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200"></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
@@ -103,28 +102,29 @@ body. <<<body
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-plan">
                             <div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="1000">
+                                <input type="text" name="event-plan-id" class="d-none" value="1000">
                                 <h5 class="col-12 text-muted"># 1000</h5>
                                 <div class="col-12 col-lg-7">
                                     <label for="event-plan-name-1" class="form-label">計畫名稱</label>
-                                    <input type="text" class="form-control form-rounded" name="event-plan-name-1" id="event-plan-name-1" maxlength="20" required>
+                                    <input type="text" class="form-control form-rounded" name="event-plan-name-1000" id="event-plan-name-1000" maxlength="20" required>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-max-1" class="form-label">計劃最大人數</label>
-                                    <input type="number" class="form-control form-rounded" name="event-plan-max-1" id="event-plan-max-1" min="1" required>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-1000" id="event-plan-max-1000" min="1" required>
                                     <div class="invalid-feedback">至少需要一位以上~~</div>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <label for="event-plan-max-each-1" class="form-label">每個預約最大人數</label>
-                                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-1" id="event-plan-max-each-1" min="1" required>
+                                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-1000" id="event-plan-max-each-1000" min="1" required>
                                     <div class="invalid-feedback">至少需要一位以上~~</div>
                                 </div>
                                 <div class="col-6 col-md-2">
                                     <label for="event-plan-price-1" class="form-label">計劃金額</label>
                                     <div class="input-group has-validation">
                                         <span class="input-group-text form-rounded">$</span>
-                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1" id="event-plan-price-1" min="0" value="0" step="0.01" required>
+                                        <input type="number" class="form-control form-rounded" name="event-plan-price-1000" id="event-plan-price-1000" min="0" value="0" step="0.01" required>
                                         <div class="invalid-feedback">正數必須約簡至兩位小數</div>
                                     </div>
                                 </div>
@@ -144,6 +144,7 @@ body . <<<body
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-schedule">
                             <div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="1">
+                                <input type="text" name="event-schedule-id" class="d-none" value="1">
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="date-picker form-floating">
                                         <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-1" id="event-schedule-start-1" required min="{$today->format('o-m-d')}">
@@ -213,7 +214,7 @@ body . <<<body
                                 <div class="w-100"></div>
                                 <div class="col-12 col-md-6">
                                     <select class="form-select form-rounded" name="event-schedule-plan-1" id="event-schedule-plan-1" required>
-                                        <option selected disabled value="">選擇計劃</option>
+                                        <option selected value>選擇計劃</option>
                                     </select>
                                     <div class="invalid-feedback">這裏必須選擇哦~~</div>
                                 </div>
@@ -262,26 +263,26 @@ body . <<<body
                                     <label for="event-location" class="form-label">國家/地區</label>
                                     <select class="form-select form-rounded crs-country" name="event-country" id="event-country" data-region-id="event-region" data-value="shortcode" data-default-option="請選擇" required>
                                     </select>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    <div class="invalid-feedback">這裏必須選擇哦~~</div>
                                 </div>
                                 <div class="col-6 col-sm-4 mb-4">
                                     <label for="event-location" class="form-label">省/州</label>
                                     <select class="form-select form-rounded" name="event-region" id="event-region" data-default-option="請選擇" required>
                                     </select>
-                                    <div class="invalid-feedback">這裏不能留空哦~~</div>
+                                    <div class="invalid-feedback">這裏必須選擇哦~~</div>
                                 </div>
                                 <div class="col-12 mb-3 position-relative">
                                     <label class="form-label">地圖位置</label>
+                                    <div class="col-12">
+                                        <input type="number" class="d-none form-control" name="event-longitude" id="event-longitude" step="0.0001" required>
+                                        <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
+                                        <div class="invalid-feedback">這裏未選擇位置哦~~</div>
+                                    </div>
                                     <div class="w-100 rounded" style="min-height: 30rem" id="map"></div>
                                     <span style="bottom: 5rem;" class="position-absolute start-50">
                                         <span class="position-relative text-white bg-black bg-opacity-50 p-2 rounded" style="left: -50%;">移動標記選擇位置</span>
                                         <span id="invalid-feedback" class="position-relative text-white bg-danger bg-opacity-75 p-2 rounded" style="left: -50%; display: none">國家/地區 尚未支持</span>
                                     </span>
-                                </div>
-                                <div class="col-12">
-                                    <input type="number" class="d-none form-control" name="event-longitude" id="event-longitude" step="0.0001" required>
-                                    <input type="number" class="d-none form-control" name="event-latitude" id="event-latitude" step="0.0001" required>
-                                    <div class="invalid-feedback">這裏未選擇位置哦~~</div>
                                 </div>
                             </div>
                         </form>
@@ -342,7 +343,7 @@ body . <<<body
                             <div class="col-12 mb-3">
                                 <label for="event-type" class="form-label"><i class="fa-solid fa-bars-staggered me-1"></i>活動種類</label>
                                 <select class="form-select form-rounded form-control-sm" id="event-type" name="event-type" required>
-                                    <option selected disabled value="">選擇種類</option>
+                                    <option selected value>選擇種類</option>
                                     <option value="0">水上活動</option>
                                     <option value="1">陸上活動</option>
                                     <option value="2">空中活動</option>
@@ -372,7 +373,7 @@ body . <<<body
                                 <img src="" alt="" class="border border-1" id="event-thumbnail-img" draggable="false" style="max-height: 10rem">
                             </div>
                             <input type="text" class="form-control d-none" name="event-thumbnail" id="event-thumbnail" required>
-                            <div class="invalid-feedback">這裏至少需要選擇圖片哦~~</div>
+                            <div class="invalid-feedback">這裏需要選擇圖片哦~~</div>
                         </form>
                         <a class="text-primary text-decoration-underline" href="#" id="event-thumbnail-change">設定/更改 封面圖片</a>
                     </div>
@@ -381,6 +382,7 @@ body . <<<body
         </div>
     </div>
 </div>
+body . <<<body
 <style>
 .event-tag{
     background-color: var(--bs-gray-300);
