@@ -614,15 +614,16 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             console.log(form)
 
             if(typeof form.plan['event-plan-id'] === 'object'){
-                form.plan = form.plan['event-plan-id'].map((value) => {
+                const tmp = form.plan['event-plan-id'].map((value) => {
                     return {
                         id: value,
-                        name: '',
+                        name: form.plan['event-plan-name-' + value],
                         max: 0,
                         max_each: 0,
                         price: 0
                     }
                 })
+                console.log(tmp)
             }
             console.log(form)
         });
