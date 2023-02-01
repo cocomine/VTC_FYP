@@ -3,16 +3,16 @@
  * Create by cocomine
  */
 
-define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker'],
-    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr) {
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker' ],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr){
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
         crs.init();
-        const support_country = ['hk', 'mo', 'tw', 'cn']
+        const support_country = [ 'hk', 'mo', 'tw', 'cn' ];
 
         /* Count content length */
-        $('#event-summary, #event-precautions, #event-location').on('input focus', function () {
+        $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
             const length = $(this).val().length;
             $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
         });
@@ -30,7 +30,17 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         $('#event-schedule-time-start-1').timepicker('setTime', new Date());
         $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
 
-        /* ============活動資料============== */
+        /* 檢查草稿 */
+        $().click(() => {
+            //todo
+        });
+
+        /* 載入草稿 */
+        $(window).on('load', () => {
+            //todo
+        });
+
+        //###### 活動資料 #######
         /* HTML filter xss */
         const filterXSS_description = new xss.FilterXSS({
             stripIgnoreTag: true,
@@ -190,7 +200,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             initialValue: jq_precautions.val()
         });
 
-        /* =============活動圖片============== */
+        //######## 活動圖片 #######
         /* Image select */
         let img_items = [];
         const jq_dropZone = $('#event-image-list');
@@ -217,7 +227,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         });
 
         /* Image drag drop */
-        //Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d
+        /* Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d */
         let adjacentItem;
         let prevAdjacentItem;
         let selectedItem;
@@ -269,7 +279,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             $(adjacentItem).parents('.item').css('marginLeft', '0');
         });
 
-        /* =================活動地址================= */
+        //####### 活動地址 ########
         /* Load map */
         const map = new mapboxgl.Map({
             container: 'map',
@@ -342,31 +352,42 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
          * @param {any[] | any} poi
          */
         function setLocalValue(poi){
-            const country = poi.filter((val) => val.place_type.includes('country'))
+            const country = poi.filter((val) => val.place_type.includes('country'));
             if (country.length > 0 && support_country.includes(country[0].properties.short_code)){
                 //set country
-                $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', { "bubbles": true }))
+                $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', { "bubbles": true }));
                 jq_location.val(poi[0].place_name.slice(0, 50))[0].dispatchEvent(new Event('input', { "bubbles": true }));
 
                 //set region
-                const region = poi.filter((val) => val.place_type.includes('region'))
-                if (region.length > 0) $('#event-region').val(region[0].text)
+                const region = poi.filter((val) => val.place_type.includes('region'));
+                if (region.length > 0) $('#event-region').val(region[0].text);
 
-                $('#invalid-feedback').hide()
+                $('#invalid-feedback').hide();
             }else{
-                $('#invalid-feedback').show()
+                $('#invalid-feedback').show();
             }
         }
 
-        /* ============計劃========== */
+        //########## 計劃 ############
         const jq_plan = $('#event-form-plan'); //計劃
         const jq_schedule = $('#event-form-schedule'); //時段
         const plan = [];
 
         /* 增加計劃 */
         $('#event-plan-add').click(function (){
+            const tmp = plan_html();
+            tmp.appendTo(jq_plan);
+            $('#event-plan-feedback').hide();
+        });
+
+        /**
+         * 計劃HTML
+         * @param {boolean} includeRemoveBtn 是否包含移除按鈕
+         * @return {JQuery<HTMLElement>}
+         */
+        function plan_html(includeRemoveBtn = true){
             const id = Math.floor(Math.random() * 9999);
-            jq_plan.append(
+            return $(
                 `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
                 <input type="text" name="event-plan-id" class="d-none" value="${id}">
                 <h5 class="col-12 text-muted"># ${id}</h5>
@@ -395,10 +416,10 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                     </div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
-                    <button type="button" class="btn-close" aria-label="Close"></button>
+                    ${includeRemoveBtn && `<button type="button" class="btn-close" aria-label="Close"></button>`}
                 </div>
             </div>`);
-        });
+        }
 
         /* 刪除計劃 */
         jq_plan.on('click', 'button', function (){
@@ -424,11 +445,11 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             if (index >= 0){
                 if (plan_name === ""){
                     //if blank
-                    plan_select.find(`[value='${plan_id}']`).remove()
+                    plan_select.find(`[value='${plan_id}']`).remove();
                     plan.splice(index, 1);
                 }else{
                     plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
-                    plan[index] = { plan_id, plan_name }
+                    plan[index] = { plan_id, plan_name };
                 }
             }else{
                 plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
@@ -436,102 +457,114 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             }
         });
 
-        /* ============活動時段============== */
+        //############### 活動時段 #################
         /* 增加時段 */
         $('#event-schedule-add').click(function (){
+            const tmp = schedule_html();
+            tmp.appendTo(jq_schedule);
+            $('#event-schedule-feedback').hide();
+        });
+
+        /**
+         * 時段HTML
+         * @param {boolean} includeRemoveBtn 是否包含移除按鈕
+         * @return {JQuery<HTMLElement>}
+         */
+        function schedule_html(includeRemoveBtn = true){
             const id = Math.floor(Math.random() * 9999);
             const min = moment().format('YYYY-MM-DD');
             const tmp = $(
                 `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="${id}">
-                      <input type="text" name="event-schedule-id" class="d-none" value="${id}">
-                      <div class="col-12 col-sm-6 col-md-3">
-                          <div class="date-picker form-floating">
-                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}">
-                              <label for="event-schedule-start-${id}">開始日期</label>
-                              <div class="invalid-feedback">必需要今天之後~~</div>
-                          </div>
-                      </div>
-                      <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
-                          <div class="date-picker form-floating">
-                              <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required min="${min}">
-                              <label for="event-schedule-end-${id}">結束日期</label>
-                              <div class="invalid-feedback">必需要開始日期之後~~</div>
-                          </div>
-                      </div>
-                      <div class="col col-md-auto">
-                          <div class="form-check form-switch float-end">
-                              <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-${id}" id="event-schedule-type-${id}">
-                              <label class="form-check-label" for="event-schedule-type-${id}">重複</label>
-                          </div>
-                      </div>
-                      <div class="w-100"></div>
-                      <div class="col-12 col-sm-6 col-md-3">
-                          <div class="form-floating">
-                              <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required value="${moment().format("HH:mm")}">
-                              <label for="event-schedule-time-start-${id}">開始時間</label>
-                              <div class="invalid-feedback">這裏不能留空哦~~</div>
-                          </div>
-                      </div>
-                      <div class="col-12 col-sm-6 col-md-3">
-                          <div class="form-floating">
-                              <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required value="${moment().add(30, 'm').format("HH:mm")}">
-                              <label for="event-schedule-time-end-${id}">結束時間</label>
-                              <div class="invalid-feedback">這裏不能留空哦~~</div>
-                          </div>
-                      </div>
-                      <div class="col-12 col-md event-schedule-week" style="display: none;">
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-0-${id}" value="0">
-                              <label class="form-check-label" for="event-schedule-week-0-${id}">週日</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-1-${id}" value="1">
-                              <label class="form-check-label" for="event-schedule-week-1-${id}">週一</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-2-${id}" value="2">
-                              <label class="form-check-label" for="event-schedule-week-2-${id}">週二</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-3-${id}" value="3">
-                              <label class="form-check-label" for="event-schedule-week-3-${id}">週三</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-4-${id}" value="4">
-                              <label class="form-check-label" for="event-schedule-week-4-${id}">週四</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-5-${id}" value="5">
-                              <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
-                          </div>
-                          <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6">
-                              <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
-                          </div>
-                          <div class="invalid-feedback">至少選取一天</div>
-                      </div>
-                      <div class="w-100"></div>
-                      <div class="col-12 col-md-6">
-                          <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}">
-                              <option selected value="">選擇計劃</option>
-                              ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
-                          </select>
-                          <div class="invalid-feedback">這裏必須選擇哦~~</div>
-                      </div>
-                      <div class="col text-end align-self-end">
-                          <button type="button" class="btn-close" aria-label="Close"></button>
-                      </div>
-                  </div>`);
+                    <input type="text" name="event-schedule-id" class="d-none" value="${id}" />
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="date-picker form-floating">
+                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}">
+                            <label for="event-schedule-start-${id}">開始日期</label>
+                            <div class="invalid-feedback">必需要今天之後~~</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
+                        <div class="date-picker form-floating">
+                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required min="${min}">
+                            <label for="event-schedule-end-${id}">結束日期</label>
+                            <div class="invalid-feedback">必需要開始日期之後~~</div>
+                        </div>
+                    </div>
+                    <div class="col col-md-auto">
+                        <div class="form-check form-switch float-end">
+                            <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-${id}" id="event-schedule-type-${id}">
+                            <label class="form-check-label" for="event-schedule-type-${id}">重複</label>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required value="${moment().format("HH:mm")}">
+                            <label for="event-schedule-time-start-${id}">開始時間</label>
+                            <div class="invalid-feedback">這裏不能留空哦~~</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required value="${moment().add(30, 'm').format("HH:mm")}">
+                            <label for="event-schedule-time-end-${id}">結束時間</label>
+                            <div class="invalid-feedback">這裏不能留空哦~~</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md event-schedule-week" style="display: none;">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-0-${id}" value="0">
+                            <label class="form-check-label" for="event-schedule-week-0-${id}">週日</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-1-${id}" value="1">
+                            <label class="form-check-label" for="event-schedule-week-1-${id}">週一</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-2-${id}" value="2">
+                            <label class="form-check-label" for="event-schedule-week-2-${id}">週二</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-3-${id}" value="3">
+                            <label class="form-check-label" for="event-schedule-week-3-${id}">週三</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-4-${id}" value="4">
+                            <label class="form-check-label" for="event-schedule-week-4-${id}">週四</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-5-${id}" value="5">
+                            <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6">
+                            <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
+                        </div>
+                        <div class="invalid-feedback">至少選取一天</div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-12 col-md-6">
+                        <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}" required>
+                            <option selected value="">選擇計劃</option>
+                            ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
+                        </select>
+                        <div class="invalid-feedback">這裏必須選擇哦~~</div>
+                    </div>
+                    <div class="col text-end align-self-end">
+                        ${includeRemoveBtn && `<button type="button" class="btn-close" aria-label="Close"></button>`}
+                    </div>
+                </div>`);
 
-            tmp.appendTo(jq_schedule);
             datepicker.addPicker(tmp.find('.date-picker')); //add date-picker
             tmp.find("[name^='event-schedule-time']").timepicker({
                 show2400: true,
                 className: "dropdown-menu",
                 closeOnScroll: true,
-                timeFormat: "H:i"
+                timeFormat: "H:i",
             }); //add timepicker
-        });
+
+            return tmp;
+        }
 
         /* 刪除時段 */
         jq_schedule.on('click', 'button', function (){
@@ -540,8 +573,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
 
         /* 切換時段類型 */
         jq_schedule.on('change', "[name^='event-schedule-type']", function (){
-            const parent = $(this).parents('[data-schedule]');
-            const elm = parent.find('.event-schedule-end, .event-schedule-week');
+            const elm = $(this).parents('[data-schedule]').find('.event-schedule-end, .event-schedule-week');
             if (this.checked){
                 //重複
                 elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', false); //Enable 結束日期
@@ -561,30 +593,55 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         /* 結束日期min調整 */
         jq_schedule.on('focus', "[name^='event-schedule-start']", function (){
             const value = $(this).val();
-            const parent = $(this).parents('[data-schedule]');
-            const elm = parent.find("[name^='event-schedule-end']");
+            const elm = $(this).parents('[data-schedule]').find("[name^='event-schedule-end']");
             elm.attr('min', value);
-        })
+        });
+
+        /* 確保開始時間再結束時間之前 */
+        jq_schedule.on('input focus', "[name^='event-schedule-time-start']", function (){
+            const end = $(this).parents('[data-schedule]').find("[name^='event-schedule-time-end']");
+            const start = $(this);
+
+            const start_time = moment(start.timepicker('getTime'));
+            const end_time = moment(end.timepicker('getTime'));
+
+            if (start_time.isAfter(end_time)){
+                end.timepicker('setTime', start_time.toDate());
+            }
+        });
+
+        /* 確保結束時間在開始時間之後 */
+        jq_schedule.on('input focus', "[name^='event-schedule-time-end']", function (){
+            const start = $(this).parents('[data-schedule]').find("[name^='event-schedule-time-start']");
+            const end = $(this);
+
+            const start_time = moment(start.timepicker('getTime'));
+            const end_time = moment(end.timepicker('getTime'));
+
+            if (end_time.isBefore(start_time)){
+                start.timepicker('setTime', end_time.toDate());
+            }
+        });
 
         /* 週期選擇提醒 (必須要至少選擇一天) */
         jq_schedule.on('change', "[name^='event-schedule-week']", function (){
             const parent = $(this).parents('.event-schedule-week');
             const chiller = parent.find("[name^='event-schedule-week']");
-            const checked = chiller.filter((index, elm) => elm.checked)
+            const checked = chiller.filter((index, elm) => elm.checked);
             if (checked.length <= 0){
-                parent.children('.invalid-feedback').show()
+                parent.children('.invalid-feedback').show();
                 chiller.each(function (){
-                    this.setCustomValidity('error')
-                })
+                    this.setCustomValidity('error');
+                });
             }else{
                 chiller.each(function (){
-                    this.setCustomValidity('')
-                })
-                parent.children('.invalid-feedback').hide()
+                    this.setCustomValidity('');
+                });
+                parent.children('.invalid-feedback').hide();
             }
-        })
+        });
 
-        /* ==============活動狀態=============== */
+        //############ 活動狀態 #################
         const jq_form = {
             jq_title: $('#event-form-title'),
             jq_data: $('#event-form-data'),
@@ -595,11 +652,57 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             jq_status: $('#event-form-status'),
             jq_attribute: $('#event-form-attribute'),
             jq_thumbnail: $('#event-form-thumbnail'),
-        }
+        };
 
         /* 儲存草稿 */
         $('#event-daft').click(function (){
             //serializeObject
+            const form = serializeData();
+            console.log(form);
+
+            localStorage.setItem("event-draft", JSON.stringify(form));
+            toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!");
+        });
+
+        /* 發佈 */
+        $('#event-post').click(function (){
+            /* 檢查 */
+            let valid = true;
+            const data = serializeData();
+            for (let jqFormKey in jq_form){
+                jq_form[jqFormKey].addClass('was-validated');
+                valid = jq_form[jqFormKey][0].checkValidity() ? valid : false;
+            }
+
+            //檢查 plan & schedule
+            if (data.plan.length <= 0){
+                $('#event-plan-feedback').show();
+                valid = false;
+            }
+            if (data.schedule.length <= 0){
+                $('#event-schedule-feedback').show();
+                valid = false;
+            }
+            if (!valid) return;
+
+            //todo: send to server
+        });
+
+        /* 移到回收桶 */
+        // $('#event-recycle').click(function (){
+        //     //todo
+        // });
+        //
+        // /* 確認移除 */
+        // $('#event-delete').click(function (){
+        //     //todo
+        // });
+
+        /**
+         * 處理data
+         * @return {{title, data, plan, schedule, image, location, status, attribute, thumbnail}}
+         */
+        function serializeData(){
             const form = {
                 title: jq_form.jq_title.serializeObject(),
                 data: jq_form.jq_data.serializeObject(),
@@ -610,8 +713,8 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                 status: jq_form.jq_status.serializeObject(),
                 attribute: jq_form.jq_attribute.serializeObject(),
                 thumbnail: jq_form.jq_thumbnail.serializeObject(),
-            }
-            console.log(form)
+            };
+            console.log(form);
 
             //serialize plan
             if (typeof form.plan['event-plan-id'] === 'object'){
@@ -623,17 +726,17 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                         max: form.plan['event-plan-max-' + value],
                         max_each: form.plan['event-plan-max-each-' + value],
                         price: form.plan['event-plan-price-' + value]
-                    }
+                    };
                 });
             }else{
                 //not array
-                form.plan = [{
+                form.plan = $.isEmptyObject(form.plan) ? [] : [ {
                     id: form.plan['event-plan-id'],
                     name: form.plan['event-plan-name-' + form.plan['event-plan-id']],
                     max: form.plan['event-plan-max-' + form.plan['event-plan-id']],
                     max_each: form.plan['event-plan-max-each-' + form.plan['event-plan-id']],
                     price: form.plan['event-plan-price-' + form.plan['event-plan-id']]
-                }];
+                } ];
             }
 
             //serialize schedule
@@ -649,11 +752,11 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                         time_end: form.schedule['event-schedule-time-end-' + value],
                         week: form.schedule['event-schedule-week-' + value] ?? null,
                         plan: form.schedule['event-schedule-plan-' + value]
-                    }
+                    };
                 });
             }else{
                 //not array
-                form.schedule = [{
+                form.schedule = $.isEmptyObject(form.schedule) ? [] : [ {
                     id: form.schedule['event-schedule-id'],
                     type: form.schedule['event-schedule-type-' + form.schedule['event-schedule-id']] === "on",
                     start: form.schedule['event-schedule-start-' + form.schedule['event-schedule-id']],
@@ -662,27 +765,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
                     time_end: form.schedule['event-schedule-time-end-' + form.schedule['event-schedule-id']],
                     week: form.schedule['event-schedule-week-' + form.schedule['event-schedule-id']] ?? null,
                     plan: form.schedule['event-schedule-plan-' + form.schedule['event-schedule-id']]
-                }];
+                } ];
             }
-            console.log(form)
 
-            localStorage.setItem("event-draft", JSON.stringify(form))
-            toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!")
-        });
+            return form;
+        }
 
-        /* 發佈 */
-        $('#event-post').click(function (){
-            for (let jqFormKey in jq_form){
-                jq_form[jqFormKey].addClass('was-validated')
-            }
-        });
-
-        /* 移到回收桶 */
-        $('#event-recycle').click(function (){
-            //todo
-        });
-
-        /* ===========活動封面=============== */
+        //############ 活動封面 ###############
         /* 更改封面圖片 */
         $('#event-thumbnail-change').click(function (e){
             e.preventDefault();
@@ -693,7 +782,7 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
             }, 1, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
         });
 
-        /* =============活動屬性============== */
+        //############ 活動屬性 #############
         /* add tag */
         const jq_addTag = $('#event-add-tag');
         jq_addTag.on('input focus', function (){
@@ -740,13 +829,13 @@ define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.up
         const jq_tagList = $('#event-tag-list');
         jq_tagList.on('click', '[data-tag] > i', function (){
             $(this).parent().remove();
-            updateTag()
+            updateTag();
         });
 
         /* update tag value */
         function updateTag(){
             const tag_elm = jq_tagList.children('[data-tag]');
-            const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray()
-            $('#event-tag').val(list.join(','))
+            const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
+            $('#event-tag').val(list.join(','));
         }
     });
