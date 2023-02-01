@@ -3,16 +3,16 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'timepicker' ],
-    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs){
+define(['jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker'],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr) {
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
         crs.init();
-        const support_country = [ 'hk', 'mo', 'tw', 'cn' ]
+        const support_country = ['hk', 'mo', 'tw', 'cn']
 
         /* Count content length */
-        $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
+        $('#event-summary, #event-precautions, #event-location').on('input focus', function () {
             const length = $(this).val().length;
             $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
         });
@@ -639,26 +639,35 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //serialize schedule
             if (typeof form.schedule['event-schedule-id'] === 'object'){
                 //is arrayed
-                form.plan = form.schedule['event-schedule-id'].map((value) => {
+                form.schedule = form.schedule['event-schedule-id'].map((value) => {
                     return {
                         id: value,
-                        name: form.plan['event-plan-name-' + value],
-                        max: form.plan['event-plan-max-' + value],
-                        max_each: form.plan['event-plan-max-each-' + value],
-                        price: form.plan['event-plan-price-' + value]
+                        type: form.schedule['event-schedule-type-' + value] === "on",
+                        start: form.schedule['event-schedule-start-' + value],
+                        end: form.schedule['event-schedule-end-' + value] ?? null,
+                        time_start: form.schedule['event-schedule-time-start-' + value],
+                        time_end: form.schedule['event-schedule-time-end-' + value],
+                        week: form.schedule['event-schedule-week-' + value] ?? null,
+                        plan: form.schedule['event-schedule-plan-' + value]
                     }
                 });
             }else{
                 //not array
                 form.schedule = [{
-                    id: form.plan['event-plan-id'],
-                    name: form.plan['event-plan-name-' + form.plan['event-plan-id']],
-                    max: form.plan['event-plan-max-' + form.plan['event-plan-id']],
-                    max_each: form.plan['event-plan-max-each-' + form.plan['event-plan-id']],
-                    price: form.plan['event-plan-price-' + form.plan['event-plan-id']]
+                    id: form.schedule['event-schedule-id'],
+                    type: form.schedule['event-schedule-type-' + form.schedule['event-schedule-id']] === "on",
+                    start: form.schedule['event-schedule-start-' + form.schedule['event-schedule-id']],
+                    end: form.schedule['event-schedule-end-' + form.schedule['event-schedule-id']] ?? null,
+                    time_start: form.schedule['event-schedule-time-start-' + form.schedule['event-schedule-id']],
+                    time_end: form.schedule['event-schedule-time-end-' + form.schedule['event-schedule-id']],
+                    week: form.schedule['event-schedule-week-' + form.schedule['event-schedule-id']] ?? null,
+                    plan: form.schedule['event-schedule-plan-' + form.schedule['event-schedule-id']]
                 }];
             }
             console.log(form)
+
+            localStorage.setItem("event-draft", JSON.stringify(form))
+            toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!")
         });
 
         /* 發佈 */
