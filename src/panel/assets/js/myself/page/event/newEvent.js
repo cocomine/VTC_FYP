@@ -599,6 +599,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /* 儲存草稿 */
         $('#event-daft').click(function (){
+            //serializeObject
             const form = {
                 title: jq_form.jq_title.serializeObject(),
                 data: jq_form.jq_data.serializeObject(),
@@ -610,20 +611,52 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 attribute: jq_form.jq_attribute.serializeObject(),
                 thumbnail: jq_form.jq_thumbnail.serializeObject(),
             }
-
             console.log(form)
 
-            if(typeof form.plan['event-plan-id'] === 'object'){
-                const tmp = form.plan['event-plan-id'].map((value) => {
+            //serialize plan
+            if (typeof form.plan['event-plan-id'] === 'object'){
+                //is arrayed
+                form.plan = form.plan['event-plan-id'].map((value) => {
                     return {
                         id: value,
                         name: form.plan['event-plan-name-' + value],
-                        max: 0,
-                        max_each: 0,
-                        price: 0
+                        max: form.plan['event-plan-max-' + value],
+                        max_each: form.plan['event-plan-max-each-' + value],
+                        price: form.plan['event-plan-price-' + value]
                     }
-                })
-                console.log(tmp)
+                });
+            }else{
+                //not array
+                form.plan = [{
+                    id: form.plan['event-plan-id'],
+                    name: form.plan['event-plan-name-' + form.plan['event-plan-id']],
+                    max: form.plan['event-plan-max-' + form.plan['event-plan-id']],
+                    max_each: form.plan['event-plan-max-each-' + form.plan['event-plan-id']],
+                    price: form.plan['event-plan-price-' + form.plan['event-plan-id']]
+                }];
+            }
+
+            //serialize schedule
+            if (typeof form.schedule['event-schedule-id'] === 'object'){
+                //is arrayed
+                form.plan = form.schedule['event-schedule-id'].map((value) => {
+                    return {
+                        id: value,
+                        name: form.plan['event-plan-name-' + value],
+                        max: form.plan['event-plan-max-' + value],
+                        max_each: form.plan['event-plan-max-each-' + value],
+                        price: form.plan['event-plan-price-' + value]
+                    }
+                });
+            }else{
+                //not array
+                form.schedule = [{
+                    id: form.plan['event-plan-id'],
+                    name: form.plan['event-plan-name-' + form.plan['event-plan-id']],
+                    max: form.plan['event-plan-max-' + form.plan['event-plan-id']],
+                    max_each: form.plan['event-plan-max-each-' + form.plan['event-plan-id']],
+                    price: form.plan['event-plan-price-' + form.plan['event-plan-id']]
+                }];
             }
             console.log(form)
         });
