@@ -132,41 +132,6 @@ class home implements IPage {
         </div>
       </div>
     </div>
-        
-        
-        <!--<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="/assets/images/background/skiing-back.jpg" class="d-block w-100" alt="Skiing">
-              <div class="carousel-caption d-none d-md-block">
-                <button type="button" class="btn btn-primary btn-lg">See More</button>
-                <h5>Into white world</h5>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <img src="/assets/images/background/diving-back.jpg" class="d-block w-100" alt="Diving">
-              <div class="carousel-caption d-none d-md-block">
-                <button type="button" class="btn btn-primary btn-lg">See More</button>
-                <h5>Close to inhabitants of the sea</h5>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <img src="/assets/images/background/climbing-back.jpg" class="d-block w-100" alt="Climbing">
-              <div class="carousel-caption d-none d-md-block">
-                <button type="button" class="btn btn-primary btn-lg">See More</button>
-                <h5>Rock and Roll</h5>
-              </div>
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>-->
 </div></br>
 
 <div class='col-12 mt-2'>
