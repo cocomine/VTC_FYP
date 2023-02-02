@@ -606,7 +606,7 @@
     }
     .bell-notify-box.notify-box {
         width: 286px;
-        right: -160px!important;
+        right: calc(-286px + 286px / 2)!important;
     }
     .page-title-area {
         padding: 15px 30px 0;

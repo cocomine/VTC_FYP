@@ -60,6 +60,7 @@ header('Content-Type:text/html; charset=utf-8');
         <link rel="stylesheet" href="/panel/assets/css/FA6/css/solid.min.css">
         <link rel="stylesheet" href="/panel/assets/css/themify-icons.min.css">
         <link rel="stylesheet" href="/panel/assets/css/metisMenu.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/scrollbar.css">
         <link rel="stylesheet" href="/panel/assets/css/owl.carousel.min.css">
         <link rel="stylesheet" href="/panel/assets/css/slicknav.min.css">
         <!-- others css -->

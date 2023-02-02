@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker' ],
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker', 'jquery.scrollbar.min' ],
     function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr){
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
@@ -30,12 +30,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         $('#event-schedule-time-start-1').timepicker('setTime', new Date());
         $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
 
-        /* 檢查草稿 */
+        /* 載入草稿 */
         $().click(() => {
             //todo
         });
 
-        /* 載入草稿 */
+        /* 檢查草稿 */
         $(window).on('load', () => {
             //todo
         });
@@ -201,10 +201,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         //######## 活動圖片 #######
-        /* Image select */
         let img_items = [];
         const jq_dropZone = $('#event-image-list');
+        jq_dropZone.scrollbar();
+        jq_dropZone.parents('.scroll-wrapper').removeClass('row mb-2 media-list')
         const jq_image = $('#event-image');
+
+        /* Image select */
         $('#event-image-select').click(() => {
             media_select.select_media((images) => {
                 const tmp = images.map((id) =>

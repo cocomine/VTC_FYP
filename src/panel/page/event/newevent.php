@@ -53,6 +53,7 @@ class newevent implements IPage {
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min.css"/>
+<link rel="stylesheet" href="/panel/assets/css/myself/page/event.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body. <<<body
 <div class="col-12 col-lg-9">
@@ -129,7 +130,7 @@ body . <<<body
                     <div class="card-text">
                         <form class="needs-validation" novalidate id="event-form-image">
                             <p class="d-none d-lg-block">你可以拖拉改變次序</p>
-                            <div class="media-list row mb-2" id="event-image-list"></div>
+                            <div class="media-list row mb-2 scrollbar-dynamic" id="event-image-list"></div>
                             <button type="button" class="btn btn-rounded btn-primary" id="event-image-select"><i class="fa-regular fa-object-ungroup me-2"></i>選擇圖片</button>
                             <small>你最多可以選擇五張圖片</small><br>
                             <div class="col-12">
@@ -279,51 +280,6 @@ body . <<<body
     </div>
 </div>
 body . <<<body
-<style>
-.event-tag{
-    background-color: var(--bs-gray-300);
-    border-radius: 50px;
-    font-size: 1.15em;
-    margin: 4px;
-}
-.event-tag > i{
-    cursor: pointer;
-    transition: color 200ms;
-}
-.event-tag > i:hover{
-    color: var(--bs-red);
-}
-#event-add-tag{
-    width: 100%;
-    min-width: 40px;
-    background: transparent;
-    border: none;
-    margin: 4px;
-    padding: 0;
-    font-size: 1.15em;
-}
-#image-list.media-list{
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-.media-list .media-list-focus{
-    border: lightgrey 1px solid;
-}
-.media-list .media-list-center{
-    cursor: grab;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translate(50%,50%);
-}
-.media-list .media-list-center > img{
-    transform: translate(-50%,-50%);
-    height: 100%;
-    max-width: none;
-}
-</style>
 <script>
     require.config({
         paths:{
