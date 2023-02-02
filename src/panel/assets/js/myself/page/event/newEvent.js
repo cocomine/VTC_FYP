@@ -31,13 +31,17 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
 
         /* 載入草稿 */
-        $().click(() => {
-            //todo
+        $('#load-draft').click(() => {
+            $('#found-draft').hide()
+            const draft = JSON.parse(localStorage.getItem("event-draft"))
+
         });
 
         /* 檢查草稿 */
         $(window).on('load', () => {
-            //todo
+            if(localStorage.getItem("event-draft") !== null){
+                $('#found-draft').show()
+            }
         });
 
         //###### 活動資料 #######
@@ -576,7 +580,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /* 切換時段類型 */
         jq_schedule.on('change', "[name^='event-schedule-type']", function (){
-            const elm = $(this).parents('[data-schedule]').find('.event-schedule-end, .event-schedule-week');
+            const parent = $(this).parents('[data-schedule]');
+            const elm = parent.find('.event-schedule-end, .event-schedule-week');
             if (this.checked){
                 //重複
                 elm.find("[name^='event-schedule-end'], [name^='event-schedule-week']").prop('disabled', false); //Enable 結束日期

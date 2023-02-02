@@ -10,6 +10,7 @@ use cocomine\IPage;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
+use panel\apis\media;
 
 class newevent implements IPage {
 
@@ -45,7 +46,6 @@ class newevent implements IPage {
                 'limit' => $Text2['limit']
             )
         ));
-
         return <<<body
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
@@ -56,6 +56,9 @@ class newevent implements IPage {
 <link rel="stylesheet" href="/panel/assets/css/myself/page/event.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body. <<<body
+<div class="alert alert-info font-14" role="alert" id="found-draft" style="display: none">
+  我們在您的瀏覽器中發現了上次儲存的草稿! 要加載入來嗎?ヾ(•ω•`)o <a href="#" class="ms-2" id="load-draft">載入!</a>
+</div>
 <div class="col-12 col-lg-9">
     <div class="row gy-4">
         <!--活動標題-->
