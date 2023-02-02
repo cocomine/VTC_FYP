@@ -21,7 +21,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch('/panel/ChangeSetting?type=DataSet', {
+            fetch('/panel/ChangeSetting/?type=DataSet', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -70,7 +70,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
             data.passwordOld = forge.util.encode64(pk.encrypt(data.passwordOld))
 
             /* send */
-            fetch('/panel/ChangeSetting?type=PassSet', {
+            fetch('/panel/ChangeSetting/?type=PassSet', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -103,7 +103,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
         forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function (err, key) {
             $.ajax({
                 type: 'POST',
-                url: '/panel/ChangeSetting?type=2FASet',
+                url: '/panel/ChangeSetting/?type=2FASet',
                 contentType: 'text/json; charset=utf-8',
                 data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey), 'DoAction': true}),
                 success: function (data) {
@@ -146,7 +146,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
 
         $.ajax({
             type: 'POST',
-            url: '/panel/ChangeSetting?type=2FASet',
+            url: '/panel/ChangeSetting/?type=2FASet',
             contentType: 'text/json; charset=utf-8',
             data: JSON.stringify({'DoAction': false}),
             success: function (json) {
@@ -181,7 +181,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch('/panel/ChangeSetting?type=TwoFACheck', {
+            fetch('/panel/ChangeSetting/?type=TwoFACheck', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -217,7 +217,7 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
         forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function (err, key) {
             $.ajax({
                 type: 'POST',
-                url: '/panel/ChangeSetting?type=2FABackupCode',
+                url: '/panel/ChangeSetting/?type=2FABackupCode',
                 contentType: 'text/json',
                 data: JSON.stringify({'puKey': forge.pki.publicKeyToPem(key.publicKey)}),
                 success: function (json) {

@@ -69,7 +69,7 @@ class account implements IPage {
                     </div>
                     <div class='col-12 col-md-4'>
                         <label for='Pass' class='col-form-label'>{$Text['password']['password']}</label>
-                        <input class='form-control input-rounded' type='text' id='Pass' disabled value="IVEairline!">
+                        <input class='form-control input-rounded' type='text' id='Pass' disabled value="XTrave!">
                         <small class='form-text text-muted'>{$Text['password']['limit']}</small>
                     </div>
                     <div class="w-100"></div>
@@ -167,7 +167,7 @@ body;
     function post(array $data): array {
         global $auth;
 
-        $status = $auth->create_account($data['name'], $data['email'], 'IVEairline!', $data['role']);
+        $status = $auth->create_account($data['name'], $data['email'], 'XTrave!', $data['role']);
 
         /* 設置強制更改 */
         if($status == AUTH_REGISTER_COMPLETE){

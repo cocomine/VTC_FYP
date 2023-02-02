@@ -261,7 +261,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
                                     <div class="dropdown-menu bell-notify-box notify-box">
                                         <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
-                                        <div class="nofity-list" id="notify">
+                                        <div class="nofity-list scrollbar-dynamic" id="notify">
                                             <!-- notify-item -->
                                         </div>
                                     </div>
@@ -282,7 +282,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 <div class="dropdown-menu" style="z-index: 1030">
 
                                     <!-- dropdown menu content -->
-                                    <a class="dropdown-item" href="/panel/ChangeSetting" data-ajax="GET">
+                                    <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
                                         <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                     </a>
                                     <?php

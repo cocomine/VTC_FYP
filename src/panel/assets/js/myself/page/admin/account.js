@@ -23,7 +23,7 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch('/panel/account', {
+            fetch('/panel/account/', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
