@@ -1,20 +1,20 @@
 {
-  "_readme": [
-    "This file locks the dependencies of your project to a known state",
-    "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-    "This file is @generated automatically"
-  ],
-  "content-hash": "c2a482f386e793a29a77657922f0cfb5",
-  "packages": [
-    {
-      "name": "bacon/bacon-qr-code",
-      "version": "2.0.8",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/Bacon/BaconQrCode.git",
-        "reference": "8674e51bb65af933a5ffaf1c308a660387c35c22"
-      },
-      "dist": {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "8d1abd4aa568def2d7286f222fd28504",
+    "packages": [
+        {
+            "name": "bacon/bacon-qr-code",
+            "version": "2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "8674e51bb65af933a5ffaf1c308a660387c35c22"
+            },
+            "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/8674e51bb65af933a5ffaf1c308a660387c35c22",
                 "reference": "8674e51bb65af933a5ffaf1c308a660387c35c22",
@@ -62,37 +62,33 @@
         },
         {
             "name": "chillerlan/php-qrcode",
-            "version": "3.2.0",
+            "version": "4.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chillerlan/php-qrcode.git",
-                "reference": "df33b38b6348ba96e2bf2207d7b0ca6ce3e506f4"
+                "reference": "2ca4bf5ae048af1981d1023ee42a0a2a9d51e51d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/df33b38b6348ba96e2bf2207d7b0ca6ce3e506f4",
-                "reference": "df33b38b6348ba96e2bf2207d7b0ca6ce3e506f4",
+                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/2ca4bf5ae048af1981d1023ee42a0a2a9d51e51d",
+                "reference": "2ca4bf5ae048af1981d1023ee42a0a2a9d51e51d",
                 "shasum": ""
             },
             "require": {
-                "chillerlan/php-settings-container": "^1.2",
-                "ext-gd": "*",
-                "ext-json": "*",
+                "chillerlan/php-settings-container": "^2.1.4",
                 "ext-mbstring": "*",
-                "php": "^7.2"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.4"
+                "phan/phan": "^5.3",
+                "phpunit/phpunit": "^9.5",
+                "setasign/fpdf": "^1.8.2"
             },
             "suggest": {
-                "chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps."
+                "chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps.",
+                "setasign/fpdf": "Required to use the QR FPDF output."
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-v2.0.x-php5": "1.0.8-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "chillerlan\\QRCode\\": "src/"
@@ -117,7 +113,7 @@
                     "homepage": "https://github.com/chillerlan/php-qrcode/graphs/contributors"
                 }
             ],
-            "description": "A QR code generator. PHP 7.2+",
+            "description": "A QR code generator. PHP 7.4+",
             "homepage": "https://github.com/chillerlan/php-qrcode",
             "keywords": [
                 "phpqrcode",
@@ -128,30 +124,41 @@
             ],
             "support": {
                 "issues": "https://github.com/chillerlan/php-qrcode/issues",
-                "source": "https://github.com/chillerlan/php-qrcode/tree/3.2.0"
+                "source": "https://github.com/chillerlan/php-qrcode/tree/4.3.4"
             },
-            "time": "2019-12-04T21:31:05+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://ko-fi.com/codemasher",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2022-07-25T09:12:45+00:00"
         },
         {
             "name": "chillerlan/php-settings-container",
-            "version": "1.2.2",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chillerlan/php-settings-container.git",
-                "reference": "d1b5284d6eb3a767459738bb0b20073f0cb3eeaf"
+                "reference": "1beb7df3c14346d4344b0b2e12f6f9a74feabd4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/d1b5284d6eb3a767459738bb0b20073f0cb3eeaf",
-                "reference": "d1b5284d6eb3a767459738bb0b20073f0cb3eeaf",
+                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/1beb7df3c14346d4344b0b2e12f6f9a74feabd4a",
+                "reference": "1beb7df3c14346d4344b0b2e12f6f9a74feabd4a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^7.2 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.4"
+                "phan/phan": "^5.3",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
@@ -170,11 +177,12 @@
                     "homepage": "https://github.com/codemasher"
                 }
             ],
-            "description": "A container class for immutable settings objects. Not a DI container. PHP 7.2+",
+            "description": "A container class for immutable settings objects. Not a DI container. PHP 7.4+",
             "homepage": "https://github.com/chillerlan/php-settings-container",
             "keywords": [
                 "PHP7",
                 "Settings",
+                "configuration",
                 "container",
                 "helper"
             ],
@@ -192,7 +200,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2021-09-03T17:33:25+00:00"
+            "time": "2022-07-05T22:32:14+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -564,20 +572,20 @@
             },
             "time": "2022-12-19T22:17:11+00:00"
         },
-    {
-      "name": "google/apiclient-services",
-      "version": "v0.285.0",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/googleapis/google-api-php-client-services.git",
-        "reference": "d8ffb976f4da1f83326d6d3f471162acd23ec5d8"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d8ffb976f4da1f83326d6d3f471162acd23ec5d8",
-        "reference": "d8ffb976f4da1f83326d6d3f471162acd23ec5d8",
-        "shasum": ""
-      },
+        {
+            "name": "google/apiclient-services",
+            "version": "v0.285.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-api-php-client-services.git",
+                "reference": "d8ffb976f4da1f83326d6d3f471162acd23ec5d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d8ffb976f4da1f83326d6d3f471162acd23ec5d8",
+                "reference": "d8ffb976f4da1f83326d6d3f471162acd23ec5d8",
+                "shasum": ""
+            },
             "require": {
                 "php": ">=5.6"
             },
@@ -604,9 +612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-              "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.285.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.285.0"
             },
-      "time": "2023-01-29T01:28:14+00:00"
+            "time": "2023-01-29T01:28:14+00:00"
         },
         {
             "name": "google/auth",
@@ -1975,5 +1983,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-  "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

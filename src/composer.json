@@ -1,7 +1,7 @@
 {
     "require": {
         "php": "^7.4",
-      "chillerlan/php-qrcode": "3.2.0",
+      "chillerlan/php-qrcode": "4.3.4",
       "phpmailer/phpmailer": "^6.1",
       "psr/log": "^1.1",
       "google/apiclient": "^2.4",
