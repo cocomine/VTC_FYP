@@ -179,6 +179,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             strikethrough: true,
             tables: true,
             smoothLivePreview: true,
+            simplifiedAutoLink: true,
             extensions: [ {
                 type: 'output',
                 regex: new RegExp(`<ul(.*)>`, 'g'),

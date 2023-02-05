@@ -7,12 +7,22 @@
 namespace panel\page\event;
 
 use cocomine\IPage;
+use cocomine\Parsedown_ext;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use mysqli;
 use panel\apis\media;
 
 class post implements IPage {
+
+    private mysqli $sqlcon;
+
+    public function __construct(mysqli $conn, array $upPath) {
+        $this->sqlcon = $conn;
+    }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
         if (!$isAuth) return 401;
@@ -308,8 +318,42 @@ body;
     }
 
     public function post(array $data): array {
-        if($_GET['type'] === 'post'){
+        //new event
+        if ($_GET['type'] === 'post') {
+            //轉換可留空欄位
+            $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
+            $data['data']['event-precautions-html'] = $data['data']['event-precautions'] === "" ? null : "";
+            $data['attribute']['event-tag'] = $data['attribute']['event-tag'] === "" ? null : $data['attribute']['event-tag'];
 
+            //轉換image to array
+            $data['image']['event-image'] = explode(',', $data['image']['event-image']);
+
+            //轉換Markdown to html
+            $MD_converter = new Parsedown_ext();
+            $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description'])); //event-description
+            if ($data['data']['event-precautions-html'] !== null) {
+                $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions'])); //event-precautions
+            }
+
+            //HTML filter xss
+            $filterXSS_description = HTMLPurifier_Config::createDefault();
+            $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt]");
+            $filterXSS_precautions = HTMLPurifier_Config::createDefault();
+            $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
+
+            $purifier = new HTMLPurifier($filterXSS_description);
+            $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
+            $purifier->config = $filterXSS_precautions;
+            $data['data']['event-precautions-html']= str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0];
+
+            //截斷過長字串
+            $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
+            $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
+
+            /* 這裏會進行輸入檢查,但非公開網頁跳過 */
+
+            //儲存數據
+            $stmt = $this->sqlcon->prepare("");
         }
         return $data;
     }
