@@ -35,7 +35,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
-            console.log(draft);
 
             //fill up
             //活動資料
@@ -122,11 +121,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* 檢查草稿 */
-        $(window).on('load', () => {
+        const found_draft = () => {
             if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
-        });
+        }
 
         //###### 活動資料 #######
         /* HTML filter xss */
@@ -758,14 +757,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         $('#event-daft').click(function (){
             //serializeObject
             const form = serializeData();
-            console.log(form);
 
             localStorage.setItem("event-draft", JSON.stringify(form));
             toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!");
         });
 
         /* 發佈 */
-        $('#event-post').click(function (){
+        $('#event-post').click(function (e){
             /* 檢查 */
             let valid = true;
             const data = serializeData();
@@ -785,7 +783,36 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             }
             if (!valid) return;
 
-            //todo: send to server
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/event/post/?type=post', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            }).then((response) => {
+                response.json().then((json) => {
+                    console.log(json)
+
+                    if(json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        window.ajexLoad("/event/");
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                })
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error)
+            })
         });
 
         /* 移到回收桶 */
@@ -941,4 +968,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
             $('#event-tag').val(list.join(','));
         }
+
+        return {found_draft};
     });

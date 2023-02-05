@@ -12,7 +12,7 @@ use DateTime;
 use DateTimeZone;
 use panel\apis\media;
 
-class newevent implements IPage {
+class post implements IPage {
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
         if (!$isAuth) return 401;
@@ -21,9 +21,6 @@ class newevent implements IPage {
     }
 
     public function showPage(): string {
-        $time_zone = new DateTimeZone("Asia/Hong_Kong");
-        $today = new DateTime('now', $time_zone);
-
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');
 
@@ -301,19 +298,25 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker', 'jquery.crs.min'])
+    loadModules(['myself/page/event/post', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker', 'jquery.crs.min'], 
+        (post) => {
+            post.found_draft();
+        })
 </script>
 body;
 
     }
 
     public function post(array $data): array {
-        return array();
+        if($_GET['type'] === 'post'){
+
+        }
+        return $data;
     }
 
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><a href='/panel/event'>活動</a></li>
+            <li><a href='/panel/post'>活動</a></li>
             <li><span>增加活動</span></li>";
     }
 
