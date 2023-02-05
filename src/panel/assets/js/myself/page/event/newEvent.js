@@ -9,7 +9,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
         crs.init();
-        const support_country = [ 'hk', 'mo', 'tw', 'cn' ];
+        const _support_country = [ 'hk', 'mo', 'tw', 'cn' ];
 
         /* Count content length */
         $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
@@ -31,16 +31,100 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
 
         /* 載入草稿 */
-        $('#load-draft').click(() => {
-            $('#found-draft').hide()
-            const draft = JSON.parse(localStorage.getItem("event-draft"))
+        $('#load-draft').click((e) => {
+            e.preventDefault();
+            //$('#found-draft').hide()
+            const draft = JSON.parse(localStorage.getItem("event-draft"));
+            console.log(draft);
 
+            //fill up
+            //活動資料
+            $('#event-title').val(draft.title['event-title']);
+            $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
+            MDE_description.codemirror.setValue(draft.data['event-description']);
+            MDE_precautions.codemirror.setValue(draft.data['event-precautions']);
+
+            //活動計劃
+            jq_plan.html("")
+            plans = [];
+            draft.plan.forEach((plan) => {
+                const tmp = plan_html(plan.id);
+                tmp.find(`[name^="event-plan-name"]`).val(plan.name);
+                tmp.find(`[name^="event-plan-max"]`).val(plan.max);
+                tmp.find(`[name^="event-plan-max-each"]`).val(plan.max_each);
+                tmp.find(`[name^="event-plan-price"]`).val(plan.price);
+                tmp.appendTo(jq_plan);
+                plans.push({ plan_id: plan.id, plan_name: plan.name });
+            });
+
+            //活動時段
+            jq_schedule.html("");
+            draft.schedule.forEach((schedule) => {
+                const tmp = schedule_html(schedule.id);
+                tmp.find(`[name^="event-schedule-start"]`).val(schedule.start);
+                tmp.find(`[name^="event-schedule-end"]`).val(schedule.end);
+                tmp.find(`[name^="event-schedule-time-start"]`).val(schedule.time_start);
+                tmp.find(`[name^="event-schedule-time-end"]`).val(schedule.time_end);
+                tmp.find(`[name^="event-schedule-plan"]`).val(schedule.plan);
+                tmp.find(`[name^="event-schedule-type"]`).prop('checked', schedule.type);
+
+                //week
+                if (schedule.week !== null){
+                    const week_part = tmp.find('.event-schedule-week').show();
+                    schedule.week.forEach((value) => {
+                        week_part.find(`[value='${value}']`).prop('checked', true);
+                    });
+                }
+
+                tmp.appendTo(jq_schedule);
+            });
+
+            //活動圖片
+            jq_dropZone.html("")
+            jq_image.val(draft.image['event-image']); //set value
+            img_items = [];
+            if(draft.image['event-image'] !== ""){
+                draft.image['event-image'].split(",").forEach((value) => {
+                    const tmp = image_html(value);
+                    tmp.appendTo(jq_dropZone);
+                    img_items.push(tmp.find('img')[0]);
+                });
+            }
+
+            //活動地址
+            $("#event-location").val(draft.location['event-location']);
+            $("#event-country").val(draft.location['event-country'])[0].dispatchEvent(new Event('change', { "bubbles": true }));
+            $("#event-region").val(draft.location['event-region']);
+            $("#event-longitude").val(draft.location['event-longitude']);
+            $("#event-latitude").val(draft.location['event-latitude']);
+            if(draft.location['event-longitude'] !== "" && draft.location['event-latitude'] !== ""){
+                map_marker.setLngLat([ draft.location['event-longitude'], draft.location['event-latitude'] ]);
+                map.flyTo({ center: [ draft.location['event-longitude'], draft.location['event-latitude'] ], zoom: 15 });
+            }
+
+            //活動狀態
+            $('#event-status').val(draft.status["event-status"])
+            $('#event-post-date').val(draft.status["event-post-date"])
+            $('#event-post-time').val(draft.status["event-post-time"])
+
+            //活動屬性
+            $('#event-type').val(draft.attribute['event-type'])
+            $('#event-tag').val("")
+            if(draft.attribute['event-tag'] !== ""){
+                draft.attribute['event-tag'].split(",").forEach((value) => {
+                    addTag(value);
+                });
+            }
+
+            //活動封面
+            $('#event-thumbnail').val(draft.thumbnail['event-thumbnail']);
+            $('#event-thumbnail-img').attr('src', '/panel/api/media/' + draft.thumbnail['event-thumbnail']).attr('alt', draft.thumbnail['event-thumbnail']);
         });
 
         /* 檢查草稿 */
         $(window).on('load', () => {
-            if(localStorage.getItem("event-draft") !== null){
-                $('#found-draft').show()
+            if (localStorage.getItem("event-draft") !== null){
+                $('#found-draft').show();
             }
         });
 
@@ -183,7 +267,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /* description markdown editor */
         const jq_description = $('#event-description');
-        new EasyMDE({
+        const MDE_description = new EasyMDE({
             ...editor_options(filterXSS_description, jq_description, MD_converter),
             element: jq_description[0],
             autosave: { enabled: false },
@@ -193,7 +277,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /* precautions markdown editor */
         const jq_precautions = $('#event-precautions');
-        new EasyMDE({
+        const MDE_precautions = new EasyMDE({
             ...editor_options(filterXSS_precautions, jq_precautions, MD_converter),
             element: jq_precautions[0],
             autosave: { enabled: false },
@@ -208,14 +292,28 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         let img_items = [];
         const jq_dropZone = $('#event-image-list');
         jq_dropZone.scrollbar();
-        jq_dropZone.parents('.scroll-wrapper').removeClass('row mb-2 media-list')
+        jq_dropZone.parents('.scroll-wrapper').removeClass('row mb-2 media-list');
         const jq_image = $('#event-image');
 
         /* Image select */
         $('#event-image-select').click(() => {
             media_select.select_media((images) => {
-                const tmp = images.map((id) =>
-                    $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
+                const tmp = images.map((id) => image_html(id));
+                jq_dropZone.html(tmp);
+
+                //list up
+                img_items = tmp.map((value) => value.find('img')[0]);
+                jq_image.val(images.join(','));
+            }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
+        });
+
+        /**
+         * 圖片html
+         * @param {string} id 圖片id
+         * @return {JQuery<HTMLElement>}
+         */
+        function image_html(id){
+            return $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
                     <div class="ratio ratio-1x1 media-list-focus">
                         <div class="overflow-hidden">
                             <div class="media-list-center">
@@ -223,15 +321,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                             </div>
                         </div>
                     </div>
-                </div>`));
-                jq_dropZone.html(tmp);
-
-                //list up
-                const tmp_img = tmp.map((value) => value.find('img'));
-                img_items = tmp_img.map((value) => value[0]);
-                jq_image.val((tmp_img.map((value) => value.data('image-id'))).join(','));
-            }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
-        });
+                </div>`);
+        }
 
         /* Image drag drop */
         /* Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d */
@@ -360,7 +451,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
          */
         function setLocalValue(poi){
             const country = poi.filter((val) => val.place_type.includes('country'));
-            if (country.length > 0 && support_country.includes(country[0].properties.short_code)){
+            if (country.length > 0 && _support_country.includes(country[0].properties.short_code)){
                 //set country
                 $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', { "bubbles": true }));
                 jq_location.val(poi[0].place_name.slice(0, 50))[0].dispatchEvent(new Event('input', { "bubbles": true }));
@@ -378,7 +469,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         //########## 計劃 ############
         const jq_plan = $('#event-form-plan'); //計劃
         const jq_schedule = $('#event-form-schedule'); //時段
-        const plan = [];
+        let plans = [];
 
         /* 增加計劃 */
         $('#event-plan-add').click(function (){
@@ -389,11 +480,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /**
          * 計劃HTML
+         * @param {number|null}id 計劃id, null=自動生成
          * @param {boolean} includeRemoveBtn 是否包含移除按鈕
          * @return {JQuery<HTMLElement>}
          */
-        function plan_html(includeRemoveBtn = true){
-            const id = Math.floor(Math.random() * 9999);
+        function plan_html(id = null, includeRemoveBtn = true){
+            id = id === null ? Math.floor(Math.random() * 9999) : id;
             return $(
                 `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
                 <input type="text" name="event-plan-id" class="d-none" value="${id}">
@@ -446,21 +538,21 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         jq_plan.on('blur', `[name^='event-plan-name']`, function (){
             const plan_name = $(this).val(), plan_id = $(this).parents('[data-plan]').data('plan');
             const plan_select = jq_schedule.find("[name^='event-schedule-plan']");
-            const index = plan.findIndex((value) => value.plan_id === plan_id);
+            const index = plans.findIndex((value) => value.plan_id === plan_id);
 
             // 時段計劃
             if (index >= 0){
                 if (plan_name === ""){
                     //if blank
                     plan_select.find(`[value='${plan_id}']`).remove();
-                    plan.splice(index, 1);
+                    plans.splice(index, 1);
                 }else{
                     plan_select.find(`[value='${plan_id}']`).text(plan_id + ' - ' + plan_name); //存在
-                    plan[index] = { plan_id, plan_name };
+                    plans[index] = { plan_id, plan_name };
                 }
             }else{
                 plan_select.append(`<option value="${plan_id}">${plan_id} - ${plan_name}</option>`); //不存在
-                plan.push({ plan_id, plan_name });
+                plans.push({ plan_id, plan_name });
             }
         });
 
@@ -553,7 +645,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     <div class="col-12 col-md-6">
                         <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}" required>
                             <option selected value="">選擇計劃</option>
-                            ${plan.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
+                            ${plans.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
                         </select>
                         <div class="invalid-feedback">這裏必須選擇哦~~</div>
                     </div>
@@ -722,7 +814,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 attribute: jq_form.jq_attribute.serializeObject(),
                 thumbnail: jq_form.jq_thumbnail.serializeObject(),
             };
-            console.log(form);
 
             //serialize plan
             if (typeof form.plan['event-plan-id'] === 'object'){
@@ -775,6 +866,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     plan: form.schedule['event-schedule-plan-' + form.schedule['event-schedule-id']]
                 } ];
             }
+            // string to array
+            form.schedule.forEach((value) => {
+                if (typeof value.week === 'string') value.week = [ value.week ];
+            });
 
             return form;
         }

@@ -56,8 +56,9 @@ class newevent implements IPage {
 <link rel="stylesheet" href="/panel/assets/css/myself/page/event.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body. <<<body
-<div class="alert alert-info font-14" role="alert" id="found-draft" style="display: none">
-  我們在您的瀏覽器中發現了上次儲存的草稿! 要加載入來嗎?ヾ(•ω•`)o <a href="#" class="ms-2" id="load-draft">載入!</a>
+<div class="alert alert-info alert-dismissible fade show" role="alert" id="found-draft" style="display: none">
+  <p>我們在您的瀏覽器中發現了上次儲存的草稿! 要加載入來嗎?ヾ(•ω•`)o <a href="#" class="ms-2" id="load-draft" data-bs-dismiss="alert">載入!</a></p>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <div class="col-12 col-lg-9">
     <div class="row gy-4">

@@ -73,17 +73,13 @@ require.config({
                 deps: ["jquery"]
             },
             "scripts":{
-                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
+                deps: ["jquery"]
             }
         }
 });
 require([
     "jquery", 
     "bootstrap", 
-    "owl.carousel.min",
-    "metisMenu.min",
-    "jquery.slimscroll.min",
-    "jquery.slicknav.min",
     "plugins",
     "scripts"], () => {
         $('#preloader').fadeOut('slow', function() { $(this).remove(); });
