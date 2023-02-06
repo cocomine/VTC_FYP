@@ -190,6 +190,36 @@ class activity_details implements \cocomine\IPage {
         object-position: center;
     }
     
+    .profile {
+        display: flex;
+        align-items: center;
+    }
+
+    
+    .name-user {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .name-user strong {
+        color: #3d3d3d;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+    }
+
+    .name-user span {
+        color: #979797;
+        font-size: 0.8rem;
+    }
+    
+    .reviews {
+        margin-top: 10px;
+        margin-left: 5vh;
+    }
+    
+    .client-comment{
+    }
+    
      /*  Comment Style End */
     </style>
     <meta charset="utf-8">
@@ -355,10 +385,71 @@ class activity_details implements \cocomine\IPage {
     <br/><br/>
     
     <! -- Comment -->
-    <div class="profile-img">
-        <img src="images/c-1.jpg" />
+    <div  class="profile">
+        <div class="profile-img">
+            <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
+        </div>
+        
+        <div class="name-user">
+            <strong>Touseeq Ijaz</strong>
+            <span>@touseeqijazweb</span>
+        </div>
+        <div class="reviews">
+            <fieldset class="rate">
+                <label for="rating10" title="5 stars" style=""></label>
+                <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
+                <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
+                <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
+                <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
+                <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
+        </div>
+
     </div>
-    
+            <div class="client-comment">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem,
+             quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a.
+              Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.
+              </p>
+        </div>   
+        
+        
+        
+    <div class="card text-bg-light mb-3" style="max-width: 100rem;" >
+      <div class="card-header">
+      
+        <div class="profile-img">
+            <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
+        </div>
+        
+        <div class="name-user">
+            <strong>Touseeq Ijaz</strong>
+            <span>@touseeqijazweb</span>
+        </div>
+        <div class="reviews">
+            <fieldset class="rate">
+                <label for="rating10" title="5 stars" style=""></label>
+                <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
+                <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
+                <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
+                <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
+                <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
+                <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
+        </div>
+      
+      
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Light card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+    </div>
     <! -- Comment End-->
     
     
