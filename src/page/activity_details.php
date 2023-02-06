@@ -119,22 +119,9 @@ class activity_details implements \cocomine\IPage {
             padding: 3vh;
             margin: 4vh;
             height: 10vh;
-        }
-    
-        .ti-plus {
-            background-color: #EFF4F7;
-            border-color: #FFFFFF;
             font-size: 3vh;
-    
         }
-    
-        .ti-minus {
-            background-color: #EFF4F7;
-            border-color: #FFFFFF;
-            font-size: 3vh;
-    
-        }
-    
+
         .Div_Plus_Minus {
             float: right;
         }
@@ -182,12 +169,32 @@ class activity_details implements \cocomine\IPage {
             position: absolute;
             padding-right: 0;
         }
-    
         /* Ratings Setting End <<<<*/
+        
+        
+        /*  Comment Style */
+        
+        
+    .profile-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 10px;
+    }
+
+    .profile-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+     /*  Comment Style End */
     </style>
     <meta charset="utf-8">
     <!-- main 1 -->
-    <div class="center">
+    <div class="card">
         <!-- Carousel -->
         <div style="width:100%; float:right; " class="">
             <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true" style="padding: 20px">
@@ -235,21 +242,27 @@ class activity_details implements \cocomine\IPage {
     <!-- activity -->
     <div class="center">
         <p class="title">活動介紹</p>
+        <div class="card-body">
         無論是在湖邊散步、慢跑，還是騎著腳踏遊覽車在湖邊遊覽，皆可飽覽迪欣湖恬靜優美的湖面風光，
         最適合一家大小一同來呼吸新鮮空氣，好好舒展身心。這個名為迪欣湖的人工湖有著波光粼粼的湖水、
         動感十足的噴泉和優美怡人的山景，絕對是你與摯愛重拾昔日樂趣、盡情玩樂的好地方。
+        </div>
     </div>
     <!-- activity  End -->
+    
+    
     
     <!-- Noted -->
     
     <div class="center">
         <p class="title">注意事項</p>
+        <div class="card-body">
         溫馨提示：
         <ul style="list-style-type:disc">
             <li>為保持社交距離，樂園會控制入園人數。你需在到訪樂園前90日內憑有效門票、會員卡、門票、換領憑證或確認通知預先透過預約到訪日子。</li>
             <li>照片只供參考。度假區內所有活動、娛樂設施及表演安排會視乎實際情況而定，如有任何變動，恕不另行通知。請瀏覽香港迪士尼樂園度假區的官方網頁及手機應用程式以查閱最新資訊或時間表，以便輕鬆出行開展奇妙旅程</li>
         </ul>
+        </div>
     </div>
     <!-- Noted End -->
     
@@ -260,11 +273,11 @@ class activity_details implements \cocomine\IPage {
 
         
         
-            <span style="font-size: 2vh">數量</span>
+            <span style="font-size: 2vh"><b>計劃</b></span>
             <div class="Div_Plus_Minus">
-                <button class="ti-plus"></button>
+                 <button class="btn btn-outline-secondary" id="ti-plus"><i class="fa fa-plus" aria-hidden="true"></i></button>
                 <span class="txt_Num">1</span>
-                <button class="ti-minus"></button>
+                <button class="btn btn-outline-secondary" id="ti-minus"><i class="fa fa-minus" aria-hidden="true"></i></button>
             </div>
         </div>
         <span class="Price_Sign">$</span><span class="Price_txt">150</span>
@@ -273,6 +286,17 @@ class activity_details implements \cocomine\IPage {
     </div>
     
     <!-- Price End-->
+    
+    <!-- Event Details -->
+    <div class="center">
+        <p class="title">活動詳情</p>
+      <div class="card-body">
+        迪欣湖活動中心，簡稱迪欣湖，鄰近香港廸士尼樂園，在迪欣湖，既可欣賞大自然優美景色，
+        同時亦可享受活動中心提供的各項活動服務及配套，的確是香港少有遠離繁囂的休閒地點。
+        周末不少人到迪欣湖影相打卡，除了model外，還有很多是拍婚紗照的新人。近來仲有不少人在迪欣湖這個背山面湖的草地上享野餐樂添！
+      </div>
+    </div>
+    <!-- Event Details End -->
     
     
     <br />
@@ -294,7 +318,7 @@ class activity_details implements \cocomine\IPage {
             <p class="Rating_Number">4.5</p><br />
             <p class="Rating_Number_maximum">/5.0</p>
             <fieldset class="rate">
-                <label for="rating10" title="5 stars"></label>
+                <label for="rating10" title="5 stars" style=""></label>
                 <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
                 <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
                 <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
@@ -328,41 +352,33 @@ class activity_details implements \cocomine\IPage {
             </div>
         </div>
         <!-- Comment_Selection End -->
+    <br/><br/>
+    
+    <! -- Comment -->
+    <div class="profile-img">
+        <img src="images/c-1.jpg" />
+    </div>
+    
+    <! -- Comment End-->
+    
+    
     
     </div>
     <!-- main 4 End-->
     
-    <!-- Message_deatil_show -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">詳情</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="normal_text">鏈結: <a
-                            href="https://www.hongkongdisneyland.com/zh-hk/destinations/inspiration-lake-recreation-centre/"
-                            target="_blank">https://www.hongkongdisneyland.com/zh-hk/destinations/inspiration-lake-recreation-centre/</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Message_deatil_show -->
     
     <script>
         $(document).ready(function () {
             let num;
             let total = $(".Price_txt").text();
-            $(".ti-plus").click(function () {
+            $("#ti-plus").click(function () {
                 num = parseInt($(".txt_Num").text()) + 1;
                 $(".txt_Num").text(num);
 
                 $(".Price_txt").text(parseInt(total) * num);
             });
 
-            $(".ti-minus").click(function () {
+            $("#ti-minus").click(function () {
                 if (parseInt($(".txt_Num").text()) > 1) {
                     num = parseInt($(".txt_Num").text()) - 1;
                     $(".txt_Num").text(num);
@@ -389,7 +405,7 @@ class activity_details implements \cocomine\IPage {
      * @inheritDoc
      */
     function path(): string {
-        return '迪欣湖';
+        return '<a href="https://fyp.cocomine.cc/">首頁</a> > 迪欣湖';
     }
 
     /**
