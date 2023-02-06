@@ -571,11 +571,9 @@ class activity_details implements \cocomine\IPage {
             });
             
         });
-        
-        function SetDate(){
+            // SetDate
             var todayDate = new Date().toISOString().slice(0, 10);
             document.getElementById("datePicker").min = todayDate;
-        }
         
     </script>
     
