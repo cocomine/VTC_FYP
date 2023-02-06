@@ -217,8 +217,6 @@ class activity_details implements \cocomine\IPage {
         margin-left: 5vh;
     }
     
-    .client-comment{
-    }
     
      /*  Comment Style End */
     </style>
@@ -364,10 +362,10 @@ class activity_details implements \cocomine\IPage {
     
         <!-- Comment_Selection -->
         <div class="button_Comment_Selection">
-            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;">全部</button>
-            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;">4.0+</button>
-            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;">3.0+</button>
-            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;">3.0></button>
+            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;" id="bt_all">全部</button>
+            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;" id="bt_over_4">4.0+</button>
+            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;" id="bt_over_3">3.0+</button>
+            <button type="button" class="btn btn-outline-secondary" style="margin-right: 10px;" id="bt_less_3"><3.0</button>
     
     
             <div class="dropdown" style="float: right;">
@@ -385,72 +383,135 @@ class activity_details implements \cocomine\IPage {
     <br/><br/>
     
     <! -- Comment -->
-    <div  class="profile">
-        <div class="profile-img">
-            <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
-        </div>
-        
-        <div class="name-user">
-            <strong>Touseeq Ijaz</strong>
-            <span>@touseeqijazweb</span>
-        </div>
-        <div class="reviews">
-            <fieldset class="rate">
-                <label for="rating10" title="5 stars" style=""></label>
-                <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
-                <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
-                <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
-                <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
-                <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
-        </div>
-
-    </div>
-            <div class="client-comment">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem,
-             quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a.
-              Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.
+        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="Comment_Card">
+            <div class="card-header">
+            <div  class="profile">
+               <!--img---->
+              <div class="profile-img"> 
+                  <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
+              </div>
+              
+              <div class="name-user">
+                  <strong>Touseeq Ijaz</strong>
+                  <span>@touseeqijazweb</span>
+              </div>
+               <!--reviews------>
+              <div class="reviews">
+                  <fieldset class="rate">
+                      <label for="rating10" title="5 stars" style=""></label>
+                      <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
+                      <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
+              </div>
+            </div>
+            
+            </div>
+            <!----Comments-------------------------------------->
+            <div class="card-body">
+              <p class="card-text">
+                最近假日走去探望迪欣湖。
+                仿似同一個老朋友見面。發現已有好多港人走入迪欣湖野餐，拍家庭照及玩戶外活動。如是自駕遊人士，
+                可以將車輛泊在迪欣湖停車場。每小時$50。但迪欣湖只有23個車位。有部份自駕遊人士會在早上9時開始駛進。個人建議可以停泊在迪士尼樂園停車場。
+                日泊$260。白金卡、金卡及職員是免費泊車。迪欣湖暫停水上活動。只供家庭式單車出租。4人座每小時$110。6人座每小時$130。上午10時開始出租。
+                但往往在當天被遊人超額預訂。遊人只可以在當日即場預訂。無網上預訂服務。迪欣湖是一個休閒的湖泊。個人喜歡出門前去超巿買下麵包。在迪欣湖餵錦鯉。家長會自備帳篷。小朋友可以踏單車及踩roller。
               </p>
-        </div>   
-        
-        
-        
-    <div class="card text-bg-light mb-3" style="max-width: 100rem;" >
-      <div class="card-header">
-      
-        <div class="profile-img">
-            <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
-        </div>
-        
-        <div class="name-user">
-            <strong>Touseeq Ijaz</strong>
-            <span>@touseeqijazweb</span>
-        </div>
-        <div class="reviews">
-            <fieldset class="rate">
-                <label for="rating10" title="5 stars" style=""></label>
-                <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
-                <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
-                <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
-                <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
-                <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
-                <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
-        </div>
-      
-      
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">Light card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
+            </div>
+          </div>
     <! -- Comment End-->
+    
+    
+    
+    
+        <! -- Comment Example 1 -->
+        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="card1">
+            <div class="card-header">
+            <div  class="profile">
+               <!--img---->
+              <div class="profile-img"> 
+                  <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
+              </div>
+              
+              <div class="name-user">
+                  <strong>Oliva</strong>
+                  <span>@Olivaadward</span>
+              </div>
+               <!--reviews------>
+              <div class="reviews">
+                  <fieldset class="rate">
+                      <label for="rating10" title="5 stars" style=""></label>
+                      <label class="half" for="rating9" title="4 1/2 stars" style=""></label>
+                      <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
+                      <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
+              </div>
+            </div>
+            
+            </div>
+            <!----Comments-------------------------------------->
+            <div class="card-body">
+              <p class="card-text">
+                早排同左爸爸去咗迪欣湖個湖好靚仲有水上船仔踩仲有三人單車踩不過天氣好熱要飲多啲水仲有草地可以野餐附近仲有間七仔俾你買嘢食
+              </p>
+            </div>
+          </div>
+    <! -- Comment Example 1 End-->
+    
+    
+    
+    
+        <! -- Comment Example 2-->
+        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="card2">
+            <div class="card-header">
+            <div  class="profile">
+               <!--img---->
+              <div class="profile-img"> 
+                  <img src="https://fyp.cocomine.cc/panel/api/media/jY4Rkm" />
+              </div>
+              
+              <div class="name-user">
+                  <strong>Harry Potter</strong>
+                  <span>@DanielRedclief</span>
+              </div>
+               <!--reviews------>
+              <div class="reviews">
+                  <fieldset class="rate">
+                      <label for="rating10" title="5 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating9" title="4 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating8" title="4 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating7" title="3 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating6" title="3 stars" style="color: #F09B0A;"> </label>
+                      <label class="half" for="rating5" title="2 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating4" title="2 stars" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating3" title="1 1/2 stars" style="color: #F09B0A;"></label>
+                      <label for="rating2" title="1 star" style="color: #F09B0A;"></label>
+                      <label class="half" for="rating1" title="1/2 star" style="color: #F09B0A;"></label>
+              </div>
+            </div>
+            
+            </div>
+            <!----Comments-------------------------------------->
+            <div class="card-body">
+              <p class="card-text">
+                迪欣湖位於香港大嶼山的竹篙灣，是迪士尼樂園邊上的新發現，走法也一樣，港鐵--欣奧--迪士尼，
+                然後步行15分鐘即可到達。走進園裡，到處都是別樣的樹、雅緻的花，不多的休閑人在觀靜靜的湖水。
+                迪欣湖是人工湖，佔地約30公頃，園內有一個面積達12公頃的人造蓄水池、緩跑徑、兒童遊樂場、服務中心和植物園。
+                迪欣湖用作公共水上康樂中心，以及為迪士尼樂園提供灌溉用水。
+              </p>
+            </div>
+          </div>
+    <! -- Comment Example 2 End-->
+    
     
     
     
@@ -458,6 +519,7 @@ class activity_details implements \cocomine\IPage {
     <!-- main 4 End-->
     
     
+    <!-- JQuery -->
     <script>
         $(document).ready(function () {
             let num;
@@ -477,6 +539,35 @@ class activity_details implements \cocomine\IPage {
                     $(".Price_txt").text(parseInt(total) * num);
                 }
             });
+            
+            
+            $("#bt_less_3").click(function(){
+                $("#card2").hide();
+                $("#card1").hide();
+                $("#Comment_Card").hide();
+            });
+            
+            $("#bt_all").click(function(){
+                $("#card2").show();
+                $("#card1").show();
+                $("#Comment_Card").show();
+            
+            });
+            
+            $("#bt_over_3").click(function(){
+                $("#card2").show();
+                $("#card1").show();
+                $("#Comment_Card").show();
+            
+            });
+            
+            $("#bt_over_4").click(function(){
+                $("#card2").show();
+                $("#card1").show();
+                $("#Comment_Card").show();
+            
+            });
+            
         });
 
     </script>
