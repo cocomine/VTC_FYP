@@ -118,7 +118,7 @@ class activity_details implements \cocomine\IPage {
             background-color: #F3F8FB;
             padding: 3vh;
             margin: 4vh;
-            height: 10vh;
+            height: auto;
             font-size: 3vh;
         }
 
@@ -294,14 +294,16 @@ class activity_details implements \cocomine\IPage {
     </div>
     <!-- Noted End -->
     
-    <!-- Price -->
+    <!-- Price Main -->
     <div class="center">
         <p class="title">預訂活動</p>
         <div class="Div_Price_activity_numb">
-
-        
-        
-            <span style="font-size: 2vh"><b>計劃</b></span>
+            <div class="date-picker date-picker-inline">
+               <input type="date" class="date-picker-toggle" id="datePicker" min="">
+               <div class="date-calendar"></div>
+            </div>
+            <br/><br/>
+            <span style="font-size: 3vh"><b>計劃</b></span>
             <div class="Div_Plus_Minus">
                  <button class="btn btn-outline-secondary" id="ti-plus"><i class="fa fa-plus" aria-hidden="true"></i></button>
                 <span class="txt_Num">1</span>
@@ -313,7 +315,7 @@ class activity_details implements \cocomine\IPage {
             style="width:15vh; float:right;margin-right: 1vh;margin-bottom: 1vh" id="order">立刻預訂</button>
     </div>
     
-    <!-- Price End-->
+    <!-- Price Main End-->
     
     <!-- Event Details -->
     <div class="center">
@@ -569,7 +571,12 @@ class activity_details implements \cocomine\IPage {
             });
             
         });
-
+        
+        function SetDate(){
+            var todayDate = new Date().toISOString().slice(0, 10);
+            document.getElementById("datePicker").min = todayDate;
+        }
+        
     </script>
     
     body;
