@@ -233,15 +233,6 @@ require.config({
             forge: "https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min"
         },
         shim:{
-            "owl.carousel.min":{
-                deps:["jquery"]
-            },
-            "jquery.slimscroll.min":{
-                deps:["jquery"]
-            },
-            "jquery.slicknav.min":{
-                deps: ["jquery"]
-            },
             "plugins":{
                 deps: ["jquery"]
             },
