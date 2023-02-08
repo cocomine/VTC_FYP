@@ -8,13 +8,9 @@ namespace panel\page\event;
 
 use cocomine\IPage;
 use cocomine\Parsedown_ext;
-use DateInterval;
-use DateTime;
-use DateTimeZone;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use mysqli;
-use panel\apis\media;
 
 class post implements IPage {
 
@@ -344,7 +340,7 @@ body;
             $purifier = new HTMLPurifier($filterXSS_description);
             $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
             $purifier->config = $filterXSS_precautions;
-            $data['data']['event-precautions-html']= str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0];
+            $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0];
 
             //截斷過長字串
             $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
@@ -353,7 +349,9 @@ body;
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             //儲存數據
-            $stmt = $this->sqlcon->prepare("");
+            $stmt = $this->sqlcon->prepare(
+                "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, description_html, location, country, region, longitude, latitude, post_time)
+                VALUES ()");
         }
         return $data;
     }
