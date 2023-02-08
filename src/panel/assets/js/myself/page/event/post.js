@@ -35,6 +35,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
+            console.log(draft);
 
             //fill up
             //活動資料
@@ -44,7 +45,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             MDE_precautions.codemirror.setValue(draft.data['event-precautions']);
 
             //活動計劃
-            jq_plan.html("")
+            jq_plan.html("");
             plans = [];
             draft.plan.forEach((plan) => {
                 const tmp = plan_html(plan.id);
@@ -67,9 +68,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 tmp.find(`[name^="event-schedule-plan"]`).val(schedule.plan);
                 tmp.find(`[name^="event-schedule-type"]`).prop('checked', schedule.type);
 
+                //時段類型重複 -> 顯示和取消禁用
+                if (schedule.type){
+                    tmp.find('.event-schedule-week, .event-schedule-end').show().find('input').prop('disabled', false);
+                }
+
                 //week
                 if (schedule.week !== null){
-                    const week_part = tmp.find('.event-schedule-week').show();
+                    const week_part = tmp.find('.event-schedule-week');
                     schedule.week.forEach((value) => {
                         week_part.find(`[value='${value}']`).prop('checked', true);
                     });
@@ -79,10 +85,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             });
 
             //活動圖片
-            jq_dropZone.html("")
+            jq_dropZone.html("");
             jq_image.val(draft.image['event-image']); //set value
             img_items = [];
-            if(draft.image['event-image'] !== ""){
+            if (draft.image['event-image'] !== ""){
                 draft.image['event-image'].split(",").forEach((value) => {
                     const tmp = image_html(value);
                     tmp.appendTo(jq_dropZone);
@@ -96,20 +102,23 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             $("#event-region").val(draft.location['event-region']);
             $("#event-longitude").val(draft.location['event-longitude']);
             $("#event-latitude").val(draft.location['event-latitude']);
-            if(draft.location['event-longitude'] !== "" && draft.location['event-latitude'] !== ""){
+            if (draft.location['event-longitude'] !== "" && draft.location['event-latitude'] !== ""){
                 map_marker.setLngLat([ draft.location['event-longitude'], draft.location['event-latitude'] ]);
-                map.flyTo({ center: [ draft.location['event-longitude'], draft.location['event-latitude'] ], zoom: 15 });
+                map.flyTo({
+                    center: [ draft.location['event-longitude'], draft.location['event-latitude'] ],
+                    zoom: 15
+                });
             }
 
             //活動狀態
-            $('#event-status').val(draft.status["event-status"])
-            $('#event-post-date').val(draft.status["event-post-date"])
-            $('#event-post-time').val(draft.status["event-post-time"])
+            $('#event-status').val(draft.status["event-status"]);
+            $('#event-post-date').val(draft.status["event-post-date"]);
+            $('#event-post-time').val(draft.status["event-post-time"]);
 
             //活動屬性
-            $('#event-type').val(draft.attribute['event-type'])
-            $('#event-tag').val("")
-            if(draft.attribute['event-tag'] !== ""){
+            $('#event-type').val(draft.attribute['event-type']);
+            $('#event-tag').val("");
+            if (draft.attribute['event-tag'] !== ""){
                 draft.attribute['event-tag'].split(",").forEach((value) => {
                     addTag(value);
                 });
@@ -125,7 +134,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
-        }
+        };
 
         //###### 活動資料 #######
         /* HTML filter xss */
@@ -584,7 +593,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     </div>
                     <div class="col-12 col-sm-6 col-md-3 event-schedule-end" style="display: none;">
                         <div class="date-picker form-floating">
-                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required min="${min}">
+                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-end-${id}" id="event-schedule-end-${id}" required disabled min="${min}">
                             <label for="event-schedule-end-${id}">結束日期</label>
                             <div class="invalid-feedback">必需要開始日期之後~~</div>
                         </div>
@@ -612,31 +621,31 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     </div>
                     <div class="col-12 col-md event-schedule-week" style="display: none;">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-0-${id}" value="0">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-0-${id}" value="0" disabled>
                             <label class="form-check-label" for="event-schedule-week-0-${id}">週日</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-1-${id}" value="1">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-1-${id}" value="1" disabled>
                             <label class="form-check-label" for="event-schedule-week-1-${id}">週一</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-2-${id}" value="2">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-2-${id}" value="2" disabled>
                             <label class="form-check-label" for="event-schedule-week-2-${id}">週二</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-3-${id}" value="3">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-3-${id}" value="3" disabled>
                             <label class="form-check-label" for="event-schedule-week-3-${id}">週三</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-4-${id}" value="4">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-4-${id}" value="4" disabled>
                             <label class="form-check-label" for="event-schedule-week-4-${id}">週四</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-5-${id}" value="5">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-5-${id}" value="5" disabled>
                             <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6">
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6" disabled>
                             <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
                         </div>
                         <div class="invalid-feedback">至少選取一天</div>
@@ -800,20 +809,20 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json)
+                    console.log(json);
 
-                    if(json.code === 200){
+                    if (json.code === 200){
                         toastr.success(json.Message, json.Title);
                         window.ajexLoad("/event/");
                     }else{
                         toastr.error(json.Message, json.Title);
                     }
-                })
+                });
             }).finally(() => {
                 bt.html(html).removeAttr('disabled');
             }).catch((error) => {
-                console.log(error)
-            })
+                console.log(error);
+            });
         });
 
         /* 移到回收桶 */
@@ -914,13 +923,18 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         //############ 活動屬性 #############
-        /* add tag */
+        /* tag */
         const jq_addTag = $('#event-add-tag');
+        const jq_tag = $('#event-tag');
+        const jq_tagList = $('#event-tag-list');
+
+        /* add tag */
         jq_addTag.on('input focus', function (){
             const elm = $(this);
             const val = elm.val();
 
             if (/(.+),/.test(val)){
+                //todo: alert max
                 addTag(val.slice(0, -1));
                 elm.val('');
             }else if (val === ","){
@@ -931,6 +945,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (/(.+)/.test(val)){
+                //todo: alert max
                 addTag(val);
                 elm.val('');
             }
@@ -940,6 +955,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
             if (e.key === "Enter"){
                 if (/(.+)/.test(val)){
+                    //todo: alert max
                     addTag(val);
                     elm.val('');
                 }
@@ -947,7 +963,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /**
-         * add Tag
+         * add Tag html
          * @param {string} name
          */
         function addTag(name){
@@ -957,7 +973,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         }
 
         /* delete tag */
-        const jq_tagList = $('#event-tag-list');
         jq_tagList.on('click', '[data-tag] > i', function (){
             $(this).parent().remove();
             updateTag();
@@ -967,8 +982,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         function updateTag(){
             const tag_elm = jq_tagList.children('[data-tag]');
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
-            $('#event-tag').val(list.join(','));
+            jq_tag.val(list.join(','));
+            //todo: count max
         }
 
-        return {found_draft};
+        return { found_draft };
     });

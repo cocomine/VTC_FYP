@@ -257,10 +257,12 @@ body . <<<body
                             <label for="event-type" class="form-label"><i class="fa-solid fa-tags me-1"></i>標籤</label>
                             <div class="col-12 border border-1 rounded">
                                 <div class="row m-0" id="event-tag-list">
-                                    <input type="text" id="event-add-tag" class="col">
+                                    <input type="text" id="event-add-tag" class="col" maxlength="100">
                                 </div>
                                 <input type="text" id="event-tag" name="event-tag" class="d-none">
                             </div>
+                            <small>請在每個標籤後輸入英文逗號</small>
+                            <span class="float-end text-secondary" id="event-tag-count">0/100</span>
                         </form>
                     </div>
                 </div>
@@ -314,44 +316,69 @@ body;
     }
 
     public function post(array $data): array {
+        global $auth;
+
         //new event
         if ($_GET['type'] === 'post') {
+            //截斷過長字串
+            $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
+            $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
+            $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
+            $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
+
             //轉換可留空欄位
             $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
-            $data['data']['event-precautions-html'] = $data['data']['event-precautions'] === "" ? null : "";
+            $data['data']['event-precautions-html'] = null;
             $data['attribute']['event-tag'] = $data['attribute']['event-tag'] === "" ? null : $data['attribute']['event-tag'];
 
-            //轉換image to array
-            $data['image']['event-image'] = explode(',', $data['image']['event-image']);
-
-            //轉換Markdown to html
-            $MD_converter = new Parsedown_ext();
-            $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description'])); //event-description
-            if ($data['data']['event-precautions-html'] !== null) {
-                $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions'])); //event-precautions
-            }
-
-            //HTML filter xss
+            //HTML filter xss config
             $filterXSS_description = HTMLPurifier_Config::createDefault();
             $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt]");
             $filterXSS_precautions = HTMLPurifier_Config::createDefault();
             $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
 
+            //轉換Markdown to html & filter xss
+            $MD_converter = new Parsedown_ext();
             $purifier = new HTMLPurifier($filterXSS_description);
+            //event-description
+            $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description']));
             $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
-            $purifier->config = $filterXSS_precautions;
-            $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0];
+            //event-precautions
+            if ($data['data']['event-precautions'] !== null) {
+                $purifier->config = $filterXSS_precautions;
+                $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions']));
+                $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0]; //event-precautions
+            }
 
-            //截斷過長字串
-            $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
-            $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
+            //轉換image to array
+            $data['image']['event-image'] = explode(',', $data['image']['event-image']);
+
+            //轉換發佈日期
+            $data['status']['event-post'] = $data['status']['event-post-date'] . ' ' . $data['status']['event-post-time'];
+
+            //轉換數據類型
+            $data['status']['event-status'] = intval($data['status']['event-status']);
+            $data['attribute']['event-type'] = intval($data['attribute']['event-type']);
+            $data['location']['event-longitude'] = floatval($data['location']['event-longitude']);
+            $data['location']['event-latitude'] = floatval($data['location']['event-latitude']);
 
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             //儲存數據
             $stmt = $this->sqlcon->prepare(
-                "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, description_html, location, country, region, longitude, latitude, post_time)
-                VALUES ()");
+                "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, 
+                   description_html, location, country, region, longitude, latitude, post_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("siisssssssssssdds", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
+                $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
+                $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post']);
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
         }
         return $data;
     }
