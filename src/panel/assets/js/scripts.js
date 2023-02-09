@@ -192,7 +192,12 @@
             }
         });
     }
-    slider_area();
+
+    try {
+        slider_area();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     Fullscreen Page
@@ -200,7 +205,7 @@
 
     if ($('#full-view').length) {
 
-        var requestFullscreen = function(ele) {
+        var requestFullscreen = function (ele) {
             if (ele.requestFullscreen) {
                 ele.requestFullscreen();
             } else if (ele.webkitRequestFullscreen) {
