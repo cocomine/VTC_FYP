@@ -139,9 +139,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Seaer Canoeing Adventure</h5>
-              <p class="card-text">Summer water activities.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">激海獨木舟探索</h5>
+              <p class="card-text">炎炎夏日,最重要暢旺大海。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -149,9 +149,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">CampFive Climbing Funday</h5>
-              <p class="card-text">Rock climbing along the beautiful harbor.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">「兄弟爬山」攀岩體驗</h5>
+              <p class="card-text">在美麗的香港維海面前攀登。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -159,9 +159,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Diving_Hong_Kong_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">UnderSea Diving</h5>
-              <p class="card-text">The beautiful seabed of Hong Kong.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">海下世界潛水班</h5>
+              <p class="card-text">在西貢海底中心呼喚愛。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -169,9 +169,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">FunUp Climbing Funday</h5>
-              <p class="card-text">Rock climbing in Hong Kong's super volcano.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">越嶺攀岩探索</h5>
+              <p class="card-text">西貢糧船灣超級火山?我就攀!</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -179,9 +179,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Canoeing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">JoJo Canoeing</h5>
-              <p class="card-text">Cooling off event.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">JoJo 獨木舟體驗</h5>
+              <p class="card-text">提供雙人獨木舟,情侶的夏天拍拖體驗。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -189,9 +189,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Trekking_Hong_Kong_01.jpg" class="card-img-top" alt="..." width="300" height="200">
             <div class="card-body">
-              <h5 class="card-title">Kiver Hiking</h5>
-              <p class="card-text">Enjoy Hong Kong Hiking Trails.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">毅行遠足旅行團</h5>
+              <p class="card-text">本地的遠足旅行團,帶你走足四大徑。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -209,9 +209,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Mountaineering_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Haba Adventure</h5>
-              <p class="card-text">Guide you to the summit.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">哈巴雪山嚮導服務</h5>
+              <p class="card-text">哈巴村的資深嚮導,帶你登上五千米雪山。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -219,9 +219,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Yangshuo Rock Family</h5>
-              <p class="card-text">Feel the beauty of China's rock climbing holy land.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">陽朔攀岩社</h5>
+              <p class="card-text">帶你逛逛中國攀岩聖地,一生人也未必攀得完。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -229,9 +229,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Canoeing_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Guilin Canoeing Association</h5>
-              <p class="card-text">The beautiful View of Cuilin.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">桂林獨木舟協會</h5>
+              <p class="card-text">沿河飽覽桂林甲天下的山水。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -239,9 +239,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Skiing_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Beijing Ski</h5>
-              <p class="card-text">Best Ski Place in China.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">北京軍刀山滑雪場</h5>
+              <p class="card-text">北京最佳滑雪地,適合初學者、窮遊旅客。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -249,9 +249,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Canoeing_China_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">China Dragon Canoeing</h5>
-              <p class="card-text">Best Canoeing in China.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">中國龍獨木舟</h5>
+              <p class="card-text">榮獲全中國最佳獨木舟服務獎項。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>  
         </div>
@@ -269,9 +269,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Jump_Macau_01.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Jump Adventure</h5>
-              <p class="card-text">Guide you to the jump.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">澳門旅遊塔笨豬跳</h5>
+              <p class="card-text">你跳我跳大家跳。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -279,19 +279,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Macau_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Solution Gym</h5>
-              <p class="card-text">Feel the bouldering.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="card card-block mx-2" style="min-width: 300px;">
-            <img src="/assets/images/event/Climbing_Macau_02.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Macau's Crux</h5>
-              <p class="card-text">Feel the climbing.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">Solution 抱石館</h5>
+              <p class="card-text">澳門高質室內抱石館,想爬一爬的你不妨一試。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -299,9 +289,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Macau_03.png" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Zel Climb</h5>
-              <p class="card-text">Good relax place in Macau.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">Macau's Crux 抱石館</h5>
+              <p class="card-text">澳門路氹區內攀岩館,自認文青之餘又十分運動風的你一定要試。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -319,9 +309,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Taiwan_01.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Dragon Hole Adventure</h5>
-              <p class="card-text">Guide you to climb in Taiwan.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">龍洞攀岩協會</h5>
+              <p class="card-text">提供資深教練,帶你享受台灣最大面積戶外攀岩場。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -329,9 +319,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Diving_Taiwan_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Blue Sea Gym</h5>
-              <p class="card-text">Enjoy the blue sea.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">藍天海潛水公司</h5>
+              <p class="card-text">龜山島的碧海藍天,與綠海龜一起暢遊大海。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -339,9 +329,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Climbing_Taiwan_02.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Boost Gym</h5>
-              <p class="card-text">Play hard, climb hard.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">山緣抱石小館</h5>
+              <p class="card-text">位於台北市的小區之內,能在攀岩之餘享受繁華都市中的一點寧靜。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -349,9 +339,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Trekking_Taiwan_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Taiwan Mountaineering Club</h5>
-              <p class="card-text">Hiking, trekking and mountaineering in Taiwan.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">台灣登山俱樂部</h5>
+              <p class="card-text">一條龍式為你辦理登山證、預訂山屋,帶你登上台灣最高。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -359,9 +349,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Diving_Taiwan_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">See to Sea Club</h5>
-              <p class="card-text">View All Taiwan's Seabed.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">「看海」潛水俱樂部</h5>
+              <p class="card-text">提供全面式浮潛、水肺潛水服務,資深教練無時無刻陪伴你在大海中遊曆。</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
@@ -369,9 +359,9 @@ class home implements IPage {
           <div class="card card-block mx-2" style="min-width: 300px;">
             <img src="/assets/images/event/Paragliding_Taiwan_01.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
-              <h5 class="card-title">Sky Club</h5>
-              <p class="card-text">Flying in the skies of taiwan.</p>
-              <a href="#" class="btn btn-primary stretched-link">Register Now</a>
+              <h5 class="card-title">台東天下滑翔傘公司</h5>
+              <p class="card-text">提供兩小時的滑翔傘體驗服務,一睹台灣東部海岸景色。另有提供國際級標準滑翔傘訓練課程</p>
+              <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
         </div>
