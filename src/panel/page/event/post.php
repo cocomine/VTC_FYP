@@ -408,6 +408,7 @@ body;
             //儲存數據 Event_plan
             $stmt->prepare("INSERT INTO Event_plan (Event_ID, plan_ID, plan_name, price, max_people, max_each_user) VALUES (?, ?, ?, ?, ?, ?)");
             foreach ($data['plan'] as $plan) {
+                //轉換數據類型
                 $plan['id'] = intval($plan['id']);
                 $plan['max'] = intval($plan['max']);
                 $plan['max_each'] = intval($plan['max_each']);
@@ -424,7 +425,24 @@ body;
             }
 
             //儲存數據 Event_schedule
-            //todo
+            $stmt->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            foreach ($data['schedule'] as $schedule){
+                //轉換數據類型
+                $schedule['id'] = intval($schedule['id']);
+                $schedule['type'] = intval($schedule['type']);
+                $schedule['plan'] = intval($schedule['plan']);
+                $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
+                $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
+
+                $stmt->bind_param("iiiisssss", $event_id, $schedule['id'], $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
         }
         return $data;
     }
