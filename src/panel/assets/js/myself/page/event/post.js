@@ -519,8 +519,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text form-rounded">$</span>
-                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" value="0" required>
-                        <div class="invalid-feedback">正數必須約簡至兩位小數</div>
+                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" value="0" step="0.01" required>
+                        <div class="invalid-feedback">需要等於0或以上~~</div>
                     </div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">

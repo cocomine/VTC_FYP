@@ -364,7 +364,7 @@ body;
 
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
-            //儲存數據
+            //儲存數據 Event
             $stmt = $this->sqlcon->prepare(
                 "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, 
                    description_html, location, country, region, longitude, latitude, post_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -372,13 +372,59 @@ body;
                 $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
                 $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
                 $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post']);
-            if(!$stmt->execute()){
+            if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
                     'Title' => 'Database Error!',
                     'Message' => $stmt->error,
                 );
             }
+
+            //取得 Event ID
+            $stmt->prepare("SELECT LAST_INSERT_ID() AS ID;");
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+            $result = $stmt->get_result()->fetch_assoc();
+            $event_id = $result['ID'];
+
+            //儲存數據 Event_img
+            $stmt->prepare("INSERT INTO Event_img (event_ID, media_ID) VALUES (?, ?)");
+            foreach ($data['image']['event-image'] as $image) {
+                $stmt->bind_param("ss", $event_id, $image);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            //儲存數據 Event_plan
+            $stmt->prepare("INSERT INTO Event_plan (Event_ID, plan_ID, plan_name, price, max_people, max_each_user) VALUES (?, ?, ?, ?, ?, ?)");
+            foreach ($data['plan'] as $plan) {
+                $plan['id'] = intval($plan['id']);
+                $plan['max'] = intval($plan['max']);
+                $plan['max_each'] = intval($plan['max_each']);
+                $plan['price'] = floatval($plan['price']);
+
+                $stmt->bind_param("iisdii", $event_id, $plan['id'], $plan['name'], $plan['price'], $plan['max'], $plan['max_each']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            //儲存數據 Event_schedule
+            //todo
         }
         return $data;
     }
