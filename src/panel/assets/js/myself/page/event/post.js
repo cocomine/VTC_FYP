@@ -934,7 +934,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (/(.+),/.test(val)){
-                //todo: alert max
+                if (jq_tag.val().length + val.length - 1 > 100) {
+                    alert("已超出字數限制");
+                    return;
+                }
+
                 addTag(val.slice(0, -1));
                 elm.val('');
             }else if (val === ","){
@@ -944,8 +948,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const elm = $(this);
             const val = elm.val();
 
-            if (/(.+)/.test(val)){
-                //todo: alert max
+            if (/(.+)/.test(val)) {
+                if (jq_tag.val().length + val.length - 1 > 100) {
+                    alert("已超出字數限制");
+                    return;
+                }
+
                 addTag(val);
                 elm.val('');
             }
@@ -954,8 +962,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (e.key === "Enter"){
-                if (/(.+)/.test(val)){
-                    //todo: alert max
+                if (/(.+)/.test(val)) {
+                    if (jq_tag.val().length + val.length - 1 > 100) {
+                        alert("已超出字數限制");
+                        return;
+                    }
+
                     addTag(val);
                     elm.val('');
                 }
@@ -979,11 +991,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* update tag value */
-        function updateTag(){
+        function updateTag() {
             const tag_elm = jq_tagList.children('[data-tag]');
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
-            jq_tag.val(list.join(','));
-            //todo: count max
+            const val = list.join(',');
+            jq_tag.val(val);
+            $('#event-tag-count').text(val.length + "/100")
         }
 
         return { found_draft };
