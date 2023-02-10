@@ -174,8 +174,8 @@ body;
             $stmt = $this->sqlcon->prepare("SET @uuid = (SELECT UUID FROM User WHERE Email = ?)");
             $stmt->bind_param('s', $data['email']);
             if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
-            $stmt->prepare("INSERT INTO pwd_change (UUID) VALUES (@uuid)");
-            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+            //$stmt->prepare("INSERT INTO pwd_change (UUID) VALUES (@uuid)");
+            //if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
             $stmt->prepare("SELECT @uuid AS `UUID`");
             if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
 

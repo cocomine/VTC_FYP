@@ -40,27 +40,36 @@
     /*================================
     Start Footer resizer
     ==================================*/
-    var e = function() {
+    var e = function () {
         var e = (window.innerHeight > 0 ? window.innerHeight : this.screen.height) - 5;
         (e -= 67) < 1 && (e = 1), e > 67 && $(".main-content").css("min-height", e + "px")
     };
-    $(window).ready(e), $(window).on("resize", e);
+    $(window).ready(e);
+    $(window).on("resize", e);
 
     /*================================
     sidebar menu
     ==================================*/
-    $("#menu").metisMenu();
+    try {
+        $("#menu").metisMenu();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     scrollbar
     ==================================*/
-    $('.menu-inner').scrollbar();
-    $('.nofity-list').scrollbar();
+    try {
+        $('.menu-inner').scrollbar();
+        $('.nofity-list').scrollbar();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     stickey Header
     ==================================*/
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
         var scroll = $(window).scrollTop(),
             mainHeader = $('#sticky-header'),
             mainHeaderHeight = mainHeader.innerHeight();
@@ -114,7 +123,7 @@
                 });
             });
 
-            lazyImages.forEach(function(lazyImage) {
+            lazyImages.forEach(function (lazyImage) {
                 lazyImageObserver.observe(lazyImage);
             });
         }
@@ -123,17 +132,21 @@
     /*================================
     Slicknav mobile menu
     ==================================*/
-    $('ul#nav_menu').slicknav({
-        prependTo: "#mobile_menu"
-    });
+    try {
+        $('ul#nav_menu').slicknav({
+            prependTo: "#mobile_menu"
+        });
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     login form
     ==================================*/
-    $('.form-gp input').on('focus', function() {
+    $('.form-gp input').on('focus', function () {
         $(this).parent('.form-gp').addClass('focused');
     });
-    $('.form-gp input').on('focusout', function() {
+    $('.form-gp input').on('focusout', function () {
         if ($(this).val().length === 0) {
             $(this).parent('.form-gp').removeClass('focused');
         }
@@ -179,7 +192,12 @@
             }
         });
     }
-    slider_area();
+
+    try {
+        slider_area();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     Fullscreen Page
@@ -187,7 +205,7 @@
 
     if ($('#full-view').length) {
 
-        var requestFullscreen = function(ele) {
+        var requestFullscreen = function (ele) {
             if (ele.requestFullscreen) {
                 ele.requestFullscreen();
             } else if (ele.webkitRequestFullscreen) {
