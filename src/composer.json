@@ -10,7 +10,8 @@
       "geoip2/geoip2": "~2.0",
       "ezyang/htmlpurifier": "^4.16",
       "ext-mysqli": "*",
-      "ext-json": "*"
+      "ext-json": "*",
+        "erusev/parsedown": "^1.7"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

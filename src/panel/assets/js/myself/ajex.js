@@ -80,7 +80,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#content').html(data.content)
 
                 if (putState) window.history.pushState({url: link}, data.title, link);
-                window.dispatchEvent(new Event('load'));
+                window.dispatchEvent(new Event('load', {bubbles: true}));
             },
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {
