@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
+ * v1.0
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
@@ -81,6 +82,12 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
                 if (putState) window.history.pushState({url: link}, data.title, link);
                 window.dispatchEvent(new Event('load'));
+
+                if(link === '/'){
+                    $(".heard-area").hide();
+                }else{
+                    $(".heard-area").show();
+                }
             },
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {

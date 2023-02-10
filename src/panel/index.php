@@ -285,7 +285,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
                                     <ul>
                                         <li><a href="/panel/event/"><i class="fa-regular fa-calendar-check"></i><span>全部活動</span></a></li>
-                                        <li><a href="/panel/event/newevent/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
+                                        <li><a href="/panel/event/post/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
                                     </ul>
                                 </li>';
                             }

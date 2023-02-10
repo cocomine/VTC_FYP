@@ -7,11 +7,18 @@
 namespace panel\page\event;
 
 use cocomine\IPage;
-use DateInterval;
-use DateTime;
-use DateTimeZone;
+use cocomine\Parsedown_ext;
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use mysqli;
 
-class newevent implements IPage {
+class post implements IPage {
+
+    private mysqli $sqlcon;
+
+    public function __construct(mysqli $conn, array $upPath) {
+        $this->sqlcon = $conn;
+    }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
         if (!$isAuth) return 401;
@@ -20,9 +27,6 @@ class newevent implements IPage {
     }
 
     public function showPage(): string {
-        $time_zone = new DateTimeZone("Asia/Hong_Kong");
-        $today = new DateTime('now', $time_zone);
-
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');
 
@@ -45,7 +49,6 @@ class newevent implements IPage {
                 'limit' => $Text2['limit']
             )
         ));
-
         return <<<body
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
@@ -56,6 +59,10 @@ class newevent implements IPage {
 <link rel="stylesheet" href="/panel/assets/css/myself/page/event.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body. <<<body
+<div class="alert alert-info alert-dismissible fade show" role="alert" id="found-draft" style="display: none">
+  <p>我們在您的瀏覽器中發現了上次儲存的草稿! 要加載入來嗎?ヾ(•ω•`)o <a href="#" class="ms-2" id="load-draft" data-bs-dismiss="alert">載入!</a></p>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 <div class="col-12 col-lg-9">
     <div class="row gy-4">
         <!--活動標題-->
@@ -250,10 +257,12 @@ body . <<<body
                             <label for="event-type" class="form-label"><i class="fa-solid fa-tags me-1"></i>標籤</label>
                             <div class="col-12 border border-1 rounded">
                                 <div class="row m-0" id="event-tag-list">
-                                    <input type="text" id="event-add-tag" class="col">
+                                    <input type="text" id="event-add-tag" class="col" maxlength="100">
                                 </div>
                                 <input type="text" id="event-tag" name="event-tag" class="d-none">
                             </div>
+                            <small>請在每個標籤後輸入英文逗號</small>
+                            <span class="float-end text-secondary" id="event-tag-count">0/100</span>
                         </form>
                     </div>
                 </div>
@@ -297,19 +306,158 @@ body . <<<body
             xss: { exports: "filterXSS" },
         }
     })
-    loadModules(['myself/page/event/newEvent', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker', 'jquery.crs.min'])
+    loadModules(['myself/page/event/post', 'easymde', 'showdown','xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'myself/datepicker', 'timepicker', 'jquery.crs.min'], 
+        (post) => {
+            post.found_draft();
+        })
 </script>
 body;
 
     }
 
     public function post(array $data): array {
-        return array();
+        global $auth;
+
+        //new event
+        if ($_GET['type'] === 'post') {
+            //截斷過長字串
+            $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
+            $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
+            $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
+            $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
+
+            //轉換可留空欄位
+            $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
+            $data['data']['event-precautions-html'] = null;
+            $data['attribute']['event-tag'] = $data['attribute']['event-tag'] === "" ? null : $data['attribute']['event-tag'];
+
+            //HTML filter xss config
+            $filterXSS_description = HTMLPurifier_Config::createDefault();
+            $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt]");
+            $filterXSS_precautions = HTMLPurifier_Config::createDefault();
+            $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
+
+            //轉換Markdown to html & filter xss
+            $MD_converter = new Parsedown_ext();
+            $purifier = new HTMLPurifier($filterXSS_description);
+            //event-description
+            $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description']));
+            $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
+            //event-precautions
+            if ($data['data']['event-precautions'] !== null) {
+                $purifier->config = $filterXSS_precautions;
+                $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions']));
+                $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0]; //event-precautions
+            }
+
+            //轉換image to array
+            $data['image']['event-image'] = explode(',', $data['image']['event-image']);
+
+            //轉換發佈日期
+            $data['status']['event-post'] = $data['status']['event-post-date'] . ' ' . $data['status']['event-post-time'];
+
+            //轉換數據類型
+            $data['status']['event-status'] = intval($data['status']['event-status']);
+            $data['attribute']['event-type'] = intval($data['attribute']['event-type']);
+            $data['location']['event-longitude'] = floatval($data['location']['event-longitude']);
+            $data['location']['event-latitude'] = floatval($data['location']['event-latitude']);
+
+            /* 這裏會進行輸入檢查,但非公開網頁跳過 */
+
+            //儲存數據 Event
+            $stmt = $this->sqlcon->prepare(
+                "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, 
+                   description_html, location, country, region, longitude, latitude, post_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("siisssssssssssdds", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
+                $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
+                $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            //取得 Event ID
+            $stmt->prepare("SELECT LAST_INSERT_ID() AS ID;");
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+            $result = $stmt->get_result()->fetch_assoc();
+            $event_id = $result['ID'];
+
+            //儲存數據 Event_img
+            $stmt->prepare("INSERT INTO Event_img (event_ID, media_ID) VALUES (?, ?)");
+            foreach ($data['image']['event-image'] as $image) {
+                $stmt->bind_param("ss", $event_id, $image);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            //儲存數據 Event_plan
+            $stmt->prepare("INSERT INTO Event_plan (Event_ID, plan_ID, plan_name, price, max_people, max_each_user) VALUES (?, ?, ?, ?, ?, ?)");
+            foreach ($data['plan'] as $plan) {
+                //轉換數據類型
+                $plan['id'] = intval($plan['id']);
+                $plan['max'] = intval($plan['max']);
+                $plan['max_each'] = intval($plan['max_each']);
+                $plan['price'] = floatval($plan['price']);
+
+                $stmt->bind_param("iisdii", $event_id, $plan['id'], $plan['name'], $plan['price'], $plan['max'], $plan['max_each']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            //儲存數據 Event_schedule
+            $stmt->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            foreach ($data['schedule'] as $schedule){
+                //轉換數據類型
+                $schedule['id'] = intval($schedule['id']);
+                $schedule['type'] = intval($schedule['type']);
+                $schedule['plan'] = intval($schedule['plan']);
+                $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
+                $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
+
+                $stmt->bind_param("iiiisssss", $event_id, $schedule['id'], $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            return array(
+                'code' => 200,
+                'Message' => "活動已成功添加!"
+            );
+        }
+        return array(
+            'code' => 404,
+            'Message' => "請求不正確",
+        );
     }
 
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><a href='/panel/event'>活動</a></li>
+            <li><a href='/panel/post'>活動</a></li>
             <li><span>增加活動</span></li>";
     }
 
