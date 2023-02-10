@@ -443,8 +443,16 @@ body;
                     );
                 }
             }
+
+            return array(
+                'code' => 200,
+                'Message' => "活動已成功添加!"
+            );
         }
-        return $data;
+        return array(
+            'code' => 404,
+            'Message' => "請求不正確",
+        );
     }
 
     public function path(): string {
