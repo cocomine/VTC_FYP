@@ -41,95 +41,118 @@ class home implements IPage {
         return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <style>
+#homeBackground {
+    background-image: url('/assets/images/background/hot-air-balloon-back.jpg');
+    height: 100vh; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    background-size: cover;
+    margin-top: -1.4rem;
+    z-index: 1;
+}
+
+#homeBackground:before {
+    content: '';
+    background-color: black;
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
 .card-img-top {
     width: 300px;
     height: 300px;
     clip: rect(10px,290px,290px,10px);
 }
-</style>
-<div class='col-12 mt-12'>
-    <div id="carouselExample" class="carousel slide">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="/assets/images/background/hot-air-balloon-back.jpg" class="d-block w-100" alt="Welcome to X-Travel">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Explore places and other experiences</h5>
-    
-            <div class="dropdown">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                Choose Location Or Activities
-              </button>
-              <form class="dropdown-menu p-4">
-                <div class="mb-3">
-                    <div class="search-box">
-                        <input type="text" name="search" placeholder="Search Location or Activities" required>
-                        <i class="ti-search"></i>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                      <div class="btn-group dropend">
-                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Hong Kong
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                            <li><a class="dropdown-item" href="#">Climbing</a></li>
-                            <li><a class="dropdown-item" href="#">Diving</a></li>
-                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                            <li><a class="dropdown-item" href="#">Trekking</a></li>
-                          </ul>
-                      </div>
-                      
-                      <div class="btn-group dropend">
-                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            China
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                            <li><a class="dropdown-item" href="#">Climbing</a></li>
-                            <li><a class="dropdown-item" href="#">Hot air balloon flight</a></li>
-                            <li><a class="dropdown-item" href="#">Mountaineering</a></li>
-                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                            <li><a class="dropdown-item" href="#">Skiing</a></li>
-                            <li><a class="dropdown-item" href="#">Trekking</a></li>
-                          </ul>
-                      </div>
-                      
-                      <div class="btn-group dropend">
-                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Macau
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Bungee Jumping</a></li>
-                            <li><a class="dropdown-item" href="#">Climbing</a></li>
-                          </ul>
-                      </div>
-                      
-                      <div class="btn-group dropend">
-                          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Taiwan
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Canoeing</a></li>
-                            <li><a class="dropdown-item" href="#">Climbing</a></li>
-                            <li><a class="dropdown-item" href="#">Diving</a></li>
-                            <li><a class="dropdown-item" href="#">Mountaineering</a></li>
-                            <li><a class="dropdown-item" href="#">Parachute</a></li>
-                            <li><a class="dropdown-item" href="#">Paragliding</a></li>
-                            <li><a class="dropdown-item" href="#">Trekking</a></li>
-                          </ul>
-                      </div>
-                  </div>
-                </div>
-              </form>
-            </div>      
-          </div>
-        </div>
-      </div>
-    </div>
-</div></br>
 
+#homeBackground h5 {
+    font-size: 3em;
+    text-shadow: 1px 1px 2px black, 5px 7px 1em black, 4px 2px 0.2em black;
+    color: white;
+}
+</style>
+
+<div class='col-12 mt-12'>
+  <div class="row justify-content-center align-items-center position-relative" id='homeBackground'>
+    <div class="col-auto">
+      <h5>體驗刺激，享受不一樣的生活點滴</h5>
+      <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        選擇地區或活動
+        </button>
+          <form class="dropdown-menu p-4">
+            <div class="mb-3">
+                <div class="search-box">
+                    <input type="text" name="search" placeholder="搜尋地點或活動" required>
+                    <i class="ti-search"></i>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                  <div class="btn-group dropend">
+                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        香港地區
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                        <li><a class="dropdown-item" href="#">攀岩</a></li>
+                        <li><a class="dropdown-item" href="#">潛水</a></li>
+                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                        <li><a class="dropdown-item" href="#">遠足</a></li>
+                      </ul>
+                  </div>
+                  
+                  <div class="btn-group dropend">
+                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        中國地區
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                        <li><a class="dropdown-item" href="#">攀岩</a></li>
+                        <li><a class="dropdown-item" href="#">熱氣球</a></li>
+                        <li><a class="dropdown-item" href="#">登山</a></li>
+                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                        <li><a class="dropdown-item" href="#">滑雪</a></li>
+                        <li><a class="dropdown-item" href="#">遠足</a></li>
+                      </ul>
+                  </div>
+                  
+                  <div class="btn-group dropend">
+                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        澳門地區
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">笨豬跳</a></li>
+                        <li><a class="dropdown-item" href="#">攀岩</a></li>
+                      </ul>
+                  </div>
+                  
+                  <div class="btn-group dropend">
+                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        台灣地區
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                        <li><a class="dropdown-item" href="#">攀岩</a></li>
+                        <li><a class="dropdown-item" href="#">潛水</a></li>
+                        <li><a class="dropdown-item" href="#">登山</a></li>
+                        <li><a class="dropdown-item" href="#">跳傘</a></li>
+                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                        <li><a class="dropdown-item" href="#">遠足</a></li>
+                      </ul>
+                  </div>
+              </div>
+            </div>
+          </form>
+        </div>      
+    </div>
+  </div>
+</div>
+body . <<<body
 <div class="home-demo">
   <div class="row">
     <div class="large-12 columns">
@@ -140,7 +163,7 @@ class home implements IPage {
             <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">激海獨木舟探索</h5>
-              <p class="card-text">炎炎夏日,最重要暢旺大海。</p>
+              <p class="card-text">炎炎夏日，最重要暢旺大海。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -180,7 +203,7 @@ class home implements IPage {
             <img src="/assets/images/event/Canoeing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">JoJo 獨木舟體驗</h5>
-              <p class="card-text">提供雙人獨木舟,情侶的夏天拍拖體驗。</p>
+              <p class="card-text">提供雙人獨木舟，情侶的夏天拍拖體驗。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -190,7 +213,7 @@ class home implements IPage {
             <img src="/assets/images/event/Trekking_Hong_Kong_01.jpg" class="card-img-top" alt="..." width="300" height="200">
             <div class="card-body">
               <h5 class="card-title">毅行遠足旅行團</h5>
-              <p class="card-text">本地的遠足旅行團,帶你走足四大徑。</p>
+              <p class="card-text">本地的遠足旅行團，帶你走足四大徑。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -210,7 +233,7 @@ class home implements IPage {
             <img src="/assets/images/event/Mountaineering_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">哈巴雪山嚮導服務</h5>
-              <p class="card-text">哈巴村的資深嚮導,帶你登上五千米雪山。</p>
+              <p class="card-text">哈巴村的資深嚮導，帶你登上五千米雪山。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -220,7 +243,7 @@ class home implements IPage {
             <img src="/assets/images/event/Climbing_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">陽朔攀岩社</h5>
-              <p class="card-text">帶你逛逛中國攀岩聖地,一生人也未必攀得完。</p>
+              <p class="card-text">帶你逛逛中國攀岩聖地，一生人也未必攀得完。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -240,7 +263,7 @@ class home implements IPage {
             <img src="/assets/images/event/Skiing_China_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">北京軍刀山滑雪場</h5>
-              <p class="card-text">北京最佳滑雪地,適合初學者、窮遊旅客。</p>
+              <p class="card-text">北京最佳滑雪地，適合初學者、窮遊旅客。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -280,7 +303,7 @@ class home implements IPage {
             <img src="/assets/images/event/Climbing_Macau_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Solution 抱石館</h5>
-              <p class="card-text">澳門高質室內抱石館,想爬一爬的你不妨一試。</p>
+              <p class="card-text">澳門高質室內抱石館，想爬一爬的你不妨一試。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -290,7 +313,7 @@ class home implements IPage {
             <img src="/assets/images/event/Climbing_Macau_03.png" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Macau's Crux 抱石館</h5>
-              <p class="card-text">澳門路氹區內攀岩館,自認文青之餘又十分運動風的你一定要試。</p>
+              <p class="card-text">澳門路氹區內攀岩館，自認文青之餘又十分運動風的你一定要試。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -310,7 +333,7 @@ class home implements IPage {
             <img src="/assets/images/event/Climbing_Taiwan_01.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">龍洞攀岩協會</h5>
-              <p class="card-text">提供資深教練,帶你享受台灣最大面積戶外攀岩場。</p>
+              <p class="card-text">提供資深教練，帶你享受台灣最大面積戶外攀岩場。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -320,7 +343,7 @@ class home implements IPage {
             <img src="/assets/images/event/Diving_Taiwan_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">藍天海潛水公司</h5>
-              <p class="card-text">龜山島的碧海藍天,與綠海龜一起暢遊大海。</p>
+              <p class="card-text">龜山島的碧海藍天，與綠海龜一起暢遊大海。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -330,7 +353,7 @@ class home implements IPage {
             <img src="/assets/images/event/Climbing_Taiwan_02.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">山緣抱石小館</h5>
-              <p class="card-text">位於台北市的小區之內,能在攀岩之餘享受繁華都市中的一點寧靜。</p>
+              <p class="card-text">位於台北市的小區之內，能在攀岩之餘享受繁華都市中的一點寧靜。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -340,7 +363,7 @@ class home implements IPage {
             <img src="/assets/images/event/Trekking_Taiwan_01.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">台灣登山俱樂部</h5>
-              <p class="card-text">一條龍式為你辦理登山證、預訂山屋,帶你登上台灣最高。</p>
+              <p class="card-text">一條龍式為你辦理登山證、預訂山屋，帶你登上台灣最高。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -350,7 +373,7 @@ class home implements IPage {
             <img src="/assets/images/event/Diving_Taiwan_02.jpg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">「看海」潛水俱樂部</h5>
-              <p class="card-text">提供全面式浮潛、水肺潛水服務,資深教練無時無刻陪伴你在大海中遊曆。</p>
+              <p class="card-text">提供全面式浮潛、水肺潛水服務，資深教練無時無刻陪伴你在大海中遊曆。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>
@@ -360,7 +383,7 @@ class home implements IPage {
             <img src="/assets/images/event/Paragliding_Taiwan_01.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">台東天下滑翔傘公司</h5>
-              <p class="card-text">提供兩小時的滑翔傘體驗服務,一睹台灣東部海岸景色。另有提供國際級標準滑翔傘訓練課程</p>
+              <p class="card-text">提供兩小時的滑翔傘體驗服務，一睹台灣東部海岸景色。另有提供國際級標準滑翔傘訓練課程。</p>
               <a href="#" class="btn btn-primary stretched-link">了解更多</a>
             </div>
           </div>

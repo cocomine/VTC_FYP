@@ -441,9 +441,7 @@ function run_apis(array $path, MyAuth $auth) {
                 </div>
 
                 <!-- Main content-->
-                <div class="container mt-4">
-                    <div class="row gy-4" id="content"></div>
-                </div>
+                <div id="content"></div>
             </div>
             <!-- Main area end -->
         </div>
