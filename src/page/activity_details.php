@@ -319,7 +319,7 @@ class activity_details implements \cocomine\IPage {
     
     <!-- Event Details -->
     <div class="center">
-        <p class="title">活動詳情</p>
+        <p class="title">活動摘要</p>
       <div class="card-body">
         迪欣湖活動中心，簡稱迪欣湖，鄰近香港廸士尼樂園，在迪欣湖，既可欣賞大自然優美景色，
         同時亦可享受活動中心提供的各項活動服務及配套，的確是香港少有遠離繁囂的休閒地點。
