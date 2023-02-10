@@ -385,7 +385,7 @@ class activity_details implements \cocomine\IPage {
     <br/><br/>
     
     <! -- Comment -->
-        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="Comment_Card">
+        <div class="card text-bg-light mb-3" style="max-width: 1000rem;" id="Comment_Card">
             <div class="card-header">
             <div  class="profile">
                <!--img---->
@@ -431,7 +431,7 @@ class activity_details implements \cocomine\IPage {
     
     
         <! -- Comment Example 1 -->
-        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="card1">
+        <div class="card text-bg-light mb-3" style="max-width: 1000rem;" id="card1">
             <div class="card-header">
             <div  class="profile">
                <!--img---->
@@ -473,7 +473,7 @@ class activity_details implements \cocomine\IPage {
     
     
         <! -- Comment Example 2-->
-        <div class="card text-bg-light mb-3" style="max-width: 100rem;" id="card2">
+        <div class="card text-bg-light mb-3" style="max-width: 1000rem;" id="card2">
             <div class="card-header">
             <div  class="profile">
                <!--img---->
