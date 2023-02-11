@@ -11,7 +11,8 @@
       "ezyang/htmlpurifier": "^4.16",
       "ext-mysqli": "*",
       "ext-json": "*",
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+      "ext-intl": "*"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

@@ -25,14 +25,13 @@ require_once('./../secret/config.inc.php');
 require_once('./Lang/Lang.php');
 # require_once('../cocomine/MyAuth.php'); //is auto load
 # require_once ('../cocomine/IPage.php');
-
 header('Content-Type:text/html; charset=utf-8');
 
 /* IP Block */
 //IP_Block();
-
+ob_clean();
 ?>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html class="no-js" lang="<?php echo $localCode ?? 'en'; ?>">
     <head>
         <meta charset="utf-8">
