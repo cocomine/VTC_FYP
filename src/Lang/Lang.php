@@ -1,4 +1,4 @@
-<?php
+0<?php
 /**
  * Copyright (c) 2020.
  * Create by cocomine
