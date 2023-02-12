@@ -29,22 +29,25 @@ class event implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
+        $datatables_lang_url = showText('datatables_js.url');
+
         return <<<body
+<pre class="d-none" id="datatables_lang_url">$datatables_lang_url</pre>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
 <div class="col-12">
     <div class="card">
         <div class="card-body">
             <div class="data-tables datatable-primary">
-                <table id="dataTable" class="text-center w-100">
+                <table id="dataTable" class="w-100">
                     <thead class="text-capitalize">
                         <tr>
-                            <th>活動標題</th>
+                            <th>活動</th>
                             <th>活動種類</th>
                             <th>標籤</th>
+                            <th>發佈日期</th>
                             <th>狀態</th>
                             <th>審核狀態</th>
-                            <th>發佈日期</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -74,7 +77,7 @@ body;
         global $auth;
 
         /* 取得該用戶建立的活動 */
-        $stmt = $this->sqlcon->prepare("SELECT review, state, type, tag, name, post_time FROM Event WHERE UUID = ?");
+        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, review, state, type, tag, name, post_time FROM Event WHERE UUID = ? AND state >= 0");
         $stmt->bind_param('s', $auth->userdata['UUID']);
         if (!$stmt->execute()) {
             return array(

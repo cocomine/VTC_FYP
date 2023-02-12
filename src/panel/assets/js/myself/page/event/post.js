@@ -814,7 +814,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
                     if (json.code === 200){
                         toastr.success(json.Message, json.Title);
-                        window.ajexLoad("/event/");
+                        window.ajexLoad("/panel/event/");
                     }else{
                         toastr.error(json.Message, json.Title);
                     }

@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "9/1/2023",
+  "Last_Update": "12/2/2023",
   "Translate": {
     "Error": "發生未知錯誤!!",
     "header": {
@@ -510,6 +510,9 @@
           "Waiting": "等待上傳..."
         }
       }
+    },
+    "datatables_js": {
+      "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh-HANT.json"
     }
   }
 }
