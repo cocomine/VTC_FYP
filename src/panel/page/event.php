@@ -86,18 +86,13 @@ body;
 
         /* get result */
         $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()){
 
+        $data = array();
+        while ($row = $result->fetch_assoc()){
+            $data[] = $row;
         }
 
-        return array('data' => array(
-            array('name' => 0,
-                'type' => 1,
-                'tag' => 2,
-                'state' => 3,
-                'review' => 4,
-                'post_time' => 5)
-        ));
+        return array('data' => $data);
     }
 
     /**

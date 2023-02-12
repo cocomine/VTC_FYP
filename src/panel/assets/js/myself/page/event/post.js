@@ -118,6 +118,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動屬性
             $('#event-type').val(draft.attribute['event-type']);
             $('#event-tag').val("");
+            $('#event-tag-list > [data-tag]').remove();
             if (draft.attribute['event-tag'] !== ""){
                 draft.attribute['event-tag'].split(",").forEach((value) => {
                     addTag(value);
@@ -939,7 +940,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     return;
                 }
 
-                addTag(val.slice(0, -1));
+                const word = val.split(',');
+                console.log(word);
+                word.forEach((value) => {
+                    if(value.length > 0) addTag(value.trim());
+                })
                 elm.val('');
             }else if (val === ","){
                 elm.val('');
@@ -954,7 +959,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     return;
                 }
 
-                addTag(val);
+                addTag(val.trim());
                 elm.val('');
             }
         }).keyup(function (e){
@@ -968,7 +973,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                         return;
                     }
 
-                    addTag(val);
+                    addTag(val.trim());
                     elm.val('');
                 }
             }
