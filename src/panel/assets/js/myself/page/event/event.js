@@ -38,7 +38,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                                     </div>
                                 </div>`;
                     }else{
-                        return data + row.summary;
+                        return data + ';' + row.summary;
                     }
                 }
             },
