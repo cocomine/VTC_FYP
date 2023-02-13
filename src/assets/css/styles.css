@@ -581,6 +581,10 @@
     padding: 0 30px 15px;
 }
 
+.nofity-list a:first-child {
+    padding-top: 15px;
+}
+
 .nofity-list a:last-child {
     margin-bottom: 0;
     border-bottom: none;
@@ -2128,6 +2132,9 @@ div.dataTables_wrapper div.dataTables_length select {
 .datatable-primary thead tr th{
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.datatable-primary thead tr th:first-child{
     padding-left: 10px;
 }
 

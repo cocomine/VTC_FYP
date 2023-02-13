@@ -243,7 +243,7 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="mainheader-area">
+        <div class="mainheader-area" style="position: sticky; top: 0;">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-3">
@@ -320,6 +320,20 @@ function run_apis(array $path, MyAuth $auth) {
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                         </a>
                                     </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Things to do
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/">Water Activities</a></li>
+                                            <li><a class="dropdown-item" href="/">Land Activities</a></li>
+                                            <li><a class="dropdown-item" href="/">Air Activities<</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/">About Us</a></li>
+                                    <li><a href="/">Contact Us</a></li>
+
+
                                     <?php /* 導航 */
                                     if ($auth->userdata['Role'] >= 1) {
                                         echo '';
