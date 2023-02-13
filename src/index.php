@@ -243,7 +243,7 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="mainheader-area">
+        <div class="mainheader-area" style="position: sticky; top: 0;">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-3">

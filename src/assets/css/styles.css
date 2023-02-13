@@ -581,6 +581,10 @@
     padding: 0 30px 15px;
 }
 
+.nofity-list a:first-child {
+    padding-top: 15px;
+}
+
 .nofity-list a:last-child {
     margin-bottom: 0;
     border-bottom: none;

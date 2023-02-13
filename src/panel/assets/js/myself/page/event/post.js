@@ -35,9 +35,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
-            console.log(draft);
+            fillData(draft)
+        });
 
-            //fill up
+        /**
+         * fill up input data
+         * @param {Object} draft
+         */
+        function fillData(draft){
             //活動資料
             $('#event-title').val(draft.title['event-title']);
             $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -128,10 +133,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動封面
             $('#event-thumbnail').val(draft.thumbnail['event-thumbnail']);
             $('#event-thumbnail-img').attr('src', '/panel/api/media/' + draft.thumbnail['event-thumbnail']).attr('alt', draft.thumbnail['event-thumbnail']);
-        });
+        }
 
         /* 檢查草稿 */
         const found_draft = () => {
+            //todo
             if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
