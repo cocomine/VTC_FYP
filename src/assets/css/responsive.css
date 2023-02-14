@@ -5,7 +5,7 @@
 
 /* (1366x768) WXGA Display */
 
-@media screen and (min-width: 1441px) and (max-width: 1920px) {
+@media screen and (min-width: 1400px) and (max-width: 1920px) {
     .error-content {
         margin-top: 100px;
     }
@@ -13,7 +13,7 @@
 
 /*Medium Desktop Device*/
 
-@media screen and (min-width: 1200px) and (max-width: 1440px) {
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
     .col-ml-6 {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 50%;
@@ -169,7 +169,7 @@
     }
 }
 
-@media (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1200px) {
     /* dashboard one */
     .mt-md-30 {
         margin-top: 30px;
@@ -280,7 +280,7 @@
 
 /* Normal desktop :991px. */
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 992px) {
     /* dashboard one */
     /* sidebar */
     .sidebar-menu {
@@ -405,7 +405,7 @@
 
 /* small mobile :320px. */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .ptb--100 {
         padding: 90px 0;
     }
@@ -413,7 +413,7 @@
 
 /* Large Mobile :480px. */
 
-@media only screen and (min-width: 480px) and (max-width: 767px) {
+@media only screen and (min-width: 576px) and (max-width: 768px) {
     /* dashboard one */
     .mb-xs-30 {
         margin-bottom: 30px;
@@ -534,7 +534,7 @@
 
 /* small mobile :320px. */
 
-@media (min-width: 240px) and (max-width: 479px) {
+@media (min-width: 240px) and (max-width: 576px) {
     /* dashboard one */
     /* sidebar */
     .sidebar-menu {
@@ -587,7 +587,7 @@
     }
     .notification-area {
         text-align: center;
-        margin: 30px 0 3px;
+        /*margin: 30px 0 3px;*/
         float: none;
     }
     .notification-area li {
@@ -605,8 +605,8 @@
         right: -101px!important;
     }
     .bell-notify-box.notify-box {
-        width: 286px;
-        right: calc(-286px + 286px / 2)!important;
+        /*width: 286px;
+        right: calc(-286px + 286px / 2)!important;*/
     }
     .page-title-area {
         padding: 15px 30px 0;

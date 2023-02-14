@@ -16,13 +16,17 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         $('html').animate({scrollTop: 0}, 200)
     })
 
-    /* go-top display */
+    /* go-top & fixed-header display */
     let last_scroll = 0;
     document.addEventListener('scroll',() => {
         const scroll = window.scrollY;
         if(last_scroll - scroll > 0) $('.go-top').fadeIn();
         else $('.go-top').fadeOut();
         last_scroll = scroll;
+
+        // fixed-header
+        if(scroll > 100 && window.innerWidth < 576) $('#fixed-header').fadeIn();
+        else $('#fixed-header').fadeOut();
     }, (Modernizr.passiveeventlisteners ? {passive: true} : false));
 
     /* 接管連結 */

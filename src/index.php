@@ -60,7 +60,7 @@ function fetch_path(): array {
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
-    if($path[0] === ""){
+    if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
 
@@ -183,7 +183,7 @@ function run_apis(array $path, MyAuth $auth) {
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     /* Get 請求 */
                     $api->get();
-                } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                     /* Delete 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -198,7 +198,7 @@ function run_apis(array $path, MyAuth $auth) {
                     } else {
                         $api->delete(null);
                     }
-                } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -213,7 +213,7 @@ function run_apis(array $path, MyAuth $auth) {
                     } else {
                         $api->post(null);
                     }
-                } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -243,35 +243,65 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="mainheader-area" style="position: sticky; top: 0;">
+        <div class="col-12 col-sm py-1 fixed-top bg-light" style="display: none" id="fixed-header">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-auto">
+                    <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
+                </div>
+
+                <!-- notify START -->
+                <div class="col-auto">
+                    <div class="d-md-inline-block d-block me-md-4">
+                        <ul class="notification-area">
+                            <!-- notify START -->
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                <div class="dropdown-menu bell-notify-box notify-box">
+                                    <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
+                                    <div class="nofity-list scrollbar-dynamic" data-notify>
+                                        <!-- notify-item -->
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- notify END -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mainheader-area sticky-sm-top">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="/"><img src="/assets/images/icon/logo.png" alt="logo"></a>
+                    <div class="col-12 col-sm mt-2">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-auto">
+                                <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
+                            </div>
+
+                            <!-- notify START -->
+                            <div class="col-auto">
+                                <div class="d-md-inline-block d-block me-md-4">
+                                    <ul class="notification-area">
+                                        <!-- notify START -->
+                                        <li class="dropdown">
+                                            <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                            <div class="dropdown-menu bell-notify-box notify-box">
+                                                <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
+                                                <div class="nofity-list scrollbar-dynamic" data-notify>
+                                                    <!-- notify-item -->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!-- notify END -->
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- profile info & task notification -->
-                    <div class="col-md-9 clearfix text-end">
-                        <div class="d-md-inline-block d-block me-md-4">
-                            <ul class="notification-area">
-
-                                <!-- notify -->
-                                <li class="dropdown">
-                                    <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                    <div class="dropdown-menu bell-notify-box notify-box">
-                                        <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
-                                        <div class="nofity-list scrollbar-dynamic" id="notify">
-                                            <!-- notify-item -->
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
+                    <!-- profile info  -->
+                    <div class="col-12 col-sm-auto clearfix text-end">
                         <div class="clearfix d-md-inline-block d-block">
                             <div class="user-profile">
-
                                 <!-- user avatar -->
                                 <img class="avatar user-thumb"
                                      src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
@@ -280,8 +310,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
                                 </h4>
                                 <div class="dropdown-menu" style="z-index: 1030">
-
-                                    <!-- dropdown menu content -->
+                                    <!-- dropdown menu content START -->
                                     <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
                                         <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                     </a>
@@ -296,6 +325,7 @@ function run_apis(array $path, MyAuth $auth) {
                                             "</a>";
                                     }
                                     ?>
+                                    <!-- dropdown menu content END -->
                                 </div>
 
                             </div>
@@ -368,60 +398,60 @@ function run_apis(array $path, MyAuth $auth) {
             </div>
         </div>
         <!-- header area end -->
-            <!-- page title area end -->
+        <!-- page title area end -->
 
-            <!-- Broadcast -->
-            <!--<div class="alert-dismiss" id="Broadcast">
+        <!-- Broadcast -->
+        <!--<div class="alert-dismiss" id="Broadcast">
             <?php
-            /*          $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
-                        $stmt = $auth->sqlcon->prepare('SELECT ID, Msg, status, Always_close FROM Broadcast WHERE Broadcast = TRUE ORDER BY Time');
-                        if (!$stmt->execute()) {
-                            echo "<div class='alert alert-info alert-dismissible fade show' role='alert'>
-                                Database Error!
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span class=\"fa fa-times\"></span></button>
-                              </div>";
+        /*          $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
+                    $stmt = $auth->sqlcon->prepare('SELECT ID, Msg, status, Always_close FROM Broadcast WHERE Broadcast = TRUE ORDER BY Time');
+                    if (!$stmt->execute()) {
+                        echo "<div class='alert alert-info alert-dismissible fade show' role='alert'>
+                            Database Error!
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span class=\"fa fa-times\"></span></button>
+                          </div>";
+                    }
+                    $result = $stmt->get_result();
+                    while ($row = $result->fetch_assoc()) {
+                        if (strpos($Broadcast_dismiss, strval($row['ID'])) === false) {
+                            switch ($row['status']) {
+                                case 1:
+                                    $status = 'success';
+                                    break;
+                                case 2:
+                                    $status = 'danger';
+                                    break;
+                                case 3:
+                                    $status = 'warning';
+                                    break;
+                                case 4:
+                                    $status = 'info';
+                                    break;
+                                default:
+                                    $status = 'primary';
+                                    break;
+                            } //status
+
+                            $bc = "<div class='alert alert-{$status} alert-dismissible fade show' role='alert'>{$row['Msg']}"; //Msg
+
+                            //Always_close
+                            if ($row['Always_close'] == true)
+                                $bc .= "<button type='button' class='close' data-dismiss='alert' aria-label='Close' data-row-id='{$row['ID']}'><span class='fa fa-times'></span></button>";
+
+                            $bc .= "</div>";
+                            echo $bc;
                         }
-                        $result = $stmt->get_result();
-                        while ($row = $result->fetch_assoc()) {
-                            if (strpos($Broadcast_dismiss, strval($row['ID'])) === false) {
-                                switch ($row['status']) {
-                                    case 1:
-                                        $status = 'success';
-                                        break;
-                                    case 2:
-                                        $status = 'danger';
-                                        break;
-                                    case 3:
-                                        $status = 'warning';
-                                        break;
-                                    case 4:
-                                        $status = 'info';
-                                        break;
-                                    default:
-                                        $status = 'primary';
-                                        break;
-                                } //status
-
-                                $bc = "<div class='alert alert-{$status} alert-dismissible fade show' role='alert'>{$row['Msg']}"; //Msg
-
-                                //Always_close
-                                if ($row['Always_close'] == true)
-                                    $bc .= "<button type='button' class='close' data-dismiss='alert' aria-label='Close' data-row-id='{$row['ID']}'><span class='fa fa-times'></span></button>";
-
-                                $bc .= "</div>";
-                                echo $bc;
-                            }
-                        }
-                        */
-            ?>
+                    }
+                    */
+        ?>
             </div>-->
-            <!-- Broadcast End -->
+        <!-- Broadcast End -->
 
-            <!-- Main area start -->
-            <div class="main-content-inner main-content">
+        <!-- Main area start -->
+        <div class="main-content-inner main-content">
 
-                <!-- global language translate -->
-                <pre style="display: none" id="globalLang">
+            <!-- global language translate -->
+            <pre style="display: none" id="globalLang">
                     <?php
                     echo json_encode(array(
                         'Error' => showText('Error'),
@@ -429,22 +459,22 @@ function run_apis(array $path, MyAuth $auth) {
                     ))
                     ?>
                 </pre>
-                <!-- global language translate End -->
+            <!-- global language translate End -->
 
-                <div class="heard-area pt-4 pb-3">
-                    <div class="container">
-                        <h4 class="page-title" id="title"></h4>
-                        <nav class="pt-2" aria-label="breadcrumb">
-                            <ol class="breadcrumb" id="path"></ol>
-                        </nav>
-                    </div>
+            <div class="heard-area pt-4 pb-3">
+                <div class="container">
+                    <h4 class="page-title" id="title"></h4>
+                    <nav class="pt-2" aria-label="breadcrumb">
+                        <ol class="breadcrumb" id="path"></ol>
+                    </nav>
                 </div>
-
-                <!-- Main content-->
-                <div id="content"></div>
             </div>
-            <!-- Main area end -->
+
+            <!-- Main content-->
+            <div id="content" class="overflow-hidden"></div>
         </div>
+        <!-- Main area end -->
+    </div>
     </div>
     <!-- main content area end -->
 

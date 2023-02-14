@@ -272,8 +272,8 @@
 }
 
 .mainheader-area .notification-area {
-    -webkit-transform: translateY(-11px);
-            transform: translateY(-11px);
+    /*-webkit-transform: translateY(-11px);
+            transform: translateY(-11px);*/
 }
 
 .mainheader-area {
