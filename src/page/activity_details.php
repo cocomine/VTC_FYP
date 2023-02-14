@@ -313,7 +313,7 @@ class activity_details implements \cocomine\IPage {
                <p class="title">預訂活動</p>
                <div class="Div_Price_activity_numb">
                    <div class="date-picker date-picker-inline">
-                      <input type="date" class="date-picker-toggle" id="datePicker" min="">
+                      <input type="date" class="date-picker-toggle form-control-lg" id="datePicker" min="">
                       <div class="date-calendar"></div>
                    </div>
                    <br/><br/>
