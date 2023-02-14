@@ -319,9 +319,9 @@ class activity_details implements \cocomine\IPage {
                    <br/><br/>
                    <span style="font-size: 3vh"><b>計劃</b></span>
                    <div class="Div_Plus_Minus">
-                        <button class="btn btn-outline-secondary" id="ti-plus"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-primary" id="ti-plus"><i class="fa fa-plus" aria-hidden="true"></i></button>
                        <span class="txt_Num">1</span>
-                       <button class="btn btn-outline-secondary" id="ti-minus"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                       <button class="btn btn-outline-primary" id="ti-minus"><i class="fa fa-minus" aria-hidden="true"></i></button>
                    </div>
                </div>
                <span class="Price_Sign">$</span><span class="Price_txt">150</span>
