@@ -35,7 +35,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
-            fillData(draft)
+            fillData(draft);
         });
 
         /**
@@ -137,8 +137,33 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /* 檢查草稿 */
         const found_draft = () => {
-            //todo
-            if (localStorage.getItem("event-draft") !== null){
+            //edit post - load post
+            if (/[0-9]+(\/)*$/.test(location.pathname)){
+                fetch(location.pathname+'/', {
+                    method: 'POST',
+                    redirect: 'error',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: "{}"
+                }).then((response) => {
+                    response.json().then((json) => {
+                        console.log(json);
+
+                        if (json.code === 200){
+                            //fillData(json.data)
+                        }else{
+                            toastr.error(json.Message, json.Title);
+                        }
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+
+            //new post - found draft
+            else if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
         };
@@ -816,8 +841,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json);
-
                     if (json.code === 200){
                         toastr.success(json.Message, json.Title);
                         window.ajexLoad("/panel/event/");
@@ -941,7 +964,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (/(.+),/.test(val)){
-                if (jq_tag.val().length + val.length - 1 > 100) {
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
@@ -949,8 +972,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 const word = val.split(',');
                 console.log(word);
                 word.forEach((value) => {
-                    if(value.length > 0) addTag(value.trim());
-                })
+                    if (value.length > 0) addTag(value.trim());
+                });
                 elm.val('');
             }else if (val === ","){
                 elm.val('');
@@ -959,8 +982,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const elm = $(this);
             const val = elm.val();
 
-            if (/(.+)/.test(val)) {
-                if (jq_tag.val().length + val.length - 1 > 100) {
+            if (/(.+)/.test(val)){
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
@@ -973,8 +996,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (e.key === "Enter"){
-                if (/(.+)/.test(val)) {
-                    if (jq_tag.val().length + val.length - 1 > 100) {
+                if (/(.+)/.test(val)){
+                    if (jq_tag.val().length + val.length - 1 > 100){
                         alert("已超出字數限制");
                         return;
                     }
@@ -1002,12 +1025,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* update tag value */
-        function updateTag() {
+        function updateTag(){
             const tag_elm = jq_tagList.children('[data-tag]');
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
             const val = list.join(',');
             jq_tag.val(val);
-            $('#event-tag-count').text(val.length + "/100")
+            $('#event-tag-count').text(val.length + "/100");
         }
 
         return { found_draft };

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * v1.0
+ * for Horizontal Menu
+ * v1.5
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
@@ -16,13 +17,17 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         $('html').animate({scrollTop: 0}, 200)
     })
 
-    /* go-top display */
+    /* go-top & fixed-header display */
     let last_scroll = 0;
     document.addEventListener('scroll',() => {
         const scroll = window.scrollY;
         if(last_scroll - scroll > 0) $('.go-top').fadeIn();
         else $('.go-top').fadeOut();
         last_scroll = scroll;
+
+        // fixed-header
+        if(scroll > 100 && window.innerWidth < 576) $('#fixed-header').fadeIn();
+        else $('#fixed-header').fadeOut();
     }, (Modernizr.passiveeventlisteners ? {passive: true} : false));
 
     /* 接管連結 */
@@ -115,10 +120,9 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* 展開 menu */
     const updateNavBar = (link) => {
-        const meun = $('#menu')
+        const meun = $('#nav_menu')
         const active = meun.find(`[href="${link}"]`);
-        active.parents('li').addClass('mm-active')
-        active.parents('#menu ul').addClass('mm-show')
+        active.parents('li').addClass('active')
     }
 
     /* 格式化銀碼 */

@@ -15,14 +15,30 @@ use mysqli;
 class post implements IPage {
 
     private mysqli $sqlcon;
+    private array $upPath;
 
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
+        $this->upPath = $upPath;
     }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
+        global $auth;
+
         if (!$isAuth) return 401;
         if ($role < 2) return 403;
+
+        //check the event is true owner
+        if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
+            $stmt = $this->sqlcon->prepare("SELECT COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            if (!$stmt->execute()) return 500;
+
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+
+            if ($row['count'] <= 0) return 403;
+        }
         return 200;
     }
 
@@ -426,7 +442,7 @@ body;
 
             //儲存數據 Event_schedule
             $stmt->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            foreach ($data['schedule'] as $schedule){
+            foreach ($data['schedule'] as $schedule) {
                 //轉換數據類型
                 $schedule['id'] = intval($schedule['id']);
                 $schedule['type'] = intval($schedule['type']);
@@ -448,11 +464,63 @@ body;
                 'code' => 200,
                 'Message' => "活動已成功添加!"
             );
+        } // load event data
+        else {
+            $output = array();
+
+            /* event table */
+            $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");
+            $stmt->bind_param('ss', $auth->userdata['UUID'], $this->upPath[0]);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            $row = $stmt->get_result()->fetch_assoc();
+            $output['title']['event-title'] = $row['name'];
+            $output['thumbnail']['event-thumbnail'] = $row['thumbnail'];
+            $output['data'] = array(
+                'event-description' => $row['description'],
+                'event-precautions' => $row['precautions'],
+                'event-summary' => $row['summary'],
+            );
+            $output['attribute'] = array(
+                'event-tag' => $row['tag'],
+                'event-type' => $row['type'],
+            );
+            $output['location'] = array(
+                'event-country' => $row['country'],
+                'event-latitude' => $row['latitude'],
+                'event-longitude' => $row['longitude'],
+                'event-location' => $row['location'],
+                'event-region' => $row['region'],
+            );
+            $output['status'] = array(
+                'event-post-date' => explode(' ', $row['post_time'])[0], //split to date
+                'event-post-time' => explode(' ', $row['post_time'])[1], //split to time
+                'event-status' => $row['state'],
+            );
+
+            /* event img */
+            $stmt->prepare("SELECT media_ID FROM Event_img WHERE event_ID = ?");
+            $stmt->bind_param("s", $this->upPath[0]);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            $rows = $stmt->get_result()->fetch_all();
+            $output['image']['event-image'] = join(',', array_map(fn($value): string => $value[0], $rows)); //join 1 line string
+
+            //output
+            return array('code' => 200, 'data' => $output);
         }
-        return array(
-            'code' => 404,
-            'Message' => "請求不正確",
-        );
     }
 
     public function path(): string {
