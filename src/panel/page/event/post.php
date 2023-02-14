@@ -464,7 +464,9 @@ body;
                 'code' => 200,
                 'Message' => "活動已成功添加!"
             );
-        } // load event data
+        }
+
+        // load event data
         else {
             $output = array();
 
@@ -517,6 +519,17 @@ body;
 
             $rows = $stmt->get_result()->fetch_all();
             $output['image']['event-image'] = join(',', array_map(fn($value): string => $value[0], $rows)); //join 1 line string
+
+            /* event plan */
+            $stmt->prepare("SELECT media_ID FROM Event_plan WHERE Event_ID = ?");
+            $stmt->bind_param("s", $this->upPath[0]);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
 
             //output
             return array('code' => 200, 'data' => $output);
