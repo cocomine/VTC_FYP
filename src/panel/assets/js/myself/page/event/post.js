@@ -35,9 +35,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
-            console.log(draft);
+            fillData(draft);
+        });
 
-            //fill up
+        /**
+         * fill up input data
+         * @param {Object} draft
+         */
+        function fillData(draft){
             //活動資料
             $('#event-title').val(draft.title['event-title']);
             $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -118,6 +123,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動屬性
             $('#event-type').val(draft.attribute['event-type']);
             $('#event-tag').val("");
+            $('#event-tag-list > [data-tag]').remove();
             if (draft.attribute['event-tag'] !== ""){
                 draft.attribute['event-tag'].split(",").forEach((value) => {
                     addTag(value);
@@ -127,11 +133,37 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動封面
             $('#event-thumbnail').val(draft.thumbnail['event-thumbnail']);
             $('#event-thumbnail-img').attr('src', '/panel/api/media/' + draft.thumbnail['event-thumbnail']).attr('alt', draft.thumbnail['event-thumbnail']);
-        });
+        }
 
         /* 檢查草稿 */
         const found_draft = () => {
-            if (localStorage.getItem("event-draft") !== null){
+            //edit post - load post
+            if (/[0-9]+(\/)*$/.test(location.pathname)){
+                fetch(location.pathname+'/', {
+                    method: 'POST',
+                    redirect: 'error',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: "{}"
+                }).then((response) => {
+                    response.json().then((json) => {
+                        console.log(json);
+
+                        if (json.code === 200){
+                            //fillData(json.data)
+                        }else{
+                            toastr.error(json.Message, json.Title);
+                        }
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+
+            //new post - found draft
+            else if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
         };
@@ -809,11 +841,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json);
-
                     if (json.code === 200){
                         toastr.success(json.Message, json.Title);
-                        window.ajexLoad("/event/");
+                        window.ajexLoad("/panel/event/");
                     }else{
                         toastr.error(json.Message, json.Title);
                     }
@@ -934,12 +964,16 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (/(.+),/.test(val)){
-                if (jq_tag.val().length + val.length - 1 > 100) {
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
 
-                addTag(val.slice(0, -1));
+                const word = val.split(',');
+                console.log(word);
+                word.forEach((value) => {
+                    if (value.length > 0) addTag(value.trim());
+                });
                 elm.val('');
             }else if (val === ","){
                 elm.val('');
@@ -948,13 +982,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const elm = $(this);
             const val = elm.val();
 
-            if (/(.+)/.test(val)) {
-                if (jq_tag.val().length + val.length - 1 > 100) {
+            if (/(.+)/.test(val)){
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
 
-                addTag(val);
+                addTag(val.trim());
                 elm.val('');
             }
         }).keyup(function (e){
@@ -962,13 +996,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (e.key === "Enter"){
-                if (/(.+)/.test(val)) {
-                    if (jq_tag.val().length + val.length - 1 > 100) {
+                if (/(.+)/.test(val)){
+                    if (jq_tag.val().length + val.length - 1 > 100){
                         alert("已超出字數限制");
                         return;
                     }
 
-                    addTag(val);
+                    addTag(val.trim());
                     elm.val('');
                 }
             }
@@ -991,12 +1025,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* update tag value */
-        function updateTag() {
+        function updateTag(){
             const tag_elm = jq_tagList.children('[data-tag]');
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
             const val = list.join(',');
             jq_tag.val(val);
-            $('#event-tag-count').text(val.length + "/100")
+            $('#event-tag-count').text(val.length + "/100");
         }
 
         return { found_draft };
