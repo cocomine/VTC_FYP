@@ -3,8 +3,8 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker', 'jquery.scrollbar.min' ],
-    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr){
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'bootstrap', 'timepicker', 'jquery.scrollbar.min' ],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr, bootstrap){
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
@@ -138,8 +138,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /* 檢查草稿 */
         const found_draft = () => {
             //edit post - load post
-            if (/[0-9]+(\/)*$/.test(location.pathname)){
-                fetch(location.pathname+'/', {
+            if (/([0-9]+)(\/)*$/.test(location.pathname)){
+                fetch(location.pathname + '/', {
                     method: 'POST',
                     redirect: 'error',
                     headers: {
@@ -152,7 +152,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                         console.log(json);
 
                         if (json.code === 200){
-                            //fillData(json.data)
+                            fillData(json.data);
+                            $('#event-recycle, #event-update').show();
+                            $('#event-daft, #event-post').hide();
                         }else{
                             toastr.error(json.Message, json.Title);
                         }
@@ -568,9 +570,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             $(this).parents('[data-plan]').remove();
 
             // 時段計劃
-            const index = plan.findIndex((value) => value.plan_id === plan_id);
+            const index = plans.findIndex((value) => value.plan_id === plan_id);
             if (index >= 0){
-                plan.splice(index, 1);
+                plans.splice(index, 1);
                 plan_select.find(`[value='${plan_id}']`).remove();
             }
         });
@@ -804,11 +806,48 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!");
         });
 
-        /* 發佈 */
-        $('#event-post').click(function (e){
-            /* 檢查 */
+        /* 確認移除 */
+        $('#event-delete').click(function (){
+            const path = /([0-9]+)(\/)*$/.exec(location.pathname); //get post id
+
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/event/post/?type=del', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: path[1] })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        bootstrap.Modal.getOrCreateInstance($('#delete_modal')[0]).hide();
+                        toastr.success(json.Message, json.Title);
+                        setTimeout(() => window.ajexLoad("/panel/event/"), 200);
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+
+        /**
+         * 檢查有效性
+         * @param {Object} data 數據
+         * @return {boolean} 是否有效
+         */
+        const validity_data = (data) => {
             let valid = true;
-            const data = serializeData();
             for (let jqFormKey in jq_form){
                 jq_form[jqFormKey].addClass('was-validated');
                 valid = jq_form[jqFormKey][0].checkValidity() ? valid : false;
@@ -823,7 +862,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 $('#event-schedule-feedback').show();
                 valid = false;
             }
-            if (!valid) return;
+            return valid;
+        };
+
+        /* 發佈 */
+        $('#event-post').click(function (e){
+            /* 檢查 */
+            const data = serializeData();
+            if (!validity_data(data)) return;
 
             /* 封鎖按鈕 */
             const bt = $(this);
@@ -855,15 +901,43 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             });
         });
 
-        /* 移到回收桶 */
-        // $('#event-recycle').click(function (){
-        //     //todo
-        // });
-        //
-        // /* 確認移除 */
-        // $('#event-delete').click(function (){
-        //     //todo
-        // });
+        /* 更新 */
+        $('#event-update').click(function (){
+            /* 檢查 */
+            const data = serializeData();
+            if (!validity_data(data)) return;
+            const post_id = /([0-9]+)(\/)*$/.exec(location.pathname)[1];
+
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/event/post/?type=update', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: post_id, data })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        window.ajexLoad("/panel/event/")
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
+
+        });
 
         /**
          * 處理data

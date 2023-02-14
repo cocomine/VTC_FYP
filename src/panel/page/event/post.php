@@ -225,9 +225,9 @@ body . <<<body
                             <div class="col-12 mb-3">
                                 <label for="event-status" class="form-label"><i class="fa-solid fa-eye me-1"></i>狀態</label>
                                 <select class="form-select form-rounded form-control-sm" id="event-status" name="event-status" required>
-                                    <option value="0">不公開</option>
-                                    <option value="1">開放報名</option>
-                                    <option value="2">暫停報名</option>
+                                    <option value="0">排程</option>
+                                    <option value="1">公開</option>
+                                    <option value="2">不公開</option>
                                 </select>
                             </div>
                             <div class="col-12 row g-0">
@@ -243,11 +243,12 @@ body . <<<body
                             </div>
                         </form>
                         <div class="text-end mt-3">
-                            <button type="button" class="btn btn-rounded btn-secondary btn-sm" id="event-daft">儲存草稿</button>
-                            <button type="button" class="btn btn-rounded btn-primary btn-sm" id="event-post">發佈</button>
-                            <div class="float-start float-lg-end d-none">
-                                <a class="text-danger text-decoration-underline" href="#" id="event-recycle">移到回收桶</a>
+                            <div class="float-start my-1" id="event-recycle" style="display: none">
+                                <button type="button" class="btn btn-link text-danger" data-bs-toggle="modal" data-bs-target="#delete_modal">刪除</button>
                             </div>
+                            <button type="button" class="btn btn-rounded btn-secondary btn-sm my-1" id="event-daft">儲存草稿</button>
+                            <button type="button" class="btn btn-rounded btn-primary btn-sm my-1" id="event-post">發佈</button>
+                            <button type="button" class="btn btn-rounded btn-primary btn-sm my-1" id="event-update" style="display: none">更新</button>
                         </div>
                     </div>
                 </div>
@@ -305,6 +306,23 @@ body . <<<body
     </div>
 </div>
 body . <<<body
+<div class="modal" tabindex="-1" id="delete_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">刪除?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>確認刪除此活動? 您將無法恢復此操作</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal"><i class='fa fa-arrow-left pe-2'></i>取消</button>
+        <button type="button" class="btn btn-danger btn-rounded" id="event-delete"><i class="fa-solid fa-trash-can pe-2"></i>確認</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
     require.config({
         paths:{
@@ -336,47 +354,7 @@ body;
 
         //new event
         if ($_GET['type'] === 'post') {
-            //截斷過長字串
-            $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
-            $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
-            $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
-            $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
-
-            //轉換可留空欄位
-            $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
-            $data['data']['event-precautions-html'] = null;
-            $data['attribute']['event-tag'] = $data['attribute']['event-tag'] === "" ? null : $data['attribute']['event-tag'];
-
-            //HTML filter xss config
-            $filterXSS_description = HTMLPurifier_Config::createDefault();
-            $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt]");
-            $filterXSS_precautions = HTMLPurifier_Config::createDefault();
-            $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
-
-            //轉換Markdown to html & filter xss
-            $MD_converter = new Parsedown_ext();
-            $purifier = new HTMLPurifier($filterXSS_description);
-            //event-description
-            $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description']));
-            $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
-            //event-precautions
-            if ($data['data']['event-precautions'] !== null) {
-                $purifier->config = $filterXSS_precautions;
-                $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions']));
-                $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0]; //event-precautions
-            }
-
-            //轉換image to array
-            $data['image']['event-image'] = explode(',', $data['image']['event-image']);
-
-            //轉換發佈日期
-            $data['status']['event-post'] = $data['status']['event-post-date'] . ' ' . $data['status']['event-post-time'];
-
-            //轉換數據類型
-            $data['status']['event-status'] = intval($data['status']['event-status']);
-            $data['attribute']['event-type'] = intval($data['attribute']['event-type']);
-            $data['location']['event-longitude'] = floatval($data['location']['event-longitude']);
-            $data['location']['event-latitude'] = floatval($data['location']['event-latitude']);
+            $data = $this->serializeData($data);
 
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
@@ -401,7 +379,7 @@ body;
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
-                    'Title' => 'Database Error!',
+                    'Title' => 'Database Error! 0',
                     'Message' => $stmt->error,
                 );
             }
@@ -409,16 +387,18 @@ body;
             $event_id = $result['ID'];
 
             //儲存數據 Event_img
-            $stmt->prepare("INSERT INTO Event_img (event_ID, media_ID) VALUES (?, ?)");
+            $stmt->prepare("INSERT INTO Event_img (event_ID, media_ID, `order`) VALUES (?, ?, ?)");
+            $tmp_img_order = 0;
             foreach ($data['image']['event-image'] as $image) {
-                $stmt->bind_param("ss", $event_id, $image);
+                $stmt->bind_param("ssi", $event_id, $image, $tmp_img_order);
                 if (!$stmt->execute()) {
                     return array(
                         'code' => 500,
-                        'Title' => 'Database Error!',
+                        'Title' => 'Database Error! 1',
                         'Message' => $stmt->error,
                     );
                 }
+                $tmp_img_order++;
             }
 
             //儲存數據 Event_plan
@@ -434,7 +414,7 @@ body;
                 if (!$stmt->execute()) {
                     return array(
                         'code' => 500,
-                        'Title' => 'Database Error!',
+                        'Title' => 'Database Error! 2',
                         'Message' => $stmt->error,
                     );
                 }
@@ -454,7 +434,7 @@ body;
                 if (!$stmt->execute()) {
                     return array(
                         'code' => 500,
-                        'Title' => 'Database Error!',
+                        'Title' => 'Database Error! 3',
                         'Message' => $stmt->error,
                     );
                 }
@@ -466,13 +446,10 @@ body;
             );
         }
 
-        // load event data
-        else {
-            $output = array();
-
-            /* event table */
-            $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");
-            $stmt->bind_param('ss', $auth->userdata['UUID'], $this->upPath[0]);
+        //delete state event
+        if ($_GET['type'] === 'del') {
+            $stmt = $this->sqlcon->prepare("DELETE FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt->bind_param('ss', $data['id'], $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -481,59 +458,211 @@ body;
                 );
             }
 
-            $row = $stmt->get_result()->fetch_assoc();
-            $output['title']['event-title'] = $row['name'];
-            $output['thumbnail']['event-thumbnail'] = $row['thumbnail'];
-            $output['data'] = array(
-                'event-description' => $row['description'],
-                'event-precautions' => $row['precautions'],
-                'event-summary' => $row['summary'],
-            );
-            $output['attribute'] = array(
-                'event-tag' => $row['tag'],
-                'event-type' => $row['type'],
-            );
-            $output['location'] = array(
-                'event-country' => $row['country'],
-                'event-latitude' => $row['latitude'],
-                'event-longitude' => $row['longitude'],
-                'event-location' => $row['location'],
-                'event-region' => $row['region'],
-            );
-            $output['status'] = array(
-                'event-post-date' => explode(' ', $row['post_time'])[0], //split to date
-                'event-post-time' => explode(' ', $row['post_time'])[1], //split to time
-                'event-status' => $row['state'],
-            );
-
-            /* event img */
-            $stmt->prepare("SELECT media_ID FROM Event_img WHERE event_ID = ?");
-            $stmt->bind_param("s", $this->upPath[0]);
-            if (!$stmt->execute()) {
+            if ($stmt->affected_rows > 0) {
+                return array(
+                    'code' => 200,
+                    'Title' => '刪除成功!',
+                );
+            } else {
                 return array(
                     'code' => 500,
-                    'Title' => 'Database Error!',
-                    'Message' => $stmt->error,
+                    'Title' => '刪除失敗!',
                 );
             }
-
-            $rows = $stmt->get_result()->fetch_all();
-            $output['image']['event-image'] = join(',', array_map(fn($value): string => $value[0], $rows)); //join 1 line string
-
-            /* event plan */
-            $stmt->prepare("SELECT media_ID FROM Event_plan WHERE Event_ID = ?");
-            $stmt->bind_param("s", $this->upPath[0]);
-            if (!$stmt->execute()) {
-                return array(
-                    'code' => 500,
-                    'Title' => 'Database Error!',
-                    'Message' => $stmt->error,
-                );
-            }
-
-            //output
-            return array('code' => 200, 'data' => $output);
         }
+
+        //update event
+        if ($_GET['type'] === 'update') {
+            $post_id = intval($data['id']);
+            $data = $this->serializeData($data['data']);
+
+            /* 這裏會進行輸入檢查,但非公開網頁跳過 */
+
+            //儲存數據 Event
+            $stmt = $this->sqlcon->prepare(
+                "UPDATE Event SET state=?, type=?, tag=?, name=?, thumbnail=?, summary=?, precautions=?, precautions_html=?, description=?, 
+                   description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=? WHERE UUID = ? AND ID = ?");
+            $stmt->bind_param("iisssssssssssddssi", $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
+                $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
+                $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $auth->userdata['UUID'], $post_id);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            //刪除舊數據
+            $stmt->prepare("DELETE Event_img, Event_plan, Event_schedule FROM Event_img, Event_plan, Event_schedule WHERE Event_img.event_ID = ? OR Event_plan.Event_ID = ? OR Event_schedule.Event_ID = ?");
+            $stmt->bind_param('iii', $post_id, $post_id, $post_id);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            //儲存數據 Event_img
+            $stmt->prepare("INSERT INTO Event_img (event_ID, media_ID, `order`) VALUES (?, ?, ?)");
+            $tmp_img_order = 0;
+            foreach ($data['image']['event-image'] as $image) {
+                $stmt->bind_param("ssi", $post_id, $image, $tmp_img_order);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error! 1',
+                        'Message' => $stmt->error,
+                    );
+                }
+                $tmp_img_order++;
+            }
+
+            //儲存數據 Event_plan
+            $stmt->prepare("INSERT INTO Event_plan (Event_ID, plan_ID, plan_name, price, max_people, max_each_user) VALUES (?, ?, ?, ?, ?, ?)");
+            foreach ($data['plan'] as $plan) {
+                //轉換數據類型
+                $plan['id'] = intval($plan['id']);
+                $plan['max'] = intval($plan['max']);
+                $plan['max_each'] = intval($plan['max_each']);
+                $plan['price'] = floatval($plan['price']);
+
+                $stmt->bind_param("iisdii", $post_id, $plan['id'], $plan['name'], $plan['price'], $plan['max'], $plan['max_each']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error! 2',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            //儲存數據 Event_schedule
+            $stmt->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            foreach ($data['schedule'] as $schedule) {
+                //轉換數據類型
+                $schedule['id'] = intval($schedule['id']);
+                $schedule['type'] = intval($schedule['type']);
+                $schedule['plan'] = intval($schedule['plan']);
+                $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
+                $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
+
+                $stmt->bind_param("iiiisssss", $post_id, $schedule['id'], $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error! 3',
+                        'Message' => $stmt->error,
+                    );
+                }
+            }
+
+            return array(
+                'code' => 200,
+                'Message' => "活動已成功更新!"
+            );
+        }
+
+        // load event data
+        $output = array('id' => $this->upPath[0]);
+
+        /* event table */
+        $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");
+        $stmt->bind_param('ss', $auth->userdata['UUID'], $this->upPath[0]);
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        $row = $stmt->get_result()->fetch_assoc();
+        $output['title']['event-title'] = $row['name'];
+        $output['thumbnail']['event-thumbnail'] = $row['thumbnail'];
+        $output['data'] = array(
+            'event-description' => $row['description'],
+            'event-precautions' => $row['precautions'],
+            'event-summary' => $row['summary'],
+        );
+        $output['attribute'] = array(
+            'event-tag' => $row['tag'],
+            'event-type' => $row['type'],
+        );
+        $output['location'] = array(
+            'event-country' => $row['country'],
+            'event-latitude' => $row['latitude'],
+            'event-longitude' => $row['longitude'],
+            'event-location' => $row['location'],
+            'event-region' => $row['region'],
+        );
+        $output['status'] = array(
+            'event-post-date' => explode(' ', $row['post_time'])[0], //split to date
+            'event-post-time' => explode(' ', $row['post_time'])[1], //split to time
+            'event-status' => $row['state'],
+        );
+
+        /* event img */
+        $stmt->prepare("SELECT media_ID FROM Event_img WHERE event_ID = ? ORDER BY `order`");
+        $stmt->bind_param("s", $this->upPath[0]);
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        $rows = $stmt->get_result()->fetch_all();
+        $output['image']['event-image'] = join(',', array_map(fn($value): string => $value[0], $rows)); //join 1 line string
+
+        /* event plan */
+        $stmt->prepare("SELECT * FROM Event_plan WHERE Event_ID = ?");
+        $stmt->bind_param("s", $this->upPath[0]);
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $output['plan'] = array_map(fn($value): array => array(
+            'id' => $value['plan_ID'],
+            'max' => $value['max_people'],
+            'max_each' => $value['max_each_user'],
+            'name' => $value['plan_name'],
+            'price' => $value['price'],
+        ), $rows);
+
+        /* event schedule */
+        $stmt->prepare("SELECT * FROM Event_schedule WHERE Event_ID = ?");
+        $stmt->bind_param("s", $this->upPath[0]);
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $output['schedule'] = array_map(fn($value): array => array(
+            'id' => $value['Schedule_ID'],
+            'plan' => $value['plan'],
+            'start' => $value['start_date'],
+            'end' => $value['end_date'],
+            'time_start' => $value['start_time'],
+            'time_end' => $value['end_time'],
+            'type' => $value['type'],
+            'week' => json_decode($value['repeat_week']),
+        ), $rows);
+
+        //output
+        return array('code' => 200, 'data' => $output);
     }
 
     public function path(): string {
@@ -548,5 +677,56 @@ body;
 
     public function get_Head(): string {
         return "增加活動";
+    }
+
+    /**
+     * 處理data
+     * @param array $data raw data
+     * @return array processed data
+     */
+    private function serializeData(array $data): array {
+        //截斷過長字串
+        $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
+        $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
+        $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
+        $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
+
+        //轉換可留空欄位
+        $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
+        $data['data']['event-precautions-html'] = null;
+        $data['attribute']['event-tag'] = $data['attribute']['event-tag'] === "" ? null : $data['attribute']['event-tag'];
+
+        //HTML filter xss config
+        $filterXSS_description = HTMLPurifier_Config::createDefault();
+        $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt]");
+        $filterXSS_precautions = HTMLPurifier_Config::createDefault();
+        $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
+
+        //轉換Markdown to html & filter xss
+        $MD_converter = new Parsedown_ext();
+        $purifier = new HTMLPurifier($filterXSS_description);
+        //event-description
+        $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description']));
+        $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
+        //event-precautions
+        if ($data['data']['event-precautions'] !== null) {
+            $purifier->config = $filterXSS_precautions;
+            $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions']));
+            $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0]; //event-precautions
+        }
+
+        //轉換image to array
+        $data['image']['event-image'] = explode(',', $data['image']['event-image']);
+
+        //轉換發佈日期
+        $data['status']['event-post'] = $data['status']['event-post-date'] . ' ' . $data['status']['event-post-time'];
+
+        //轉換數據類型
+        $data['status']['event-status'] = intval($data['status']['event-status']);
+        $data['attribute']['event-type'] = intval($data['attribute']['event-type']);
+        $data['location']['event-longitude'] = floatval($data['location']['event-longitude']);
+        $data['location']['event-latitude'] = floatval($data['location']['event-latitude']);
+
+        return $data;
     }
 }
