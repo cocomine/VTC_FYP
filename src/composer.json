@@ -11,7 +11,8 @@
       "ext-mysqli": "*",
       "ext-json": "*",
         "erusev/parsedown": "^1.7",
-      "ext-intl": "*"
+      "ext-intl": "*",
+      "ext-mbstring": "*"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

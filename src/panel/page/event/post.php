@@ -687,10 +687,12 @@ body;
      */
     private function serializeData(array $data): array {
         //截斷過長字串
-        $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
-        $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 500)[0];
-        $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
-        $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
+        $data['data']['event-summary'] = mb_str_split($data['data']['event-summary'], 80)[0];
+        $data['data']['event-precautions'] = mb_str_split($data['data']['event-precautions'], 500)[0];
+        $data['data']['event-description'] = mb_str_split($data['data']['event-description'], 1000)[0];
+        $data['data']['event-tag'] = mb_str_split($data['data']['event-tag'], 100)[0];
+        $data['title']['event-title'] = mb_str_split($data['title']['event-title'], 50)[0];
+        $data['location']['event-location'] = mb_str_split($data['location']['event-location'], 100)[0];
 
         //轉換可留空欄位
         $data['data']['event-precautions'] = $data['data']['event-precautions'] === "" ? null : $data['data']['event-precautions'];
@@ -713,7 +715,7 @@ body;
         if ($data['data']['event-precautions'] !== null) {
             $purifier->config = $filterXSS_precautions;
             $data['data']['event-precautions-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-precautions']));
-            $data['data']['event-precautions-html'] = str_split($purifier->purify($data['data']['event-precautions-html']), 300)[0]; //event-precautions
+            $data['data']['event-precautions-html'] = $purifier->purify($data['data']['event-precautions-html']);
         }
 
         //轉換image to array

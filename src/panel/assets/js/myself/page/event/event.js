@@ -34,7 +34,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                                     </div>
                                     <div class="col">
                                         <a href="/panel/event/post/${row.ID}">${data}</a><br>
-                                        <p class="text-secondary">${row.summary}</p>
+                                        <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>
                                 </div>`;
                     }else{
