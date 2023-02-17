@@ -11,9 +11,9 @@
                 if (!o[this.name].push) {
                     o[this.name] = [o[this.name]];
                 }
-                o[this.name].push(this.value || '');
+                o[this.name].push(this.value.trim() || null);
             } else {
-                o[this.name] = this.value || '';
+                o[this.name] = this.value.trim() || null;
             }
         });
         return o;
@@ -40,40 +40,36 @@
     /*================================
     Start Footer resizer
     ==================================*/
-    var e = function() {
+    var e = function () {
         var e = (window.innerHeight > 0 ? window.innerHeight : this.screen.height) - 5;
         (e -= 67) < 1 && (e = 1), e > 67 && $(".main-content").css("min-height", e + "px")
     };
-    $(window).ready(e), $(window).on("resize", e);
+    $(window).ready(e);
+    $(window).on("resize", e);
 
     /*================================
     sidebar menu
     ==================================*/
-    $("#menu").metisMenu();
+    try {
+        $("#menu").metisMenu();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
-    slimscroll activation
+    scrollbar
     ==================================*/
-    $('.menu-inner').slimScroll({
-        height: 'auto'
-    });
-    $('.nofity-list').slimScroll({
-        height: '435px'
-    });
-    $('.timeline-area').slimScroll({
-        height: '500px'
-    });
-    $('.recent-activity').slimScroll({
-        height: 'calc(100vh - 114px)'
-    });
-    $('.settings-list').slimScroll({
-        height: 'calc(100vh - 158px)'
-    });
+    try {
+        $('.menu-inner').scrollbar();
+        $('.nofity-list').scrollbar();
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     stickey Header
     ==================================*/
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
         var scroll = $(window).scrollTop(),
             mainHeader = $('#sticky-header'),
             mainHeaderHeight = mainHeader.innerHeight();
@@ -127,7 +123,7 @@
                 });
             });
 
-            lazyImages.forEach(function(lazyImage) {
+            lazyImages.forEach(function (lazyImage) {
                 lazyImageObserver.observe(lazyImage);
             });
         }
@@ -136,17 +132,21 @@
     /*================================
     Slicknav mobile menu
     ==================================*/
-    $('ul#nav_menu').slicknav({
-        prependTo: "#mobile_menu"
-    });
+    try {
+        $('ul#nav_menu').slicknav({
+            prependTo: "#mobile_menu"
+        });
+    } catch (e) {
+        console.debug(e)
+    }
 
     /*================================
     login form
     ==================================*/
-    $('.form-gp input').on('focus', function() {
+    $('.form-gp input').on('focus', function () {
         $(this).parent('.form-gp').addClass('focused');
     });
-    $('.form-gp input').on('focusout', function() {
+    $('.form-gp input').on('focusout', function () {
         if ($(this).val().length === 0) {
             $(this).parent('.form-gp').removeClass('focused');
         }

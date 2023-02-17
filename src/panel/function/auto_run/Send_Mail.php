@@ -9,8 +9,8 @@ use PHPMailer\PHPMailer\Exception;
 
 ini_set('error_log', '/volume1/web/error_log/Send_Mail.log');
 
-require(__DIR__."/../../vendor/autoload.php");
-require(__DIR__."/../../function/config.inc.php");
+require(__DIR__."/../../../vendor/autoload.php");
+require(__DIR__."/../../../../secret/config.inc.php");
 
 /* SQL */
 //SQL config

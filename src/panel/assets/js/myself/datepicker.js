@@ -84,7 +84,7 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
      * 添加新 date-picker
      * @param {jQuery<HTMLElement>} pickers
      */
-    function addPicker(pickers) {
+    const addPicker = function (pickers) {
         pickers.each((index, picker) => {
             setup(picker)
         });

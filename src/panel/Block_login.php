@@ -60,30 +60,17 @@ require.config({
             forge: "https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min"
         },
         shim:{
-            "owl.carousel.min":{
-                deps:["jquery"]
-            },
-            "jquery.slimscroll.min":{
-                deps:["jquery"]
-            },
-            "jquery.slicknav.min":{
-                deps: ["jquery"]
-            },
             "plugins":{
                 deps: ["jquery"]
             },
             "scripts":{
-                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min"]
+                deps: ["jquery"]
             }
         }
 });
 require([
     "jquery", 
     "bootstrap", 
-    "owl.carousel.min",
-    "metisMenu.min",
-    "jquery.slimscroll.min",
-    "jquery.slicknav.min",
     "plugins",
     "scripts"], () => {
         $('#preloader').fadeOut('slow', function() { $(this).remove(); });

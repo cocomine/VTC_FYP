@@ -41,9 +41,6 @@
             "owl.carousel.min": {
                 deps: ["jquery"]
             },
-            "jquery.slimscroll.min": {
-                deps: ["jquery"]
-            },
             "jquery.slicknav.min": {
                 deps: ["jquery"]
             },
@@ -51,7 +48,7 @@
                 deps: ["jquery"]
             },
             "scripts": {
-                deps: ["jquery", "jquery.slicknav.min", "jquery.slimscroll.min", "owl.carousel.min", "metisMenu.min"]
+                deps: ["jquery", "jquery.slicknav.min", "jquery.scrollbar.min", "owl.carousel.min", "metisMenu.min"]
             }
         }
     });
@@ -62,7 +59,7 @@
         "bootstrap",
         "owl.carousel.min",
         "metisMenu.min",
-        "jquery.slimscroll.min",
+        "jquery.scrollbar.min",
         "jquery.slicknav.min",
         "plugins",
         "scripts",

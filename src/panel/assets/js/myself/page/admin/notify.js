@@ -18,7 +18,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch('/panel/notify?type=sendNotify', {
+            fetch('/panel/admin/notify_mg/?type=sendNotify', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -50,7 +50,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         let id = $(this).attr('data-row-id')
 
         /* send */
-        fetch('/panel/notify?type=DelNotify', {
+        fetch('/panel/admin/notify_mg/?type=DelNotify', {
             method: 'POST',
             redirect: 'error',
             headers: {
@@ -93,7 +93,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         $('#list-notify').find('tbody').html("<tr><td colspan='6'> <div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div> </td></tr>")
 
         /* send */
-        fetch('/panel/notify?type=ShowNotify', {
+        fetch('/panel/admin/notify_mg/?type=ShowNotify', {
             method: 'POST',
             redirect: 'error',
             headers: {

@@ -43,12 +43,12 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://accounts.google.com https://cdn.datatables.net https://api.mapbox.com;
-              style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://accounts.google.com https://cdn.datatables.net https://api.mapbox.com;
-              connect-src 'self' https://accounts.google.com https://*.lottiefiles.com https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://www.gstatic.com https://cdn.datatables.net https://api.mapbox.com;
+              style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://cdn.datatables.net https://api.mapbox.com;
+              connect-src 'self' https://*.google.com https://*.lottiefiles.com https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://cdn.datatables.net;
               img-src 'self' data: blob: https://www.gravatar.com;
               font-src 'self' https://fonts.gstatic.com;
-              frame-src 'self' https://accounts.google.com;
+              frame-src 'self' https://*.google.com;
               worker-src 'self' blob:;
               child-src blob:;" />
         <link rel="manifest" href="/panel/assets/manifest.json"/>
@@ -60,6 +60,7 @@ header('Content-Type:text/html; charset=utf-8');
         <link rel="stylesheet" href="/panel/assets/css/FA6/css/solid.min.css">
         <link rel="stylesheet" href="/panel/assets/css/themify-icons.min.css">
         <link rel="stylesheet" href="/panel/assets/css/metisMenu.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/scrollbar.css">
         <link rel="stylesheet" href="/panel/assets/css/owl.carousel.min.css">
         <link rel="stylesheet" href="/panel/assets/css/slicknav.min.css">
         <!-- others css -->

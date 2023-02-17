@@ -3,9 +3,11 @@
     Template Name: srtdash - Bootstrap 4 Admin and Ui Kit
     Template URI: http://tf.itech-theme.com/srtdash-preview
     Description: This is Bootstrap 4 Admin Template and Ui Kit
-    Author: cdibrandstudio
+    Author: cdibrandstudio, cocomine
     Author https://themeforest.net/user/cdibrandstudio
-    Version: 1.0
+    Author https://cocomine.cc
+    Version: 2.0
+    for Horizontal Menu
 
 ----------------------------------------------
     
@@ -147,7 +149,7 @@
 }
 
 .menu-inner {
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
     height: 100%;
 }
 
@@ -272,8 +274,8 @@
 }
 
 .mainheader-area .notification-area {
-    -webkit-transform: translateY(-11px);
-            transform: translateY(-11px);
+    /*-webkit-transform: translateY(-11px);
+            transform: translateY(-11px);*/
 }
 
 .mainheader-area {
@@ -496,6 +498,7 @@
             user-select: none;
     position: relative;
     z-index: 1;
+    padding: 0;
 }
 
 .notification-area li {
@@ -569,15 +572,19 @@
 }
 
 .nofity-list {
-    padding: 30px 0;
+    /*padding: 30px 0;*/
+    height: 435px;
 }
 
 .nofity-list a {
-    padding: 0 30px;
     display: block;
     margin-bottom: 20px;
     border-bottom: 1px solid #f5f2f2;
-    padding-bottom: 15px;
+    padding: 0 30px 15px;
+}
+
+.nofity-list a:first-child {
+    padding-top: 15px;
 }
 
 .nofity-list a:last-child {
@@ -2127,6 +2134,9 @@ div.dataTables_wrapper div.dataTables_length select {
 .datatable-primary thead tr th{
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.datatable-primary thead tr th:first-child{
     padding-left: 10px;
 }
 

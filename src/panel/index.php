@@ -258,7 +258,7 @@ function run_apis(array $path, MyAuth $auth) {
 
             <!-- sidebar body -->
             <div class="main-menu">
-                <div class="menu-inner">
+                <div class="menu-inner scrollbar-dynamic">
                     <nav>
                         <ul class="metismenu" id="menu">
 
@@ -285,7 +285,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
                                     <ul>
                                         <li><a href="/panel/event/"><i class="fa-regular fa-calendar-check"></i><span>全部活動</span></a></li>
-                                        <li><a href="/panel/event/newevent/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
+                                        <li><a href="/panel/event/post/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
                                     </ul>
                                 </li>';
                             }
@@ -335,7 +335,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
                                 <div class="dropdown-menu bell-notify-box notify-box">
                                     <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
-                                    <div class="nofity-list" id="notify">
+                                    <div class="nofity-list scrollbar-dynamic" id="notify">
                                         <!-- notify-item -->
                                     </div>
                                 </div>
