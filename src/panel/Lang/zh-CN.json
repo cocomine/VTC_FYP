@@ -511,6 +511,15 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh.json"
+    },
+    "UserDetail": {
+      "Detail": "用户资料",
+      "Organize": "组织",
+      "Country": "国家",
+      "Phone": "电话号码",
+      "Address": "地址",
+      "prove": "证明文件"
+
     }
   }
 }

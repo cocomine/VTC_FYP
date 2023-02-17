@@ -513,6 +513,15 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh-HANT.json"
+    },
+    "UserDetail": {
+      "Detail": "用戶資料",
+      "Organize": "組織",
+      "Country": "國家",
+      "Phone": "電話號碼",
+      "Address": "地址",
+      "prove": "證明文件"
+
     }
   }
 }

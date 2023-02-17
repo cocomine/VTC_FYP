@@ -513,6 +513,15 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/en-GB.json"
+    },
+    "UserDetail": {
+      "Detail": "User Profile",
+      "Organize": "Organize",
+      "Country": "Country",
+      "Phone": "Phone Number",
+      "Address": "Address",
+      "prove": "Proof Document"
+
     }
   }
 }
