@@ -66,7 +66,7 @@ class post implements IPage {
             )
         ));
         return <<<body
-<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<link rel="stylesheet" href="/panel/assets/css/easymde.min.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
@@ -85,8 +85,9 @@ body. <<<body
         <div class="col-12">
             <form class="needs-validation" novalidate id="event-form-title">
                 <div class="form-floating">
-                    <input type="text" class="form-control form-control-lg form-rounded" id="event-title" name="event-title" maxlength="20" required style="font-size: 1.4em; font-weight: bold" placeholder="活動標題" autofocus/>
+                    <input type="text" class="form-control form-control-lg form-rounded" id="event-title" name="event-title" maxlength="50" required style="font-size: 1.4em; font-weight: bold" placeholder="活動標題" autofocus/>
                     <label for="event-title">活動標題</label>
+                    <span class="float-end text-secondary" id="event-title-count" style="margin-top: -20px; margin-right: 18px">0/50</span>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
             </form>
@@ -100,13 +101,13 @@ body. <<<body
                         <form class="needs-validation" novalidate id="event-form-data">
                             <div class="col-12 mb-4">
                                 <label for="event-summary" class="form-label">活動摘要</label>
-                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="50" required></textarea>
-                                <span class="float-end text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                <textarea class="form-control" name="event-summary" id="event-summary" rows="2" maxlength="80" required></textarea>
+                                <span class="float-end text-secondary" id="event-summary-count" style="margin-top: -20px; margin-right: 10px">0/80</span>
                                 <div class="invalid-feedback">這裏不能留空哦~~</div>
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="event-summary" class="form-label">活動注意事項</label>
-                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="200"></textarea>
+                                <textarea class="form-control" name="event-precautions" id="event-precautions" rows="4" maxlength="500"></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="event-description" class="form-label">活動描述</label>
@@ -175,8 +176,8 @@ body . <<<body
                             <div class="row">
                                 <div class="col-12 mb-1">
                                     <label for="event-location" class="form-label">活動詳細地址</label>
-                                    <textarea class="form-control" id="event-location" name="event-location" maxlength="50" rows="2" style="resize: none;" required></textarea>
-                                    <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/50</span>
+                                    <textarea class="form-control" id="event-location" name="event-location" maxlength="100" rows="2" style="resize: none;" required></textarea>
+                                    <span class="float-end text-secondary" id="event-location-count" style="margin-top: -20px; margin-right: 10px">0/100</span>
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                                 <div class="col-6 col-sm-4 mb-4">
@@ -329,7 +330,7 @@ body . <<<body
             'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.1/mapbox-gl'],
             '@mapbox/mapbox-gl-geocoder': ['https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min'],
             '@mapbox/mapbox-sdk':['https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min'],
-            easymde: ['https://unpkg.com/easymde/dist/easymde.min'],
+            easymde: ['myself/easymde.min'],
             showdown: ['https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min'],
             xss:['xss.min'],
             'media-select': ['myself/media-select'],
@@ -687,7 +688,7 @@ body;
     private function serializeData(array $data): array {
         //截斷過長字串
         $data['data']['event-summary'] = str_split($data['data']['event-summary'], 50)[0];
-        $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 200)[0];
+        $data['data']['event-precautions'] = str_split($data['data']['event-precautions'], 500)[0];
         $data['data']['event-description'] = str_split($data['data']['event-description'], 1000)[0];
         $data['data']['event-tag'] = str_split($data['data']['event-tag'], 100)[0];
 
@@ -707,7 +708,7 @@ body;
         $purifier = new HTMLPurifier($filterXSS_description);
         //event-description
         $data['data']['event-description-html'] = str_replace("\n", "", $MD_converter->text($data['data']['event-description']));
-        $data['data']['event-description-html'] = str_split($purifier->purify($data['data']['event-description-html']), 1500)[0];
+        $data['data']['event-description-html'] = $purifier->purify($data['data']['event-description-html']);
         //event-precautions
         if ($data['data']['event-precautions'] !== null) {
             $purifier->config = $filterXSS_precautions;

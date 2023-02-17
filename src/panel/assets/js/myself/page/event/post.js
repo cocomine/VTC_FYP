@@ -12,7 +12,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         const _support_country = [ 'hk', 'mo', 'tw', 'cn' ];
 
         /* Count content length */
-        $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
+        $('#event-summary, #event-precautions, #event-location, #event-title').on('input focus', function (){
             const length = $(this).val().length;
             $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
         });
@@ -298,11 +298,15 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                         className: "count",
                         defaultValue: (el) => {
                             el.innerHTML = "0/" + jq_elm.attr('maxlength');
+                            el._count = 0;
                         },
                         onUpdate: (el) => {
                             const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
                             el.innerHTML = length + "/" + maxlength;
-                            if (length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
+                            if (length >= maxlength){
+                                if(length > el._count) toastr.warning(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
+                                el._count = length
+                            }
                         }
                     } ]
             };
@@ -497,7 +501,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             if (country.length > 0 && _support_country.includes(country[0].properties.short_code)){
                 //set country
                 $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', { "bubbles": true }));
-                jq_location.val(poi[0].place_name.slice(0, 50))[0].dispatchEvent(new Event('input', { "bubbles": true }));
+                jq_location.val(poi[0].place_name.slice(0, parseInt(jq_location.attr('maxlength'))))[0].dispatchEvent(new Event('input', { "bubbles": true }));
 
                 //set region
                 const region = poi.filter((val) => val.place_type.includes('region'));
