@@ -267,29 +267,31 @@ body . <<<body2
 <div class='col-12 mt-4'>
     <div class='card'>
         <div class='card-body'>
-            <h1 class='header-title'>{$Text['UserDetail']['Detail']}</h1>
+            <h1 class='header-title'>用戶資料</h1>
             <form id='PassSet' novalidate class='needs-validation'>
+         
                  <div class='col-12'>
-                    <label for='Old_Pass' class='col-form-label'>{$Text['UserDetail']['Organize']}</label>
+                    <label  class='col-form-label'>組織</label>
                     <input class='form-control input-rounded' type='text' id='Organize'  name='Organize' required>
                     <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                  </div>
                  <div class='col-12'>
-                            <label class='col-form-label' for='Language'>{$Text['UserDetail']['Country']}</label>
+                            <label class='col-form-label' for='Language'>國家</label>
                             <select class='input-rounded form-select' name='lang' id='Language'>
-                                <option value='en' $Lang_Sel[0]>{$Text['Lang']['en']}</option>
-                                <option value='zh' $Lang_Sel[1]>{$Text['Lang']['zh']}</option>
-                                <option value='zh-CN' $Lang_Sel[2]>{$Text['Lang']['zh-CN']}</option>
+                                <option value='hk' $Lang_Sel[0]>香港</option>
+                                <option value='tw' $Lang_Sel[1]>台灣</option>
+                                <option value='cn' $Lang_Sel[2]>中國</option>
+                                <option value='mo' $Lang_Sel[3]>澳門</option>
                             </select>
                 </div>
                 
                 <div class='col-12'>
-                    <label for='Phone' class='col-form-label'>{$Text['UserDetail']['Phone']}</label>
+                    <label for='Phone' class='col-form-label'>電話</label>
                     <input class='input-rounded form-control' type='text' id='Phone' pattern='[0-9]{8,}' name='Phone'  required>
                     <div class='invalid-feedback'>{$Text['Form']['Match_Old_Pass']}</div>
                 </div>
                 <div class='col-12'>
-                    <label for='Address' class='col-for-label'>{$Text['UserDetail']['Address']}</label>
+                    <label for='Address' class='col-for-label'>地址</label>
                     <input class='form-control input-rounded' type='Address' id='Password2' pattern='' name='Address' required>
                     <div class='invalid-feedback'>{$Text['Form']['Not_Match_Wrong']}</div>
                 </div>
@@ -297,7 +299,7 @@ body . <<<body2
                 <div class='col-12 mt-4'>
                     <div class='card'>
                             <div class='card-body'>
-                               <h1 class='header-title'>{$Text['UserDetail']['prove']}</h1>
+                               <h1 class='header-title'>證明</h1>
                              <div id='drop-area' class='row py-5 justify-content-center'>
                                 <h5 class='col-auto'>{$Text['drag']}</h5>
                               <div class='w-100'></div>
