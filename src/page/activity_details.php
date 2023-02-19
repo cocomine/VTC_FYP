@@ -381,7 +381,12 @@ class activity_details implements \cocomine\IPage {
     
     <!-- JQuery -->
     <script>
-        loadModules(['myself/page/activity_details'])
+        require.config({
+            paths:{
+                activity_details: ['myself/page/activity_details'],
+            },
+        });
+        loadModules(['activity_details'])
     </script>
     
     body;
