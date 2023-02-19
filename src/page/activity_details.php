@@ -49,7 +49,7 @@ class activity_details implements \cocomine\IPage {
         ));
 
         return <<<body
-    <link href="assets/css/page/activity_details.css" rel="stylesheet">
+    <link href="assets/css/myself/page/activity_details.css" rel="stylesheet">
     <meta charset="utf-8">
     <!-- main 1 -->
     <div class="row justify-content-center">
