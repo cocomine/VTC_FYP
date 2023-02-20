@@ -72,7 +72,7 @@ class post implements IPage {
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min.css"/>
-<link rel="stylesheet" href="/panel/assets/css/myself/page/event.css"/>
+<link rel="stylesheet" href="/panel/assets/css/myself/page/event.post.css"/>
 <pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 body. <<<body
 <div class="alert alert-info alert-dismissible fade show" role="alert" id="found-draft" style="display: none">
@@ -601,7 +601,7 @@ body;
         );
         $output['status'] = array(
             'event-post-date' => explode(' ', $row['post_time'])[0], //split to date
-            'event-post-time' => explode(' ', $row['post_time'])[1], //split to time
+            'event-post-time' => substr(explode(' ', $row['post_time'])[1], 0, -3), //split to time
             'event-status' => $row['state'],
         );
 
@@ -656,8 +656,8 @@ body;
             'plan' => $value['plan'],
             'start' => $value['start_date'],
             'end' => $value['end_date'],
-            'time_start' => $value['start_time'],
-            'time_end' => $value['end_time'],
+            'time_start' => substr($value['start_time'], 0, -3),
+            'time_end' => substr($value['end_time'], 0, -3),
             'type' => $value['type'],
             'week' => json_decode($value['repeat_week']),
         ), $rows);

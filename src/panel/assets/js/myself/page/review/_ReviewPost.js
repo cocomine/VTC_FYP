@@ -7,7 +7,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
     function (jq, EasyMDE, Showdown, xss, mapboxgl, MapboxGeocoder, mapboxSdk, toastr, moment, crs){
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
-        crs.init()
+        crs.init();
 
         /**
          * fill up input data
@@ -16,12 +16,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
         function fillData(draft){
             //活動資料
             $('#event-title').val(draft.title['event-title']);
-            $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
+            $('#event-summary').val(draft.data['event-summary']);
             MDE_description.codemirror.setValue(draft.data['event-description']);
             MDE_precautions.codemirror.setValue(draft.data['event-precautions']);
 
             //活動計劃
-            jq_plan.html("");
             plans = [];
             draft.plan.forEach((plan) => {
                 const tmp = plan_html(plan.id);
@@ -34,7 +33,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             });
 
             //活動時段
-            jq_schedule.html("");
             draft.schedule.forEach((schedule) => {
                 const tmp = schedule_html(schedule.id);
                 tmp.find(`[name^="event-schedule-start"]`).val(schedule.start);
@@ -61,8 +59,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             });
 
             //活動圖片
-            jq_dropZone.html("");
-            jq_image.val(draft.image['event-image']); //set value
             if (draft.image['event-image'] !== ""){
                 draft.image['event-image'].split(",").forEach((value) => {
                     const tmp = image_html(value);
@@ -72,15 +68,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
 
             //活動地址
             $("#event-location").val(draft.location['event-location']);
-            $("#event-country").val(draft.location['event-country'])[0].dispatchEvent(new Event('change', { "bubbles": true }));
+            $("#event-country").val(draft.location['event-country'])[0].dispatchEvent(new Event('change', {bubbles: true}));
             $("#event-region").val(draft.location['event-region']);
-            $("#event-longitude").val(draft.location['event-longitude']);
-            $("#event-latitude").val(draft.location['event-latitude']);
             if (draft.location['event-longitude'] !== "" && draft.location['event-latitude'] !== ""){
                 map_marker.setLngLat([ draft.location['event-longitude'], draft.location['event-latitude'] ]);
                 map.flyTo({
                     center: [ draft.location['event-longitude'], draft.location['event-latitude'] ],
-                    zoom: 15
+                    zoom: 12
                 });
             }
 
@@ -91,8 +85,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
 
             //活動屬性
             $('#event-type').val(draft.attribute['event-type']);
-            $('#event-tag').val("");
-            $('#event-tag-list > [data-tag]').remove();
             if (draft.attribute['event-tag'] !== ""){
                 draft.attribute['event-tag'].split(",").forEach((value) => {
                     addTag(value);
@@ -225,21 +217,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
                         return filterXSS.process(renderedHTML);
                     }
                 },
-                status: [ "lines", "words", "cursor", {
-                        className: "count",
-                        defaultValue: (el) => {
-                            el.innerHTML = "0/" + jq_elm.attr('maxlength');
-                            el._count = 0;
-                        },
-                        onUpdate: (el) => {
-                            const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
-                            el.innerHTML = length + "/" + maxlength;
-                            if (length >= maxlength){
-                                if (length > el._count) toastr.warning(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
-                                el._count = length;
-                            }
-                        }
-                    } ]
+                status: [ "lines", "words", "cursor" ]
             };
         };
 
@@ -250,9 +228,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             element: jq_description[0],
             autosave: { enabled: false },
             placeholder: "活動描述",
-            initialValue: jq_description.val()
         });
-        MDE_description.codemirror.setOption('readOnly', true)
+        MDE_description.codemirror.setOption('readOnly', 'nocursor');
 
         /* precautions markdown editor */
         const jq_precautions = $('#event-precautions');
@@ -262,9 +239,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             autosave: { enabled: false },
             placeholder: "活動注意事項",
             maxHeight: "5rem",
-            initialValue: jq_precautions.val()
         });
-        MDE_precautions.codemirror.setOption('readOnly', true)
+        MDE_precautions.codemirror.setOption('readOnly', 'nocursor');
 
         //######## 活動圖片 #######
         const jq_dropZone = $('#event-image-list');
@@ -445,12 +421,20 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
         }
 
         //############ 活動狀態 #################
+        /* 批准 */
+        $('#event-pass').click(function (){
+
+        })
+
+        /* 駁回 */
+        $('#event-reject').click(function (){
+
+        })
 
         //############ 活動封面 ###############
 
         //############ 活動屬性 #############
         /* tag */
-        const jq_addTag = $('#event-add-tag');
         const jq_tag = $('#event-tag');
         const jq_tagList = $('#event-tag-list');
 
@@ -459,7 +443,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
          * @param {string} name
          */
         function addTag(name){
-            jq_addTag.before(
+            jq_tagList.append(
                 `<div class="col-auto event-tag" data-tag="${name}">${name}</div>`);
             updateTag();
         }

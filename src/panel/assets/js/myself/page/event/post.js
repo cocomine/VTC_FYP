@@ -111,7 +111,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 map_marker.setLngLat([ draft.location['event-longitude'], draft.location['event-latitude'] ]);
                 map.flyTo({
                     center: [ draft.location['event-longitude'], draft.location['event-latitude'] ],
-                    zoom: 15
+                    zoom: 12
                 });
             }
 
@@ -319,7 +319,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             element: jq_description[0],
             autosave: { enabled: false },
             placeholder: "活動描述",
-            initialValue: jq_description.val()
         });
 
         /* precautions markdown editor */
@@ -332,7 +331,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide" ],
             placeholder: "活動注意事項",
             maxHeight: "5rem",
-            initialValue: jq_precautions.val()
         });
 
         //######## 活動圖片 #######
