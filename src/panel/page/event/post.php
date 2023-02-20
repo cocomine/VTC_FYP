@@ -667,17 +667,23 @@ body;
     }
 
     public function path(): string {
-        return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
+        if(sizeof($this->upPath) > 0){
+            return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
+            <li><a href='/panel/post'>活動</a></li>
+            <li><span>修改活動</span></li>";
+        }else{
+            return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
             <li><a href='/panel/post'>活動</a></li>
             <li><span>增加活動</span></li>";
+        }
     }
 
     public function get_Title(): string {
-        return "增加活動 | X-Travel";
+        return sizeof($this->upPath) > 0 ? "修改活動 | X-Travel" : "增加活動 | X-Travel";
     }
 
     public function get_Head(): string {
-        return "增加活動";
+        return sizeof($this->upPath) > 0 ? "修改活動" : "增加活動";
     }
 
     /**
