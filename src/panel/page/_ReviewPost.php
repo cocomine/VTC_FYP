@@ -268,7 +268,7 @@ body;
 
         /* 批准 */
         if($_GET['type'] === "pass"){
-            //todo:pass
+            //todo:test
             return $data;
         }
 
