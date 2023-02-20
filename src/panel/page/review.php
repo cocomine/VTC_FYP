@@ -12,14 +12,25 @@ use mysqli;
 class review implements IPage {
 
     private mysqli $sqlcon;
+    private array $upPath;
+    private _ReviewPost $reviewPost;
 
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
+        $this->upPath = $upPath;
+
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0) $this->reviewPost = new _ReviewPost($conn, $upPath);
     }
     /**
      * @inheritDoc
      */
     public function access(bool $isAuth, int $role, bool $isPost): int {
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->access($isAuth, $role, $isPost);
+        }
+
         if (!$isAuth) return 401;
         if ($role < 2) return 403;
         return 200;
@@ -29,6 +40,11 @@ class review implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->showPage();
+        }
+
         $datatables_lang_url = showText('datatables_js.url');
 
         return <<<body
@@ -73,6 +89,11 @@ body;
      * @inheritDoc
      */
     public function post(array $data): array {
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->post($data);
+        }
+
         global $auth;
 
         /* 取得該用戶建立的活動 */
@@ -101,21 +122,36 @@ body;
      * @inheritDoc
      */
     public function path(): string {
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->path();
+        }
+
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><span>活動</span></li>";
+            <li><span>審核活動</span></li>";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "活動 | X-Travel";
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->get_Title();
+        }
+
+        return "審核活動 | X-Travel";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Head(): string {
-        return "活動";
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reviewPost->get_Head();
+        }
+
+        return "審核活動";
     }
 }

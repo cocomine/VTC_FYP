@@ -683,7 +683,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                             <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6" disabled>
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-6-${id}" value="6" disabled>
                             <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
                         </div>
                         <div class="invalid-feedback">至少選取一天</div>

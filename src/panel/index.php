@@ -283,6 +283,8 @@ function run_apis(array $path, MyAuth $auth) {
                                         <li><a href="/panel/event/post/"><i class="fa-solid fa-calendar-plus"></i><span>增加活動</span></a></li>
                                     </ul>
                                 </li>
+                            <?php }
+                            if ($auth->userdata['Role'] > 2) { ?>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span><?php echo showText("admin.Head") ?></span></a>
                                     <ul>
@@ -290,8 +292,6 @@ function run_apis(array $path, MyAuth $auth) {
                                         <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span><?php echo showText("Account.Head") ?></span></a></li>
                                     </ul>
                                 </li>
-                            <?php } ?>
-                            <?php if ($auth->userdata['Role'] > 2) { ?>
                                 <li><a href="/panel/review/"><i class="fa-solid fa-calendar-check"></i><span>審核活動</span></a></li>
                             <?php } ?>
                             <!-- sidebar content End-->
