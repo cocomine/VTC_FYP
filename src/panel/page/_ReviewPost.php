@@ -264,9 +264,18 @@ body;
 
     public function post(array $data): array {
         global $auth;
+        $output = array('id' => $this->upPath[0]); // load event data
 
-        // load event data
-        $output = array('id' => $this->upPath[0]);
+        /* 批准 */
+        if($_GET['type'] === "pass"){
+
+            return $data;
+        }
+
+        /* 駁回 */
+        if($_GET['type'] === "reject"){
+            return $data;
+        }
 
         /* event table */
         $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");

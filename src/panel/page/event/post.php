@@ -449,7 +449,7 @@ body;
 
         //delete state event
         if ($_GET['type'] === 'del') {
-            $stmt = $this->sqlcon->prepare("DELETE FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt = $this->sqlcon->prepare("UPDATE Event SET state = -1 WHERE ID = ? AND UUID = ?");
             $stmt->bind_param('ss', $data['id'], $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 return array(

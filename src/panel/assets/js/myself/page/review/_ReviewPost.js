@@ -423,12 +423,66 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
         //############ 活動狀態 #################
         /* 批准 */
         $('#event-pass').click(function (){
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
+            /* send */
+            fetch(location.pathname+'?type=pass', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: path[1] })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        setTimeout(() => window.ajexLoad("/panel/review/"), 200);
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
         })
 
         /* 駁回 */
         $('#event-reject').click(function (){
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
+            /* send */
+            fetch(location.pathname+'?type=reject', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: path[1] })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        setTimeout(() => window.ajexLoad("/panel/review/"), 200);
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
         })
 
         //############ 活動封面 ###############
