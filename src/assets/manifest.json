@@ -2,8 +2,9 @@
   "name" : "X-Travel",
   "display" : "minimal-ui",
   "start_url" : "/",
+  "id": "/",
   "short_name" : "X-Travel",
-  "theme_color" : "#ff7112",
+  "theme_color" : "#12a0ff",
   "description" : "X-Travel",
   "background_color" : "#ff9e5b",
   "icons" : [

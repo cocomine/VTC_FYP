@@ -2,6 +2,7 @@
   "name" : "X-Travel Control Panel",
   "display" : "minimal-ui",
   "start_url" : "/panel/",
+  "id": "/panel/",
   "short_name" : "X-Travel Panel",
   "theme_color" : "#ff7112",
   "description" : "X-Travel Control Panel",
