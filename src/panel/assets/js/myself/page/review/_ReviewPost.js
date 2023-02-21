@@ -429,7 +429,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch(location.pathname+'?type=pass', {
+            fetch(location.pathname+'/?type=pass', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -461,7 +461,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch(location.pathname+'?type=reject', {
+            fetch(location.pathname+'/?type=reject', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {

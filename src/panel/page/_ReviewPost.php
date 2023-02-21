@@ -264,18 +264,59 @@ body;
 
     public function post(array $data): array {
         global $auth;
-        $output = array('id' => $this->upPath[0]); // load event data
 
         /* 批准 */
         if($_GET['type'] === "pass"){
-            //todo:pass
-            return $data;
+            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 1 WHERE ID = ? AND UUID = ?");
+            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            if ($stmt->affected_rows > 0) {
+                return array(
+                    'code' => 200,
+                    'Title' => '活動已批准!',
+                );
+            } else {
+                return array(
+                    'code' => 500,
+                    'Title' => '未能成功批准, 請重新嘗試',
+                );
+            }
         }
 
         /* 駁回 */
         if($_GET['type'] === "reject"){
-            return $data;
+            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 2 WHERE ID = ? AND UUID = ?");
+            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            if ($stmt->affected_rows > 0) {
+                return array(
+                    'code' => 200,
+                    'Title' => '活動已駁回!',
+                );
+            } else {
+                return array(
+                    'code' => 500,
+                    'Title' => '未能成功駁回, 請重新嘗試',
+                );
+            }
         }
+
+        # load event data
+        $output = array('id' => $this->upPath[0]);
 
         /* event table */
         $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");
