@@ -10,7 +10,7 @@ use cocomine\IPage;
 use mysqli;
 use panel\page\review\_ReviewPost;
 
-class review implements IPage {
+class reserve implements IPage {
 
     private mysqli $sqlcon;
     private array $upPath;
