@@ -467,7 +467,7 @@ body;
             } else {
                 return array(
                     'code' => 500,
-                    'Title' => '刪除失敗!',
+                    'Title' => '刪除失敗, 請重新嘗試',
                 );
             }
         }
