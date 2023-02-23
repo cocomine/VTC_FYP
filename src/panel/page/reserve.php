@@ -165,7 +165,7 @@ body;
         }
 
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><span>審核活動</span></li>";
+            <li><span>預約管理</span></li>";
     }
 
     /**
@@ -177,7 +177,7 @@ body;
             return $this->reviewPost->get_Title();
         }
 
-        return "審核活動 | X-Travel";
+        return "預約管理 | X-Travel";
     }
 
     /**
@@ -189,6 +189,6 @@ body;
             return $this->reviewPost->get_Head();
         }
 
-        return "審核活動";
+        return "預約管理";
     }
 }

@@ -276,7 +276,8 @@ function run_apis(array $path, MyAuth $auth) {
                                 </ul>
                             </li>
                             <?php if ($auth->userdata['Role'] > 1) { ?>
-                                <li><a href="/panel/reserve/"><i class="fa-solid fa-calendar-check"></i><span>--</span></a></li>
+                                <hr class="text-light">
+                                <li><a href="/panel/reserve/"><i class="fa-solid fa-people-roof"></i><span>預約管理</span></a></li>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
                                     <ul>
@@ -286,6 +287,7 @@ function run_apis(array $path, MyAuth $auth) {
                                 </li>
                             <?php }
                             if ($auth->userdata['Role'] > 2) { ?>
+                                <hr class="text-light">
                                 <li><a href="/panel/review/"><i class="fa-solid fa-calendar-check"></i><span>審核活動</span></a></li>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span><?php echo showText("admin.Head") ?></span></a>
