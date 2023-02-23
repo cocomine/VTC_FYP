@@ -39,41 +39,8 @@ class home implements IPage {
         $jsonLang = json_encode(array());
 
         return <<<body
+<link rel="stylesheet" href="/assets/css/myself/page/home.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<style>
-#homeBackground {
-    background-image: url('/assets/images/background/hot-air-balloon-back.jpg');
-    height: 100vh; 
-    background-repeat: no-repeat; 
-    background-position: center; 
-    background-size: cover;
-    z-index: 1;
-}
-
-#homeBackground:before {
-    content: '';
-    background-color: black;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -1;
-}
-
-.card-img-top {
-    width: 300px;
-    height: 300px;
-    clip: rect(10px,290px,290px,10px);
-}
-
-#homeBackground h5 {
-    font-size: 3em;
-    text-shadow: 1px 1px 2px black, 5px 7px 1em black, 4px 2px 0.2em black;
-    color: white;
-}
-</style>
 
 <div class='container-fluid'>
   <div class="row justify-content-center align-items-center position-relative" id='homeBackground'>
@@ -382,23 +349,6 @@ body. <<<body
 </div>
 body. <<<body
 <script>
-  var owl = $('.owl-carousel');
-  owl.owlCarousel({
-    margin: 10,
-    loop: true,
-    responsive: {
-      0: {
-        items: 1
-      },
-      600: {
-        items: 2
-      },
-      1000: {
-        items: 3
-      }
-    }
-  })
-
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>
 body;

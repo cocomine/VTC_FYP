@@ -322,16 +322,16 @@ function run_apis(array $path, MyAuth $auth) {
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Things to do
+                                            玩樂體驗
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/">Water Activities</a></li>
-                                            <li><a class="dropdown-item" href="/">Land Activities</a></li>
-                                            <li><a class="dropdown-item" href="/">Air Activities<</a></li>
+                                            <li><a class="dropdown-item" href="/">水上活動</a></li>
+                                            <li><a class="dropdown-item" href="/">陸上活動</a></li>
+                                            <li><a class="dropdown-item" href="/">空中活動</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="/">About Us</a></li>
-                                    <li><a href="/">Contact Us</a></li>
+                                    <li><a href="/">關於我們</a></li>
+                                    <li><a href="/">聯絡我們</a></li>
 
 
                                     <?php /* 導航 */
