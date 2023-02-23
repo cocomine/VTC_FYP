@@ -60,10 +60,7 @@ class reserve implements IPage {
                     <thead class="text-capitalize">
                         <tr>
                             <th>活動</th>
-                            <th>活動種類</th>
-                            <th>發佈日期</th>
-                            <th>狀態</th>
-                            <th>審核狀態</th>
+                            <th>活動計劃 / 預約人數</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -81,7 +78,7 @@ class reserve implements IPage {
             'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
         },
     });
-    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/review/review'])
+    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/reserve'])
 </script>
 body;
     }
@@ -96,9 +93,12 @@ body;
         }
 
         global $auth;
+        $output = array();
 
-        /* 取得該用戶建立的活動 */
-        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, review, state, type, name, post_time FROM Event WHERE state >= 0 AND review != 1");
+        /* 取得該用戶建立的活動給參與人數 */
+        /* */
+        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, name FROM Event WHERE UUID = ?");
+        $stmt->bind_param('s', $auth->userdata['UUID']);
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -109,13 +109,50 @@ body;
 
         /* get result */
         $result = $stmt->get_result();
-
-        $data = array();
         while ($row = $result->fetch_assoc()){
-            $data[] = $row;
-        }
+            $temp = array(
+                'ID' => $row['ID'],
+                'thumbnail' => $row['thumbnail'],
+                'summary' => $row['summary'],
+                'name' => $row['name'],
+                'plan' => null
+            );
 
-        return array('data' => $data);
+            /* get plan */
+            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->bind_param('i', $row['ID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* get schedule */
+            $schedule_result = $stmt->get_result();
+            while ($row = $schedule_result->fetch_assoc()){
+                $stmt->prepare("SELECT COALESCE(SUM(plan_people), 0) AS `total` FROM Book_event_detail WHERE event_schedule IN(SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
+                $stmt->bind_param('ii', $row['plan'], $row['Event_ID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                /* get result */
+                $schedule_row = $stmt->get_result()->fetch_assoc();
+                $temp['plan'][] = array(
+                    'plan_name' => $row['plan_name'],
+                    'total' => $schedule_row['total']
+                );
+            }
+
+            $output[] = $temp;
+        }
+        return array('data' => $output);
     }
 
     /**
