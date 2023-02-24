@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr'], function (jq, toastr) {
+define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
     "use strict";
 
     const Lang = JSON.parse($('#langJson').text());
@@ -11,19 +11,27 @@ define(['jquery', 'toastr'], function (jq, toastr) {
     let owl = $('.owl-carousel');
     owl.owlCarousel({
         margin: 10,
-        loop: true,
+        nav: true,
+        dots: true,
+        mergeFit:false,
+        navText: [
+            "<i class=\"fa-solid fa-chevron-left\"></i>",
+            "<i class=\"fa-solid fa-chevron-right\"></i>"
+        ],
+        stagePadding: 40,
+        lazyLoad:true,
         responsive: {
             0: {
-                items: 1
+                items: 1,
             },
-            500: {
-                items: 2
+            576: {
+                items: 2,
             },
-            750: {
-                items: 3
+            992: {
+                items: 3,
             },
-            1000: {
-                items: 4
+            1200: {
+                items: 4,
             }
         }
     })

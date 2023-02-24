@@ -124,34 +124,54 @@ body. <<<body
     
       <div class="col-12">
         <h3><b>香港地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme"><!-- 呢度要留意要加返 'owl-theme' class -->
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <!-- card-img-top start; 用呢一段code,先可以唔同圖片嘅比例亦不會出現拉伸情況 -->
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" alt=""><!-- 要用lazyload請咁樣寫 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- card-img-top stop -->
               <div class="card-body">
                 <h5 class="card-title">激海獨木舟探索</h5>
                 <p class="card-text">炎炎夏日，最重要暢旺大海。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a><!-- 呢度要留意要加返 'btn-rounded' class-->
               </div>
             </div>
           </div>
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
               <div class="card-body">
                 <h5 class="card-title">「兄弟爬山」攀岩體驗</h5>
                 <p class="card-text">在美麗的香港維海面前攀登。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
               </div>
             </div>
           </div>
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Diving_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
               <div class="card-body">
                 <h5 class="card-title">海下世界潛水班</h5>
                 <p class="card-text">在西貢海底中心呼喚愛。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
               </div>
             </div>
           </div>
@@ -190,7 +210,7 @@ body. <<<body
 
       <div class="col-12">
         <h3><b>中國地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Mountaineering_China_01.jpg" class="card-img-top" alt="...">
@@ -246,7 +266,7 @@ body. <<<body
   
       <div class="col-12">
         <h3><b>澳門地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Jump_Macau_01.jpeg" class="card-img-top" alt="...">
@@ -282,7 +302,7 @@ body. <<<body
 
       <div class="col-12">
         <h3><b>台灣地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Climbing_Taiwan_01.jpeg" class="card-img-top" alt="...">
@@ -347,7 +367,7 @@ body. <<<body
       </div>
     </div>
 </div>
-body. <<<body
+body . <<<body
 <script>
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>

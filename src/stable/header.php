@@ -61,6 +61,7 @@ ob_clean();
         <link rel="stylesheet" href="/assets/css/metisMenu.min.css">
         <link rel="stylesheet" href="/assets/css/scrollbar.css">
         <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="/assets/css/owl.theme.default.css">
         <link rel="stylesheet" href="/assets/css/slicknav.min.css">
         <!-- others css -->
         <link rel="stylesheet" href="/assets/css/typography.css">
