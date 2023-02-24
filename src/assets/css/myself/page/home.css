@@ -1,13 +1,33 @@
 #homeBackground {
-    background-image: url('/assets/images/background/hot-air-balloon-back.webp');
     height: 100vh;
+    overflow: hidden;
+}
+
+#homeBackground > div{
+    background-image: url('/assets/images/background/hot-air-balloon-back.webp');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    height: 100%;
+    position: relative;
     z-index: 1;
 }
 
-#homeBackground:before {
+#homeBackground:before{
+    content: '';
+    background-image: url("/assets/images/mask.webp");
+    background-repeat: repeat-x;
+    background-size: contain;
+    position: absolute;
+    background-position: center;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 100px;
+    z-index: 5;
+}
+
+#homeBackground> div:before {
     content: '';
     background-color: black;
     opacity: 0.3;

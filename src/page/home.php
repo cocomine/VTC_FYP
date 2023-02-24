@@ -41,82 +41,81 @@ class home implements IPage {
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/home.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-
-<div class='container-fluid'>
-  <div class="row justify-content-center align-items-center position-relative" id='homeBackground'>
-    <div class="col-auto">
-      <h5>體驗刺激，享受不一樣的生活點滴</h5>
-      <div class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        選擇地區或活動
-        </button>
-          <form class="dropdown-menu p-4">
-            <div class="mb-3">
-                <div class="search-box">
-                    <input type="text" name="search" placeholder="搜尋地點或活動" required>
-                    <i class="ti-search"></i>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        香港地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">潛水</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
+<div id='homeBackground' class="position-relative">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-auto">
+            <h5>體驗刺激，享受不一樣的生活點滴</h5>
+            <div class="dropdown">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              選擇地區或活動
+              </button>
+              <form class="dropdown-menu p-4">
+                  <div class="mb-3">
+                      <div class="search-box">
+                          <input type="text" name="search" placeholder="搜尋地點或活動" required>
+                          <i class="ti-search"></i>
+                    </div>
                   </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        中國地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">熱氣球</a></li>
-                        <li><a class="dropdown-item" href="#">登山</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">滑雪</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
+                  <div class="mb-3">
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              香港地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">潛水</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              中國地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">熱氣球</a></li>
+                              <li><a class="dropdown-item" href="#">登山</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">滑雪</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              澳門地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">笨豬跳</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              台灣地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">潛水</a></li>
+                              <li><a class="dropdown-item" href="#">登山</a></li>
+                              <li><a class="dropdown-item" href="#">跳傘</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                    </div>
                   </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        澳門地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">笨豬跳</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                      </ul>
-                  </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        台灣地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">潛水</a></li>
-                        <li><a class="dropdown-item" href="#">登山</a></li>
-                        <li><a class="dropdown-item" href="#">跳傘</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
-                  </div>
-              </div>
-            </div>
-          </form>
-        </div>      
+              </form>
+            </div>      
+        </div>
     </div>
-  </div>
 </div>
 body. <<<body
 <div class="container mt-4">

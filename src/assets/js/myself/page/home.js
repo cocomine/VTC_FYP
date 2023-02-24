@@ -6,8 +6,7 @@
 define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
     "use strict";
 
-    const Lang = JSON.parse($('#langJson').text());
-
+    /* 輪播圖 */
     let owl = $('.owl-carousel');
     owl.owlCarousel({
         margin: 10,
@@ -35,4 +34,12 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             }
         }
     })
+
+    /* 視差效果 */
+    document.addEventListener('scroll', function(){
+        //index-head Parallax scrolling
+        const scroll = window.scrollY;
+        const index_head = $('#homeBackground > div');
+        index_head[0].style.transform = `translateY(${scroll * 0.4}px)`
+    }, (Modernizr.passiveeventlisteners ? {passive: true} : false))
 })

@@ -346,7 +346,7 @@ function run_apis(array $path, MyAuth $auth) {
                             <nav>
                                 <ul id="nav_menu">
 
-                                    <!-- sidebar content -->
+                                    <!-- sidebar content; 由於以提供自定方式, 注意不會再使用bootstrap導航欄-->
                                     <li>
                                         <a href="/">
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
