@@ -14,7 +14,7 @@
 use cocomine\LoadPageFactory;
 use cocomine\MyAuth;
 use cocomine\MyAuthException;
-use panel\page\home;
+use page\home;
 
 /* header */
 const title = "index.title";
@@ -269,65 +269,67 @@ function run_apis(array $path, MyAuth $auth) {
                 </div>
             </div>
         </div>
-        <div class="mainheader-area sticky-sm-top">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-12 col-sm mt-2">
-                        <div class="row justify-content-between align-items-center">
-                            <div class="col-auto">
-                                <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
-                            </div>
+        <div class="sticky-sm-top">
+            <div class="mainheader-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-sm mt-2">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-auto">
+                                    <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
+                                </div>
 
-                            <!-- notify START -->
-                            <div class="col-auto">
-                                <div class="d-md-inline-block d-block me-md-4">
-                                    <ul class="notification-area">
-                                        <!-- notify START -->
-                                        <li class="dropdown">
-                                            <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                            <div class="dropdown-menu bell-notify-box notify-box">
-                                                <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
-                                                <div class="nofity-list scrollbar-dynamic" data-notify>
-                                                    <!-- notify-item -->
+                                <!-- notify START -->
+                                <div class="col-auto">
+                                    <div class="d-md-inline-block d-block me-md-4">
+                                        <ul class="notification-area">
+                                            <!-- notify START -->
+                                            <li class="dropdown">
+                                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                                <div class="dropdown-menu bell-notify-box notify-box">
+                                                    <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
+                                                    <div class="nofity-list scrollbar-dynamic" data-notify>
+                                                        <!-- notify-item -->
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <!-- notify END -->
-                                    </ul>
+                                            </li>
+                                            <!-- notify END -->
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- profile info  -->
-                    <div class="col-12 col-sm-auto clearfix text-end">
-                        <div class="clearfix d-md-inline-block d-block">
-                            <div class="user-profile">
-                                <!-- user avatar -->
-                                <img class="avatar user-thumb"
-                                     src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
-                                     alt="avatar">
-                                <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
-                                </h4>
-                                <div class="dropdown-menu" style="z-index: 1030">
-                                    <!-- dropdown menu content START -->
-                                    <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
-                                        <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
-                                    </a>
-                                    <?php
-                                    if ($auth->islogin) {
-                                        echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
+                        <!-- profile info  -->
+                        <div class="col-12 col-sm-auto clearfix text-end">
+                            <div class="clearfix d-md-inline-block d-block">
+                                <div class="user-profile">
+                                    <!-- user avatar -->
+                                    <img class="avatar user-thumb"
+                                         src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
+                                         alt="avatar">
+                                    <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
+                                        <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
+                                    </h4>
+                                    <div class="dropdown-menu" style="z-index: 1030">
+                                        <!-- dropdown menu content START -->
+                                        <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
+                                            <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
+                                        </a>
+                                        <?php
+                                        if ($auth->islogin) {
+                                            echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
                                                     <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
-                                            "</a>";
-                                    } else {
-                                        echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
+                                                "</a>";
+                                        } else {
+                                            echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
                                                     <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
-                                            "</a>";
-                                    }
-                                    ?>
-                                    <!-- dropdown menu content END -->
-                                </div>
+                                                "</a>";
+                                        }
+                                        ?>
+                                        <!-- dropdown menu content END -->
+                                    </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -344,22 +346,22 @@ function run_apis(array $path, MyAuth $auth) {
                             <nav>
                                 <ul id="nav_menu">
 
-                                    <!-- sidebar content -->
+                                    <!-- sidebar content; 由於以提供自定方式, 注意不會再使用bootstrap導航欄-->
                                     <li>
                                         <a href="/">
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" role="button">Things to do</a>
+                                        <a href="javascript:void(0)" role="button">玩樂體驗</a>
                                         <ul class="submenu">
-                                            <li><a href="#">Water Activities</a></li>
-                                            <li><a href="#">Land Activities</a></li>
-                                            <li><a href="#">Air Activities</a></li>
+                                            <li><a href="#">水上活動</a></li>
+                                            <li><a href="#">陸上活動</a></li>
+                                            <li><a href="#">空中活動</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Contact Us</a></li>
+                                    <li><a href="#">關於我們</a></li>
+                                    <li><a href="#">聯絡我們</a></li>
 
 
                                     <?php /* 導航 */
@@ -472,7 +474,6 @@ function run_apis(array $path, MyAuth $auth) {
             <div id="content" class="overflow-hidden"></div>
         </div>
         <!-- Main area end -->
-    </div>
     </div>
     <!-- main content area end -->
 
