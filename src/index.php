@@ -243,35 +243,65 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="mainheader-area">
+        <div class="col-12 col-sm py-1 fixed-top bg-light" style="display: none" id="fixed-header">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-auto">
+                    <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
+                </div>
+
+                <!-- notify START -->
+                <div class="col-auto">
+                    <div class="d-md-inline-block d-block me-md-4">
+                        <ul class="notification-area">
+                            <!-- notify START -->
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                <div class="dropdown-menu bell-notify-box notify-box">
+                                    <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
+                                    <div class="nofity-list scrollbar-dynamic" data-notify>
+                                        <!-- notify-item -->
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- notify END -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mainheader-area sticky-sm-top">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="/"><img src="/assets/images/icon/logo.png" alt="logo"></a>
+                    <div class="col-12 col-sm mt-2">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-auto">
+                                <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
+                            </div>
+
+                            <!-- notify START -->
+                            <div class="col-auto">
+                                <div class="d-md-inline-block d-block me-md-4">
+                                    <ul class="notification-area">
+                                        <!-- notify START -->
+                                        <li class="dropdown">
+                                            <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                            <div class="dropdown-menu bell-notify-box notify-box">
+                                                <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
+                                                <div class="nofity-list scrollbar-dynamic" data-notify>
+                                                    <!-- notify-item -->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!-- notify END -->
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- profile info & task notification -->
-                    <div class="col-md-9 clearfix text-end">
-                        <div class="d-md-inline-block d-block me-md-4">
-                            <ul class="notification-area">
-
-                                <!-- notify -->
-                                <li class="dropdown">
-                                    <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
-                                    <div class="dropdown-menu bell-notify-box notify-box">
-                                        <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
-                                        <div class="nofity-list scrollbar-dynamic" id="notify">
-                                            <!-- notify-item -->
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
+                    <!-- profile info  -->
+                    <div class="col-12 col-sm-auto clearfix text-end">
                         <div class="clearfix d-md-inline-block d-block">
                             <div class="user-profile">
-
                                 <!-- user avatar -->
                                 <img class="avatar user-thumb"
                                      src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($auth->userdata['Email']))); ?>"
@@ -280,8 +310,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     <span id="username"><?php echo $auth->userdata['Name'] ?? showText('index.visitor') ?></span><i class="fa fa-angle-down"></i>
                                 </h4>
                                 <div class="dropdown-menu" style="z-index: 1030">
-
-                                    <!-- dropdown menu content -->
+                                    <!-- dropdown menu content START -->
                                     <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
                                         <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                     </a>
@@ -296,6 +325,7 @@ function run_apis(array $path, MyAuth $auth) {
                                             "</a>";
                                     }
                                     ?>
+                                    <!-- dropdown menu content END -->
                                 </div>
 
                             </div>
