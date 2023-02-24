@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "9/1/2023",
+  "Last_Update": "12/2/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -71,6 +71,9 @@
           "Waiting": "Waiting for upload..."
         }
       }
+    },
+    "datatables_js": {
+      "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/en-GB.json"
     }
   }
 }

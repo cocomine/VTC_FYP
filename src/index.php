@@ -14,7 +14,7 @@
 use cocomine\LoadPageFactory;
 use cocomine\MyAuth;
 use cocomine\MyAuthException;
-use panel\page\home;
+use page\home;
 
 /* header */
 const title = "index.title";
@@ -320,18 +320,16 @@ function run_apis(array $path, MyAuth $auth) {
                                             <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                         </a>
                                     </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            玩樂體驗
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/">水上活動</a></li>
-                                            <li><a class="dropdown-item" href="/">陸上活動</a></li>
-                                            <li><a class="dropdown-item" href="/">空中活動</a></li>
+                                    <li>
+                                        <a href="javascript:void(0)" role="button">玩樂體驗</a>
+                                        <ul class="submenu">
+                                            <li><a href="#">水上活動</a></li>
+                                            <li><a href="#">陸上活動</a></li>
+                                            <li><a href="#">空中活動</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="/">關於我們</a></li>
-                                    <li><a href="/">聯絡我們</a></li>
+                                    <li><a href="#">關於我們</a></li>
+                                    <li><a href="#">聯絡我們</a></li>
 
 
                                     <?php /* 導航 */
@@ -368,60 +366,60 @@ function run_apis(array $path, MyAuth $auth) {
             </div>
         </div>
         <!-- header area end -->
-            <!-- page title area end -->
+        <!-- page title area end -->
 
-            <!-- Broadcast -->
-            <!--<div class="alert-dismiss" id="Broadcast">
+        <!-- Broadcast -->
+        <!--<div class="alert-dismiss" id="Broadcast">
             <?php
-            /*          $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
-                        $stmt = $auth->sqlcon->prepare('SELECT ID, Msg, status, Always_close FROM Broadcast WHERE Broadcast = TRUE ORDER BY Time');
-                        if (!$stmt->execute()) {
-                            echo "<div class='alert alert-info alert-dismissible fade show' role='alert'>
-                                Database Error!
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span class=\"fa fa-times\"></span></button>
-                              </div>";
+        /*          $Broadcast_dismiss = $_COOKIE['Broadcast-dismiss'] ?? '0,0';
+                    $stmt = $auth->sqlcon->prepare('SELECT ID, Msg, status, Always_close FROM Broadcast WHERE Broadcast = TRUE ORDER BY Time');
+                    if (!$stmt->execute()) {
+                        echo "<div class='alert alert-info alert-dismissible fade show' role='alert'>
+                            Database Error!
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span class=\"fa fa-times\"></span></button>
+                          </div>";
+                    }
+                    $result = $stmt->get_result();
+                    while ($row = $result->fetch_assoc()) {
+                        if (strpos($Broadcast_dismiss, strval($row['ID'])) === false) {
+                            switch ($row['status']) {
+                                case 1:
+                                    $status = 'success';
+                                    break;
+                                case 2:
+                                    $status = 'danger';
+                                    break;
+                                case 3:
+                                    $status = 'warning';
+                                    break;
+                                case 4:
+                                    $status = 'info';
+                                    break;
+                                default:
+                                    $status = 'primary';
+                                    break;
+                            } //status
+
+                            $bc = "<div class='alert alert-{$status} alert-dismissible fade show' role='alert'>{$row['Msg']}"; //Msg
+
+                            //Always_close
+                            if ($row['Always_close'] == true)
+                                $bc .= "<button type='button' class='close' data-dismiss='alert' aria-label='Close' data-row-id='{$row['ID']}'><span class='fa fa-times'></span></button>";
+
+                            $bc .= "</div>";
+                            echo $bc;
                         }
-                        $result = $stmt->get_result();
-                        while ($row = $result->fetch_assoc()) {
-                            if (strpos($Broadcast_dismiss, strval($row['ID'])) === false) {
-                                switch ($row['status']) {
-                                    case 1:
-                                        $status = 'success';
-                                        break;
-                                    case 2:
-                                        $status = 'danger';
-                                        break;
-                                    case 3:
-                                        $status = 'warning';
-                                        break;
-                                    case 4:
-                                        $status = 'info';
-                                        break;
-                                    default:
-                                        $status = 'primary';
-                                        break;
-                                } //status
-
-                                $bc = "<div class='alert alert-{$status} alert-dismissible fade show' role='alert'>{$row['Msg']}"; //Msg
-
-                                //Always_close
-                                if ($row['Always_close'] == true)
-                                    $bc .= "<button type='button' class='close' data-dismiss='alert' aria-label='Close' data-row-id='{$row['ID']}'><span class='fa fa-times'></span></button>";
-
-                                $bc .= "</div>";
-                                echo $bc;
-                            }
-                        }
-                        */
-            ?>
+                    }
+                    */
+        ?>
             </div>-->
-            <!-- Broadcast End -->
+        <!-- Broadcast End -->
 
-            <!-- Main area start -->
-            <div class="main-content-inner main-content">
+        <!-- Main area start -->
+        <div class="main-content-inner main-content">
 
-                <!-- global language translate -->
-                <pre style="display: none" id="globalLang">
+            <!-- global language translate -->
+            <pre style="display: none" id="globalLang">
                     <?php
                     echo json_encode(array(
                         'Error' => showText('Error'),
@@ -429,22 +427,21 @@ function run_apis(array $path, MyAuth $auth) {
                     ))
                     ?>
                 </pre>
-                <!-- global language translate End -->
+            <!-- global language translate End -->
 
-                <div class="heard-area pt-4 pb-3">
-                    <div class="container">
-                        <h4 class="page-title" id="title"></h4>
-                        <nav class="pt-2" aria-label="breadcrumb">
-                            <ol class="breadcrumb" id="path"></ol>
-                        </nav>
-                    </div>
+            <div class="heard-area pt-4 pb-3">
+                <div class="container">
+                    <h4 class="page-title" id="title"></h4>
+                    <nav class="pt-2" aria-label="breadcrumb">
+                        <ol class="breadcrumb" id="path"></ol>
+                    </nav>
                 </div>
-
-                <!-- Main content-->
-                <div id="content"></div>
             </div>
-            <!-- Main area end -->
+
+            <!-- Main content-->
+            <div id="content" class="overflow-hidden"></div>
         </div>
+        <!-- Main area end -->
     </div>
     <!-- main content area end -->
 

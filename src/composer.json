@@ -1,7 +1,6 @@
 {
     "require": {
         "php": "^7.4",
-      "chillerlan/php-qrcode": "3.2.0",
       "phpmailer/phpmailer": "^6.1",
       "psr/log": "^1.1",
       "google/apiclient": "^2.4",
@@ -11,7 +10,9 @@
       "ezyang/htmlpurifier": "^4.16",
       "ext-mysqli": "*",
       "ext-json": "*",
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+      "ext-intl": "*",
+      "ext-mbstring": "*"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

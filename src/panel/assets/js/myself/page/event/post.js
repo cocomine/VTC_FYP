@@ -3,8 +3,8 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'timepicker', 'jquery.scrollbar.min' ],
-    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr){
+define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.upload', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', '@mapbox/mapbox-sdk', 'moment', 'myself/datepicker', 'jquery.crs.min', 'toastr', 'bootstrap', 'timepicker', 'jquery.scrollbar.min' ],
+    function (jq, EasyMDE, Showdown, xss, media_select, media_upload, mapboxgl, MapboxGeocoder, mapboxSdk, moment, datepicker, crs, toastr, bootstrap){
         "use strict";
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
@@ -12,7 +12,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         const _support_country = [ 'hk', 'mo', 'tw', 'cn' ];
 
         /* Count content length */
-        $('#event-summary, #event-precautions, #event-location').on('input focus', function (){
+        $('#event-summary, #event-precautions, #event-location, #event-title').on('input focus', function (){
             const length = $(this).val().length;
             $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
         });
@@ -35,9 +35,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             e.preventDefault();
             //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
-            console.log(draft);
+            fillData(draft);
+        });
 
-            //fill up
+        /**
+         * fill up input data
+         * @param {Object} draft
+         */
+        function fillData(draft){
             //活動資料
             $('#event-title').val(draft.title['event-title']);
             $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -106,7 +111,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 map_marker.setLngLat([ draft.location['event-longitude'], draft.location['event-latitude'] ]);
                 map.flyTo({
                     center: [ draft.location['event-longitude'], draft.location['event-latitude'] ],
-                    zoom: 15
+                    zoom: 12
                 });
             }
 
@@ -118,6 +123,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動屬性
             $('#event-type').val(draft.attribute['event-type']);
             $('#event-tag').val("");
+            $('#event-tag-list > [data-tag]').remove();
             if (draft.attribute['event-tag'] !== ""){
                 draft.attribute['event-tag'].split(",").forEach((value) => {
                     addTag(value);
@@ -127,11 +133,39 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動封面
             $('#event-thumbnail').val(draft.thumbnail['event-thumbnail']);
             $('#event-thumbnail-img').attr('src', '/panel/api/media/' + draft.thumbnail['event-thumbnail']).attr('alt', draft.thumbnail['event-thumbnail']);
-        });
+        }
 
         /* 檢查草稿 */
         const found_draft = () => {
-            if (localStorage.getItem("event-draft") !== null){
+            //edit post - load post
+            if (/([0-9]+)(\/)*$/.test(location.pathname)){
+                fetch(location.pathname + '/', {
+                    method: 'POST',
+                    redirect: 'error',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: "{}"
+                }).then((response) => {
+                    response.json().then((json) => {
+                        console.log(json);
+
+                        if (json.code === 200){
+                            fillData(json.data);
+                            $('#event-recycle, #event-update').show();
+                            $('#event-daft, #event-post').hide();
+                        }else{
+                            toastr.error(json.Message, json.Title);
+                        }
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+
+            //new post - found draft
+            else if (localStorage.getItem("event-draft") !== null){
                 $('#found-draft').show();
             }
         };
@@ -264,11 +298,15 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                         className: "count",
                         defaultValue: (el) => {
                             el.innerHTML = "0/" + jq_elm.attr('maxlength');
+                            el._count = 0;
                         },
                         onUpdate: (el) => {
                             const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
                             el.innerHTML = length + "/" + maxlength;
-                            if (length > maxlength) alert(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
+                            if (length >= maxlength){
+                                if(length > el._count) toastr.warning(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
+                                el._count = length
+                            }
                         }
                     } ]
             };
@@ -281,7 +319,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             element: jq_description[0],
             autosave: { enabled: false },
             placeholder: "活動描述",
-            initialValue: jq_description.val()
         });
 
         /* precautions markdown editor */
@@ -294,7 +331,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "guide" ],
             placeholder: "活動注意事項",
             maxHeight: "5rem",
-            initialValue: jq_precautions.val()
         });
 
         //######## 活動圖片 #######
@@ -463,7 +499,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             if (country.length > 0 && _support_country.includes(country[0].properties.short_code)){
                 //set country
                 $('#event-country').val(country[0].properties.short_code.toUpperCase())[0].dispatchEvent(new Event('change', { "bubbles": true }));
-                jq_location.val(poi[0].place_name.slice(0, 50))[0].dispatchEvent(new Event('input', { "bubbles": true }));
+                jq_location.val(poi[0].place_name.slice(0, parseInt(jq_location.attr('maxlength'))))[0].dispatchEvent(new Event('input', { "bubbles": true }));
 
                 //set region
                 const region = poi.filter((val) => val.place_type.includes('region'));
@@ -536,9 +572,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             $(this).parents('[data-plan]').remove();
 
             // 時段計劃
-            const index = plan.findIndex((value) => value.plan_id === plan_id);
+            const index = plans.findIndex((value) => value.plan_id === plan_id);
             if (index >= 0){
-                plan.splice(index, 1);
+                plans.splice(index, 1);
                 plan_select.find(`[value='${plan_id}']`).remove();
             }
         });
@@ -645,7 +681,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                             <label class="form-check-label" for="event-schedule-week-5-${id}">週五</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="event-schedule-week-1" id="event-schedule-week-6-${id}" value="6" disabled>
+                            <input class="form-check-input" type="checkbox" name="event-schedule-week-${id}" id="event-schedule-week-6-${id}" value="6" disabled>
                             <label class="form-check-label" for="event-schedule-week-6-${id}">週六</label>
                         </div>
                         <div class="invalid-feedback">至少選取一天</div>
@@ -772,11 +808,48 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             toastr.success("已成功將草稿儲存在瀏覽器", "儲存成功!");
         });
 
-        /* 發佈 */
-        $('#event-post').click(function (e){
-            /* 檢查 */
+        /* 確認移除 */
+        $('#event-delete').click(function (){
+            const path = /([0-9]+)(\/)*$/.exec(location.pathname); //get post id
+
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/event/post/?type=del', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: path[1] })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        bootstrap.Modal.getOrCreateInstance($('#delete_modal')[0]).hide();
+                        toastr.success(json.Message, json.Title);
+                        setTimeout(() => window.ajexLoad("/panel/event/"), 200);
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+
+        /**
+         * 檢查有效性
+         * @param {Object} data 數據
+         * @return {boolean} 是否有效
+         */
+        const validity_data = (data) => {
             let valid = true;
-            const data = serializeData();
             for (let jqFormKey in jq_form){
                 jq_form[jqFormKey].addClass('was-validated');
                 valid = jq_form[jqFormKey][0].checkValidity() ? valid : false;
@@ -791,7 +864,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 $('#event-schedule-feedback').show();
                 valid = false;
             }
-            if (!valid) return;
+            return valid;
+        };
+
+        /* 發佈 */
+        $('#event-post').click(function (e){
+            /* 檢查 */
+            const data = serializeData();
+            if (!validity_data(data)) return;
 
             /* 封鎖按鈕 */
             const bt = $(this);
@@ -809,11 +889,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 body: JSON.stringify(data)
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json);
-
                     if (json.code === 200){
                         toastr.success(json.Message, json.Title);
-                        window.ajexLoad("/event/");
+                        window.ajexLoad("/panel/event/");
                     }else{
                         toastr.error(json.Message, json.Title);
                     }
@@ -825,15 +903,43 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             });
         });
 
-        /* 移到回收桶 */
-        // $('#event-recycle').click(function (){
-        //     //todo
-        // });
-        //
-        // /* 確認移除 */
-        // $('#event-delete').click(function (){
-        //     //todo
-        // });
+        /* 更新 */
+        $('#event-update').click(function (){
+            /* 檢查 */
+            const data = serializeData();
+            if (!validity_data(data)) return;
+            const post_id = /([0-9]+)(\/)*$/.exec(location.pathname)[1];
+
+            /* 封鎖按鈕 */
+            const bt = $(this);
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/event/post/?type=update', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: post_id, data })
+            }).then((response) => {
+                response.json().then((json) => {
+                    if (json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        window.ajexLoad("/panel/event/")
+                    }else{
+                        toastr.error(json.Message, json.Title);
+                    }
+                });
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
+
+        });
 
         /**
          * 處理data
@@ -934,12 +1040,16 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (/(.+),/.test(val)){
-                if (jq_tag.val().length + val.length - 1 > 100) {
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
 
-                addTag(val.slice(0, -1));
+                const word = val.split(',');
+                console.log(word);
+                word.forEach((value) => {
+                    if (value.length > 0) addTag(value.trim());
+                });
                 elm.val('');
             }else if (val === ","){
                 elm.val('');
@@ -948,13 +1058,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const elm = $(this);
             const val = elm.val();
 
-            if (/(.+)/.test(val)) {
-                if (jq_tag.val().length + val.length - 1 > 100) {
+            if (/(.+)/.test(val)){
+                if (jq_tag.val().length + val.length - 1 > 100){
                     alert("已超出字數限制");
                     return;
                 }
 
-                addTag(val);
+                addTag(val.trim());
                 elm.val('');
             }
         }).keyup(function (e){
@@ -962,13 +1072,13 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             const val = elm.val();
 
             if (e.key === "Enter"){
-                if (/(.+)/.test(val)) {
-                    if (jq_tag.val().length + val.length - 1 > 100) {
+                if (/(.+)/.test(val)){
+                    if (jq_tag.val().length + val.length - 1 > 100){
                         alert("已超出字數限制");
                         return;
                     }
 
-                    addTag(val);
+                    addTag(val.trim());
                     elm.val('');
                 }
             }
@@ -991,12 +1101,12 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* update tag value */
-        function updateTag() {
+        function updateTag(){
             const tag_elm = jq_tagList.children('[data-tag]');
             const list = tag_elm.map((index, elm) => elm.dataset.tag).toArray();
             const val = list.join(',');
             jq_tag.val(val);
-            $('#event-tag-count').text(val.length + "/100")
+            $('#event-tag-count').text(val.length + "/100");
         }
 
         return { found_draft };
