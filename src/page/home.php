@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-namespace panel\page;
+namespace page;
 
 use cocomine\IPage;
 use mysqli;
