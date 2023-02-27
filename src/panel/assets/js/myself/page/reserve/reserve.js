@@ -46,8 +46,6 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                 data: 'plan',
                 render: (data, type) => {
                     if (type === 'display'){
-                        console.log(data)
-
                         return data ? data.map((value) => `<b>${value.plan_name}:</b> <code>${value.total}</code>`).join('<br>') : "沒有任何活動計劃"
                     }else{
                         return data ? data.map((value) => value.plan_name + ',' +value.total).join(';') : "沒有任何活動計劃";

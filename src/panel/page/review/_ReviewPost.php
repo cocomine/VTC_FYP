@@ -403,7 +403,8 @@ body;
 
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><a href='/panel/review'>審核活動</a></li><li><span>活動 " . $this->upPath[0] . "</span></li>";
+            <li><a href='/panel/review'>審核活動</a></li>
+            <li><span>活動 " . $this->upPath[0] . "</span></li>";
     }
 
     public function get_Title(): string {

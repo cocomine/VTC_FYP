@@ -132,7 +132,7 @@ body;
             /* get schedule */
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT COALESCE(SUM(plan_people), 0) AS `total` FROM Book_event_detail WHERE event_schedule IN(SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
+                $stmt->prepare("SELECT COALESCE(SUM(plan_people), 0) AS `total` FROM Book_event_plan WHERE event_schedule IN(SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
                 $stmt->bind_param('ii', $row['plan'], $row['Event_ID']);
                 if (!$stmt->execute()) {
                     return array(
