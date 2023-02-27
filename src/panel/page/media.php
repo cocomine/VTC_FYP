@@ -65,7 +65,10 @@ class media implements IPage {
             <div class='modal-body'>
                 <div class="row">
                     <div class="col text-center">
-                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-height: 70vh"/>
+                        <img src='' draggable='false' alt='xxxx' style="max-height: 70vh"/>
+                        <object data="" type="" style="height: 100vh; width: 100%; display: none">
+                            <a href="" target="_blank">{$Text['unsupportedView']}</a>
+                        </object>
                     </div>
                     <div class="col-12 col-md-3" id="Media-modal-detail">
                         <p>

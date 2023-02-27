@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * 1.0
+ * 1.5
  */
 
 /*
@@ -150,7 +150,8 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
             }
 
             //檔案名稱20字或以下
-            if (file.name.length > 100) {
+            const file_tmp = file.name.match(/(.+)(\..+)/)
+            if (file_tmp[1].length > 20) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');

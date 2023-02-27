@@ -489,7 +489,8 @@
             "Media"
           ],
           "drag": "You can drag files here to upload"
-        }
+        },
+        "unsupportedView": "Your browser does not support direct viewing, please download the file first"
       }
     },
     "Media-upload": {

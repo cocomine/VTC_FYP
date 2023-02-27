@@ -24,17 +24,42 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
             }
 
             //html
-            const map = data.body.map((value) =>
-                `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
-                    <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
-                        <div class="overflow-hidden">
-                            <div class="media-list-center">
-                                <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${Lang.Media.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>`
-            );
+            const map = data.body.map((value) => {
+                if (/(image\/.+)/.test(value.mime)){
+                    return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                    <div class="overflow-hidden">
+                                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name ?? ''}</span>
+                                        <div class="media-list-center">
+                                            <img src="/panel/assets/images/image_loading.webp" draggable="false" alt="${Lang.Media.replace('%s', value.id)}" data-src="/panel/api/media/${value.id}" class="lazy"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                }else if (value.mime === "application/pdf"){
+                    return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                    <div class="overflow-hidden">
+                                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name}</span>
+                                        <div class="media-list-center">
+                                            <img src="/panel/assets/images/file-pdf-solid.svg" draggable="false" alt="${Lang.Media.replace('%s', value.id)}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                }else{
+                    return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                    <div class="overflow-hidden">
+                                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name}</span>
+                                        <div class="media-list-center">
+                                            <img src="/panel/assets/images/file-solid.svg" draggable="false" alt="${Lang.Media.replace('%s', value.id)}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                }
+            });
 
             //print out
             media_list = data.body;
@@ -94,10 +119,17 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
             const bs_modal = bootstrap.Modal.getOrCreateInstance(modal[0]);
 
             modal.find('.modal-title > b > span').text(id);
-            modal.find('img').attr('src', '/panel/api/media/' + id).attr('alt', 'Media %s'.replace('%s', id));
 
             const media = media_list.filter((value) => value.id === id)[0];
             const detail = $('#Media-modal-detail');
+            if (/(image\/.+)/.test(media.mime)){
+                modal.find('object').hide();
+                modal.find('img').attr('src', '/panel/api/media/' + id).attr('alt', 'Media %s'.replace('%s', id)).show();
+            }else{
+                modal.find('img').hide();
+                modal.find('object').attr('data', '/panel/api/media/' + id).attr('type', media.mime)
+                .show().children().attr('href', 'https://' + location.host + '/panel/api/media/' + id);
+            }
             detail.find('p:nth-child(1) > input').val(media.name).attr('data-id', id);
             detail.find('p:nth-child(2) > code').text(id);
             detail.find('p:nth-child(3) > code').text(media.datetime);
@@ -200,7 +232,7 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
             headers: {
                 'Content-Type': 'text/json; charset=UTF-8'
             },
-            body: JSON.stringify({name: elm.val()})
+            body: JSON.stringify({ name: elm.val() })
         }).then(async (response) => {
             const data = await response.json();
 
@@ -211,6 +243,6 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
             }
         }).catch((error) => {
             console.log(error);
-        })
+        });
     }
 });
