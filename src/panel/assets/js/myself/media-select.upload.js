@@ -13,7 +13,7 @@
  * $LangJson => Place text in json format
  * json must conform to the structure, you can refer to lines 22 to 31
  */
-define(['media-select'], function (media_select) {
+define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
     const jq_modal = media_select.data.jq_modal();
     let timeout;
     const drop_area = jq_modal.find('.modal-content')
@@ -88,9 +88,9 @@ define(['media-select'], function (media_select) {
     drop_area.on('drop', function (e) {
         handleFiles((e.originalEvent && e.originalEvent.dataTransfer.files));
     })
-    $('#file-sel').change(function (e) {
+    drop_area.find('#file-sel').change(function (e) {
         handleFiles(e.target.files);
-        $('#file-sel').val('');
+        $(this).val('');
     })
 
     /**
@@ -98,7 +98,7 @@ define(['media-select'], function (media_select) {
      * @param mime
      */
     function setInputAccept(mime) {
-        $('#file-sel').attr('accept', mime)
+        drop_area.find('#file-sel').attr('accept', mime)
     }
 
     /**
@@ -108,6 +108,9 @@ define(['media-select'], function (media_select) {
     function handleFiles(files) {
         let limit = 4;
         let upload_queue = [];
+
+        /* 自動跳回選擇媒體分頁 */
+        bootstrap.Tab.getOrCreateInstance(drop_area.find('[data-bs-target="#Media-select-pane"]')[0]).show();
 
         for (let file of files) {
             /* 顯示進度 */
@@ -121,7 +124,7 @@ define(['media-select'], function (media_select) {
                             </div>
                         </div>
                     </div>`);
-            jq_modal.find('.media-list').prepend(tmp);
+            drop_area.find('.media-list').prepend(tmp);
             const progressBar = tmp.find('.progress-bar');
 
             /* 進行檢查 */
