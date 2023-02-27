@@ -68,9 +68,13 @@ class media implements IPage {
                         <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-height: 70vh"/>
                     </div>
                     <div class="col-12 col-md-3" id="Media-modal-detail">
-                        <p>{$Text['Media_ID']} <span>xxxx</span></p>
-                        <p>{$Text['Upload_Time']} <span>xxxx</span></p>
-                        <p>{$Text['MIME_type']} <span>xxxx</span></p>
+                        <p>
+                            <label for="file-name" class="form-label">{$Text['name']}</label>
+                            <input type="text" class="form-control" id="file-name" maxlength="20">
+                        </p>
+                        <p>{$Text['Media_ID']} <code class="bg-light">xxxx</code></p>
+                        <p>{$Text['Upload_Time']} <code class="bg-light">xxxx</code></p>
+                        <p>{$Text['MIME_type']} <code class="bg-light">xxxx</code></p>
                         <p>{$Text['URL']} <code class="bg-light">xxxx</code></p>
                         <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{$Text['Show_Original']}</a>
                         <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} {$Text['Delete'][1]}</button>

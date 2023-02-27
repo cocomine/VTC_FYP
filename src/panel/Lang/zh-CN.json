@@ -463,6 +463,7 @@
         "Upload_Time": "上传时间:",
         "MIME_type": "MIME 类型:",
         "URL": "网址:",
+        "name": "档案名称:",
         "No_media": "没有媒体",
         "respond": {
           "single": {
@@ -473,6 +474,10 @@
             "success": "所选媒体已成功删除",
             "partially": "所选媒体已部分删除",
             "fail": "所选媒体删除失败"
+          },
+          "edit": {
+            "success": "媒體已成功修改",
+            "fail": "媒體修改失敗"
           }
         },
         "Media_Select": {

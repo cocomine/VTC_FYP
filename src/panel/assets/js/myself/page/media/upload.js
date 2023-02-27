@@ -65,7 +65,8 @@ define(['jquery'], function () {
             }
 
             //檔案名稱20字或以下
-            if (file.name.length > 100) {
+            const file_tmp = file.name.match(/(.+)(\..+)/)
+            if (file_tmp[1].length > 20) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
