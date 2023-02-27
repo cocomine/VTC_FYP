@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2023.
+ * Create by cocomine
+ */
+
+.event-tag{
+    background-color: var(--bs-gray-300);
+    border-radius: 50px;
+    font-size: 1.15em;
+    margin: 4px;
+}
+#event-image-list.media-list{
+    flex-wrap: nowrap;
+    /*overflow-x: auto;*/
+}
+#event-image-list.media-list .media-list-focus{
+    border: lightgrey 1px solid;
+}
+#event-image-list.media-list .media-list-center{
+    cursor: grab;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate(50%,50%);
+}
+#event-image-list.media-list .media-list-center > img{
+    transform: translate(-50%,-50%);
+    height: 100%;
+    max-width: none;
+}
+.CodeMirror.cm-s-easymde.CodeMirror-wrap{
+    background-color: #e9ecef;
+}
+.form-check-input:disabled, .form-check-input:disabled~.form-check-label{
+    opacity: 1;
+}

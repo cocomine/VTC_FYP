@@ -110,6 +110,14 @@ class media implements IApi {
                 return;
             }
 
+            /* 檔案存在 */
+            if(!file_exists($row['path'])){
+                http_response_code(404);
+                header("Content-type: image/webp");
+                readfile('./assets/images/image_not_found.webp');
+                return;
+            }
+
             /* 展示圖片 */
             header("Content-type: " . $row['MIME']);
             readfile($row['path']);

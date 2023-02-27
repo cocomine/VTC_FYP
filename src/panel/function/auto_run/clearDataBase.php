@@ -6,7 +6,7 @@
 
 ini_set('error_log', '/volume1/web/error_log/clearDataBase.log');
 
-require (__DIR__.'/../config.inc.php');
+require (__DIR__.'/../../../../secret/config.inc.php');
 
 $sqlcon = new mysqli(Cfg_Sql_Host, Cfg_Sql_dbUser, Cfg_Sql_dbPass, Cfg_Sql_dbName);
 $stmt = $sqlcon->prepare("TRUNCATE Block_ip");

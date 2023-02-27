@@ -57,7 +57,7 @@ RewriteRule ^.*$ /index.php [L,QSA]
     Header set Cache-Control "no-cache, max-age=64000"
   </FilesMatch>
   <FilesMatch "sw.min.js">
-    Header set Service-Worker-Allowed "/panel"
+    Header set Service-Worker-Allowed "/"
   </FilesMatch>
 </IfModule>
 # END HttpHeaders

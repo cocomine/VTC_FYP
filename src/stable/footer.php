@@ -27,7 +27,7 @@
 <!-- page container area end -->
 <!-- script load start-->
 <!-- require js -->
-<script src="/panel/assets/js/require.js"></script>
+<script src="/assets/js/require.js"></script>
 <script>
     require.config({
         baseUrl: "/assets/js",
@@ -102,7 +102,7 @@
         window.formatPrice = ajex.formatPrice
     })
 </script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<script src="/assets/js/sw-register.js"></script>
 <!-- script load end -->
 </body>
 </html>

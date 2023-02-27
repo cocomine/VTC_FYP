@@ -78,17 +78,17 @@ header('Content-Type:text/html; charset=utf-8');
     </head>
 <body>
 <!-- head start -->
-<!--[if lt IE 8]>
+    <!--[if lt IE 8]>
     <p class="browserupgrade"><?php echo showText("header.browserupgrade"); ?></p>
-<![endif]-->
-<noscript><p id="noscript"><?php echo showText("header.noscript"); ?></noscript>
-<!-- preloader area start -->
-<div id="preloader">
-    <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
-    <div class="position-absolute top-50 start-50 translate-middle">
-        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+    <![endif]-->
+    <noscript><p id="noscript"><?php echo showText("header.noscript"); ?></noscript>
+    <!-- preloader area start -->
+    <div id="preloader">
+        <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+        </div>
     </div>
-</div>
 <!-- preloader area end -->
 <!--google one tap -->
 <?php
