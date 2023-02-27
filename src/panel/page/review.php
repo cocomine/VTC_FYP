@@ -33,7 +33,7 @@ class review implements IPage {
         }
 
         if (!$isAuth) return 401;
-        if ($role < 2) return 403;
+        if ($role < 3) return 403;
         return 200;
     }
 

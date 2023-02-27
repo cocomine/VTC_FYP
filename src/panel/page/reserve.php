@@ -8,20 +8,20 @@ namespace panel\page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\page\review\_ReviewPost;
+use panel\page\reserve\_ReservePost;
 
 class reserve implements IPage {
 
     private mysqli $sqlcon;
     private array $upPath;
-    private _ReviewPost $reviewPost;
+    private _ReservePost $reservePost;
 
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
         $this->upPath = $upPath;
 
         /* 檢視審核活動 */
-        if(sizeof($this->upPath) > 0) $this->reviewPost = new _ReviewPost($conn, $upPath);
+        if(sizeof($this->upPath) > 0) $this->reservePost = new _ReservePost($conn, $upPath);
     }
     /**
      * @inheritDoc
@@ -29,7 +29,7 @@ class reserve implements IPage {
     public function access(bool $isAuth, int $role, bool $isPost): int {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->access($isAuth, $role, $isPost);
+            return $this->reservePost->access($isAuth, $role, $isPost);
         }
 
         if (!$isAuth) return 401;
@@ -43,7 +43,7 @@ class reserve implements IPage {
     public function showPage(): string {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->showPage();
+            return $this->reservePost->showPage();
         }
 
         $datatables_lang_url = showText('datatables_js.url');
@@ -89,7 +89,7 @@ body;
     public function post(array $data): array {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->post($data);
+            return $this->reservePost->post($data);
         }
 
         global $auth;
@@ -161,7 +161,7 @@ body;
     public function path(): string {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->path();
+            return $this->reservePost->path();
         }
 
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
@@ -174,7 +174,7 @@ body;
     public function get_Title(): string {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->get_Title();
+            return $this->reservePost->get_Title();
         }
 
         return "預約管理 | X-Travel";
@@ -186,7 +186,7 @@ body;
     public function get_Head(): string {
         /* 檢視審核活動 */
         if(sizeof($this->upPath) > 0){
-            return $this->reviewPost->get_Head();
+            return $this->reservePost->get_Head();
         }
 
         return "預約管理";
