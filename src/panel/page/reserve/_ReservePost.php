@@ -105,7 +105,51 @@ body;
      * @inheritDoc
      */
     public function post(array $data): array {
-        return array('data' => array());
+
+        $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.full_name, b.book_date FROM Book_event b, User u, User_detail d WHERE b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
+        $stmt->bind_param('s', $this->upPath[0]);
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        $output = array();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $tmp = array(
+                'ID' => $row['ID'],
+                'Name' => $row['Name'],
+                'full_name' => $row['full_name'],
+                'book_date' => $row['book_date'],
+                'plan' => array(),
+            );
+
+            $stmt->prepare("SELECT p.plan_name, b.plan_people FROM Book_event_plan b, Event_schedule e, Event_plan p 
+                                    WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
+            $stmt->bind_param('sss', $row['ID'], $this->upPath[0], $this->upPath[0]);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            $plan_result = $stmt->get_result();
+            while ($row = $plan_result->fetch_assoc()) {
+                $tmp['plan'][] = array(
+                    'plan_name' => $row['plan_name'],
+                    'plan_people' => $row['plan_people'],
+                );
+            }
+
+            $output[] = $tmp;
+        }
+
+        return array('data' => $output);
     }
 
     /**
