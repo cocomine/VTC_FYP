@@ -74,14 +74,62 @@ class _ReservePost implements \cocomine\IPage {
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">用戶資料</h4>
-                    
+                    <div class="row gy-2">
+                        <div class="col-6">
+                            <label class="form-label" for="lastname">姓氏</label>
+                            <input type="text" class="form-control form-rounded" id="lastname" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="firstname">名字</label>
+                            <input type="text" class="form-control form-rounded" id="firstname" readonly>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="country">國家 / 地區</label>
+                            <input type="text" class="form-control form-rounded" id="country" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="sex">性別</label>
+                            <input type="text" class="form-control form-rounded" id="sex" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="birth">出生日期</label>
+                            <input type="text" class="form-control form-rounded" id="birth" readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">預約時段</h4>
+                    <h4 class="card-title">預約詳細</h4>
+                    <div class="col-12 my-2 border border-secondary border-opacity-50 border-2 rounded text-center">
+                        <p>預約日期</p>
+                        <code class="fs-3" id="reserve_date">000.000.000</code>
+                    </div>
+                    <div class="col-12">
+                        <table class="table">
+                            <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
+                                <tr>
+                                    <th scope="col">活動計劃</th>
+                                    <th scope="col">活動時段</th>
+                                    <th scope="col">預約人數</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reserve_detail" class="table-group-divider">
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 <div>
             </div>
         </div>
