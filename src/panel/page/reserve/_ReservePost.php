@@ -108,8 +108,16 @@ class _ReservePost implements \cocomine\IPage {
                             <input type="text" class="form-control form-rounded" id="firstname" readonly>
                         </div>
                         <div class="col-12">
+                            <label class="form-label" for="email">電郵地址</label>
+                            <input type="text" class="form-control form-rounded" id="email" readonly>
+                        </div>
+                        <div class="col-6">
                             <label class="form-label" for="country">國家 / 地區</label>
                             <input type="text" class="form-control form-rounded" id="country" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="phone">電話號碼</label>
+                            <input type="text" class="form-control form-rounded" id="phone" readonly>
                         </div>
                         <div class="col-6">
                             <label class="form-label" for="sex">性別</label>
@@ -130,7 +138,7 @@ class _ReservePost implements \cocomine\IPage {
                     <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇用戶</div>
                     <div style="display: none" data-detail>
                         <div class="col-12 my-2 border border-secondary border-opacity-50 border-2 rounded text-center">
-                            <p>預約日期</p>
+                            <p>預約日期 (年/月/日)</p>
                             <code class="fs-3" id="reserve_date">000.000.000</code>
                         </div>
                         <div class="col-12">
@@ -145,8 +153,11 @@ class _ReservePost implements \cocomine\IPage {
                                 <tbody id="reserve_detail" class="table-group-divider"></tbody>
                             </table>
                         </div>
+                        <div class="col-12">
+                            <p class="text-secondary">下單時間: <span id="order_time">000.000.000</span></p>
+                        </div>
                     </div>
-                <div>
+                </div>
             </div>
         </div>
     </div>
@@ -172,7 +183,34 @@ body;
 
         /* 展示用戶預約詳情 */
         if($_GET['type'] === "detail"){
-            return $data;
+            $stmt = $this->sqlcon->prepare("SELECT u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
+                FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.User = u.UUID AND b.User = d.UUID");
+            $stmt->bind_param('s', $data['id']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            $output = $stmt->get_result()->fetch_assoc(); //get result
+
+            # 展示預約計劃
+            $stmt->prepare("SELECT p.plan_name, b.plan_people, e.start_time, e.end_time FROM Book_event_plan b, Event_schedule e, Event_plan p 
+                                    WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
+            $stmt->bind_param('sss', $data['id'], $output['event_ID'], $output['event_ID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            $output['plan'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); //get result
+
+            return array('code' => 200, 'data' => $output);
         }
 
         /* 展示預約用戶列表 */
