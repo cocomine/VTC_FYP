@@ -49,21 +49,44 @@ class _ReservePost implements \cocomine\IPage {
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
 <div class="col-12 col-lg-6">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">已遞交預約用戶</h4>
-            <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇用戶查看資料</div>
-            <div class="data-tables datatable-primary">
-                <table id="dataTable" class="w-100">
-                    <thead class="text-capitalize">
-                        <tr>
-                            <th>用戶</th>
-                            <th>預約時間</th>
-                            <th>活動計劃 / 預約人數</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+    <div class="row gy-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">已遞交預約用戶</h4>
+                    <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇用戶查看資料</div>
+                    <div class="data-tables datatable-primary">
+                        <table id="dataTable" class="w-100">
+                            <thead class="text-capitalize">
+                                <tr>
+                                    <th>用戶</th>
+                                    <th>預約時間</th>
+                                    <th>活動計劃 / 預約人數</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">過去預約用戶</h4>
+                    <div class="data-tables datatable-primary">
+                        <table id="dataTable2" class="w-100">
+                            <thead class="text-capitalize">
+                                <tr>
+                                    <th>用戶</th>
+                                    <th>預約時間</th>
+                                    <th>活動計劃 / 預約人數</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -74,7 +97,8 @@ class _ReservePost implements \cocomine\IPage {
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">用戶資料</h4>
-                    <div class="row gy-2">
+                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇用戶</div>
+                    <div class="row gy-2" style="display: none" data-detail>
                         <div class="col-6">
                             <label class="form-label" for="lastname">姓氏</label>
                             <input type="text" class="form-control form-rounded" id="lastname" readonly>
@@ -103,32 +127,24 @@ class _ReservePost implements \cocomine\IPage {
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">預約詳細</h4>
-                    <div class="col-12 my-2 border border-secondary border-opacity-50 border-2 rounded text-center">
-                        <p>預約日期</p>
-                        <code class="fs-3" id="reserve_date">000.000.000</code>
-                    </div>
-                    <div class="col-12">
-                        <table class="table">
-                            <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
-                                <tr>
-                                    <th scope="col">活動計劃</th>
-                                    <th scope="col">活動時段</th>
-                                    <th scope="col">預約人數</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reserve_detail" class="table-group-divider">
-                                <tr>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇用戶</div>
+                    <div style="display: none" data-detail>
+                        <div class="col-12 my-2 border border-secondary border-opacity-50 border-2 rounded text-center">
+                            <p>預約日期</p>
+                            <code class="fs-3" id="reserve_date">000.000.000</code>
+                        </div>
+                        <div class="col-12">
+                            <table class="table">
+                                <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
+                                    <tr>
+                                        <th scope="col">活動計劃</th>
+                                        <th scope="col">活動時段</th>
+                                        <th scope="col">預約人數</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reserve_detail" class="table-group-divider"></tbody>
+                            </table>
+                        </div>
                     </div>
                 <div>
             </div>
@@ -154,7 +170,13 @@ body;
      */
     public function post(array $data): array {
 
-        $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.full_name, b.book_date FROM Book_event b, User u, User_detail d WHERE b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
+        /* 展示用戶預約詳情 */
+        if($_GET['type'] === "detail"){
+            return $data;
+        }
+
+        /* 展示預約用戶列表 */
+        $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.last_name, d.first_name, b.book_date FROM Book_event b, User u, User_detail d WHERE b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
         $stmt->bind_param('s', $this->upPath[0]);
         if (!$stmt->execute()) {
             return array(
@@ -170,7 +192,7 @@ body;
             $tmp = array(
                 'ID' => $row['ID'],
                 'Name' => $row['Name'],
-                'full_name' => $row['full_name'],
+                'full_name' => $row['last_name'].' '.$row['first_name'],
                 'book_date' => $row['book_date'],
                 'plan' => array(),
             );
