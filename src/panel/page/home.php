@@ -39,19 +39,69 @@ class home implements IPage {
 
         $Text = showText('index.Content');
 
-        /* json 語言 */
-        $jsonLang = json_encode(array());
-
         if($this->role < 2){
             return "<script>location.replace('/')</script>";
         }else{
             return <<<body
-<pre id='langJson' style='display: none'>$jsonLang</pre>
-<div class='col-12 mt-4'>
+<div class="col-md-6 col-lg-3 mt-5 mb-3">
+    <div class="card">
+        <div class="seo-fact sbg1">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <div class="seofct-icon"><i class="fa-solid fa-coins"></i>本年賺取</div>
+                <h2>$ <span id="year-earned">--</span></h2>
+            </div>
+            <canvas id="year-earned-chart" height="50"></canvas>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 col-lg-3 mt-md-5 mb-3">
+    <div class="card">
+        <div class="seo-fact sbg2">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本年預約</div>
+                <h2 id="year-order">--</h2>
+            </div>
+            <canvas id="year-order-chart" height="50"></canvas>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 col-lg-3 mt-md-5 mb-3">
+    <div class="card">
+        <div class="seo-fact sbg3">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本月賺取</div>
+                <h2>$ <span id="month-earned">--</span></h2>
+            </div>
+            <canvas id="month-earned-chart" height="50"></canvas>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 col-lg-3 mt-md-5 mb-3">
+    <div class="card">
+        <div class="seo-fact sbg4">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本月預約</div>
+                <h2 id="month-order">--</h2>
+            </div>
+            <canvas id="month-order-chart" height="50"></canvas>
+        </div>
+    </div>
+</div>
 
+今天預約訂單list
+來自國家/地區統計chart
+
+最熱門活動chart
+最近三日評論
 </div>
 <script>
-loadModules(['myself/datepicker', 'myself/page/home'])
+require.config({
+    paths: {
+        'chartjs': ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min"],
+        //'chartjs-adapter-moment': ["https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min"],
+    }
+});
+loadModules(['chartjs', 'myself/page/home'])
 </script>
 body;
         }
@@ -62,7 +112,9 @@ body;
     function post(array $data): array {
         global $auth;
 
-        return array();
+        if($_GET['type'] === "count"){
+
+        }
     }
 
     /* path輸出 */
