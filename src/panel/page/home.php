@@ -48,6 +48,7 @@ class home implements IPage {
             return <<<body
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <div class='col-12 mt-4'>
+
 </div>
 <script>
 loadModules(['myself/datepicker', 'myself/page/home'])

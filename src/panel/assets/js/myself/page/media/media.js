@@ -127,8 +127,14 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
                 modal.find('img').attr('src', '/panel/api/media/' + id).attr('alt', 'Media %s'.replace('%s', id)).show();
             }else{
                 modal.find('img').hide();
-                modal.find('object').attr('data', '/panel/api/media/' + id).attr('type', media.mime)
-                .show().children().attr('href', 'https://' + location.host + '/panel/api/media/' + id);
+                modal.find('object').show().children().attr('href', 'https://' + location.host + '/panel/api/media/' + id);
+
+                if(modal.find('object')[0].contentDocument){
+                    const doc = modal.find('object')[0].contentDocument;
+                    doc.location.replace('/panel/api/media/' + id);
+                }else{
+                    modal.find('object').attr('data', '/panel/api/media/' + id).attr('type', media.mime)
+                }
             }
             detail.find('p:nth-child(1) > input').val(media.name).attr('data-id', id);
             detail.find('p:nth-child(2) > code').text(id);

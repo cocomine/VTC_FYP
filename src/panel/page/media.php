@@ -80,7 +80,7 @@ class media implements IPage {
                         <p>{$Text['MIME_type']} <code class="bg-light">xxxx</code></p>
                         <p>{$Text['URL']} <code class="bg-light">xxxx</code></p>
                         <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{$Text['Show_Original']}</a>
-                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} {$Text['Delete'][1]}</button>
+                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} 1 {$Text['Delete'][1]}</button>
                     </div>
                 </div>
             </div>
