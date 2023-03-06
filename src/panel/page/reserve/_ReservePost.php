@@ -59,6 +59,7 @@ class _ReservePost implements \cocomine\IPage {
                         <table id="dataTable" class="w-100">
                             <thead class="text-capitalize">
                                 <tr>
+                                    <th>#</th>
                                     <th>用戶</th>
                                     <th>預約時間</th>
                                     <th>活動計劃 / 預約人數</th>
@@ -78,6 +79,7 @@ class _ReservePost implements \cocomine\IPage {
                         <table id="dataTable2" class="w-100">
                             <thead class="text-capitalize">
                                 <tr>
+                                    <th>#</th>
                                     <th>用戶</th>
                                     <th>預約時間</th>
                                     <th>活動計劃 / 預約人數</th>
@@ -142,19 +144,22 @@ class _ReservePost implements \cocomine\IPage {
                             <code class="fs-3" id="reserve_date">000.000.000</code>
                         </div>
                         <div class="col-12">
-                            <table class="table">
-                                <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
-                                    <tr>
-                                        <th scope="col">活動計劃</th>
-                                        <th scope="col">活動時段</th>
-                                        <th scope="col">預約人數</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="reserve_detail" class="table-group-divider"></tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
+                                        <tr>
+                                            <th scope="col">活動計劃</th>
+                                            <th scope="col">活動時段</th>
+                                            <th scope="col">預約人數</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reserve_detail"></tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="col-12">
                             <p class="text-secondary">下單時間: <span id="order_time">000.000.000</span></p>
+                            <p class="text-secondary">訂單編號: # <span id="order_id">00</span></p>
                         </div>
                     </div>
                 </div>
@@ -183,7 +188,7 @@ body;
 
         /* 展示用戶預約詳情 */
         if($_GET['type'] === "detail"){
-            $stmt = $this->sqlcon->prepare("SELECT u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
+            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
                 FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.User = u.UUID AND b.User = d.UUID");
             $stmt->bind_param('s', $data['id']);
             if (!$stmt->execute()) {

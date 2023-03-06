@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce9f0cd3c3b84c511122a1ab506d6704",
+    "content-hash": "50d6b52e3891a0b513048775b4139974",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -293,6 +293,63 @@
                 "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
             },
             "time": "2022-09-18T07:06:19+00:00"
+        },
+        {
+            "name": "fightbulc/moment",
+            "version": "1.34",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/moment.php.git",
+                "reference": "c813018ff87dfe77353f838908fc644cc5536b50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/moment.php/zipball/c813018ff87dfe77353f838908fc644cc5536b50",
+                "reference": "c813018ff87dfe77353f838908fc644cc5536b50",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^5.5 || ^6.5 || ^7.5 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Moment\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Parse, validate, manipulate, and display dates in PHP w/ i18n support. Inspired by moment.js",
+            "keywords": [
+                "date",
+                "display",
+                "format",
+                "i18n",
+                "locale",
+                "manipulate",
+                "moment",
+                "parse",
+                "time",
+                "translation",
+                "validate"
+            ],
+            "support": {
+                "issues": "https://github.com/fightbulc/moment.php/issues",
+                "source": "https://github.com/fightbulc/moment.php/tree/1.34"
+            },
+            "time": "2023-01-26T21:18:59+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1890,7 +1947,10 @@
         "php": "^7.4",
         "ext-mysqli": "*",
         "ext-json": "*",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*",
+        "ext-imagick": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

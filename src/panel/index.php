@@ -60,6 +60,9 @@ function fetch_path(): array {
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
+    if (preg_match("/^\?.*$/", $path[count($path) - 1])) {
+        $path = array_slice($path, 0, -1);
+    }
     if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
@@ -107,6 +110,7 @@ function run_page(array $path, MyAuth $auth) {
                     'content' => $homePage->showPage()
                 ));
             }
+            exit();
         }
     } else {
 

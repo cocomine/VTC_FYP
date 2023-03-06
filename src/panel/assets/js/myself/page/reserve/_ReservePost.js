@@ -17,6 +17,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             url: $('#datatables_lang_url').text()
         },
         columns: [
+            {data: "ID"},
             {
                 data: 'Name',
                 render: function (data, type, row){
@@ -77,12 +78,25 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
         ],
     });
 
-    /* show user more info */
+    /* 請求用戶詳細資訊 */
     $("#dataTable, #dataTable2").on('click', 'a[data-id]', function (e){
         e.preventDefault();
         const id = $(this).data('id');
+        showUserInfo(id)
+    });
 
-        fetch('/panel/reserve/?type=detail', {
+    /* 自動載入用戶詳細資訊 */
+    const hashtag = location.hash;
+    if(hashtag.length > 0) {
+        showUserInfo(hashtag.slice(1))
+    }
+
+    /**
+     * 顯示用戶詳細資訊
+     * @param id 訂單id
+     */
+    function showUserInfo(id){
+        fetch(location.pathname+'?type=detail', {
             method: 'POST',
             redirect: 'error',
             headers: {
@@ -90,38 +104,39 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({ id })
-        }).then((response) => {
-            response.ok && response.json().then((json) => {
-                if (json.code === 200){
-                    $('[data-select]').remove();
-                    $('[data-detail]').show();
-                    const data = json.data;
+        }).then(async (response) => {
+            const json = await response.json();
+            if (response.ok && json.code === 200){
+                $('[data-select]').remove();
+                $('[data-detail]').show();
+                const data = json.data;
+                window.history.pushState({url: location.pathname+'#'+data.ID}, '', location.pathname+'#'+data.ID);
 
-                    //load data
-                    $('#lastname').val(data.last_name);
-                    $('#firstname').val(data.first_name);
-                    $('#email').val(data.Email);
-                    $('#phone').val('+' + data.phone_code + ' ' + data.phone);
-                    $('#country').val(country[data.country]);
-                    $('#sex').val(sex[data.sex]);
-                    $('#birth').val(data.birth);
+                //load data
+                $('#lastname').val(data.last_name);
+                $('#firstname').val(data.first_name);
+                $('#email').val(data.Email);
+                $('#phone').val('+' + data.phone_code + ' ' + data.phone);
+                $('#country').val(country[data.country]);
+                $('#sex').val(sex[data.sex]);
+                $('#birth').val(data.birth);
 
-                    $('#reserve_date').text(moment(data.book_date).format('YYYY/M/DD'));
-                    $('#order_time').text(data.order_datetime);
-                    $('#reserve_detail').html(data.plan.map((value) => {
-                        return `<tr>
+                $('#reserve_date').text(moment(data.book_date).format('YYYY/M/DD'));
+                $('#order_time').text(data.order_datetime);
+                $('#order_id').text(data.ID);
+                $('#reserve_detail').html(data.plan.map((value) => {
+                    return `<tr>
                                     <td>${value.plan_name}</td>  
                                     <td>${value.start_time}<i class="fa-solid fa-angles-right mx-2"></i>${value.end_time}</td>
                                     <td>${value.plan_people}</td>
-                                </tr>`
-                    }));
+                                </tr>`;
+                }));
 
-                }else{
-                    toastr.error(json.Message, json.Title);
-                }
-            });
+            }else{
+                toastr.error(json.Message, json.Title);
+            }
         }).catch((error) => {
             console.log(error);
         });
-    });
+    }
 });

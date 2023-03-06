@@ -14,7 +14,8 @@
       "ext-intl": "*",
       "ext-mbstring": "*",
       "ext-fileinfo": "*",
-      "ext-imagick": "*"
+      "ext-imagick": "*",
+        "fightbulc/moment": "^1.34"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
