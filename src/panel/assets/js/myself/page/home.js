@@ -3,8 +3,9 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'chartjs', 'moment' ], function (jq, toastr, Chart){
+define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], function (jq, toastr, Chart, moment){
     "use strict";
+    $('.today-order-list').scrollbar();
 
     /* 數據統計 */
     fetch('/panel/?type=count', {

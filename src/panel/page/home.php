@@ -47,6 +47,11 @@ class home implements IPage {
             return "<script>location.replace('/')</script>";
         } else {
             return <<<body
+<style>
+.today-order-list{
+    height: 245px;
+}
+</style>
 <div class="col-md-6 col-lg-3">
     <div class="card">
         <div class="seo-fact sbg1">
@@ -92,21 +97,23 @@ class home implements IPage {
     </div>
 </div>
 body . <<<body
-<div class="col-xl-8">
+<div class="col-lg-8">
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">今天預約訂單</h4>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered zero-configuration">
-                    <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
-                    <tr>
-                        <th>#</th>
-                        <th>用戶</th>
-                        <th>預約時間</th>
-                        <th>活動計劃 / 預約人數</th>
-                    </tr>
+            <div class="scrollbar-dynamic today-order-list">
+                <table class="table table-striped">
+                    <thead class="table-primary text-light sticky-top" style="--bs-table-bg: var(--primary-color)">
+                        <tr>
+                            <th>#</th>
+                            <th>用戶</th>
+                            <th>預約時間</th>
+                            <th>活動計劃 / 預約人數</th>
+                        </tr>
                     </thead>
-                    <tbody id="today-order"></tbody>
+                    <tbody id="today-order">
+                        <tr><td colspan="4" class="text-center">目前沒有資料</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
