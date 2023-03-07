@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], function (jq, toastr, Chart, moment){
+define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ], function (jq, toastr, Chart, ajex){
     "use strict";
     $('.today-order-list').scrollbar();
     const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
@@ -262,7 +262,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], func
             });
             $('#month-order').text(nFormatter(json.data.month.map((item) => item.count).reduce((a, b) => a + b, 0), 1))
         }else{
-            toastr.error(json.Message, json.Title);
+            toastr.error(json.Message, json.Title ?? globalLang.Error);
         }
     }).catch((error) => {
         console.log(error);
@@ -307,48 +307,74 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], func
                 </tr>`
             ));
         }else{
-            toastr.error(json.Message, json.Title);
+            toastr.error(json.Message, json.Title ?? globalLang.Error);
         }
     }).catch((error) => {
         console.log(error);
     });
 
-    new Chart($('#county')[0].getContext('2d'), {
-        // The type of chart we want to create
-        type: 'doughnut',
-        // The data for our dataset
-        data: {
-            labels: ["香港", "澳門", "台灣", "中國大陸"],
-            datasets: [{
-                hoverBackgroundColor: [
-                    "#8919FE",
-                    "#12C498",
-                    "#F8CB3F",
-                    "#e34444"
-                ],
-                backgroundColor: [
-                    "rgba(137,25,254,0.8)",
-                    "rgba(18,196,152,0.8)",
-                    "rgba(248,203,63,0.8)",
-                    "rgba(227,68,68,0.8)"
-                ],
-                borderColor: "#fff",
-                hoverBorderColor: "#fff",
-                hoverOffset: 8,
-                data: [810, 410, 260, 150],
-            }]
+    /* 顧客國家/地區 */
+    fetch('/panel/?type=country', {
+        method: 'POST',
+        redirect: 'error',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
         },
-        // Configuration options go here
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-            },
-            animation: {
-                easing: "easeInOutBack"
+        body: JSON.stringify({})
+    }).then(async (response) => {
+        const json = await response.json();
+        if (response.ok && json.code === 200){
+            const data = json.data;
+            console.log(json);
+
+            if(data.length <= 0){
+                $('#country').replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                return;
             }
+
+            new Chart($('#country')[0].getContext('2d'), {
+                // The type of chart we want to create
+                type: 'doughnut',
+                // The data for our dataset
+                data: {
+                    labels: data.map((item) => country[item.country]),
+                    datasets: [{
+                        hoverBackgroundColor: [
+                            "#8919FE",
+                            "#12C498",
+                            "#F8CB3F",
+                            "#e34444"
+                        ],
+                        backgroundColor: [
+                            "rgba(137,25,254,0.8)",
+                            "rgba(18,196,152,0.8)",
+                            "rgba(248,203,63,0.8)",
+                            "rgba(227,68,68,0.8)"
+                        ],
+                        borderColor: "#fff",
+                        hoverBorderColor: "#fff",
+                        hoverOffset: 8,
+                        data: data.map((item) => item.count),
+                    }]
+                },
+                // Configuration options go here
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                    },
+                    animation: {
+                        easing: "easeInOutBack"
+                    }
+                }
+            });
+        }else{
+            toastr.error(json.Message, json.Title ?? globalLang.Error);
         }
+    }).catch((error) => {
+        console.log(error);
     });
 
     /**

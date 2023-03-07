@@ -47,7 +47,7 @@ class home implements IPage {
             return <<<body
 <style>
 .today-order-list{
-    height: 297px;
+    height: 20rem;
 }
 </style>
 <div class="col-md-6 col-lg-3">
@@ -65,7 +65,7 @@ class home implements IPage {
     <div class="card">
         <div class="seo-fact sbg2">
             <div class="p-4 d-flex justify-content-between align-items-center">
-                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本年預約</div>
+                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本年新單</div>
                 <h2 id="year-order">--</h2>
             </div>
             <canvas id="year-order-chart" height="50"></canvas>
@@ -87,7 +87,7 @@ class home implements IPage {
     <div class="card">
         <div class="seo-fact sbg4">
             <div class="p-4 d-flex justify-content-between align-items-center">
-                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本月預約</div>
+                <div class="seofct-icon"><i class="fa-solid fa-receipt"></i>本月新單</div>
                 <h2 id="month-order">--</h2>
             </div>
             <canvas id="month-order-chart" height="50"></canvas>
@@ -98,13 +98,13 @@ body . <<<body
 <div class="col-lg-8">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">今天預約訂單</h4>
+            <h4 class="card-title">今天預約</h4>
             <div class="scrollbar-dynamic today-order-list">
                 <table class="table table-striped">
                     <thead class="table-primary text-light sticky-top" style="--bs-table-bg: var(--primary-color)">
                         <tr>
                             <th>#</th>
-                            <th>顧客</th>
+                            <th>客戶</th>
                             <th>活動計劃 / 預約人數</th>
                             <th>預約時間</th>
                         </tr>
@@ -122,8 +122,9 @@ body . <<<body
 <div class="col-lg-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title float-start">顧客國家/地區</h4><small class="text-muted card-title">(過去6個月)</small>
-            <canvas id="county" height="233"></canvas>
+            <h4 class="card-title float-start">顧客國家/地區</h4>
+            <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
+            <canvas id="country" height="233"></canvas>
         </div>
     </div>
 </div>
@@ -153,7 +154,7 @@ body;
             /* 年度 */
             $stmt = $this->sqlcon->prepare("SELECT m.text, IFNULL(SUM(b.pay_price), 0) AS `total`, COUNT(b.ID) AS `count`
                                                 FROM months_calendar m LEFT JOIN Book_event b ON (
-                                                    m.months = MONTH(b.book_date) AND YEAR(b.book_date) = YEAR(CURRENT_DATE) AND b.event_ID IN (SELECT ID FROM Event WHERE UUID = ?))
+                                                    m.months = MONTH(b.order_datetime) AND YEAR(b.order_datetime) = YEAR(CURRENT_DATE) AND b.event_ID IN (SELECT ID FROM Event WHERE UUID = ?))
                                                 GROUP BY m.months ORDER BY m.months");
             $stmt->bind_param("s", $auth->userdata['UUID']);
             if (!$stmt->execute()) {
@@ -166,9 +167,9 @@ body;
             $output['year'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             /* 月度 */
-            $stmt->prepare("SELECT book_date AS `text`, IFNULL(SUM(pay_price), 0) AS `total`, COUNT(ID) AS `count` FROM Book_event 
-                                WHERE YEAR(book_date) = YEAR(CURRENT_DATE) AND MONTH(book_date) = MONTH(CURRENT_DATE) AND event_ID IN (SELECT ID FROM Event WHERE UUID = ?) 
-                                GROUP BY book_date ORDER BY text");
+            $stmt->prepare("SELECT order_datetime AS `text`, IFNULL(SUM(pay_price), 0) AS `total`, COUNT(ID) AS `count` FROM Book_event 
+                                WHERE YEAR(order_datetime) = YEAR(CURRENT_DATE) AND MONTH(order_datetime) = MONTH(CURRENT_DATE) AND event_ID IN (SELECT ID FROM Event WHERE UUID = ?) 
+                                GROUP BY order_datetime ORDER BY text");
             $stmt->bind_param("s", $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 return array(
@@ -272,7 +273,9 @@ body;
 
         /* 顧客國家/地區 */
         if($_GET['type'] === "country"){
-            $stmt = $this->sqlcon->prepare("SELECT d.country , COUNT(b.ID) AS `count` FROM Book_event b, User_detail d WHERE b.User = d.UUID AND b.event_ID IN(SELECT ID FROM Event WHERE UUID = ?) GROUP BY d.country");
+            $stmt = $this->sqlcon->prepare("SELECT d.country , COUNT(b.ID) AS `count` FROM Book_event b, User_detail d 
+                                                WHERE b.User = d.UUID AND b.order_datetime >= SUBDATE(CURRENT_DATE, INTERVAL 6 MONTH ) 
+                                                  AND b.event_ID IN(SELECT ID FROM Event WHERE UUID = ?) GROUP BY d.country");
             $stmt->bind_param("s", $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 return array(
@@ -284,6 +287,8 @@ body;
 
             return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
+
+
 
         return array('code' => 404, 'Message' => 'Required data request type');
     }

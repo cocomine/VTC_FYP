@@ -60,7 +60,7 @@ class _ReservePost implements \cocomine\IPage {
                             <thead class="text-capitalize">
                                 <tr>
                                     <th>#</th>
-                                    <th>顧客</th>
+                                    <th>客戶</th>
                                     <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>
@@ -80,7 +80,7 @@ class _ReservePost implements \cocomine\IPage {
                             <thead class="text-capitalize">
                                 <tr>
                                     <th>#</th>
-                                    <th>顧客</th>
+                                    <th>客戶</th>
                                     <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>
@@ -99,7 +99,7 @@ class _ReservePost implements \cocomine\IPage {
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">用戶資料</h4>
-                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇用戶</div>
+                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇客戶</div>
                     <div class="row gy-2" style="display: none" data-detail>
                         <div class="col-6">
                             <label class="form-label" for="lastname">姓氏</label>
@@ -137,7 +137,7 @@ class _ReservePost implements \cocomine\IPage {
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">預約詳細</h4>
-                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇用戶</div>
+                    <div class="alert alert-warning" data-select><i class="fa-solid fa-triangle-exclamation me-2"></i>請先選擇客戶</div>
                     <div style="display: none" data-detail>
                         <div class="col-12 my-2 border border-secondary border-opacity-50 border-2 rounded text-center">
                             <p>預約日期 (年/月/日)</p>
@@ -158,8 +158,8 @@ class _ReservePost implements \cocomine\IPage {
                             </div>
                         </div>
                         <div class="col-12">
-                            <p class="text-secondary">下單時間: <span id="order_time">000.000.000</span></p>
-                            <p class="text-secondary">訂單編號: # <span id="order_id">00</span></p>
+                            <p class="text-secondary">下單預約時間: <span id="order_time">000.000.000</span></p>
+                            <p class="text-secondary">預約編號: # <span id="order_id">00</span></p>
                         </div>
                     </div>
                 </div>
