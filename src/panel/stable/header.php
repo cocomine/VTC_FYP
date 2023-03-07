@@ -43,7 +43,7 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://www.gstatic.com https://cdn.datatables.net https://api.mapbox.com;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://www.gstatic.com https://cdn.datatables.net https://api.mapbox.com https://cdn.amcharts.com;
               style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://cdn.datatables.net https://api.mapbox.com;
               connect-src 'self' https://*.google.com https://*.lottiefiles.com https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://cdn.datatables.net;
               img-src 'self' data: blob: https://www.gravatar.com;

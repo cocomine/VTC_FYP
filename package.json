@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@amcharts/amcharts5": "^5.2.28",
+    "@amcharts/amcharts5": "^5.3.6",
     "@mapbox/mapbox-gl-geocoder": "^5.0.1",
     "@mapbox/mapbox-sdk": "^0.15.0",
     "@turf/buffer": "^6.5.0",

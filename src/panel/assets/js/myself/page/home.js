@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ], function (jq, toastr, Chart, ajex){
+define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
     "use strict";
     $('.today-order-list').scrollbar();
     const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
@@ -90,7 +90,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ],
                 data: {
                     labels: json.data.year.map((item) => item.text),
                     datasets: [ {
-                        label: "訂單數",
+                        label: "預約數",
                         backgroundColor: "rgba(82,204,173,0.6)",
                         borderColor: 'rgba(255,255,255,0.3)',
                         data: json.data.year.map((item) => item.count),
@@ -150,7 +150,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ],
                 data: {
                     labels: json.data.month.map((item) => item.text),
                     datasets: [ {
-                        label: "Share",
+                        label: "金額",
                         backgroundColor: "rgba(204,146,143,0.6)",
                         borderColor: 'rgba(255,255,255,0.3)',
                         data: json.data.month.map((item) => item.total),
@@ -210,7 +210,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ],
                 data: {
                     labels: json.data.month.map((item) => item.text),
                     datasets: [ {
-                        label: "Share",
+                        label: "預約數",
                         backgroundColor: "rgba(230,203,115,0.6)",
                         borderColor: 'rgba(255,255,255,0.3)',
                         data: json.data.month.map((item) => item.count),
@@ -326,14 +326,15 @@ define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ],
         const json = await response.json();
         if (response.ok && json.code === 200){
             const data = json.data;
+            const jq_country = $('#country');
             console.log(json);
 
             if(data.length <= 0){
-                $('#country').replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                jq_country.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
                 return;
             }
 
-            new Chart($('#country')[0].getContext('2d'), {
+            new Chart(jq_country[0].getContext('2d'), {
                 // The type of chart we want to create
                 type: 'doughnut',
                 // The data for our dataset
@@ -363,6 +364,87 @@ define([ 'jquery', 'toastr', 'chartjs', 'myself/ajex', 'jquery.scrollbar.min' ],
                     plugins: {
                         legend: {
                             position: 'bottom',
+                        },
+                    },
+                    animation: {
+                        easing: "easeInOutBack"
+                    }
+                }
+            });
+        }else{
+            toastr.error(json.Message, json.Title ?? globalLang.Error);
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    /* 最熱門活動 */
+    fetch('/panel/?type=top', {
+        method: 'POST',
+        redirect: 'error',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({})
+    }).then(async (response) => {
+        const json = await response.json();
+        if (response.ok && json.code === 200){
+            const data = json.data;
+            const jq_heatEvent = $('#heat-event');
+            console.log(json);
+
+            if(data.length <= 0){
+                jq_heatEvent.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                return;
+            }
+
+            new Chart(jq_heatEvent[0].getContext('2d'), {
+                // The type of chart we want to create
+                type: 'bar',
+                // The data for our dataset
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+                    datasets: [{
+                        hoverBackgroundColor: [
+                            "#8919FE",
+                            "#12C498",
+                            "#F8CB3F",
+                            "#e34444",
+                            "#19c1fe",
+                        ],
+                        backgroundColor: [
+                            "rgba(137,25,254,0.8)",
+                            "rgba(18,196,152,0.8)",
+                            "rgba(248,203,63,0.8)",
+                            "rgba(227,68,68,0.8)",
+                            "rgba(25,193,254,0.8)",
+                        ],
+                        borderColor: "#fff",
+                        hoverBorderColor: "#fff",
+                        hoverOffset: 8,
+                        label: '預約數',
+                        data: [12, 19, 3, 5, 2],
+                        barPercentage : 0.5,
+                        categoryPercentage: 1,
+                    }]
+                },
+                // Configuration options go here
+                options: {
+                    layout: {
+                        autoPadding: false,
+                    },
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                    },
+                    scales:{
+                        y: {
+                            grid: {
+                                display: false,
+                            },
                         },
                     },
                     animation: {

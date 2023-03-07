@@ -122,23 +122,36 @@ body . <<<body
 <div class="col-lg-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title float-start">顧客國家/地區</h4>
+            <h4 class="card-title float-start">客戶國家/地區</h4>
             <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
             <canvas id="country" height="233"></canvas>
         </div>
     </div>
 </div>
-最熱門活動chart
+<div class="col-lg-7">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title float-start">最熱門活動</h4>
+            <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
+            <canvas id="heat-event" height="233"></canvas>
+        </div>
+    </div>
+</div>
+
 最近三日評論
 </div>
 <script>
 require.config({
     paths: {
         'chartjs': ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min"],
-        //'chartjs-adapter-moment': ["https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min"],
+        /*'chartjs-adapter-moment': ["https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min"],
+        '@amcharts/amcharts5' : ["https://cdn.amcharts.com/lib/5/index"],
+        '@amcharts/amcharts5/xy' : ["https://cdn.amcharts.com/lib/5/xy"],
+        '@amcharts/amcharts5/themes/Animated' : ["https://cdn.amcharts.com/lib/5/themes/Animated"],
+        '@amcharts/amcharts5/locales/zh_Hant': ["https://cdn.amcharts.com/lib/5/locales/zh_Hant"]*/
     }
 });
-loadModules(['chartjs', 'myself/page/home'])
+loadModules(['chartjs', 'myself/page/home']);
 </script>
 body;
         }
@@ -288,7 +301,10 @@ body;
             return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
 
+        /* 最熱門活動 */
+        if($_GET['type'] === "top"){
 
+        }
 
         return array('code' => 404, 'Message' => 'Required data request type');
     }
