@@ -14,6 +14,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
         },
         responsive: true,
         language: {
+            loadingRecords: `<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>`,
             url: $('#datatables_lang_url').text()
         },
         columns: [

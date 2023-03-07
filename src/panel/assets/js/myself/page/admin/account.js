@@ -5,8 +5,14 @@
 
 define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function (jq, toastr) {
     /* dataTables */
-    const table = $('#dataTable').DataTable({responsive: true});
-    table.column('3').order('desc').draw()
+    const table = $('#dataTable').DataTable({
+        responsive: true,
+        language:{
+            loadingRecords: `<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>`,
+            url: $('#datatables_lang_url').text()
+        },
+        order: [[3, 'desc']],
+    });
 
     /* js資料 */
     const Lang = JSON.parse($('#LangJson').text());

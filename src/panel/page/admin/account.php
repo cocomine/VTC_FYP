@@ -37,7 +37,9 @@ class account implements IPage {
      */
     public function showPage(): string {
 
-        $Text = showText('Account.Content'); //翻譯文件
+        /* 翻譯文件 */
+        $Text = showText('Account.Content');
+        $datatables_lang_url = showText('datatables_js.url');
 
         /* 身份組3以上可以增加user */
         $createAC_html = "";
@@ -123,6 +125,7 @@ tmp;
         return <<<body
 $createAC_html
 <pre id='LangJson' style='display: none'>$LangJson</pre>
+<pre class="d-none" id="datatables_lang_url">$datatables_lang_url</pre>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
 <div class="col-12">
