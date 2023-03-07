@@ -61,7 +61,7 @@ class _ReservePost implements \cocomine\IPage {
                                 <tr>
                                     <th>#</th>
                                     <th>用戶</th>
-                                    <th>預約時間</th>
+                                    <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>
                             </thead>
@@ -81,7 +81,7 @@ class _ReservePost implements \cocomine\IPage {
                                 <tr>
                                     <th>#</th>
                                     <th>用戶</th>
-                                    <th>預約時間</th>
+                                    <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>
                             </thead>
@@ -185,12 +185,13 @@ body;
      * @inheritDoc
      */
     public function post(array $data): array {
+        global $auth;
 
         /* 展示用戶預約詳情 */
         if($_GET['type'] === "detail"){
             $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
-                FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.User = u.UUID AND b.User = d.UUID");
-            $stmt->bind_param('s', $data['id']);
+                FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
+            $stmt->bind_param('ss', $data['id'], $this->upPath[0]);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -199,7 +200,14 @@ body;
                 );
             }
 
-            $output = $stmt->get_result()->fetch_assoc(); //get result
+            $result = $stmt->get_result();
+            if($result->num_rows <= 0){  // no result
+                return array(
+                    'code' => 403,
+                    'Title' => '該訂單不屬於這個活動',
+                );
+            }
+            $output = $result->fetch_assoc(); //get result
 
             # 展示預約計劃
             $stmt->prepare("SELECT p.plan_name, b.plan_people, e.start_time, e.end_time FROM Book_event_plan b, Event_schedule e, Event_plan p 

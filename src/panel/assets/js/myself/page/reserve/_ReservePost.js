@@ -53,7 +53,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             dataSrc: function (json){
                 return json.data.filter((data) => {
                     const book_date = moment(data.book_date);
-                    return moment().isSameOrBefore(book_date);
+                    return moment().isSameOrBefore(book_date, 'day');
                 });
             }
         },
@@ -70,7 +70,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             dataSrc: function (json){
                 return json.data.filter((data) => {
                     const book_date = moment(data.book_date);
-                    return moment().isAfter(book_date);
+                    return moment().isAfter(book_date, 'day');
                 });
             }
         },
@@ -111,7 +111,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 $('[data-select]').remove();
                 $('[data-detail]').show();
                 const data = json.data;
-                window.history.pushState({url: location.pathname+'#'+data.ID}, '', location.pathname+'#'+data.ID);
+                window.history.replaceState({url: location.pathname+'#'+data.ID}, '', location.pathname+'#'+data.ID);
 
                 //load data
                 $('#lastname').val(data.last_name);
@@ -127,10 +127,10 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 $('#order_id').text(data.ID);
                 $('#reserve_detail').html(data.plan.map((value) => {
                     return `<tr>
-                                    <td>${value.plan_name}</td>  
-                                    <td>${value.start_time}<i class="fa-solid fa-angles-right mx-2"></i>${value.end_time}</td>
-                                    <td>${value.plan_people}</td>
-                                </tr>`;
+                                <td>${value.plan_name}</td>  
+                                <td>${value.start_time}<i class="fa-solid fa-angles-right mx-2"></i>${value.end_time}</td>
+                                <td>${value.plan_people}</td>
+                            </tr>`;
                 }));
 
             }else{

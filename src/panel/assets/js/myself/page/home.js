@@ -279,9 +279,32 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], func
     }).then(async (response) => {
         const json = await response.json();
         if (response.ok && json.code === 200){
+            const data = json.data;
             console.log(json);
 
+            if(data.length <= 0){
+                $('#today-order').html('<tr><td colspan="4"><div class="text-center text-muted">今日無預約</div></td></tr>');
+                return;
+            }
 
+            $('#today-order').html(data.map((item) =>
+                `<tr>
+                    <td>${item.ID}</td>
+                    <td>
+                        <a href="/panel/reserve/${item.event_ID}#${item.ID}">${item.Name} (${item.last_name} ${item.first_name})</a>
+                    </td>
+                    <td>
+                        ${item.plan.map((plan) => 
+                            `<b>${plan.plan_name}:</b> <code class="bg-light">${plan.plan_people}</code>`
+                        ).join('<br>')}
+                    </td>
+                    <td>
+                        ${item.plan.map((plan) => 
+                            `${plan.start_time}<i class="fa-solid fa-angles-right mx-2"></i>${plan.end_time}`
+                        ).join('<br>')}
+                    </td>
+                </tr>`
+            ));
         }else{
             toastr.error(json.Message, json.Title);
         }

@@ -105,8 +105,8 @@ body . <<<body
                         <tr>
                             <th>#</th>
                             <th>用戶</th>
-                            <th>預約時間</th>
                             <th>活動計劃 / 預約人數</th>
+                            <th>預約時間</th>
                         </tr>
                     </thead>
                     <tbody id="today-order">
@@ -230,7 +230,38 @@ body;
 
         /* 今日預約 */
         if($_GET['type'] === "today"){
+            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.last_name, d.first_name, b.event_ID FROM Book_event b, User u, User_detail d, Event e 
+                                               WHERE b.book_date = CURRENT_DATE AND b.User = u.UUID AND b.User = d.UUID AND b.event_ID = e.ID AND e.UUID = ?");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
 
+            $output = array();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+
+                # 展示預約計劃
+                $stmt->prepare("SELECT p.plan_name, b.plan_people, e.start_time, e.end_time FROM Book_event_plan b, Event_schedule e, Event_plan p 
+                                    WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
+                $stmt->bind_param('sss', $row['ID'], $row['event_ID'], $row['event_ID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                //合併
+                $output[] = array_merge($row, array('plan' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)));
+            }
+
+            return array('code' => 200, 'data' => $output); //output
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');
