@@ -267,6 +267,30 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], func
         console.log(error);
     });
 
+    /* 今日預約 */
+    fetch('/panel/?type=today', {
+        method: 'POST',
+        redirect: 'error',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({})
+    }).then(async (response) => {
+        const json = await response.json();
+        if (response.ok && json.code === 200){
+            console.log(json);
+
+
+        }else{
+            toastr.error(json.Message, json.Title);
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+
+
+
     /**
      * 數量單位簡化<br>
      * ref: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900

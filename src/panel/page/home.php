@@ -6,9 +6,7 @@
 
 namespace panel\page;
 
-use Cassandra\Date;
 use cocomine\IPage;
-use DateTime;
 use Moment\Moment;
 use Moment\MomentException;
 use mysqli;
@@ -198,21 +196,24 @@ body;
                 );
             }
 
+            /* group to week */
             $temp = array();
             $i = 0;
             $week = 0;
-
-            foreach ($output['month'] as $value) {
+            for ($x = 0; $x < count($output['month']); $x++) {
+                $value = $output['month'][$x];
                 $i++;
                 if ($i === 1) {
-                    $temp[$week]['text'] = $value['text'];
+                    $temp[$week]['text'] = $value['text'] . ' ~ ';
+                    $temp[$week]['count'] = 0;
+                    $temp[$week]['total'] = 0;
                 }
                 if ($i <= 7) {
-                    $temp[$week]['total'] = $temp[$week]['total'] + $value['total'];
-                    $temp[$week]['count'] = $temp[$week]['count'] + $value['count'];
+                    $temp[$week]['total'] += $value['total'];
+                    $temp[$week]['count'] += $value['count'];
                 }
-                if ($i === 7) {
-                    $temp[$week]['text'] = $temp[$week]['text'] . ' ~ ' . $value['text'];
+                if ($i === 7 || $x === count($output['month']) - 1) {
+                    $temp[$week]['text'] .= $value['text'];
                     $week++;
                     $i = 0;
                 }
@@ -223,6 +224,11 @@ body;
                 'code' => 200,
                 'data' => $output,
             );
+        }
+
+        /* 今日預約 */
+        if($_GET['type'] === "today"){
+
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');
