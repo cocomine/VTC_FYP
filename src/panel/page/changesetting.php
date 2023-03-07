@@ -52,6 +52,8 @@ class changesetting implements IPage {
 
         // 指引文字
         $Text = showText('ChangeSetting');
+        $Text2 = showText('Media.Content');
+        $Text3 = showText('Media-upload.Content');
 
         /* 用戶語言 */
         $Lang_Sel = array();
@@ -83,11 +85,32 @@ class changesetting implements IPage {
             'strength' => showText('ChangeSetting.strength'),
             'BackupCode' => showText('ChangeSetting.BackupCode')
             ));
-
+        /*图片json*/
+        $LangJson = json_encode(array(
+            'No_media' => $Text2['No_media'],
+            'Media' => $Text2['Media'] . ' %s',
+            'Unknown_Error' => showText('Error'),
+            'title' => $Text2['Media_Select']['title'],
+            'Select' => $Text2['Media_Select']['Select'],
+            'upload' => array(
+                'Timeout' => $Text3['respond']['Timeout'],
+                'File_name_over' => $Text3['respond']['File_name_over'],
+                'Over_size' => $Text3['respond']['Over_size'],
+                'File_type_not_mach' => $Text3['respond']['File_type_not_mach'],
+                'Waiting' => $Text3['respond']['Waiting'],
+                'limit_type' => $Text3['limit_type'],
+                'drag' => $Text3['drag'],
+                'upload' => $Text3['upload'],
+                'or' => $Text3['or'],
+                'limit' => $Text3['limit']
+            )
+        ));
         /* HTNL */
         return <<<body
-<pre id='langJson' style='display: none'>$jsonLang</pre>
 <link rel="stylesheet" href="/assets/css/myself/datetimepicker.css">
+<link rel="stylesheet" href="/assets/css/myself/media-select.css">
+<pre id='langJson' style='display: none'>$jsonLang</pre>
+<pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 <!-- 基本資料 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -270,72 +293,99 @@ body . <<<body2
         <div class='card-body'>
             <h1 class='header-title'>用戶資料</h1>
             <form id='PassSet' novalidate class='needs-validation'>
-                    <div class='col-12'>
+                <div class='col-12'>
                     <label for='Address' class='col-for-label'>全名</label>
                     <input class='form-control input-rounded' type='FullName' id='FullName' pattern='' name='FullName' required>
                     <div class='invalid-feedback'>請輸入文字</div>
                 </div>
                 <label  class='col-form-label'>出生日期</label>
-                <div class="date-picker">
-                <input type="date" class="date-picker-toggle">
+                    <div class="date-picker col-7">
+                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-post-date" id="event-post-date" required>
+                        <div class="invalid-feedback">這裏不能留空哦~~</div>
+                    </div>               
+                <div class='col-12'>
+                    <label class='col-form-label' for='Language'>國家</label>
+                        <select class='input-rounded form-select' name='lang' id='Language'>
+                            <option value='hk' $Lang_Sel[0]>香港</option>
+                            <option value='tw' $Lang_Sel[1]>台灣</option>
+                            <option value='cn' $Lang_Sel[2]>中國</option>
+                            <option value='mo' $Lang_Sel[3]>澳門</option>
+                        </select>
                 </div>
-                 <div class='col-12'>
-                    <label  class='col-form-label'>組織</label>
-                    <input class='form-control input-rounded' type='text' id='Organize'  name='Organize' required>
-                    <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
-                 </div>
-                 <div class='col-12'>
-                            <label class='col-form-label' for='Language'>國家</label>
-                            <select class='input-rounded form-select' name='lang' id='Language'>
-                                <option value='hk' $Lang_Sel[0]>香港</option>
-                                <option value='tw' $Lang_Sel[1]>台灣</option>
-                                <option value='cn' $Lang_Sel[2]>中國</option>
-                                <option value='mo' $Lang_Sel[3]>澳門</option>
-                            </select>
-                </div>
-                
                 <div class='col-12'>
                     <label for='Phone' class='col-form-label'>電話號碼</label>
                     <input class='input-rounded form-control' type='text' id='Phone' pattern='[0-9]{8,}' name='Phone'  required>
                     <div class='invalid-feedback'>請輸入正確的電話號碼</div>
                 </div>
-                <div class='col-12'>
-                    <label for='Address' class='col-for-label'>地址</label>
-                    <input class='form-control input-rounded' type='Address' id='Address' pattern='' name='Address' required>
-                    <div class='invalid-feedback'>請輸入文字</div>
-                </div>
-              
-                <div class='col-12 mt-4'>
-                    <div class='card'>
-                            <div class='card-body'>
-                               <h1 class='header-title'>證明文件</h1>
-                               <button type="button" class="btn btn-rounded btn-primary" id="event-image-select"><i class="fa-regular fa-object-ungroup me-2"></i>選擇圖片</button>
-                                <small>上傳證明文件</small><br>
-                                 <div class="col-12">
-                                 <input type="text" class="d-none" id="event-image" name="event-image" required>
-                                 <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
-                                 </div>
-                                 </div>
-           
-                     </div>
-                </div>
-        </div>
-    </div>            
-</div>
+                
+                     
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
             </form>
         </div>
     </div>
 </div>
+<!-- 合作者資訊 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title'>合作者資料</h1>
+            <form id='PassSet' novalidate class='needs-validation'>
+                <div class='col-12'>
+                    <label for='organize' class='col-for-label'>組織名字</label>
+                    <input class='form-control input-rounded' type='organize' id='organizeName' pattern='' name='organizeName' required>
+                    <div class='invalid-feedback'>請輸入文字</div>
+                </div>
+                <div class='col-12'>
+                    <label  class='col-form-label'>銀行代碼</label>
+                    <input class='form-control input-rounded' type='text' id='bankCode'  name='bankCode' required>
+                    <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                </div>
+                <div class='col-12'>
+                    <label class='col-form-label' for='Language'>國家</label>
+                        <select class='input-rounded form-select' name='lang' id='Language'>
+                            <option value='hk' $Lang_Sel[0]>香港</option>
+                            <option value='tw' $Lang_Sel[1]>台灣</option>
+                            <option value='cn' $Lang_Sel[2]>中國</option>
+                            <option value='mo' $Lang_Sel[3]>澳門</option>
+                        </select>
+                </div>
+                <div class='col-12'>
+                    <label for='Phone' class='col-form-label'>電話號碼</label>
+                    <input class='input-rounded form-control' type='text' id='organizePhone' pattern='[0-9]{8,}' name='organizePhone'  required>
+                    <div class='invalid-feedback'>請輸入正確的電話號碼</div>
+                </div>
+                <div class='col-12'>
+                    <label for='Address' class='col-for-label'>地址</label>
+                    <input class='form-control input-rounded' type='Address' id='organizeAddress' pattern='' name='organizeAddress' required>
+                    <div class='invalid-feedback'>請輸入文字</div>
+                </div>
+                     <label for='Address' class='col-for-label'>證明文件</label></br>
+                     <div class="media-list row mb-2 scrollbar-dynamic" id="documents-image-list"></div>
+                     <button type="button" class="btn btn-rounded btn-primary btn-imgae mt-4 pr-4 pl-4" id="documents-image-select"><i class="fa-solid fa-file-lines"></i>選擇圖片</button>
+                     </br><small>你最多可以選擇五張圖片</small><br>
+                     <div class="col-12">
+                         <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
+                         <input type="text" class="d-none" id="documents-image" name="documents-image" required>
+                     </div>
+                     
+                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 require.config({
     paths:{
         zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
         forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
         FileSaver: ['FileSaver.min'],
+        'media-select': ['myself/media-select'],
+        'media-select.upload': ['myself/media-select.upload'],
+        'timepicker': ['https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min'],
     },
 });
-loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
+loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver','media-select','media-select.upload','timepicker'])
 
 
 </script>
@@ -345,6 +395,9 @@ body2;
     /* 回傳表單資料 */
     function post(array $data): array {
         global $auth;
+
+        /*測試圖片效果*/
+
 
         /* 修改資料 */
         if ($_GET['type'] == 'DataSet') {
@@ -449,6 +502,7 @@ body2;
             'code' => 400,
             'Title' => showText('Error_Page.400_title'),
         );
+
     }
 
     /**

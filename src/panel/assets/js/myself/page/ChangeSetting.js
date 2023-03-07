@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, toastr, zxcvbn, forge, bootstrap, FileSaver) => {
+define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver','media-select', 'media-select.upload'], (jq,media_select,media_upload, toastr, zxcvbn, forge, bootstrap, FileSaver) => {
     "use strict";
 
     const Lang = JSON.parse($('#langJson').text());
@@ -303,5 +303,95 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver'], (jq, t
 
         if (!input.includes(val)) $(list[3]).removeClass('bg-danger').addClass('bg-success');
         else $(list[3]).removeClass('bg-success').addClass('bg-danger');
+    });
+
+
+
+    /* 證明圖片 */
+    let img_items = [];
+    const jq_dropZone = $('#documents-image-list');
+    jq_dropZone.scrollbar();
+    jq_dropZone.parents('.scroll-wrapper').removeClass('row mb-2 media-list');
+    const jq_image = $('#documents-image');
+
+    /* Image select */
+    $('#documents-image-select').click(() => {
+        media_select.select_media((images) => {
+            const tmp = images.map((id) => image_html(id));
+            jq_dropZone.html(tmp);
+
+            //list up
+            img_items = tmp.map((value) => value.find('img')[0]);
+            jq_image.val(images.join(','));
+        }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
+    });
+
+    /**
+     * 圖片html
+     * @param {string} id 圖片id
+     * @return {JQuery<HTMLElement>}
+     */
+    function image_html(id){
+        return $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
+                    <div class="ratio ratio-1x1 media-list-focus">
+                        <div class="overflow-hidden">
+                            <div class="media-list-center">
+                                <img src="/panel/api/media/${id}" draggable="true" data-image-id="${id}" alt="${id}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+    }
+    /* Image drag drop */
+    /* Thx & ref: https://medium.com/@joie.software/exploring-the-html-drag-and-drop-api-using-plain-javascript-part-1-42f603cce90d */
+    let adjacentItem;
+    let prevAdjacentItem;
+    let selectedItem;
+
+    //dragstart
+    jq_dropZone.on('dragstart', 'img', function (e){
+        selectedItem = e.target;
+        $(e.target).parents('.item').css('opacity', 0.4);
+        e.originalEvent.dataTransfer.effectAllowed = 'move';
+    });
+    //dragover
+    jq_dropZone.on('dragover', function (e){
+        e.preventDefault();
+        e.originalEvent.dataTransfer.dropEffect = "move";
+
+        if (img_items.includes(e.target)){
+            adjacentItem = e.target;
+
+            if (adjacentItem !== prevAdjacentItem && prevAdjacentItem !== undefined){
+                $(prevAdjacentItem).parents('.item').css('marginLeft', '0');
+            }
+
+            if (adjacentItem !== null && adjacentItem !== selectedItem && (img_items.includes(adjacentItem))){
+                const item = $(adjacentItem).parents('.item');
+                item.css('transition', 'all 1s ease').css('marginLeft', item.outerWidth() + 'px');
+            }
+
+            prevAdjacentItem = adjacentItem;
+        }
+    });
+    //drop
+    jq_dropZone.on('drop', function (e){
+        e.preventDefault();
+
+        if (adjacentItem !== null && img_items.includes(adjacentItem) || img_items.includes($(adjacentItem).parents('[draggable]'))){
+            jq_dropZone.find(adjacentItem).parents('.item').before($(selectedItem).parents('.item').css('opacity', 1));
+            $(adjacentItem).parents('.item').css('transition', 'none').css('marginLeft', '0');
+
+            //list up
+            jq_image.val((
+                jq_dropZone.find('[data-image-id]').map(
+                    (index, elm) => elm.dataset.imageId).toArray()
+            ).join(','));
+        }
+    });
+    //dragend
+    jq_dropZone.on('dragend', function (){
+        $(selectedItem).parents('.item').css('opacity', 1);
+        $(adjacentItem).parents('.item').css('marginLeft', '0');
     });
 })
