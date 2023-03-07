@@ -6,6 +6,7 @@
 define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], function (jq, toastr, Chart, moment){
     "use strict";
     $('.today-order-list').scrollbar();
+    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
 
     /* 數據統計 */
     fetch('/panel/?type=count', {
@@ -312,7 +313,43 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment', 'jquery.scrollbar.min' ], func
         console.log(error);
     });
 
-
+    new Chart($('#county')[0].getContext('2d'), {
+        // The type of chart we want to create
+        type: 'doughnut',
+        // The data for our dataset
+        data: {
+            labels: ["香港", "澳門", "台灣", "中國大陸"],
+            datasets: [{
+                hoverBackgroundColor: [
+                    "#8919FE",
+                    "#12C498",
+                    "#F8CB3F",
+                    "#e34444"
+                ],
+                backgroundColor: [
+                    "rgba(137,25,254,0.8)",
+                    "rgba(18,196,152,0.8)",
+                    "rgba(248,203,63,0.8)",
+                    "rgba(227,68,68,0.8)"
+                ],
+                borderColor: "#fff",
+                hoverBorderColor: "#fff",
+                hoverOffset: 8,
+                data: [810, 410, 260, 150],
+            }]
+        },
+        // Configuration options go here
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            },
+            animation: {
+                easing: "easeInOutBack"
+            }
+        }
+    });
 
     /**
      * 數量單位簡化<br>

@@ -60,7 +60,7 @@ class _ReservePost implements \cocomine\IPage {
                             <thead class="text-capitalize">
                                 <tr>
                                     <th>#</th>
-                                    <th>用戶</th>
+                                    <th>顧客</th>
                                     <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>
@@ -80,7 +80,7 @@ class _ReservePost implements \cocomine\IPage {
                             <thead class="text-capitalize">
                                 <tr>
                                     <th>#</th>
-                                    <th>用戶</th>
+                                    <th>顧客</th>
                                     <th>預約日期</th>
                                     <th>活動計劃 / 預約人數</th>
                                 </tr>

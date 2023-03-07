@@ -47,7 +47,7 @@ class home implements IPage {
             return <<<body
 <style>
 .today-order-list{
-    height: 245px;
+    height: 297px;
 }
 </style>
 <div class="col-md-6 col-lg-3">
@@ -104,7 +104,7 @@ body . <<<body
                     <thead class="table-primary text-light sticky-top" style="--bs-table-bg: var(--primary-color)">
                         <tr>
                             <th>#</th>
-                            <th>用戶</th>
+                            <th>顧客</th>
                             <th>活動計劃 / 預約人數</th>
                             <th>預約時間</th>
                         </tr>
@@ -119,8 +119,14 @@ body . <<<body
         </div>
     </div>
 </div>
-來自國家/地區統計chart
-
+<div class="col-lg-4">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title float-start">顧客國家/地區</h4><small class="text-muted card-title">(過去6個月)</small>
+            <canvas id="county" height="233"></canvas>
+        </div>
+    </div>
+</div>
 最熱門活動chart
 最近三日評論
 </div>
@@ -262,6 +268,21 @@ body;
             }
 
             return array('code' => 200, 'data' => $output); //output
+        }
+
+        /* 顧客國家/地區 */
+        if($_GET['type'] === "country"){
+            $stmt = $this->sqlcon->prepare("SELECT d.country , COUNT(b.ID) AS `count` FROM Book_event b, User_detail d WHERE b.User = d.UUID AND b.event_ID IN(SELECT ID FROM Event WHERE UUID = ?) GROUP BY d.country");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');
