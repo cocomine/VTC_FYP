@@ -8,6 +8,7 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
+use panel\apis\media;
 
 /**
  * Class home
@@ -41,7 +42,7 @@ class home implements IPage {
 
         $hkActivities = '';
 
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country FROM Event WHERE review = 1 AND state = 1 AND country = 'HK'");
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'HK'");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -54,7 +55,7 @@ class home implements IPage {
         while($row = $rs->fetch_assoc()) {
             $hkActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
             $hkActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $hkActivities .= "<img class='owl-lazy' data-src='/assets/images/event/Canoeing_Hong_Kong_01.jpg' alt=''></div></div></div><div class='card-body'>";
+            $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
             $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
             $hkActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
@@ -62,7 +63,7 @@ class home implements IPage {
 
         $cnActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country FROM Event WHERE review = 1 AND state = 1 AND country = 'CN'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'CN'");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -75,7 +76,7 @@ class home implements IPage {
         while($row = $rs->fetch_assoc()) {
             $cnActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
             $cnActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $cnActivities .= "<img class='owl-lazy' data-src='/assets/images/event/Canoeing_Hong_Kong_01.jpg' alt=''></div></div></div><div class='card-body'>";
+            $cnActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
             $cnActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $cnActivities .= "<p class='card-text'>".$row['summary']."</p>";
             $cnActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
@@ -83,7 +84,7 @@ class home implements IPage {
 
         $moActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country FROM Event WHERE review = 1 AND state = 1 AND country = 'MO'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'MO'");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -96,7 +97,7 @@ class home implements IPage {
         while($row = $rs->fetch_assoc()) {
             $moActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
             $moActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $moActivities .= "<img class='owl-lazy' data-src='/assets/images/event/Canoeing_Hong_Kong_01.jpg' alt=''></div></div></div><div class='card-body'>";
+            $moActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
             $moActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $moActivities .= "<p class='card-text'>".$row['summary']."</p>";
             $moActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
@@ -104,7 +105,7 @@ class home implements IPage {
 
         $twActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country FROM Event WHERE review = 1 AND state = 1 AND country = 'TW'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'TW'");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -117,7 +118,7 @@ class home implements IPage {
         while($row = $rs->fetch_assoc()) {
             $twActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
             $twActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $twActivities .= "<img class='owl-lazy' data-src='/assets/images/event/Canoeing_Hong_Kong_01.jpg' alt=''></div></div></div><div class='card-body'>";
+            $twActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
             $twActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $twActivities .= "<p class='card-text'>".$row['summary']."</p>";
             $twActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
