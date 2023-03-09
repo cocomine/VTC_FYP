@@ -10,7 +10,6 @@ use cocomine\IPage;
 use Moment\Moment;
 use Moment\MomentException;
 use mysqli;
-use panel\apis\media;
 
 /**
  * Class home
@@ -41,6 +40,7 @@ class home implements IPage {
     function showPage(): string {
 
         $Text = showText('index.Content');
+        $avatar = md5(strtolower('roguish.6888467468@gmail.com'));
 
         if ($this->role < 2) {
             return "<script>location.replace('/')</script>";
@@ -49,6 +49,9 @@ class home implements IPage {
 <style>
 .today-order-list{
     height: 20rem;
+}
+.comment{
+    background: linear-gradient(159deg, var(--primary-color) 0%, rgb(var(--bs-primary-rgb), 0.7) 100%);
 }
 </style>
 <div class="col-md-6 col-lg-3">
@@ -95,7 +98,7 @@ class home implements IPage {
         </div>
     </div>
 </div>
-body . <<<body
+body. <<<body
 <div class="col-lg-8">
     <div class="card">
         <div class="card-body">
@@ -146,18 +149,29 @@ body . <<<body
         </div>
     </div>
 </div>
-
-最近三日評論
+<div class="col-lg-5">
+    <div class="card comment">
+        <div class="card-body">
+            <h4 class="card-title text-light">最近三日評論</h4>
+            <div class="owl-carousel owl-theme">
+                <div class="item">
+                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 50px; height: auto">
+                        <img src="https://www.gravatar.com/avatar/$avatar?s=200" alt="avatar" />
+                    </div>
+                    <div class="text-light">
+                        <h5><b>cocomine</b></h5>
+                        <p class="text-light">vsukbvskbkbkjvbkjsbdkdsbjksbkjsdbvkjbvkdbvsdvkdsbvkdsbvksjbvjkbvksjvbsjkvbsjkvbskjvbdkvvksjdbvjkdbvjskdvbkvbsdkvbsdjkvbjkvbjvbkvjkvb
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
 require.config({
     paths: {
         'chartjs': ["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min"],
-        /*'chartjs-adapter-moment': ["https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min"],
-        '@amcharts/amcharts5' : ["https://cdn.amcharts.com/lib/5/index"],
-        '@amcharts/amcharts5/xy' : ["https://cdn.amcharts.com/lib/5/xy"],
-        '@amcharts/amcharts5/themes/Animated' : ["https://cdn.amcharts.com/lib/5/themes/Animated"],
-        '@amcharts/amcharts5/locales/zh_Hant': ["https://cdn.amcharts.com/lib/5/locales/zh_Hant"]*/
     }
 });
 loadModules(['chartjs', 'myself/page/home']);
@@ -309,7 +323,7 @@ body;
 
             return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
-        media::Generate_img_html('sds');
+
         /* 最熱門活動 */
         if($_GET['type'] === "top"){
             $stmt = $this->sqlcon->prepare("SELECT e.ID, e.Name, COUNT(b.ID) AS `count` FROM Book_event b, Event e 

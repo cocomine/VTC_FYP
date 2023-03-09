@@ -462,6 +462,21 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
         console.log(error);
     });
 
+    /* 最近三日評論 */
+    $('.owl-carousel').owlCarousel({
+        loop: true,
+        margin: 15,
+        nav: true,
+        dots: true,
+        autoplay: true,
+        autoplayHoverPause: true,
+        responsive: {
+            0: {
+                items: 2
+            },
+        }
+    });
+
     /**
      * 數量單位簡化<br>
      * ref: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
