@@ -153,13 +153,14 @@ body. <<<body
     <div class="card comment">
         <div class="card-body">
             <h4 class="card-title text-light">最近三日評論</h4>
-            <div class="owl-carousel owl-theme">
+            <div class="owl-carousel owl-theme pt-2">
                 <div class="item">
-                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 50px; height: auto">
+                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
                         <img src="https://www.gravatar.com/avatar/$avatar?s=200" alt="avatar" />
                     </div>
                     <div class="text-light">
                         <h5><b>cocomine</b></h5>
+                        <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
                         <p class="text-light">vsukbvskbkbkjvbkjsbdkdsbjksbkjsdbvkjbvkdbvsdvkdsbvkdsbvksjbvjkbvksjvbsjkvbsjkvbskjvbdkvvksjdbvjkdbvjskdvbkvbsdkvbsdjkvbjkvbjvbkvjkvb
                         </p>
                     </div>
@@ -339,6 +340,31 @@ body;
             }
 
             return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
+        }
+
+        /* 最近三日評論 */
+        if($_GET['type'] === "comment"){
+            $stmt = $this->sqlcon->prepare("SELECT u.Name, u.Email, b.event_ID, r.comment, r.rate, r.DateTime FROM Book_event b, User u, Event e, Book_review r
+                                               WHERE r.DateTime >= SUBDATE(CURRENT_DATE, INTERVAL 3 DAY ) AND b.User = u.UUID AND b.event_ID = e.ID AND b.ID = r.Book_ID AND e.UUID = ?
+                                               ORDER BY r.DateTime DESC");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* get result */
+            $output = array();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $row['Email'] =  md5(strtolower($row['Email'])); //頭像 md5
+                $output[] = $row;
+            }
+
+            return array('code' => 200, 'data' => $output); //output
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');

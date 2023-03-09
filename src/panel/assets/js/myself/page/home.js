@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
+define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, moment){
     "use strict";
     $('.today-order-list').scrollbar();
     const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
@@ -20,7 +20,7 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
     }).then(async (response) => {
         const json = await response.json();
         if (response.ok && json.code === 200){
-            console.log(json);
+            //console.log(json);
 
             // 本年賺取
             new Chart($('#year-earned-chart')[0].getContext('2d'), {
@@ -282,7 +282,7 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
         if (response.ok && json.code === 200){
             const data = json.data;
             const jq_today_order = $('#today-order');
-            console.log(json);
+            //console.log(json);
 
             if(data.length <= 0){
                 jq_today_order.html('<tr><td colspan="4"><div class="text-center text-muted">今日無預約</div></td></tr>');
@@ -328,7 +328,7 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
         if (response.ok && json.code === 200){
             const data = json.data;
             const jq_country = $('#country');
-            console.log(json);
+            //console.log(json);
 
             if(data.length <= 0){
                 jq_country.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
@@ -393,7 +393,7 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
         if (response.ok && json.code === 200){
             const data = json.data;
             const jq_heatEvent = $('#heat-event');
-            console.log(json);
+            //console.log(json);
 
             if(data.length <= 0){
                 jq_heatEvent.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
@@ -463,18 +463,68 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
     });
 
     /* 最近三日評論 */
-    $('.owl-carousel').owlCarousel({
-        loop: true,
-        margin: 15,
-        nav: true,
-        dots: true,
-        autoplay: true,
-        autoplayHoverPause: true,
-        responsive: {
-            0: {
-                items: 2
-            },
+    fetch('/panel/?type=comment', {
+        method: 'POST',
+        redirect: 'error',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({})
+    }).then(async (response) => {
+        const json = await response.json();
+        if (response.ok && json.code === 200){
+            const data = json.data;
+            const jq_comment = $('.owl-carousel');
+            //console.log(json);
+
+            if(data.length <= 0){
+                jq_comment.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                return;
+            }
+
+            jq_comment.html(data.map((item) =>
+                `<div class="item">
+                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
+                        <img class="owl-lazy" data-src="https://www.gravatar.com/avatar/${item.Email}?s=200" alt="avatar">
+                    </div>
+                    <div class="text-light">
+                        <h5><b>${item.Name}</b></h5>
+                        <div>
+                            ${Array.from({length: item.rate}, () => `<i class="fa-solid fa-star text-warning"></i>`).join('')}
+                            ${Array.from({length: 5-item.rate}, () => `<i class="fa-regular fa-star"></i>`).join('')}
+                        </div>
+                        <span>${moment(item.DateTime).format("yyyy/M/DD")}</span>
+                        <p class="text-light">${item.comment}</p>
+                    </div>
+                </div>`
+            ));
+            
+            jq_comment.owlCarousel({
+                loop: true,
+                margin: 15,
+                nav: false,
+                dots: true,
+                autoplay: true,
+                lazyLoad: true,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    992: {
+                        items: 1
+                    },
+                    1200:{
+                        items: 2
+                    }
+                }
+            });
+        }else{
+            toastr.error(json.Message, json.Title ?? globalLang.Error);
         }
+    }).catch((error) => {
+        console.log(error);
     });
 
     /**
