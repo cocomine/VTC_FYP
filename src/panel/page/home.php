@@ -10,6 +10,7 @@ use cocomine\IPage;
 use Moment\Moment;
 use Moment\MomentException;
 use mysqli;
+use panel\apis\media;
 
 /**
  * Class home
@@ -124,7 +125,13 @@ body . <<<body
         <div class="card-body">
             <h4 class="card-title float-start">客戶國家/地區</h4>
             <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
-            <canvas id="country" height="233"></canvas>
+            <div>
+                <div class="row justify-content-center w-100 g-0">
+                    <div style="max-height: 350px" class="col-auto">
+                        <canvas id="country" height="233"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -133,7 +140,9 @@ body . <<<body
         <div class="card-body">
             <h4 class="card-title float-start">最熱門活動</h4>
             <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
-            <canvas id="heat-event" height="233"></canvas>
+            <div style="max-height: 350px">
+                <canvas id="heat-event" height="233" class="w-100"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -300,10 +309,22 @@ body;
 
             return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
-
+        media::Generate_img_html('sds');
         /* 最熱門活動 */
         if($_GET['type'] === "top"){
+            $stmt = $this->sqlcon->prepare("SELECT e.ID, e.Name, COUNT(b.ID) AS `count` FROM Book_event b, Event e 
+                                                WHERE b.event_ID = e.ID AND b.order_datetime >= SUBDATE(CURRENT_DATE, INTERVAL 6 MONTH ) 
+                                                  AND e.UUID = ? GROUP BY e.ID ORDER BY `count` DESC LIMIT 5");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
 
+            return array('code' => 200, 'data' => $stmt->get_result()->fetch_all(MYSQLI_ASSOC)); //output
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');

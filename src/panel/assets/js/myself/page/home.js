@@ -281,14 +281,15 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
         const json = await response.json();
         if (response.ok && json.code === 200){
             const data = json.data;
+            const jq_today_order = $('#today-order');
             console.log(json);
 
             if(data.length <= 0){
-                $('#today-order').html('<tr><td colspan="4"><div class="text-center text-muted">今日無預約</div></td></tr>');
+                jq_today_order.html('<tr><td colspan="4"><div class="text-center text-muted">今日無預約</div></td></tr>');
                 return;
             }
 
-            $('#today-order').html(data.map((item) =>
+            jq_today_order.html(data.map((item) =>
                 `<tr>
                     <td>${item.ID}</td>
                     <td>
@@ -404,7 +405,7 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
                 type: 'bar',
                 // The data for our dataset
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+                    labels: data.map((item) => item.Name),
                     datasets: [{
                         hoverBackgroundColor: [
                             "#8919FE",
@@ -424,16 +425,13 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
                         hoverBorderColor: "#fff",
                         hoverOffset: 8,
                         label: '預約數',
-                        data: [12, 19, 3, 5, 2],
+                        data: data.map((item) => item.count),
                         barPercentage : 0.5,
-                        categoryPercentage: 1,
+                        categoryPercentage: 0.5,
                     }]
                 },
                 // Configuration options go here
                 options: {
-                    layout: {
-                        autoPadding: false,
-                    },
                     indexAxis: 'y',
                     plugins: {
                         legend: {
@@ -446,6 +444,11 @@ define([ 'jquery', 'toastr', 'chartjs'], function (jq, toastr, Chart){
                                 display: false,
                             },
                         },
+                        x: {
+                            ticks:{
+                                stepSize: 1,
+                            }
+                        }
                     },
                     animation: {
                         easing: "easeInOutBack"
