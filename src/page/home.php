@@ -42,7 +42,7 @@ class home implements IPage {
 
         $hkActivities = '';
 
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'HK'");
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'HK' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -63,7 +63,7 @@ class home implements IPage {
 
         $cnActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'CN'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'CN' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -84,7 +84,7 @@ class home implements IPage {
 
         $moActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'MO'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'MO' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -105,7 +105,7 @@ class home implements IPage {
 
         $twActivities = '';
 
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail FROM Event WHERE review = 1 AND state = 1 AND country = 'TW'");
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'TW' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
