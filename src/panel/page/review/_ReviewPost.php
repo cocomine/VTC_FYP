@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-namespace panel\page;
+namespace panel\page\review;
 
 use cocomine\IPage;
 use mysqli;
@@ -20,22 +20,8 @@ class _ReviewPost implements IPage {
     }
 
     public function access(bool $isAuth, int $role, bool $isPost): int {
-        global $auth;
-
         if (!$isAuth) return 401;
-        if ($role < 2) return 403;
-
-        //check the event is true owner
-        if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
-            $stmt = $this->sqlcon->prepare("SELECT COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
-            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
-            if (!$stmt->execute()) return 500;
-
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-
-            if ($row['count'] <= 0) return 403;
-        }
+        if ($role < 3) return 403;
         return 200;
     }
 
@@ -267,8 +253,8 @@ body;
 
         /* 批准 */
         if($_GET['type'] === "pass"){
-            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 1 WHERE ID = ? AND UUID = ?");
-            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 1 WHERE ID = ?");
+            $stmt->bind_param('s', $this->upPath[0]);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -292,8 +278,8 @@ body;
 
         /* 駁回 */
         if($_GET['type'] === "reject"){
-            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 2 WHERE ID = ? AND UUID = ?");
-            $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
+            $stmt = $this->sqlcon->prepare("UPDATE Event SET review = 2 WHERE ID = ?");
+            $stmt->bind_param('s', $this->upPath[0]);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -319,8 +305,8 @@ body;
         $output = array('id' => $this->upPath[0]);
 
         /* event table */
-        $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE UUID = ? AND ID = ?");
-        $stmt->bind_param('ss', $auth->userdata['UUID'], $this->upPath[0]);
+        $stmt = $this->sqlcon->prepare("SELECT * FROM Event WHERE ID = ?");
+        $stmt->bind_param('s',$this->upPath[0]);
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -417,7 +403,8 @@ body;
 
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><span>審核活動</span></li>";
+            <li><a href='/panel/review'>審核活動</a></li>
+            <li><span>活動 " . $this->upPath[0] . "</span></li>";
     }
 
     public function get_Title(): string {

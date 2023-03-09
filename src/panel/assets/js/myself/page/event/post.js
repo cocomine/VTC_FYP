@@ -304,8 +304,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                             const length = jq_elm.val().length, maxlength = jq_elm.attr('maxlength');
                             el.innerHTML = length + "/" + maxlength;
                             if (length >= maxlength){
-                                if(length > el._count) toastr.warning(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
-                                el._count = length
+                                if (length > el._count) toastr.warning(`字數已超出了${maxlength}字限制! 如你繼續輸入, 內容有機會被截斷`);
+                                el._count = length;
                             }
                         }
                     } ]
@@ -439,6 +439,57 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             map.setFog({ 'horizon-blend': 0.05 });
         });
 
+        /* Given a query in the form "lng, lat" or "lat, lng"
+        * returns the matching geographic coordinate(s)
+        * as search results in carmen geojson format,
+        * https://github.com/mapbox/carmen/blob/master/carmen-geojson.md */
+        const coordinatesGeocoder = function (query){
+            // Match anything which looks like
+            // decimal degrees coordinate pair.
+            const matches = query.match(
+                /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
+            );
+            if (!matches){
+                return null;
+            }
+
+            function coordinateFeature(lng, lat){
+                return {
+                    center: [ lng, lat ],
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [ lng, lat ]
+                    },
+                    place_name: 'Lat: ' + lat + ' Lng: ' + lng,
+                    place_type: [ 'coordinate' ],
+                    properties: {},
+                    type: 'Feature'
+                };
+            }
+
+            const coord1 = Number(matches[1]);
+            const coord2 = Number(matches[2]);
+            const geocodes = [];
+
+            if (coord1 < -90 || coord1 > 90){
+                // must be lng, lat
+                geocodes.push(coordinateFeature(coord1, coord2));
+            }
+
+            if (coord2 < -90 || coord2 > 90){
+                // must be lat, lng
+                geocodes.push(coordinateFeature(coord2, coord1));
+            }
+
+            if (geocodes.length === 0){
+                // else could be either lng, lat or lat, lng
+                geocodes.push(coordinateFeature(coord1, coord2));
+                geocodes.push(coordinateFeature(coord2, coord1));
+            }
+
+            return geocodes;
+        };
+
         /* Add Map Control */
         const map_marker = new mapboxgl.Marker({
             color: 'red',
@@ -448,7 +499,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             accessToken: mapboxgl.accessToken,
             marker: false,
             mapboxgl: mapboxgl,
-            proximity: "ip",
+            limit: 8,
+            countries: _support_country.join(','),
+            localGeocoder: coordinatesGeocoder,
+
+            reverseGeocode: true
         });
         map.addControl(map_geo);
         const map_track = new mapboxgl.GeolocateControl({ showUserLocation: false, fitBoundsOptions: { zoom: 15 } });
@@ -928,7 +983,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 response.json().then((json) => {
                     if (json.code === 200){
                         toastr.success(json.Message, json.Title);
-                        window.ajexLoad("/panel/event/")
+                        window.ajexLoad("/panel/event/");
                     }else{
                         toastr.error(json.Message, json.Title);
                     }

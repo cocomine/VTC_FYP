@@ -60,6 +60,9 @@ function fetch_path(): array {
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
+    if (preg_match("/^\?.*$/", $path[count($path) - 1])) {
+        $path = array_slice($path, 0, -1);
+    }
     if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
@@ -107,6 +110,7 @@ function run_page(array $path, MyAuth $auth) {
                     'content' => $homePage->showPage()
                 ));
             }
+            exit();
         }
     } else {
 
@@ -276,6 +280,8 @@ function run_apis(array $path, MyAuth $auth) {
                                 </ul>
                             </li>
                             <?php if ($auth->userdata['Role'] > 1) { ?>
+                                <hr class="text-light">
+                                <li><a href="/panel/reserve/"><i class="fa-solid fa-people-roof"></i><span>預約管理</span></a></li>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
                                     <ul>
@@ -285,6 +291,8 @@ function run_apis(array $path, MyAuth $auth) {
                                 </li>
                             <?php }
                             if ($auth->userdata['Role'] > 2) { ?>
+                                <hr class="text-light">
+                                <li><a href="/panel/review/"><i class="fa-solid fa-calendar-check"></i><span>審核活動</span></a></li>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span><?php echo showText("admin.Head") ?></span></a>
                                     <ul>
@@ -292,7 +300,6 @@ function run_apis(array $path, MyAuth $auth) {
                                         <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span><?php echo showText("Account.Head") ?></span></a></li>
                                     </ul>
                                 </li>
-                                <li><a href="/panel/review/"><i class="fa-solid fa-calendar-check"></i><span>審核活動</span></a></li>
                             <?php } ?>
                             <!-- sidebar content End-->
                         </ul>

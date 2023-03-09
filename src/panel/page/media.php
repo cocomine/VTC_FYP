@@ -65,15 +65,22 @@ class media implements IPage {
             <div class='modal-body'>
                 <div class="row">
                     <div class="col text-center">
-                        <img src='/panel/assets/images/image_loading.webp' draggable='false' alt='xxxx' style="max-height: 70vh"/>
+                        <img src='' draggable='false' alt='xxxx' style="max-height: 70vh"/>
+                        <object data="" type="" style="height: 100vh; width: 100%; display: none">
+                            <a href="" target="_blank">{$Text['unsupportedView']}</a>
+                        </object>
                     </div>
                     <div class="col-12 col-md-3" id="Media-modal-detail">
-                        <p>{$Text['Media_ID']} <span>xxxx</span></p>
-                        <p>{$Text['Upload_Time']} <span>xxxx</span></p>
-                        <p>{$Text['MIME_type']} <span>xxxx</span></p>
+                        <p>
+                            <label for="file-name" class="form-label">{$Text['name']}</label>
+                            <input type="text" class="form-control" id="file-name" maxlength="20">
+                        </p>
+                        <p>{$Text['Media_ID']} <code class="bg-light">xxxx</code></p>
+                        <p>{$Text['Upload_Time']} <code class="bg-light">xxxx</code></p>
+                        <p>{$Text['MIME_type']} <code class="bg-light">xxxx</code></p>
                         <p>{$Text['URL']} <code class="bg-light">xxxx</code></p>
                         <a target="_blank" class="btn btn-outline-primary btn-rounded" href="./"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{$Text['Show_Original']}</a>
-                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} {$Text['Delete'][1]}</button>
+                        <button type="button" data-id="xxx" class="btn btn-danger btn-rounded"><i class="fa-solid fa-trash me-2"></i>{$Text['Delete'][0]} 1 {$Text['Delete'][1]}</button>
                     </div>
                 </div>
             </div>

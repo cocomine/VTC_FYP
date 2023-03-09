@@ -17,7 +17,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
             url: $('#datatables_lang_url').text()
         },
         order: [
-            [ 3, 'desc' ]
+            [ 2, 'asc' ]
         ],
         columns: [
             {

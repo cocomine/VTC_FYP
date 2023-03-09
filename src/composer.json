@@ -12,7 +12,10 @@
       "ext-json": "*",
         "erusev/parsedown": "^1.7",
       "ext-intl": "*",
-      "ext-mbstring": "*"
+      "ext-mbstring": "*",
+      "ext-fileinfo": "*",
+      "ext-imagick": "*",
+        "fightbulc/moment": "^1.34"
     },
   "scripts": {
     "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
