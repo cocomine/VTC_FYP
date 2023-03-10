@@ -202,7 +202,6 @@ class changesetting implements IPage {
         </div>
     </div>
 </div>
-body . <<<body2
 <!-- 雙重驗證 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -287,6 +286,7 @@ body . <<<body2
         </div>
     </div>
 </div>
+body . <<<body2
 <!-- 用户資訊 -->
 <div class='col-12 mt-4'>
     <div class='card'>

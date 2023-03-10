@@ -171,7 +171,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
      * 選擇媒體
      * @param {number} max 最多可選擇媒體, 0=無限
      * @param {RegExp} mime 列表過濾MIME媒體類型
-     * @param {([string])=>void} selected_media 回傳選擇媒體id
+     * @param {([{id: string, name: string}])=>void} selected_media 回傳選擇媒體id
      */
     const select_media = function (selected_media, max = 0, mime = /.*/){
         max_sel = max;

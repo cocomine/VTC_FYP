@@ -307,24 +307,10 @@ define(['jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver','media-s
         else $(list[3]).removeClass('bg-success').addClass('bg-danger');
     });
 
-
-
-    /* 證明圖片 */
-    let img_items = [];
-    const jq_dropZone = $('#documents-image-list');
-    jq_dropZone.scrollbar();
-    jq_dropZone.parents('.scroll-wrapper').removeClass('row mb-2 media-list');
-    const jq_image = $('#documents-image');
-
-    /* Image select */
+    /* pdf select */
     $('#documents-image-select').click(() => {
-        media_select.select_media((images) => {
-            const tmp = images.map((id) => image_html(id));
-            jq_dropZone.html(tmp);
+        media_select.select_media((medias) => {
 
-            //list up
-            img_items = tmp.map((value) => value.find('img')[0]);
-            jq_image.val(images.join(','));
         }, 5, /(application\/pdf)/);
     });
 
