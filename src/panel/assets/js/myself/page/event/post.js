@@ -343,7 +343,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /* Image select */
         $('#event-image-select').click(() => {
             media_select.select_media((images) => {
-                const tmp = images.map(({id}) => image_html(id));
+                const tmp = images.map(({id, name}) => image_html(id, name));
                 jq_dropZone.html(tmp);
 
                 //list up
@@ -355,14 +355,15 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /**
          * 圖片html
          * @param {string} id 圖片id
+         * @param {string} name 圖片名稱
          * @return {JQuery<HTMLElement>}
          */
-        function image_html(id){
+        function image_html(id, name){
             return $(`<div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
                     <div class="ratio ratio-1x1 media-list-focus">
                         <div class="overflow-hidden">
                             <div class="media-list-center">
-                                <img src="/panel/api/media/${id}" draggable="true" data-image-id="${id}" alt="${id}" />
+                                <img src="/panel/api/media/${id}" draggable="true" data-image-id="${id}" alt="${name}" />
                             </div>
                         </div>
                     </div>
@@ -1077,9 +1078,9 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         $('#event-thumbnail-change').click(function (e){
             e.preventDefault();
 
-            media_select.select_media(function (img){
-                $('#event-thumbnail-img').attr('src', '/panel/api/media/' + img[0]).attr('alt', img[0]);
-                $('#event-thumbnail').val(img[0]);
+            media_select.select_media(function (imges){
+                $('#event-thumbnail-img').attr('src', '/panel/api/media/' + imges[0].id).attr('alt', imges[0].name);
+                $('#event-thumbnail').val(imges[0].id);
             }, 1, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
         });
 
