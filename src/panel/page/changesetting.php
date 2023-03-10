@@ -80,13 +80,14 @@ class changesetting implements IPage {
                       <button type='button' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4' data-bs-toggle='modal' data-bs-target='#TwoFA_register'><i class='fa fa-lock pe-2'></i>{$Text['2FA']['Enable']}</button>";
         }
 
-        /* json 語言 */
+        /* 多語言 */
         $jsonLang = json_encode(array(
             'strength' => showText('ChangeSetting.strength'),
             'BackupCode' => showText('ChangeSetting.BackupCode')
             ));
-        /*图片json*/
-        $LangJson = json_encode(array(
+
+        // media-select 語言
+        $mediaSelect_lang = json_encode(array(
             'No_media' => $Text2['No_media'],
             'Media' => $Text2['Media'] . ' %s',
             'Unknown_Error' => showText('Error'),
@@ -107,10 +108,11 @@ class changesetting implements IPage {
         ));
         /* HTNL */
         return <<<body
-<link rel="stylesheet" href="/assets/css/myself/datetimepicker.css">
-<link rel="stylesheet" href="/assets/css/myself/media-select.css">
-<pre id='langJson' style='display: none'>$jsonLang</pre>
-<pre id="media-select-LangJson" class="d-none">$LangJson</pre>
+<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+<link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+<link rel="stylesheet" href="/panel/assets/css/countrySelectcss">
+<pre id='langJson' class="d-none">$jsonLang</pre>
+<pre id="media-select-LangJson" class="d-none">$mediaSelect_lang</pre>
 <!-- 基本資料 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -287,38 +289,40 @@ class changesetting implements IPage {
     </div>
 </div>
 body . <<<body2
-<!-- 用户資訊 -->
+<!-- 個人資料 -->
 <div class='col-12 mt-4'>
     <div class='card'>
         <div class='card-body'>
-            <h1 class='header-title'>用戶資料</h1>
-            <form id='PassSet' novalidate class='needs-validation'>
-                <div class='col-12'>
-                    <label for='Address' class='col-for-label'>全名</label>
-                    <input class='form-control input-rounded' type='FullName' id='FullName' pattern='' name='FullName' required>
-                    <div class='invalid-feedback'>請輸入文字</div>
-                </div>
-                <label  class='col-form-label'>出生日期</label>
-                    <div class="date-picker col-7">
-                        <input type="date" class="form-control form-rounded date-picker-toggle" name="event-post-date" id="event-post-date" required>
-                        <div class="invalid-feedback">這裏不能留空哦~~</div>
-                    </div>               
-                <div class='col-12'>
-                    <label class='col-form-label' for='Language'>國家</label>
-                        <select class='input-rounded form-select' name='lang' id='Language'>
-                            <option value='hk' $Lang_Sel[0]>香港</option>
-                            <option value='tw' $Lang_Sel[1]>台灣</option>
-                            <option value='cn' $Lang_Sel[2]>中國</option>
-                            <option value='mo' $Lang_Sel[3]>澳門</option>
+            <h1 class='header-title'>個人資料</h1>
+            <form id='User-detail' novalidate class='needs-validation'>
+                <div class="row gy-2">
+                    <div class="col-6">
+                        <label class="form-label" for="lastname">姓氏</label>
+                        <input type="text" class="form-control form-rounded" id="lastname" name="lastname" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="firstname">名字</label>
+                        <input type="text" class="form-control form-rounded" id="firstname" name="firstname" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="country">國家 / 地區</label>
+                        <select class="form-select form-rounded" id="country" name="country" required></select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="phone">電話號碼</label>
+                        <input type="tel" class="form-control form-rounded" id="phone" name="phone" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="sex">性別</label>
+                        <select class="form-select form-rounded" id="sex" name="sex" required>
+                            <option value="1">男</option>
+                            <option value="0">女</option>
                         </select>
-                </div>
-                <div class='col-12'>
-                    <label for='Phone' class='col-form-label'>電話號碼</label>
-                    <input class='input-rounded form-control' type='text' id='Phone' pattern='[0-9]{8,}' name='Phone'  required>
-                    <div class='invalid-feedback'>請輸入正確的電話號碼</div>
-                </div>
-                
-                     
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="birth">出生日期</label>
+                        <!--todo-->
+                    </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
             </form>
         </div>
@@ -373,7 +377,7 @@ body . <<<body2
         </div>
     </div>
 </div>
-
+body2 . <<<body2
 <script>
 require.config({
     paths:{
@@ -383,6 +387,7 @@ require.config({
         'media-select': ['myself/media-select'],
         'media-select.upload': ['myself/media-select.upload'],
         'timepicker': ['https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min'],
+        'jquert.crs.js': ['jquert.crs.min']
     },
 });
 loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver','media-select','media-select.upload','timepicker'])

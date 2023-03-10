@@ -34,6 +34,7 @@
     "datatables.net-bs5": "^1.13.1",
     "datatables.net-responsive-bs5": "^2.4.0",
     "easymde": "^2.18.0",
+    "intl-tel-input": "^17.0.20",
     "jquery": "^3.6.1",
     "jquery.scrollbar": "^0.2.11",
     "mapbox-gl": "^2.11.0",
