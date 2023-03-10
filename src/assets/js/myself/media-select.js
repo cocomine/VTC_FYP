@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022. 
  * Create by cocomine
- * 1.5
+ * 1.7.0
  */
 
 /*
@@ -76,17 +76,18 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
     jq_modal.find('.media-list').on('click', '[data-id]', function (){
         const elm = $(this);
         const id = elm.data('id');
+        const name = elm.data('name');
 
         /* 選取 */
-        if (selected_list.includes(id)){
+        if (selected_list.some((value) => value.id === id)){
             //is selected
             elm.removeClass('selected');
-            selected_list.splice(selected_list.indexOf(id), 1);
+            selected_list.splice(selected_list.findIndex((value) => value.id = id), 1);
         }else{
             //not selected
             if (selected_list.length >= max_sel && max_sel !== 0) return; //超出數量
             elm.addClass('selected');
-            selected_list.push(id);
+            selected_list.push({id, name});
         }
 
         jq_modal.find('.btn-primary > span').text(selected_list.length.toString());
@@ -120,7 +121,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
                 const map = data.body.map((value) => {
                     if (/(image\/.+)/.test(value.mime)){
                         return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
-                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}" data-name="${value.name}">
                                     <div class="overflow-hidden">
                                         <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name ?? ''}</span>
                                         <div class="media-list-center">
@@ -131,7 +132,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
                             </div>`;
                     }else if (value.mime === "application/pdf"){
                         return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
-                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}" data-name="${value.name}">
                                     <div class="overflow-hidden">
                                         <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name}</span>
                                         <div class="media-list-center">
@@ -142,7 +143,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
                             </div>`;
                     }else{
                         return `<div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
-                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}">
+                                <div class="ratio ratio-1x1 media-list-focus" data-id="${value.id}" data-name="${value.name}">
                                     <div class="overflow-hidden">
                                         <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${value.name}</span>
                                         <div class="media-list-center">

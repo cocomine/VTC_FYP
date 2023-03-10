@@ -343,7 +343,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /* Image select */
         $('#event-image-select').click(() => {
             media_select.select_media((images) => {
-                const tmp = images.map((id) => image_html(id));
+                const tmp = images.map(({id}) => image_html(id));
                 jq_dropZone.html(tmp);
 
                 //list up
