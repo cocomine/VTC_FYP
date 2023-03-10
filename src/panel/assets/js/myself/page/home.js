@@ -475,11 +475,11 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
         const json = await response.json();
         if (response.ok && json.code === 200){
             const data = json.data;
-            const jq_comment = $('.owl-carousel');
+            const jq_comment = $('#comment');
             //console.log(json);
 
             if(data.length <= 0){
-                jq_comment.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                jq_comment.replaceWith('<div class="text-light py-5 text-center">最近沒有評論</div>');
                 return;
             }
 
@@ -510,13 +510,22 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
                 autoplayHoverPause: true,
                 responsive: {
                     0: {
+                        items: 1
+                    },
+                    576: {
                         items: 2
+                    },
+                    768: {
+                        items: 3
                     },
                     992: {
                         items: 1
                     },
                     1200:{
                         items: 2
+                    },
+                    1800:{
+                        items: 3
                     }
                 }
             });

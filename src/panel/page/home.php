@@ -153,7 +153,7 @@ body. <<<body
     <div class="card comment">
         <div class="card-body">
             <h4 class="card-title text-light">最近三日評論</h4>
-            <div class="owl-carousel owl-theme pt-2"></div>
+            <div class="owl-carousel owl-theme pt-2" id="comment"></div>
         </div>
     </div>
 </div>
