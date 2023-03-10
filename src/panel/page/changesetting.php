@@ -110,7 +110,7 @@ class changesetting implements IPage {
         return <<<body
 <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
 <link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
-<link rel="stylesheet" href="/panel/assets/css/countrySelectcss">
+<link rel="stylesheet" href="/panel/assets/css/intlTelInput.css">
 <pre id='langJson' class="d-none">$jsonLang</pre>
 <pre id="media-select-LangJson" class="d-none">$mediaSelect_lang</pre>
 <!-- 基本資料 -->
@@ -294,23 +294,23 @@ body . <<<body2
     <div class='card'>
         <div class='card-body'>
             <h1 class='header-title'>個人資料</h1>
-            <form id='User-detail' novalidate class='needs-validation'>
+            <form id='user-detail' novalidate class='needs-validation'>
                 <div class="row gy-2">
                     <div class="col-6">
                         <label class="form-label" for="lastname">姓氏</label>
-                        <input type="text" class="form-control form-rounded" id="lastname" name="lastname" required>
+                        <input type="text" class="form-control form-rounded" id="lastname" name="lastname" required value="">
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="firstname">名字</label>
-                        <input type="text" class="form-control form-rounded" id="firstname" name="firstname" required>
+                        <input type="text" class="form-control form-rounded" id="firstname" name="firstname" required value="">
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="country">國家 / 地區</label>
-                        <select class="form-select form-rounded" id="country" name="country" required></select>
+                        <select class="form-select form-rounded crs-country" id="country" name="country" data-default-value="" data-value="shortcode" data-default-option="請選擇" data-preferred="HK,TW,MO,CN" data-region-id="null" required></select>
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="phone">電話號碼</label>
-                        <input type="tel" class="form-control form-rounded" id="phone" name="phone" required>
+                        <input type="tel" class="form-control form-rounded" id="phone" name="phone" required value="">
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="sex">性別</label>
@@ -321,7 +321,9 @@ body . <<<body2
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="birth">出生日期</label>
-                        <!--todo-->
+                        <div class="date-picker">
+                            <input type="date" class="date-picker-toggle form-control form-rounded" value="">
+                        </div>
                     </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
             </form>
@@ -386,11 +388,15 @@ require.config({
         FileSaver: ['FileSaver.min'],
         'media-select': ['myself/media-select'],
         'media-select.upload': ['myself/media-select.upload'],
-        'timepicker': ['https://cdn.jsdelivr.net/npm/timepicker@1.14.0/jquery.timepicker.min'],
-        'jquert.crs.js': ['jquert.crs.min']
     },
+    shim:{
+        intlTelInput: {
+            deps: ['jquery'],
+            exports: 'intlTelInput'
+        },
+    }
 });
-loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver','media-select','media-select.upload','timepicker'])
+loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver','media-select','media-select.upload','timepicker', 'full.jquery.crs.min', 'intlTelInput', 'myself/datepicker'])
 
 
 </script>
@@ -501,6 +507,11 @@ body2;
                     'Message' => $this->ResultMsg($e->getCode())[1],
                 );
             }
+        }
+
+        /* 個人資料 */
+        if($_GET['type'] === "UserDetail"){
+
         }
 
         return array(
