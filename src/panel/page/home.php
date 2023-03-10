@@ -153,19 +153,7 @@ body. <<<body
     <div class="card comment">
         <div class="card-body">
             <h4 class="card-title text-light">最近三日評論</h4>
-            <div class="owl-carousel owl-theme pt-2">
-                <div class="item">
-                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
-                        <img src="https://www.gravatar.com/avatar/$avatar?s=200" alt="avatar" />
-                    </div>
-                    <div class="text-light">
-                        <h5><b>cocomine</b></h5>
-                        <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
-                        <p class="text-light">vsukbvskbkbkjvbkjsbdkdsbjksbkjsdbvkjbvkdbvsdvkdsbvkdsbvksjbvjkbvksjvbsjkvbsjkvbskjvbdkvvksjdbvjkdbvjskdvbkvbsdkvbsdjkvbjkvbjvbkvjkvb
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <div class="owl-carousel owl-theme pt-2"></div>
         </div>
     </div>
 </div>
