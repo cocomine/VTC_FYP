@@ -361,10 +361,10 @@ body . <<<body2
                 </div>
                      <label for='Address' class='col-for-label'>證明文件</label></br>
                      <div class="media-list row mb-2 scrollbar-dynamic" id="documents-image-list"></div>
-                     <button type="button" class="btn btn-rounded btn-primary btn-imgae mt-4 pr-4 pl-4" id="documents-image-select"><i class="fa-solid fa-file-lines"></i>選擇圖片</button>
-                     </br><small>你最多可以選擇五張圖片</small><br>
+                     <button type="button" class="btn btn-rounded btn-primary btn-imgae mt-4 pr-4 pl-4" id="documents-image-select"><i class="fa-solid fa-file-lines"></i>選擇文件</button>
+                    
                      <div class="col-12">
-                         <div class="invalid-feedback">這裏至少需要選擇一張圖片哦~~</div>
+                         <div class="invalid-feedback">你只可以选择一份PDF档案選擇</div>
                          <input type="text" class="d-none" id="documents-image" name="documents-image" required>
                      </div>
                      
