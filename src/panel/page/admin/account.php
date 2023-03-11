@@ -65,7 +65,7 @@ class account implements IPage {
                         <label class='col-form-label' for='Role'>Role</label>
                         <select class='input-rounded form-select' name='role' id='Role'>
                             <option value='1'>{$Text['Role']['Normal']}</option>
-                            <option value='2'>{$Text['Role']['Operator']}</option>
+                            <option value='2'>{$Text['Role']['collaborator']}</option>
                             <option value='3'>{$Text['Role']['Administrator']}</option>
                         </select>
                     </div>
@@ -114,7 +114,14 @@ tmp;
             //time 處理;
             $time = date('Y-m-d G:i:s', $row['Last_Login']);
 
-            $user_data .= "<tr><td>{$row['UUID']}</td><td>{$row['Name']}</td><td>{$row['Email']}</td><td>$time</td><td>$role</td><td>$active</td></tr>";
+            $user_data .= "<tr class='position-relative'>
+                <td>{$row['UUID']}</td>
+                <td><a href='#' data-id='{$row['UUID']}' class='stretched-link'>{$row['Name']}</a></td>
+                <td>{$row['Email']}</td
+                ><td>$time</td>
+                <td>$role</td
+                ><td>$active</td>
+            </tr>";
         }
 
         /* json */
@@ -150,6 +157,8 @@ $createAC_html
         </div>
     </div>
 </div>
+<!-- 查看資料 -->
+
 <script>
     require.config({
         paths:{
