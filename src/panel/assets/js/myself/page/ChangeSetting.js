@@ -9,15 +9,9 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
     media_upload.setInputAccept("application/pdf");
     const Lang = JSON.parse($('#langJson').text());
     crs.init();
-    const jq_phone = $('#phone');
-    const jq_organize_phone = $('#organize-phone');
+    const jq_phone = $('#phone'); //電話
+    const jq_organize_phone = $('#organize-phone'); //組織電話
     const user_phone = intlTelInput(jq_phone[0], {
-        initialCountry: "hk",
-        preferredCountries: [ 'tw', 'hk', 'mo', 'cn' ],
-        separateDialCode: true,
-        utilsScript: "/panel/assets/js/utils.js",
-    });
-    const organize_phone = intlTelInput(jq_organize_phone[0], {
         initialCountry: "hk",
         preferredCountries: [ 'tw', 'hk', 'mo', 'cn' ],
         separateDialCode: true,
@@ -321,13 +315,6 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
         else $(list[3]).removeClass('bg-success').addClass('bg-danger');
     });
 
-    // /* pdf select todo */
-    // $('#documents-image-select').click(() => {
-    //     media_select.select_media((medias) => {
-    //
-    //     }, 5, /(application\/pdf)/);
-    // });
-
     /* check phone number */
     $("#organize-phone, #phone").on('input focus', function (){
         if(!$(this).parents('form').hasClass('was-validated')) return;
@@ -373,7 +360,6 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
                 body: JSON.stringify(data)
             }).then(async (response) => {
                 const json = await response.json();
-                console.log(json); //debug
                 if (response.ok && json.code === 200){
                     toastr.success(json.Message, json.Title);
                     $(this).removeClass('was-validated');
@@ -388,54 +374,73 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
         }
     });
 
-    /* Count content length */
-    $('#organize-Address').on('input focus', function (){
-        const length = $(this).val().length;
-        $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
-    });
+    /* 組織資料部分 */
+    if(jq_organize_phone.length > 0){
 
-    /* 組織資料 */
-    $('#organize').submit(function (e){
-        if (!e.isDefaultPrevented() && this.checkValidity()){
-            e.preventDefault();
-            e.stopPropagation();
-            const data = $(this).serializeObject();
-            data.phone_code = organize_phone.getSelectedCountryData().dialCode;
+        const organize_phone = intlTelInput(jq_organize_phone[0], {
+            initialCountry: "hk",
+            preferredCountries: [ 'tw', 'hk', 'mo', 'cn' ],
+            separateDialCode: true,
+            utilsScript: "/panel/assets/js/utils.js",
+        }); //組織電話
 
-            //check phone number
-            if (!organize_phone.isValidNumber()){
-                jq_organize_phone[0].setCustomValidity('error');
-                return;
+        /* Count content length */
+        $('#organize-Address').on('input focus', function (){
+            const length = $(this).val().length;
+            $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
+        });
+
+        /* 組織資料 */
+        $('#organize').submit(function (e){
+            if (!e.isDefaultPrevented() && this.checkValidity()){
+                e.preventDefault();
+                e.stopPropagation();
+                const data = $(this).serializeObject();
+                data.organize_phone_code = organize_phone.getSelectedCountryData().dialCode;
+
+                //check phone number
+                if (!organize_phone.isValidNumber()){
+                    jq_organize_phone[0].setCustomValidity('error');
+                    return;
+                }
+
+                /* 封鎖按鈕 */
+                const bt = $(this).children('.form-submit');
+                const html = bt.html();
+                bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+                /* send */
+                fetch('/panel/ChangeSetting/?type=organize', {
+                    method: 'POST',
+                    redirect: 'error',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    const json = await response.json();
+                    if (response.ok && json.code === 200){
+                        toastr.success(json.Message, json.Title);
+                        $(this).removeClass('was-validated');
+                    }else{
+                        toastr.error(json.Message, json.Title ?? globalLang.Error);
+                    }
+                }).finally(() => {
+                    bt.html(html).removeAttr('disabled');
+                }).catch((error) => {
+                    console.log(error);
+                });
             }
+        });
 
-            /* 封鎖按鈕 */
-            const bt = $(this).children('.form-submit');
-            const html = bt.html();
-            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
-
-            /* send */
-            fetch('/panel/ChangeSetting/?type=UserDetail', {
-                method: 'POST',
-                redirect: 'error',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(data)
-            }).then(async (response) => {
-                const json = await response.json();
-                console.log(json); //debug
-                if (response.ok && json.code === 200){
-                    toastr.success(json.Message, json.Title);
-                    $(this).removeClass('was-validated');
-                }else{
-                    toastr.error(json.Message, json.Title ?? globalLang.Error);
-                }
-            }).finally(() => {
-                bt.html(html).removeAttr('disabled');
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    });
+        /* pdf select todo */
+        $('#organize-prove-select').click(() => {
+            media_select.select_media((medias) => {
+                const prove = medias[0];
+                $('#organize-prove').val(prove.id);
+                $('#organize-prove-filename').text(prove.name + ".pdf");
+            }, 1, /(application\/pdf)/);
+        });
+    }
 });
