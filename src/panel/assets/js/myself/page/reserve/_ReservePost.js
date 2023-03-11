@@ -4,6 +4,9 @@
  */
 
 define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment){
+    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
+    const sex = { 1: "男", 0: "女" };
+
     const dataTable_Options = {
         ajax: {
             url: location.pathname + '/',
@@ -17,13 +20,16 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             loadingRecords: `<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>`,
             url: $('#datatables_lang_url').text()
         },
+        createdRow: function (row){
+            $(row).addClass('position-relative');
+        },
         columns: [
             {data: "ID"},
             {
                 data: 'Name',
                 render: function (data, type, row){
                     if (type === 'display'){
-                        return `<a href="#" data-id="${row.ID}">${data} (${row.full_name})</a>`;
+                        return `<a href="#" data-id="${row.ID}" class="stretched-link">${data} (${row.full_name})</a>`;
                     }else{
                         return data + ";" + row.full_name;
                     }
@@ -42,8 +48,6 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             }
         ]
     };
-    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
-    const sex = { 1: "男", 0: "女" };
 
     /* load user list */
     $('#dataTable').dataTable({

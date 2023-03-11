@@ -290,10 +290,10 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
             }
 
             jq_today_order.html(data.map((item) =>
-                `<tr>
+                `<tr class="position-relative">
                     <td>${item.ID}</td>
                     <td>
-                        <a href="/panel/reserve/${item.event_ID}#${item.ID}">${item.Name} (${item.last_name} ${item.first_name})</a>
+                        <a href="/panel/reserve/${item.event_ID}#${item.ID}" class="stretched-link">${item.Name} (${item.last_name} ${item.first_name})</a>
                     </td>
                     <td>
                         ${item.plan.map((plan) => 
@@ -486,7 +486,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
             jq_comment.html(data.map((item) =>
                 `<div class="item">
                     <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
-                        <img class="owl-lazy" data-src="https://www.gravatar.com/avatar/${item.Email}?s=200" alt="avatar">
+                        <a href="https://${location.hostname}/activity_details/${item.event_ID}" class="stretched-link"><img class="owl-lazy" data-src="https://www.gravatar.com/avatar/${item.Email}?s=200" alt="avatar"></a>
                     </div>
                     <div class="text-light">
                         <h5><b>${item.Name}</b></h5>
