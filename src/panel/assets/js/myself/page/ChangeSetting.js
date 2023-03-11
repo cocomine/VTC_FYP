@@ -3,13 +3,21 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media-select', 'media-select.upload', 'full.jquery.crs.min', 'intlTelInput', 'myself/datepicker' ], (jq, toastr, zxcvbn, forge, bootstrap, FileSaver, media_select, media_upload, crs, intlTelInput) => {
+define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media-select', 'media-select.upload', 'full.jquery.crs.min', 'intl-tel-input', 'myself/datepicker' ], (jq, toastr, zxcvbn, forge, bootstrap, FileSaver, media_select, media_upload, crs, intlTelInput) => {
     "use strict";
 
     media_upload.setInputAccept("application/pdf");
     const Lang = JSON.parse($('#langJson').text());
     crs.init();
-    const user_phone = intlTelInput($('#phone')[0], {
+    const jq_phone = $('#phone');
+    const jq_organize_phone = $('#organize-phone');
+    const user_phone = intlTelInput(jq_phone[0], {
+        initialCountry: "hk",
+        preferredCountries: [ 'tw', 'hk', 'mo', 'cn' ],
+        separateDialCode: true,
+        utilsScript: "/panel/assets/js/utils.js",
+    });
+    const organize_phone = intlTelInput(jq_organize_phone[0], {
         initialCountry: "hk",
         preferredCountries: [ 'tw', 'hk', 'mo', 'cn' ],
         separateDialCode: true,
@@ -313,24 +321,39 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
         else $(list[3]).removeClass('bg-success').addClass('bg-danger');
     });
 
-    /* pdf select todo */
-    $('#documents-image-select').click(() => {
-        media_select.select_media((medias) => {
+    // /* pdf select todo */
+    // $('#documents-image-select').click(() => {
+    //     media_select.select_media((medias) => {
+    //
+    //     }, 5, /(application\/pdf)/);
+    // });
 
-        }, 5, /(application\/pdf)/);
-    });
+    /* check phone number */
+    $("#organize-phone, #phone").on('input focus', function (){
+        if(!$(this).parents('form').hasClass('was-validated')) return;
 
-    /*  */
+        if (!intlTelInputGlobals.getInstance(this).isValidNumber()){
+            this.setCustomValidity('error');
+        }else{
+            this.setCustomValidity('');
+        }
+    })
+
+    /* 修改html */
+    .after(`<div class="invalid-feedback">請輸入正確電話號碼</div>`)
+        .parent().children('.iti__flag-container').css({ 'height': jq_phone.outerHeight() + 'px' });
+
+    /* 個人資料 */
     $('#user-detail').submit(function (e){
         if (!e.isDefaultPrevented() && this.checkValidity()){
             e.preventDefault();
             e.stopPropagation();
             const data = $(this).serializeObject();
-            console.log(data); //debug
+            data.phone_code = user_phone.getSelectedCountryData().dialCode;
 
-            /* check phone number */
-            if(!user_phone.isValidNumber()){
-                console.log(user_phone.getValidationError());
+            //check phone number
+            if (!user_phone.isValidNumber()){
+                jq_phone[0].setCustomValidity('error');
                 return;
             }
 
@@ -350,8 +373,61 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
                 body: JSON.stringify(data)
             }).then(async (response) => {
                 const json = await response.json();
+                console.log(json); //debug
                 if (response.ok && json.code === 200){
                     toastr.success(json.Message, json.Title);
+                    $(this).removeClass('was-validated');
+                }else{
+                    toastr.error(json.Message, json.Title ?? globalLang.Error);
+                }
+            }).finally(() => {
+                bt.html(html).removeAttr('disabled');
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    });
+
+    /* Count content length */
+    $('#organize-Address').on('input focus', function (){
+        const length = $(this).val().length;
+        $(this).parent('div').children('span').text(length + "/" + $(this).attr('maxlength'));
+    });
+
+    /* 組織資料 */
+    $('#organize').submit(function (e){
+        if (!e.isDefaultPrevented() && this.checkValidity()){
+            e.preventDefault();
+            e.stopPropagation();
+            const data = $(this).serializeObject();
+            data.phone_code = organize_phone.getSelectedCountryData().dialCode;
+
+            //check phone number
+            if (!organize_phone.isValidNumber()){
+                jq_organize_phone[0].setCustomValidity('error');
+                return;
+            }
+
+            /* 封鎖按鈕 */
+            const bt = $(this).children('.form-submit');
+            const html = bt.html();
+            bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+            /* send */
+            fetch('/panel/ChangeSetting/?type=UserDetail', {
+                method: 'POST',
+                redirect: 'error',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            }).then(async (response) => {
+                const json = await response.json();
+                console.log(json); //debug
+                if (response.ok && json.code === 200){
+                    toastr.success(json.Message, json.Title);
+                    $(this).removeClass('was-validated');
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
                 }
