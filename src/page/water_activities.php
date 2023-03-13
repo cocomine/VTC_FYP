@@ -11,12 +11,11 @@ use mysqli;
 use panel\apis\media;
 
 /**
- * Class home
+ * Class water_activites
  * @package cocopixelmc\Page
  */
-class home implements IPage {
+class water_activities implements \cocomine\IPage {
     private mysqli $sqlcon;
-
 
     /**
      * home constructor.
@@ -27,86 +26,24 @@ class home implements IPage {
         $this->sqlcon = $sqlcon;
     }
 
-    /* 是否有權進入 */
-    function access(bool $isAuth, int $role, bool $isPost): int {
+    /**
+     * @inheritDoc
+     */
+    public function access(bool $isAuth, int $role, bool $isPost): int
+    {
         return 200;
     }
 
-    /* 輸出頁面 */
-    function showPage(): string {
-
+    /**
+     * @inheritDoc
+     */
+    public function showPage(): string
+    {
         $Text = showText('index.Content');
 
         /* json 語言 */
         $jsonLang = json_encode(array());
 
-        $hkActivities = '';
-
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'HK' ORDER BY create_time DESC LIMIT 5");
-        if (!$stmt->execute()) {
-            return 'Database Error!';
-        }
-
-        $rs = $stmt->get_result();
-        while($row = $rs->fetch_assoc()) {
-            $hkActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
-            $hkActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
-            $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
-            $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $hkActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
-        }
-
-        $cnActivities = '';
-
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'CN' ORDER BY create_time DESC LIMIT 5");
-        if (!$stmt->execute()) {
-            return 'Database Error!';
-        }
-
-        $rs = $stmt->get_result();
-        while($row = $rs->fetch_assoc()) {
-            $cnActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
-            $cnActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $cnActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
-            $cnActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
-            $cnActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $cnActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
-        }
-
-        $moActivities = '';
-
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'MO' ORDER BY create_time DESC LIMIT 5");
-        if (!$stmt->execute()) {
-            return 'Database Error!';
-        }
-
-        $rs = $stmt->get_result();
-        while($row = $rs->fetch_assoc()) {
-            $moActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
-            $moActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $moActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
-            $moActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
-            $moActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $moActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
-        }
-
-        $twActivities = '';
-
-        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'TW' ORDER BY create_time DESC LIMIT 5");
-        if (!$stmt->execute()) {
-            return 'Database Error!';
-        }
-
-        $rs = $stmt->get_result();
-        while($row = $rs->fetch_assoc()) {
-            $twActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
-            $twActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $twActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
-            $twActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
-            $twActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $twActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
-        }
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/home.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
@@ -226,26 +163,37 @@ loadModules(['myself/datepicker', 'myself/page/home'])
 body;
     }
 
-    /* POST請求 */
-    function post(array $data): array {
+    /**
+     * @inheritDoc
+     */
+    public function post(array $data): array
+    {
         global $auth;
 
         return array();
     }
 
-    /* path輸出 */
-    function path(): string {
-        return '<li class="breadcrumb-item active">' . showText("index.home") . '</li>';
+    /**
+     * @inheritDoc
+     */
+    public function path(): string
+    {
+        // TODO: Implement path() method.
     }
 
-    /* 取得頁面標題 */
-    public function get_Title(): string {
-        return showText('index.title');
+    /**
+     * @inheritDoc
+     */
+    public function get_Title(): string
+    {
+        // TODO: Implement get_Title() method.
     }
 
-    /* 取得頁首標題 */
-    public function get_Head(): string {
-        return showText("index.home");
+    /**
+     * @inheritDoc
+     */
+    public function get_Head(): string
+    {
+        // TODO: Implement get_Head() method.
     }
-
 }
