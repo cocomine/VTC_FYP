@@ -53,8 +53,8 @@ class _ReservePost implements \cocomine\IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">已遞交預約用戶</h4>
-                    <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇用戶查看資料</div>
+                    <h4 class="card-title">已遞交預約客戶</h4>
+                    <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇客戶查看資料</div>
                     <div class="data-tables datatable-primary">
                         <table id="dataTable" class="w-100">
                             <thead class="text-capitalize">
@@ -74,7 +74,7 @@ class _ReservePost implements \cocomine\IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">過去預約用戶</h4>
+                    <h4 class="card-title">過去預約客戶</h4>
                     <div class="data-tables datatable-primary">
                         <table id="dataTable2" class="w-100">
                             <thead class="text-capitalize">
@@ -115,7 +115,7 @@ class _ReservePost implements \cocomine\IPage {
                         </div>
                         <div class="col-6">
                             <label class="form-label" for="country">國家 / 地區</label>
-                            <input type="text" class="form-control form-rounded" id="country" readonly>
+                            <select class="form-control form-rounded crs-country" id="country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null" disabled style="background-color: initial"></select>
                         </div>
                         <div class="col-6">
                             <label class="form-label" for="phone">電話號碼</label>
@@ -176,7 +176,7 @@ require.config({
             'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
         },
     });
-loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/_ReservePost']);
+loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/_ReservePost', 'full.jquery.crs.min']);
 </script>
 body;
     }
@@ -232,7 +232,7 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }

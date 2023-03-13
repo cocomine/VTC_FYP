@@ -47,7 +47,7 @@ class account implements IPage {
 <div class="col-12 mt-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="header-title">Create Account</h4>
+            <h4 class="header-title">{$Text['Create']}</h4>
             <form id='AddAC' novalidate class='needs-validation'>
                 <div class="row g-2">
                     <div class='col-12 col-md-4'>
@@ -92,7 +92,7 @@ tmp;
         $user_data = "";
         while ($row = $result->fetch_assoc()) {
             // role 處理
-            switch ($row['role']){
+            switch ($row['role']) {
                 case 1:
                     $role = $Text['Role']['Normal'];
                     break;
@@ -108,8 +108,8 @@ tmp;
             }
 
             //activated 處理
-            if($row['activated']) $active = '<span class="status-p bg-success">'.$Text['List']['Activated'].'</span>';
-            else $active = '<span class="status-p bg-danger">'.$Text['List']['Not_activated'].'</span>';
+            if ($row['activated']) $active = '<span class="status-p bg-success">' . $Text['List']['Activated'] . '</span>';
+            else $active = '<span class="status-p bg-danger">' . $Text['List']['Not_activated'] . '</span>';
 
             //time 處理;
             $time = date('Y-m-d G:i:s', $row['Last_Login']);
@@ -139,6 +139,7 @@ $createAC_html
     <div class="card">
         <div class="card-body">
             <h4 class="header-title">{$Text['List']['List']}</h4>
+            <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇用戶查看資料</div>
             <div class="data-tables datatable-primary">
                 <table id="dataTable" class="text-center w-100">
                     <thead class="text-capitalize">
@@ -177,7 +178,8 @@ $createAC_html
                 <div class="tab-content mt-1">
                     <!-- 個人資料 -->
                     <div class="tab-pane fade show active" id="user-detail-pane" role="tabpanel" aria-labelledby="user-detail-tab" tabindex="0">
-                        <div class="row gy-2">
+                        <div class="alert alert-warning" id="user-detail-none"><i class="fa-solid fa-triangle-exclamation me-2"></i>此帳戶沒有填寫個人資料</div>
+                        <div class="row gy-2" id="user-detail">
                             <div class="col-6">
                                 <label class="form-label" for="lastname">姓氏</label>
                                 <input type="text" class="form-control form-rounded" id="lastname" readonly>
@@ -188,7 +190,7 @@ $createAC_html
                             </div>
                             <div class="col-6">
                                 <label class="form-label" for="country">國家 / 地區</label>
-                                <select class="form-control form-rounded crs-country" id="country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null"></select>
+                                <select class="form-control form-rounded crs-country" id="country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null" disabled style="background-color: initial"></select>
                             </div>
                             <div class="col-6">
                                 <label class="form-label" for="phone">電話號碼</label>
@@ -206,23 +208,24 @@ $createAC_html
                     </div>
                     <!-- 組織資料 -->
                     <div class="tab-pane fade" id="organization-detail-pane" role="tabpanel" aria-labelledby="organization-detail-tab" tabindex="0">
-                        <div class="row gy-2 w-100">
+                        <div class="alert alert-warning" id="organize-detail-none"><i class="fa-solid fa-triangle-exclamation me-2"></i>此帳戶沒有填寫組織資料</div>
+                        <div class="row gy-2" id="organize-detail">
                             <div class="row">
                                 <div class='col-12'>
                                     <label for='organize-Name' class='col-form-label'>組織名字</label>
                                     <input class='form-control form-rounded' type='text' id='organize-Name' readonly>
                                 </div>
-                                <div class='col-4'>
+                                <div class='col-5'>
                                     <label for="organize-bankCode" class='col-form-label'>銀行SWIFT代碼</label>
                                     <input class='form-control form-rounded' type='text' id='organize-bankCode'  readonly>
                                 </div>
-                                <div class='col-8'>
+                                <div class='col-7'>
                                     <label for="organize-bankAccount" class='col-form-label'>銀行帳號號碼</label>
                                     <input class='form-control form-rounded' type='text' id='organize-bankAccount' readonly>
                                 </div>
                                 <div class='col-6'>
                                     <label class='col-form-label' for='organize-country'>組織所在國家 / 地區</label>
-                                    <select class="form-control form-rounded crs-country" id="organize-country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null"></select>
+                                    <select class="form-control form-rounded crs-country" id="organize-country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null" disabled style="background-color: initial"></select>
                                 </div>
                                 <div class='col-6'>
                                     <label for='organize-phone' class='col-form-label'>組織電話號碼</label>
@@ -234,7 +237,7 @@ $createAC_html
                                 </div>
                                 <div class="col-12">
                                     <label for='organize-prove' class='col-form-label'>商業證明</label><br>
-                                    <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-regular fa-eye me-2"></i>查看商業證明</button>
+                                    <a type='button' id="organize-prove" class='btn btn-rounded btn-outline-primary pr-4 pl-4' target="_blank"><i class="fa-regular fa-eye me-2"></i>查看商業證明</a>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +257,7 @@ $createAC_html
             'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
         },
     });
-    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/admin/account'])
+    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/admin/account', 'full.jquery.crs.min'])
 </script>
 body;
     }
@@ -265,17 +268,57 @@ body;
     function post(array $data): array {
         global $auth;
 
+        /* 查看帳戶詳細資料 */
+        if ($_GET['type'] === "viewDetail") {
+            /* 個人資料 */
+            $stmt = $this->sqlcon->prepare("SELECT User_detail.*, User.role FROM User_detail, User WHERE User_detail.UUID = User.UUID AND User_detail.`UUID` = ?");
+            $stmt->bind_param("s", $data['id']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+            $user_detail = $stmt->get_result()->fetch_assoc();
+
+            /* 組織資料 */
+            if ($user_detail['role'] >= 2) {
+                $stmt->prepare("SELECT * FROM User_detail_collabora u WHERE `UUID` = ?");
+                $stmt->bind_param("s", $data['id']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.500_title'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $organize_detail = $stmt->get_result()->fetch_assoc();
+            } else {
+                $organize_detail = false; // 用戶是普通用戶
+            }
+
+            return array(
+                'code' => 200,
+                'data' => array(
+                    'user_detail' => $user_detail,
+                    'organize_detail' => $organize_detail,
+                )
+            );
+        }
+
+        /* 創建帳號 */
         $status = $auth->create_account($data['name'], $data['email'], 'XTrave!', $data['role']);
 
         /* 設置強制更改 */
-        if($status == AUTH_REGISTER_COMPLETE){
+        if ($status == AUTH_REGISTER_COMPLETE) {
             $stmt = $this->sqlcon->prepare("SET @uuid = (SELECT UUID FROM User WHERE Email = ?)");
             $stmt->bind_param('s', $data['email']);
-            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+            if (!$stmt->execute()) $status = AUTH_SERVER_ERROR;
             //$stmt->prepare("INSERT INTO pwd_change (UUID) VALUES (@uuid)");
             //if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
             $stmt->prepare("SELECT @uuid AS `UUID`");
-            if(!$stmt->execute()) $status = AUTH_SERVER_ERROR;
+            if (!$stmt->execute()) $status = AUTH_SERVER_ERROR;
 
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();

@@ -575,7 +575,7 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }
@@ -611,7 +611,7 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }
@@ -625,7 +625,7 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }
@@ -645,7 +645,7 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }

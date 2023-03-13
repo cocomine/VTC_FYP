@@ -3,9 +3,9 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment){
-    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
+define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment, crs){
     const sex = { 1: "男", 0: "女" };
+    crs.init();
 
     const dataTable_Options = {
         ajax: {
@@ -122,7 +122,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 $('#firstname').val(data.first_name);
                 $('#email').val(data.Email);
                 $('#phone').val('+' + data.phone_code + ' ' + data.phone);
-                $('#country').val(country[data.country]);
+                $('#country').val(data.country);
                 $('#sex').val(sex[data.sex]);
                 $('#birth').val(data.birth);
 

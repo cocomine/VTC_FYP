@@ -557,7 +557,7 @@ body;
                 return array(
                     'code' => 500,
                     'Title' => showText('Error_Page.500_title'),
-                    'Message' => showText('Error_Page.500_message'),
+                    'Message' => $stmt->error,
                 );
             }
 
