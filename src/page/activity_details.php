@@ -35,7 +35,7 @@ class activity_details implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
-
+        //todo
         return <<<body
 <div class="container mt-4">
     <div class="row gy-4">
