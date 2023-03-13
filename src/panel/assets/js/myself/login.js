@@ -4,7 +4,6 @@
  */
 
 define(['forge', 'jquery'], function (forge) {
-
     "use strict";
 
     /* Go back home */
