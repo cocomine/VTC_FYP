@@ -205,9 +205,10 @@ body;
             }
 
             try {
-                /* 列出本月日曆 */
+                /* 本月日曆 */
                 $now = new Moment();
                 $endDay = $now->cloning()->endOf('month');
+                # 本月日曆, 將日期填滿整個陣列
                 for ($i = 1; $i <= intval($endDay->getDay()); $i++) {
                     $now->setDay($i);
                     $output['month'][] = array(
@@ -220,6 +221,7 @@ body;
                 /* 取出結果 */
                 $result = $stmt->get_result();
                 while ($row = $result->fetch_assoc()) {
+                    # 將有資料的日期填入陣列
                     $now = new Moment($row['text']);
                     $output['month'][intval($now->getDay()) - 1] = $row;
                 }
@@ -237,23 +239,23 @@ body;
             for ($x = 0; $x < count($output['month']); $x++) {
                 $value = $output['month'][$x];
                 $i++;
-                if ($i === 1) {
+                if ($i === 1) { //每週第一日
                     $temp[$week]['text'] = $value['text'] . ' ~ ';
                     $temp[$week]['count'] = 0;
                     $temp[$week]['total'] = 0;
                 }
-                if ($i <= 7) {
+                if ($i <= 7) { //每週中的所有日子
                     $temp[$week]['total'] += $value['total'];
                     $temp[$week]['count'] += $value['count'];
                 }
-                if ($i === 7 || $x === count($output['month']) - 1) {
+                if ($i === 7 || $x === count($output['month']) - 1) { //每週最後一日
                     $temp[$week]['text'] .= $value['text'];
                     $week++;
                     $i = 0;
                 }
             }
-            $output['month'] = $temp;
 
+            $output['month'] = $temp;
             return array(
                 'code' => 200,
                 'data' => $output,
