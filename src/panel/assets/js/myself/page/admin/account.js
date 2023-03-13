@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function (jq, toastr) {
+define(['jquery', 'toastr', 'bootstrap', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5'], function (jq, toastr, bootstrap) {
     /* dataTables */
     const table = $('#dataTable').DataTable({
         responsive: true,
@@ -17,6 +17,7 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
     /* js資料 */
     const Lang = JSON.parse($('#LangJson').text());
 
+    /* 增加帳號 */
     $('#AddAC').submit(function (e) {
         if (!e.isDefaultPrevented() && this.checkValidity()) {
             e.preventDefault();
@@ -63,4 +64,6 @@ define(['jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.
 
         }
     })
+
+    bootstrap.Modal.getOrCreateInstance($('#view-detail')[0]).show()
 })

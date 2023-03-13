@@ -187,7 +187,6 @@ class changesetting implements IPage {
         </div>
     </div>
 </div>
-
 <!-- 密碼 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -236,9 +235,10 @@ class changesetting implements IPage {
     <div class='card'>
         <div class='card-body'>
             <h1 class='header-title float-start'>個人資料</h1>
-            <small class="text-muted ms-2">(資料用作確認預約之用)</small>
-            <form id='user-detail' novalidate class='needs-validation float-start'>
-                <div class="row gy-2">
+            <p><small class="text-muted ms-2">(資料用作確認預約之用)</small></p>
+            <div>
+                <form id='user-detail' novalidate class='needs-validation'>
+                <div class="row gy-2 w-100">
                     <div class="col-6">
                         <label class="form-label" for="lastname">姓氏</label>
                         <input type="text" class="form-control form-rounded" id="lastname" name="lastname" maxlength="10" required value="{$user_detail['last_name']}">
@@ -276,10 +276,12 @@ class changesetting implements IPage {
                 </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
             </form>
+            </div>
         </div>
     </div>
 </div>
 body .
+
 /* Role >= 2, 才顯示 */
 ($auth->userdata['Role'] >= 2 ? <<<partner
 <!-- 組織資料 -->
@@ -333,6 +335,8 @@ body .
     </div>
 </div>
 partner : "") .
+
+/* 雙重驗證, etc. */
 <<<body
 <!-- 雙重驗證 -->
 <div class='col-12 mt-4'>

@@ -157,7 +157,93 @@ $createAC_html
         </div>
     </div>
 </div>
-<!-- 查看資料 -->
+<!-- 帳戶詳細資料 -->
+<div class="modal" tabindex="-1" id="view-detail">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">帳戶詳細資料</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="user-detail-tab" data-bs-toggle="tab" data-bs-target="#user-detail-pane" type="button" role="tab" aria-controls="user-detail-pane" aria-selected="true">個人資料</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="organization-detail-tab" data-bs-toggle="tab" data-bs-target="#organization-detail-pane" type="button" role="tab" aria-controls="organization-detail-pane" aria-selected="false">組織資料</a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-1">
+                    <!-- 個人資料 -->
+                    <div class="tab-pane fade show active" id="user-detail-pane" role="tabpanel" aria-labelledby="user-detail-tab" tabindex="0">
+                        <div class="row gy-2">
+                            <div class="col-6">
+                                <label class="form-label" for="lastname">姓氏</label>
+                                <input type="text" class="form-control form-rounded" id="lastname" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="firstname">名字</label>
+                                <input type="text" class="form-control form-rounded" id="firstname" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="country">國家 / 地區</label>
+                                <select class="form-control form-rounded crs-country" id="country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null"></select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="phone">電話號碼</label>
+                                <input type="text" class="form-control form-rounded" id="phone" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="sex">性別</label>
+                                <input type="text" class="form-control form-rounded" id="sex" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="birth">出生日期</label>
+                                <input type="text" class="form-control form-rounded" id="birth" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 組織資料 -->
+                    <div class="tab-pane fade" id="organization-detail-pane" role="tabpanel" aria-labelledby="organization-detail-tab" tabindex="0">
+                        <div class="row gy-2 w-100">
+                            <div class="row">
+                                <div class='col-12'>
+                                    <label for='organize-Name' class='col-form-label'>組織名字</label>
+                                    <input class='form-control form-rounded' type='text' id='organize-Name' readonly>
+                                </div>
+                                <div class='col-4'>
+                                    <label for="organize-bankCode" class='col-form-label'>銀行SWIFT代碼</label>
+                                    <input class='form-control form-rounded' type='text' id='organize-bankCode'  readonly>
+                                </div>
+                                <div class='col-8'>
+                                    <label for="organize-bankAccount" class='col-form-label'>銀行帳號號碼</label>
+                                    <input class='form-control form-rounded' type='text' id='organize-bankAccount' readonly>
+                                </div>
+                                <div class='col-6'>
+                                    <label class='col-form-label' for='organize-country'>組織所在國家 / 地區</label>
+                                    <select class="form-control form-rounded crs-country" id="organize-country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null"></select>
+                                </div>
+                                <div class='col-6'>
+                                    <label for='organize-phone' class='col-form-label'>組織電話號碼</label>
+                                    <input type="text" class="form-control form-rounded" id="organize-phone" readonly>
+                                </div>
+                                <div class='col-12'>
+                                    <label for='organize-Address' class='col-form-label'>組織所在地址</label>
+                                    <textarea class='form-control input-rounded' type='text' id='organize-Address' readonly style="resize: none"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label for='organize-prove' class='col-form-label'>商業證明</label><br>
+                                    <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-regular fa-eye me-2"></i>查看商業證明</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     require.config({
