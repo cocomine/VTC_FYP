@@ -51,18 +51,7 @@ class Activity_View implements IPage
                     </div>
                 </div>
             </div>
-            <script>
-    require.config({
-        paths:{
-            'datatables.net': ['https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min'],
-            'datatables.net-bs5': ['https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min'],
-            'datatables.net-responsive': ['https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min'],
-            'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
-        },
-    });
-    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/reserve'])
-</script>
-body;
+        body;
     }
 
     /* POST請求 */
