@@ -27,10 +27,6 @@ class Activity_View implements IPage
     /* 輸出頁面 */
     public function showPage(): string {
         /* 檢視審核活動 */
-        if(sizeof($this->upPath) > 0){
-            return $this->reservePost->showPage();
-        }
-
         $datatables_lang_url = showText('datatables_js.url');
 
         return <<<body
