@@ -7,7 +7,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
     const table = $('#dataTable').DataTable({
         responsive: true,
         ajax: {
-            url: '/activity_view',
+            url: '/panel/reserve/',
             type: 'POST',
             data: function (d){
                 return JSON.stringify(d);
@@ -27,14 +27,14 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                     if (type === 'display'){
                         return `<div class="row">
                                     <div class="col-auto">
-                                        <a href="/activity_view${row.ID}">
+                                        <a href="/panel/reserve/${row.ID}">
                                             <div class="ratio ratio-16x9" style="width: 160px;">
                                                 <img src="/panel/api/media/${row.thumbnail}" alt="${row.thumbnail}" class="w-auto mh-100 h-auto">
                                             </div>
                                         </a>
                                     </div>
                                     <div class="col">
-                                        <a href="/activity_view${row.ID}">${data}</a><br>
+                                        <a href="/panel/reserve/${row.ID}">${data}</a><br>
                                         <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>
                                 </div>`;

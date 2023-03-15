@@ -3,7 +3,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
     const table = $('#dataTable').DataTable({
         responsive: true,
         ajax: {
-            url: '/panel/reserve/',
+            url: '/activity_view',
             type: 'POST',
             data: function (d){
                 return JSON.stringify(d);
@@ -43,9 +43,9 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 data: 'plan',
                 render: (data, type) => {
                     if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.plan_name}:</b> <code class="bg-light">${value.total}</code>`).join('<br>') : "沒有任何活動計劃"
+                        return data ? data.map((value) => `<b>${value.plan_name}:</b> <code class="bg-light">${value.pay_price}</code>`).join('<br>') : "沒有任何活動計劃"
                     }else{
-                        return data ? data.map((value) => value.plan_name + ',' +value.total).join(';') : "沒有任何活動計劃";
+                        return data ? data.map((value) => value.plan_name + ',' +value.pay_price).join(';') : "沒有任何活動計劃";
                     }
                 }
             },

@@ -5,6 +5,7 @@ namespace page;
 use cocomine\IPage;
 use mysqli;
 
+
 class activity_view implements IPage
 {
 
@@ -68,11 +69,70 @@ class activity_view implements IPage
     }
 
     /* POST請求 */
-    public function post(array $data): array
-    {
-        global $auth;
+    public function post(array $data): array {
 
-        return array();
+        global $auth;
+        $output = array();
+
+        /* 取得該用戶建立的活動給參與人數 */
+        /* */
+        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price FROM Book_event, Event WHERE Event.UUID = Book_event.User AND Event.ID = Book_event.event_ID ");
+        if (!$stmt->execute()) {
+            return array(
+                'code' => 500,
+                'Title' => 'Database Error!',
+                'Message' => $stmt->error,
+            );
+        }
+
+        /* get result */
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()){
+            $temp = array(
+                'ID' => $row['ID'],
+                'thumbnail' => $row['thumbnail'],
+                'summary' => $row['summary'],
+                'name' => $row['name'],
+                'pay_price' => $row['pay_price'],
+                'plan' => null
+            );
+
+
+            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->bind_param('i', $row['ID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* get schedule */
+            $schedule_result = $stmt->get_result();
+            while ($row = $schedule_result->fetch_assoc()){
+                $stmt->prepare("SELECT pay_price FROM Book_event WHERE event_ID = ?");
+                $stmt->bind_param('i', $row['ID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => 'Database Error!',
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                /* get result */
+                $schedule_row = $stmt->get_result()->fetch_assoc();
+                $temp['plan'][] = array(
+                    'plan_name' => $row['plan_name'],
+                    'pay_price' => $schedule_row['pay_price']
+                );
+            }
+
+
+            $output[] = $temp;
+        }
+        return array('data' => $output);
     }
 
     /* path輸出 */
