@@ -2,6 +2,9 @@
 
 namespace page;
 
+use cocomine\IPage;
+use mysqli;
+
 class Activity_View implements IPage
 {
 
