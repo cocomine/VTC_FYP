@@ -22,15 +22,47 @@ class Activity_View implements IPage
     }
 
     /* 輸出頁面 */
-    function showPage(): string {
+    public function showPage(): string {
+        /* 檢視審核活動 */
+        if(sizeof($this->upPath) > 0){
+            return $this->reservePost->showPage();
+        }
 
-        //$Text = showText('index.Content');
+        $datatables_lang_url = showText('datatables_js.url');
 
-        /* json 語言 */
-        //$jsonLang = json_encode(array());
-
-        //return ;
-
+        return <<<body
+            <pre class="d-none" id="datatables_lang_url">$datatables_lang_url</pre>
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="data-tables datatable-primary">
+                            <table id="dataTable" class="w-100">
+                                <thead class="text-capitalize">
+                                    <tr>
+                                        <th>活動</th>
+                                        <th>活動計劃 / 預約人數</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+    require.config({
+        paths:{
+            'datatables.net': ['https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min'],
+            'datatables.net-bs5': ['https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min'],
+            'datatables.net-responsive': ['https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min'],
+            'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
+        },
+    });
+    loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/reserve'])
+</script>
+body;
     }
 
     /* POST請求 */
