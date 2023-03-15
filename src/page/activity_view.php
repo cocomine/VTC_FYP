@@ -68,31 +68,9 @@ class activity_view implements IPage
     }
 
     /* POST請求 */
-    function post(array $data): array {
-        /* 檢視審核活動 */
-        if(sizeof($this->upPath) > 0){
-            return $this->reservePost->post($data);
-        }
-
+    public function post(array $data): array
+    {
         global $auth;
-        $output = array();
-
-        /* 取得該用戶建立的活動給參與人數 */
-        /* */
-        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, name FROM Event WHERE UUID = ?");
-        $stmt->bind_param('s', $auth->userdata['UUID']);
-        if (!$stmt->execute()) {
-            return array(
-                'code' => 500,
-                'Title' => 'Database Error!',
-                'Message' => $stmt->error,
-            );
-        }
-
-        /* get result */
-        $result = $stmt->get_result();
-
-        return array('data' => $output);
 
         return array();
     }
