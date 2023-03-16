@@ -299,12 +299,12 @@ body .
                     <div class='col-3'>
                         <label for="organize-bankCode" class='col-form-label'>銀行SWIFT代碼</label>
                         <input class='form-control form-rounded' type='text' id='organize-bankCode'  name='organize-bankCode' required value="{$organize_detail['SWIFTCode']}" pattern="^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$" maxlength="11" placeholder="AAAABBCCXXX">
-                        <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                        <div class='invalid-feedback'>請輸入正確銀行SWIFT代碼</div>
                     </div>
                     <div class='col-9'>
                         <label for="organize-bankAccount" class='col-form-label'>銀行帳號號碼</label>
                         <input class='form-control form-rounded' type='text' id='organize-bankAccount' name='organize-bankAccount' required pattern="^[0-9 ]+$" value="{$organize_detail['BankAccount']}" maxlength="25">
-                        <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                        <div class='invalid-feedback'>請輸入正確銀行帳號號碼</div>
                     </div>
                     <div class='col-6'>
                         <label class='col-form-label' for='organize-country'>組織所在國家 / 地區</label>
@@ -326,7 +326,7 @@ body .
                         <input type="text" class="d-none" name="organize-prove" id="organize-prove" required value="{$organize_detail['prove']}">
                         <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
                         <span id="organize-prove-filename" class="ps-2">{$organize_detail['name']}</span>
-                        <div class='invalid-feedback'>必須上在商業證明</div>
+                        <div class='invalid-feedback'>必須上載商業證明</div>
                     </div>
                 </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>

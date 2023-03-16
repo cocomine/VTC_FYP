@@ -6,7 +6,6 @@ define(['jquery', 'mapbox-gl', 'toastr'], function (jq, mapboxgl, toastr) {
      */
     const map_location = JSON.parse($('#map-location').text());
 
-    console.log(map_location);
     /* Load map */
     const map = new mapboxgl.Map({
         container: 'map',
