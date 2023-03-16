@@ -246,7 +246,7 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="col-12 col-sm py-1 fixed-top bg-light" style="display: none" id="fixed-header">
+        <div class="col-12 col-sm py-1 fixed-top bg-light top-0" style="display: none" id="fixed-header">
             <div class="row justify-content-between align-items-center">
                 <div class="col-auto">
                     <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
@@ -315,7 +315,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     </h4>
                                     <div class="dropdown-menu" style="z-index: 1030">
                                         <!-- dropdown menu content START -->
-                                        <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
+                                        <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" target="_blank">
                                             <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                         </a>
                                         <?php
@@ -455,13 +455,13 @@ function run_apis(array $path, MyAuth $auth) {
 
             <!-- global language translate -->
             <pre style="display: none" id="globalLang">
-                    <?php
-                    echo json_encode(array(
-                        'Error' => showText('Error'),
-                        'notify' => showText('notify.Content.Time')
-                    ))
-                    ?>
-                </pre>
+                <?php
+                echo json_encode(array(
+                    'Error' => showText('Error'),
+                    'notify' => showText('notify.Content.Time')
+                ))
+                ?>
+            </pre>
             <!-- global language translate End -->
 
             <div class="heard-area pt-4 pb-3">
