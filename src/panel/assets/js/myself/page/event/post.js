@@ -268,11 +268,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                             media_select.select_media((ids) => {
                                 if (doc.somethingSelected()){
                                     const text = doc.getSelection();
-                                    doc.replaceSelection('![' + text + '](/panel/api/media/' + ids + ')', 'around');
+                                    doc.replaceSelection('![' + text + '](/panel/api/media/' + ids[0].id + ')', 'around');
                                     editor.codemirror.focus();
                                 }else{
                                     const cur = doc.getCursor();
-                                    const text = '![](/panel/api/media/' + ids + ')';
+                                    const text = '![' + ids[0].name + '](/panel/api/media/' + ids[0].id + ')';
                                     doc.replaceRange(text, cur);
                                     editor.codemirror.focus();
                                 }
@@ -343,7 +343,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /* Image select */
         $('#event-image-select').click(() => {
             media_select.select_media((images) => {
-                const tmp = images.map(({id, name}) => image_html(id, name));
+                const tmp = images.map(({ id, name }) => image_html(id, name));
                 jq_dropZone.html(tmp);
 
                 //list up

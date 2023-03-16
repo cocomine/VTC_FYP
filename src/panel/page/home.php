@@ -32,20 +32,13 @@ class home implements IPage {
     function access(bool $isAuth, int $role, bool $isPost): int {
         $this->role = $role;
         if (!$isAuth) return 401;
-        if ($role < 1) return 403;
+        if ($role <= 1) return 403;
         return 200;
     }
 
     /* 輸出頁面 */
     function showPage(): string {
-
-        $Text = showText('index.Content');
-        $avatar = md5(strtolower('roguish.6888467468@gmail.com'));
-
-        if ($this->role < 2) {
-            return "<script>location.replace('/')</script>";
-        } else {
-            return <<<body
+        return <<<body
 <style>
 .today-order-list{
     height: 20rem;
@@ -166,8 +159,6 @@ require.config({
 loadModules(['chartjs', 'myself/page/home']);
 </script>
 body;
-        }
-
     }
 
     /* POST請求 */
