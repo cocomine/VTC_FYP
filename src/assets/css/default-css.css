@@ -757,6 +757,11 @@ img {
     font-size: 30px;
 }
 
-/* needs-validation IDE auto complete */
-.needs-validation {
+/* card title */
+.card-title{
+    font-weight: bold;
 }
+
+/* needs-validation IDE auto complete */
+.needs-validation {}
+.lazy{}

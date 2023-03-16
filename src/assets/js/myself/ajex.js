@@ -80,8 +80,8 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             success: function (data) {
                 unModules()
 
-                $('title').text(data.title);
-                $('#title').text(data.head);
+                $('title').html(data.title);
+                $('#title').html(data.head);
                 $('#path').html(data.path);
                 $('#content').html(data.content)
 

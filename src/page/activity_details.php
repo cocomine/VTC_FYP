@@ -10,6 +10,12 @@ class activity_details implements IPage {
     private array $UpPath;
     private string $activity_name;
     private mysqli $sqlcon;
+    private static array $country = array(
+        'HK' => '香港',
+        'TW' => '台灣',
+        'CN' => '中國大陸',
+        'MO' => '澳門',
+    );
 
     function __construct(mysqli $sqlcon, array $UpPath) {
         $this->sqlcon = $sqlcon;
@@ -35,7 +41,7 @@ class activity_details implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
-        // Event data
+        /* Event data */
         $stmt = $this->sqlcon->prepare("SELECT summary, precautions_html, description_html, location, country, region, latitude, longitude, post_time, create_time FROM Event WHERE ID = ?");
         $stmt->bind_param("s", $this->UpPath[0]);
         if(!$stmt->execute()){
@@ -43,24 +49,40 @@ class activity_details implements IPage {
             exit;
         }
         $event_data = $stmt->get_result()->fetch_assoc();
+        $event_data['country'] = self::$country[$event_data['country']]; //轉換國家代碼為中文
+        $event_data['map-location'] = json_encode(array('lat' => $event_data['latitude'], 'lng' => $event_data['longitude'])); //將經緯度轉換為json
 
-        //event image
+        /* event image */
         $stmt->prepare("SELECT media_ID FROM Event_img WHERE event_ID = ? ORDER BY `order`");
         $stmt->bind_param("s", $this->UpPath[0]);
         if(!$stmt->execute()){
             echo_error(500);
             exit;
         }
-        $result = $stmt->get_result(); $event_img = array();
-        while ($row = $result->fetch_assoc()) {
-            $event_img[] =
-                "<div class='carousel-item active'>
-                    <img src='https://fyp.cocomine.cc/panel/api/media/{$row['media_ID']}' class='d-block w-100' alt='''>
-                </div>";
-        }
-        $event_data['img'] = join("", $event_img);
+        $event_img = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-        //event review
+        # 將array轉換為img html, 並將第一個圖片設為active
+        $event_data['img'] = join("", array_map(function($img, $index){
+            if($index == 0) $active = "active";
+            return
+                "<div class='carousel-item {$active}'>
+                    <div class='ratio ratio-21x9'>
+                        <img src='/panel/assets/images/image_loading.webp' data-src='/panel/api/media/{$img['media_ID']}' class='d-block w-100 lazy head-image' alt='{$img['media_ID']} Image'>
+                    </div>
+                </div>";
+        }, $event_img, array_keys($event_img)));
+
+        # 將array轉換為button html, 並將第一個button設為active
+        $event_data['img_btn'] = join("", array_map(function($img, $index){
+            if($index == 0) {
+                return "<button type='button' data-bs-target='#carousel' data-bs-slide-to='$index' class='active' aria-current='true' aria-label='Slide $index'></button>";
+            }else{
+                return "<button type='button' data-bs-target='#carousel' data-bs-slide-to='$index' aria-label='Slide $index'></button>";
+            }
+        }, $event_img, array_keys($event_img)));
+
+
+        /*//event review
         $stmt->prepare("SELECT r.* FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
         $stmt->bind_param("s", $this->UpPath[0]);
         if(!$stmt->execute()){
@@ -79,30 +101,33 @@ class activity_details implements IPage {
             }
             $review['img'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             return $review;
-        }, $book_review);
+        }, $book_review);*/
 
 
         return <<<body
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+<style>
+.head-image {
+    object-fit: contain;
+}
+</style>
 <div class="container mt-4">
     <div class="row gy-4">
         <!-- 活動圖片 -->
         <div class="col-12">
-            <div class="card">
-                <div class="w-100">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true" style="padding: 20px">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
+            <div class="card overflow-hidden">
+                <div class="w-100 bg-secondary bg-opacity-50">
+                    <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">{$event_data['img_btn']}</div>
                         <div class="carousel-inner">{$event_data['img']}</div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                            <span class="visually-hidden">上一張</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                            <span class="visually-hidden">下一張</span>
                         </button>
                     </div>
                 </div>
@@ -121,7 +146,10 @@ class activity_details implements IPage {
         <div class="col-12">
             <div class="card bg-danger bg-opacity-10">
                 <div class="card-body">
-                    <h3 class="card-title">注意事項</h3>
+                    <div class="row align-items-center">
+                        <img src="/assets/images/icon/megaphone.png" alt="" class="p-2 col-auto" style="width: 52px; background-color: var(--bs-light); border-radius: 50%"/> 
+                        <h3 class="card-title col-auto m-0">注意事項</h3>
+                    </div>
                     <div class="card-text">{$event_data['precautions_html']}</div>
                 </div>
             </div>
@@ -131,21 +159,18 @@ class activity_details implements IPage {
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">預訂活動</h3>
-                    <div class="Div_Price_activity_numb">
-                        <div class="date-picker date-picker-inline">
-                           <input type="date" class="date-picker-toggle form-control-lg" id="datePicker" min="">
-                           <div class="date-calendar"></div>
-                        </div>
-                        <br/><br/>
-                        <span style="font-size: 3vh"><b>計劃</b></span>
-                        <div class="Div_Plus_Minus">
-                             <button class="btn btn-outline-primary" id="ti-plus"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                            <span class="txt_Num">1</span>
-                            <button class="btn btn-outline-primary" id="ti-minus"><i class="fa fa-minus" aria-hidden="true"></i></button>
-                        </div>
+                    <div class="date-picker date-picker mt-4">
+                       <label for="book-date" class="form-label">預約日期</label><br>
+                       <input type="date" class="date-picker-toggle form-control form-rounded w-auto" id="book-date">
                     </div>
-                    <span class="Price_Sign">$</span><span class="Price_txt">150</span>
-                    <button type="button" class="btn btn-primary btn-lg" style="width:15vh; float:right;margin-right: 1vh;margin-bottom: 1vh" id="order">立刻預訂</button>
+                    <div class="mt-4">
+                        <label class="form-label">可預訂方案時段</label>
+                        <div id="plan" class="row gy-2"></div>
+                    </div>
+                    <div class="row justify-content-between mt-4 p-1">
+                        <h4 class="col-auto ali" id="total">$ --</h4>
+                        <button type="button" class="btn btn-primary btn-rounded col-auto" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>立即預訂</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -163,9 +188,13 @@ body . <<<body
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title" id="map_title">地點</h3>
-                    <p class="card-text" id="map_address">{$event_data['location']}</p>
-                    <div id="map" style="width:100%;height:10rem;"></div>
+                    <h3 class="card-title" id="map_title">活動位置</h3>
+                    <p class="card-text">
+                        {$event_data['location']}<br>
+                        {$event_data['country']}, {$event_data['region']}
+                    </p>
+                    <div id="map" class="w-100 rounded" style="min-height:15rem;"></div>
+                    <pre class="d-none" id="map-location">{$event_data['map-location']}</pre>
                 </div>
             </div>
         </div>
@@ -185,10 +214,12 @@ body . <<<body
 <script>
     require.config({
         paths:{
+            datepicker: ['myself/datepicker'],
             activity_details: ['myself/page/activity_details'],
+            'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.1/mapbox-gl'],
         },
     });
-    loadModules(['activity_details'])
+    loadModules(['activity_details', 'datepicker', 'mapbox-gl'])
 </script>
 body;
     }
