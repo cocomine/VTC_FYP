@@ -2,8 +2,8 @@
 
 namespace page;
 
-use mysqli;
 use cocomine\IPage;
+use mysqli;
 
 class activity_details implements IPage {
 
@@ -73,7 +73,6 @@ class activity_details implements IPage {
                 </div>
             </div>
         </div>
-    
         <!-- 活動摘要 -->
         <div class="col-12">
             <div class="card">
@@ -87,7 +86,6 @@ class activity_details implements IPage {
                 </div>
             </div>
         </div>
-    
         <!-- 注意事項 -->
         <div class="col-12">
             <div class="card bg-danger bg-opacity-10">
@@ -106,7 +104,6 @@ class activity_details implements IPage {
                 </div>
             </div>
         </div>
-    
         <!-- 預訂活動 -->
         <div class="col-12">
             <div class="card">
@@ -130,7 +127,6 @@ class activity_details implements IPage {
                 </div>
             </div>
         </div>
-        
         <!-- 活動詳情 -->
         <div class="col-12">
             <div class="card">
