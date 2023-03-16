@@ -6,6 +6,8 @@
 define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment, crs){
     const sex = { 1: "男", 0: "女" };
     crs.init();
+    let prev_select_user;
+    let loaded_dataTable = 0;
 
     const dataTable_Options = {
         ajax: {
@@ -50,7 +52,8 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
     };
 
     /* load user list */
-    $('#dataTable').dataTable({
+    $('#dataTable').on('init.dt', dataTableInit)
+        .dataTable({
         ...dataTable_Options,
         ajax: {
             ...dataTable_Options.ajax,
@@ -67,7 +70,8 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
     });
 
     /* 過去預約用戶 */
-    $('#dataTable2').dataTable({
+    $('#dataTable2').on('init.dt', dataTableInit)
+        .dataTable({
         ...dataTable_Options,
         ajax: {
             ...dataTable_Options.ajax,
@@ -83,6 +87,17 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
         ],
     });
 
+    /* When 2 datatable is loaded, 自動載入用戶詳細資訊 */
+    function dataTableInit(){
+        loaded_dataTable++;
+        if(loaded_dataTable >= 2){
+            const hashtag = location.hash;
+            if(hashtag.length > 0) {
+                showUserInfo(hashtag.slice(1))
+            }
+        }
+    }
+
     /* 請求用戶詳細資訊 */
     $("#dataTable, #dataTable2").on('click', 'a[data-id]', function (e){
         e.preventDefault();
@@ -90,17 +105,16 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
         showUserInfo(id)
     });
 
-    /* 自動載入用戶詳細資訊 */
-    const hashtag = location.hash;
-    if(hashtag.length > 0) {
-        showUserInfo(hashtag.slice(1))
-    }
-
     /**
      * 顯示用戶詳細資訊
      * @param id 訂單id
      */
     function showUserInfo(id){
+        /* height light table row */
+        if(prev_select_user) prev_select_user.css('background-color', '');
+        prev_select_user = $(`a[data-id="${id}"]`).parents(".position-relative").css('background-color', '#dedede');
+
+        /* send request */
         fetch(location.pathname+'?type=detail', {
             method: 'POST',
             redirect: 'error',

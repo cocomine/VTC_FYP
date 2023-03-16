@@ -8,6 +8,7 @@ class _ReservePost implements \cocomine\IPage {
 
     private mysqli $sqlcon;
     private array $upPath;
+    private string $event_name;
 
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
@@ -25,7 +26,7 @@ class _ReservePost implements \cocomine\IPage {
 
         //check the event is true owner
         if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
-            $stmt = $this->sqlcon->prepare("SELECT COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt = $this->sqlcon->prepare("SELECT name, COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
             $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
             if (!$stmt->execute()) return 500;
 
@@ -33,6 +34,7 @@ class _ReservePost implements \cocomine\IPage {
             $row = $result->fetch_assoc();
 
             if ($row['count'] <= 0) return 403;
+            $this->event_name = $row['name'];
         }
         return 200;
     }
@@ -279,20 +281,20 @@ body;
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
             <li><a href='/panel/reserve'>預約管理</a></li>
-            <li><span>活動 " . $this->upPath[0] . "</span></li>";
+            <li><span>" . $this->event_name . "</span></li>";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "預約管理 | X-Travel";
+        return $this->event_name." 預約管理 | X-Travel";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Head(): string {
-        return "預約管理";
+        return $this->event_name." 預約管理";
     }
 }
