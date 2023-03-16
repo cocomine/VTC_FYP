@@ -73,10 +73,12 @@ class activity_view implements IPage
 
         global $auth;
         $output = array();
+        $id = "8be832fd-af63-11ed-9cd6-0011329060ef";
 
         /* 取得該用戶建立的活動給參與人數 */
         /* */
-        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price FROM Book_event, Event WHERE Event.UUID = Book_event.User AND Event.ID = Book_event.event_ID ");
+        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price FROM Book_event, Event WHERE Event.UUID = Book_event.User AND Event.ID = Book_event.event_ID AND User = ?");
+        $stmt->bind_param('s', $id);
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -98,7 +100,7 @@ class activity_view implements IPage
             );
 
 
-            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->prepare("SELECT ID, name AS plan_name FROM Event WHERE ID = ?");
             $stmt->bind_param('i', $row['ID']);
             if (!$stmt->execute()) {
                 return array(
@@ -111,7 +113,7 @@ class activity_view implements IPage
             /* get schedule */
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT pay_price FROM Book_event WHERE event_ID = ?");
+                $stmt->prepare("SELECT event_ID, pay_price FROM Book_event WHERE event_ID = ?");
                 $stmt->bind_param('i', $row['ID']);
                 if (!$stmt->execute()) {
                     return array(
