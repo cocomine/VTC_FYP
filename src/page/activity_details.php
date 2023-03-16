@@ -35,7 +35,46 @@ class activity_details implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
-        //todo
+        // Event data
+        $stmt = $this->sqlcon->prepare("SELECT summary, precautions_html, description_html, location, country, region, latitude, longitude, post_time, create_time FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if(!$stmt->execute()){
+            echo_error(500);
+            exit;
+        }
+        $event_data = $stmt->get_result()->fetch_assoc();
+
+        //event image
+        $stmt->prepare("SELECT media_ID, `order` FROM Event_img WHERE event_ID = ? ORDER BY `order`");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if(!$stmt->execute()){
+            echo_error(500);
+            exit;
+        }
+        $event_data['img'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        //event review
+        $stmt->prepare("SELECT r.* FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if(!$stmt->execute()){
+            echo_error(500);
+            exit;
+        }
+        $book_review = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        //event review img
+        $event_data['review'] =array_map(function($review){
+            $stmt = $this->sqlcon->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
+            $stmt->bind_param("s", $review['ID']);
+            if(!$stmt->execute()){
+                echo_error(500);
+                exit;
+            }
+            $review['img'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $review;
+        }, $book_review);
+
+
         return <<<body
 <div class="container mt-4">
     <div class="row gy-4">
@@ -78,11 +117,7 @@ class activity_details implements IPage {
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">活動摘要</h3>
-                    <p class="card-text">
-                        無論是在湖邊散步、慢跑，還是騎著腳踏遊覽車在湖邊遊覽，皆可飽覽迪欣湖恬靜優美的湖面風光，
-                        最適合一家大小一同來呼吸新鮮空氣，好好舒展身心。這個名為迪欣湖的人工湖有著波光粼粼的湖水、
-                        動感十足的噴泉和優美怡人的山景，絕對是你與摯愛重拾昔日樂趣、盡情玩樂的好地方。
-                    </p>
+                    <p class="card-text">{$event_data['summary']}</p>
                 </div>
             </div>
         </div>
@@ -91,16 +126,7 @@ class activity_details implements IPage {
             <div class="card bg-danger bg-opacity-10">
                 <div class="card-body">
                     <h3 class="card-title">注意事項</h3>
-                    <div class="card-text">
-                        <ul style="list-style-type:disc;">
-                            <li>活動時間：2021/06/01 09:00 - 2021/06/01 17:00</li>
-                            <li>活動地點：台北市中山區中山北路二段</li>
-                            <li>活動費用：$150</li>
-                            <li>活動人數：1~10人</li>
-                            <li>活動語言：中文</li>
-                            <li>活動須知：請務必準時參加活動，如有遲到，請提前聯絡我們</li>
-                        </ul>
-                    </div>
+                    <div class="card-text">{$event_data['precautions_html']}</div>
                 </div>
             </div>
         </div>
@@ -132,11 +158,7 @@ class activity_details implements IPage {
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">活動詳情</h3>
-                    <div class="card-text">
-                        迪欣湖活動中心，簡稱迪欣湖，鄰近香港廸士尼樂園，在迪欣湖，既可欣賞大自然優美景色，
-                        同時亦可享受活動中心提供的各項活動服務及配套，的確是香港少有遠離繁囂的休閒地點。
-                        周末不少人到迪欣湖影相打卡，除了model外，還有很多是拍婚紗照的新人。近來仲有不少人在迪欣湖這個背山面湖的草地上享野餐樂添！
-                    </div>
+                    <div class="card-text">{$event_data['description_html']}</div>
                 </div>
             </div>
         </div>
@@ -145,8 +167,9 @@ body . <<<body
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title" id="map_title">地點</p>
-                    <img src="/assets/images/icon/Logo-big.png" class="d-block w-100" width="500" height="800" style="padding: 30px;">
+                    <h3 class="card-title" id="map_title">地點</h3>
+                    <p class="card-text" id="map_address">{$event_data['location']}</p>
+                    <div id="map" style="width:100%;height:10rem;"></div>
                 </div>
             </div>
         </div>
