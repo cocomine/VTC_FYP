@@ -82,7 +82,7 @@ class activity_details implements IPage {
         }, $event_img, array_keys($event_img)));
 
 
-        /*//event review
+        /* event review */
         $stmt->prepare("SELECT r.* FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
         $stmt->bind_param("s", $this->UpPath[0]);
         if(!$stmt->execute()){
@@ -91,7 +91,7 @@ class activity_details implements IPage {
         }
         $book_review = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-        //event review img
+        # event review img
         $event_data['review'] =array_map(function($review){
             $stmt = $this->sqlcon->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
             $stmt->bind_param("s", $review['ID']);
@@ -101,7 +101,7 @@ class activity_details implements IPage {
             }
             $review['img'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             return $review;
-        }, $book_review);*/
+        }, $book_review);
 
 
         return <<<body
