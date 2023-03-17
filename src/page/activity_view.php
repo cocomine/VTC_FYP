@@ -43,7 +43,7 @@ class activity_view implements IPage
                                         <thead class="text-capitalize">
                                             <tr>
                                                 <th>活動</th>
-                                                <th>活動計劃 / 預約人數</th>
+                                                <th>活動計劃 / 預約價錢</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -144,11 +144,11 @@ class activity_view implements IPage
 
     /* 取得頁面標題 */
     public function get_Title(): string {
-        return showText('index.title');
+        return showText('Activity_View');
     }
 
     /* 取得頁首標題 */
     public function get_Head(): string {
-        return showText("index.home");
+        return showText("查看預約");
     }
 }
