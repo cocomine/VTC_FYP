@@ -53,7 +53,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             jq_plan.html("");
             plans = [];
             draft.plan.forEach((plan) => {
-                const tmp = plan_html(plan.id);
+                const tmp = plan_html(plan.id, false, false);
                 tmp.find(`[name^="event-plan-name"]`).val(plan.name);
                 tmp.find(`[name^="event-plan-max"]`).val(plan.max);
                 tmp.find(`[name^="event-plan-max-each"]`).val(plan.max_each);
@@ -65,7 +65,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動時段
             jq_schedule.html("");
             draft.schedule.forEach((schedule) => {
-                const tmp = schedule_html(schedule.id);
+                const tmp = schedule_html(schedule.id, false, false);
                 tmp.find(`[name^="event-schedule-start"]`).val(schedule.start);
                 tmp.find(`[name^="event-schedule-end"]`).val(schedule.end);
                 tmp.find(`[name^="event-schedule-time-start"]`).val(schedule.time_start);
@@ -75,7 +75,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
                 //時段類型重複 -> 顯示和取消禁用
                 if (schedule.type){
-                    tmp.find('.event-schedule-week, .event-schedule-end').show().find('input').prop('disabled', false);
+                    tmp.find('.event-schedule-week, .event-schedule-end').show().find('input');
                 }
 
                 //week
@@ -583,40 +583,42 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
          * 計劃HTML
          * @param {number|null}id 計劃id, null=自動生成
          * @param {boolean} includeRemoveBtn 是否包含移除按鈕
+         * @param {boolean} editable 是否可編輯
          * @return {JQuery<HTMLElement>}
          */
-        function plan_html(id = null, includeRemoveBtn = true){
+        function plan_html(id = null, includeRemoveBtn = true, editable = true){
             id = id === null ? Math.floor(Math.random() * 9999) : id;
+            const editableClass = editable ? '' : 'disabled';
             return $(
                 `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2" data-plan="${id}">
                 <input type="text" name="event-plan-id" class="d-none" value="${id}">
                 <h5 class="col-12 text-muted"># ${id}</h5>
                 <div class="col-12 col-lg-7">
                     <label for="event-plan-name-${id}" class="form-label">計畫名稱</label>
-                    <input type="text" class="form-control form-rounded" name="event-plan-name-${id}" id="event-plan-name-${id}" maxlength="20" required>
+                    <input type="text" class="form-control form-rounded" name="event-plan-name-${id}" id="event-plan-name-${id}" maxlength="20" required ${editableClass}>
                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                 </div>
                 <div class="w-100"></div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-max-${id}" class="form-label">計劃最大人數</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" min="1" required>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" min="1" required ${editableClass}>
                     <div class="invalid-feedback">至少需要一位以上~~</div>
                 </div>
                 <div class="col-6 col-md-3">
                     <label for="event-plan-max-each-${id}" class="form-label">每個預約最大人數</label>
-                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" min="1" required>
+                    <input type="number" class="form-control form-rounded" name="event-plan-max-each-${id}" id="event-plan-max-each-${id}" min="1" required ${editableClass}>
                     <div class="invalid-feedback">至少需要一位以上~~</div>
                 </div>
                 <div class="col-6 col-md-2">
                     <label for="event-plan-price-${id}" class="form-label">計劃金額</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text form-rounded">$</span>
-                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" value="0" step="0.01" required>
+                        <input type="number" class="form-control form-rounded" name="event-plan-price-${id}" id="event-plan-price-${id}" min="0" value="0" step="0.01" required ${editableClass}>
                         <div class="invalid-feedback">需要等於0或以上~~</div>
                     </div>
                 </div>
                 <div class="col text-end align-self-end align-self-lg-auto" style="margin-top: -10px">
-                    ${includeRemoveBtn && `<button type="button" class="btn-close" aria-label="Close"></button>`}
+                    ${includeRemoveBtn ? `<button type="button" class="btn-close" aria-label="Close"></button>` : ''}
                 </div>
             </div>`);
         }
@@ -667,18 +669,21 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
         /**
          * 時段HTML
+         * @param {number|null} id 時段ID
          * @param {boolean} includeRemoveBtn 是否包含移除按鈕
+         * @param {boolean} editable 是否可編輯
          * @return {JQuery<HTMLElement>}
          */
-        function schedule_html(includeRemoveBtn = true){
-            const id = Math.floor(Math.random() * 9999);
+        function schedule_html(id = null, includeRemoveBtn = true, editable = true){
+            id = id === null ? Math.floor(Math.random() * 9999) : id;
             const min = moment().format('YYYY-MM-DD');
+            const editableClass = editable ? '' : 'disabled';
             const tmp = $(
                 `<div class="col-12 mb-2 row g-1 border border-1 rounded p-2 align-items-center" data-schedule="${id}">
-                    <input type="text" name="event-schedule-id" class="d-none" value="${id}" />
+                    <input type="text" name="event-schedule-id" class="d-none" value="${id}"/>
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="date-picker form-floating">
-                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}">
+                            <input type="date" class="form-control form-rounded date-picker-toggle" name="event-schedule-start-${id}" id="event-schedule-start-${id}" required min="${min}" ${editableClass}>
                             <label for="event-schedule-start-${id}">開始日期</label>
                             <div class="invalid-feedback">必需要今天之後~~</div>
                         </div>
@@ -692,21 +697,21 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     </div>
                     <div class="col col-md-auto">
                         <div class="form-check form-switch float-end">
-                            <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-${id}" id="event-schedule-type-${id}">
+                            <input class="form-check-input" type="checkbox" role="switch" name="event-schedule-type-${id}" id="event-schedule-type-${id}" ${editableClass}>
                             <label class="form-check-label" for="event-schedule-type-${id}">重複</label>
                         </div>
                     </div>
                     <div class="w-100"></div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required value="${moment().format("HH:mm")}">
+                            <input type="text" class="form-control form-rounded" name="event-schedule-time-start-${id}" id="event-schedule-time-start-${id}" required value="${moment().format("HH:mm")}" ${editableClass}>
                             <label for="event-schedule-time-start-${id}">開始時間</label>
                             <div class="invalid-feedback">這裏不能留空哦~~</div>
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required value="${moment().add(30, 'm').format("HH:mm")}">
+                            <input type="text" class="form-control form-rounded" name="event-schedule-time-end-${id}" id="event-schedule-time-end-${id}" required value="${moment().add(30, 'm').format("HH:mm")}" ${editableClass}>
                             <label for="event-schedule-time-end-${id}">結束時間</label>
                             <div class="invalid-feedback">這裏不能留空哦~~</div>
                         </div>
@@ -744,14 +749,14 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                     </div>
                     <div class="w-100"></div>
                     <div class="col-12 col-md-6">
-                        <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}" required>
+                        <select class="form-select form-rounded" name="event-schedule-plan-${id}" id="event-schedule-plan-${id}" required ${editableClass}>
                             <option selected value="">選擇計劃</option>
                             ${plans.map((value) => `<option value="${value.plan_id}">${value.plan_id} - ${value.plan_name}</option>`)}
                         </select>
                         <div class="invalid-feedback">這裏必須選擇哦~~</div>
                     </div>
                     <div class="col text-end align-self-end">
-                        ${includeRemoveBtn && `<button type="button" class="btn-close" aria-label="Close"></button>`}
+                        ${includeRemoveBtn ? `<button type="button" class="btn-close" aria-label="Close"></button>` : ''}
                     </div>
                 </div>`);
 

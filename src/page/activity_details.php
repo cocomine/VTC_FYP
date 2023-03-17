@@ -26,7 +26,7 @@ class activity_details implements IPage {
      * @inheritDoc
      */
     public function access(bool $isAuth, int $role, bool $isPost): int {
-        $stmt = $this->sqlcon->prepare("SELECT name FROM Event WHERE ID = ?");
+        $stmt = $this->sqlcon->prepare("SELECT name FROM Event WHERE ID = ? AND (state = 1 OR state = 2)");
         $stmt->bind_param("s", $this->UpPath[0]);
         if (!$stmt->execute()) return 500;
 
@@ -92,8 +92,8 @@ class activity_details implements IPage {
         $book_reviews = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
         # 取得評論圖片
+        $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
         $book_reviews = array_map(function ($review) use ($stmt){
-            $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
             $stmt->bind_param("s", $review['Book_ID']);
             if (!$stmt->execute()) {
                 echo_error(500);
@@ -230,7 +230,9 @@ review;
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
-                        <div id="plan" class="row gy-2"></div>
+                        <div id="plan" class="row gy-2">
+                            
+                        </div>
                     </div>
                     <div class="row justify-content-between mt-4 p-1">
                         <h4 class="col-auto ali" id="total">$ --</h4>
