@@ -25,4 +25,14 @@ define(['jquery', 'mapbox-gl', 'toastr'], function (jq, mapboxgl, toastr) {
     }).setLngLat([ map_location.lng, map_location.lat ]).addTo(map);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
+
+    /* 放大圖片 */
+    $('#review').on('click', '.review-image', function (e) {
+        const elm = $(this);
+        const url = elm.data('src');
+        const alt = elm.attr('alt');
+        elm.parents('.card-body').children('.zoom-image').show().html(
+            `<img src="${url}" class="head-image d-block w-100" alt="${alt}">`
+        )
+    });
 })
