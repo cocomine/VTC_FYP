@@ -20,6 +20,9 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
         order: [
             [ 1, 'desc' ]
         ],
+        createdRow: function (row){
+            $(row).addClass('position-relative');
+        },
         columns: [
             {
                 data: 'name',
@@ -27,14 +30,12 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                     if (type === 'display'){
                         return `<div class="row">
                                     <div class="col-auto">
-                                        <a href="/panel/reserve/${row.ID}">
-                                            <div class="ratio ratio-16x9" style="width: 160px;">
-                                                <img src="/panel/api/media/${row.thumbnail}" alt="${row.thumbnail}" class="w-auto mh-100 h-auto">
-                                            </div>
-                                        </a>
+                                        <div class="ratio ratio-16x9" style="width: 160px;">
+                                            <img src="/panel/api/media/${row.thumbnail}" alt="${row.thumbnail}" class="w-auto mh-100 h-auto">
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <a href="/panel/reserve/${row.ID}">${data}</a><br>
+                                        <a href="/panel/reserve/${row.ID}" class="stretched-link">${data}</a><br>
                                         <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>
                                 </div>`;

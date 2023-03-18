@@ -69,8 +69,8 @@ $LangJson = json_encode(array(
 2. 接受選擇媒體 `media_select.select_media`
     ```javascript
     define(['jquery', 'media-select'], function (jq, media_select) {
-        media_select.select_media(function (ids){
-            //ids = 用戶選擇的圖片id array
+        media_select.select_media(function (medias){
+            //medias = 用戶選擇的圖片{id, name} array
         }, max, mime);
     });
     ```
@@ -84,8 +84,8 @@ $LangJson = json_encode(array(
    ```javascript
    //例子
     define(['jquery', 'media-select'], function (jq, media_select) {
-        media_select.select_media(function (ids){
-            ids.forEach((id)=>{
+        media_select.select_media(function (medias){
+            medias.forEach(({id, name})=>{
                 //type something...
             },max, mime);
         });
@@ -98,9 +98,9 @@ $LangJson = json_encode(array(
 define(['jquery', 'media-select'], function (jq, media_select) {
     $('#select').click(function () {
         //用戶可以選擇無限將圖, 接受任何檔案類型
-        media_select.select_media((ids) => {
-            ids.forEach((id)=>{
-                $('#show').append(`<img src="/panel/api/media/${id}" alt="${id}"/>`)
+        media_select.select_media((medias) => {
+           medias.forEach(({id, name})=>{
+                $('#show').append(`<img src="/panel/api/media/${id}" alt="${name}"/>`) //展示圖片
             }, 0, /.*/)
         });
     })

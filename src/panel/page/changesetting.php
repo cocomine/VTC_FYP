@@ -17,6 +17,7 @@ use mysqli;
 class changesetting implements IPage {
 
     public static int $Role = 1;
+    private mysqli $sqlcon;
 
     /**
      * changesetting constructor.
@@ -24,7 +25,9 @@ class changesetting implements IPage {
      * @param mysqli $sqlcon sql連接
      * @param array $UpPath 上條路徑
      */
-    function __construct(mysqli $sqlcon, array $UpPath) { }
+    function __construct(mysqli $sqlcon, array $UpPath) {
+        $this->sqlcon = $sqlcon;
+    }
 
     /* 檢查訪問權 */
     public function access(bool $isAuth, int $role, bool $isPost): int {
@@ -50,8 +53,34 @@ class changesetting implements IPage {
         $userdata = $auth->userdata;
         $avatar = md5(strtolower($userdata['Email'])); //頭像
 
-        // 指引文字
+        /* 多語言 */
+        $jsonLang = json_encode(array(
+            'strength' => showText('ChangeSetting.strength'),
+            'BackupCode' => showText('ChangeSetting.BackupCode')
+        ));
+        // media-select 語言
         $Text = showText('ChangeSetting');
+        $Text2 = showText('Media.Content');
+        $Text3 = showText('Media-upload.Content');
+        $mediaSelect_lang = json_encode(array(
+            'No_media' => $Text2['No_media'],
+            'Media' => $Text2['Media'] . ' %s',
+            'Unknown_Error' => showText('Error'),
+            'title' => $Text2['Media_Select']['title'],
+            'Select' => $Text2['Media_Select']['Select'],
+            'upload' => array(
+                'Timeout' => $Text3['respond']['Timeout'],
+                'File_name_over' => $Text3['respond']['File_name_over'],
+                'Over_size' => $Text3['respond']['Over_size'],
+                'File_type_not_mach' => $Text3['respond']['File_type_not_mach'],
+                'Waiting' => $Text3['respond']['Waiting'],
+                'limit_type' => "接受：.pdf",
+                'drag' => $Text3['drag'],
+                'upload' => $Text3['upload'],
+                'or' => $Text3['or'],
+                'limit' => $Text3['limit']
+            )
+        ));
 
         /* 用戶語言 */
         $Lang_Sel = array();
@@ -78,15 +107,39 @@ class changesetting implements IPage {
                       <button type='button' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4' data-bs-toggle='modal' data-bs-target='#TwoFA_register'><i class='fa fa-lock pe-2'></i>{$Text['2FA']['Enable']}</button>";
         }
 
-        /* json 語言 */
-        $jsonLang = json_encode(array(
-            'strength' => showText('ChangeSetting.strength'),
-            'BackupCode' => showText('ChangeSetting.BackupCode')
-            ));
+        /* 個人資料 */
+        $stmt = $this->sqlcon->prepare("SELECT * FROM User_detail WHERE `UUID` = ?");
+        $stmt->bind_param("s", $userdata['UUID']);
+        if(!$stmt->execute()){
+            return showText('Error');
+        }
+        $user_detail = $stmt->get_result()->fetch_assoc();
+        $user_detail_sex = array(0 => '', 1 => '');
+        if($user_detail['sex']){
+            $user_detail_sex[1] = 'selected';
+        }else{
+            $user_detail_sex[0] = 'selected';
+        }
 
-        /* HTNL */
+        /* 組織資料 */
+        if($auth->userdata['Role'] >= 2){
+            $stmt = $this->sqlcon->prepare("SELECT u.*, m.name FROM User_detail_collabora u, media m WHERE u.prove = m.ID AND `UUID` = ?");
+            $stmt->bind_param("s", $userdata['UUID']);
+            if(!$stmt->execute()){
+                return showText('Error');
+            }
+            $organize_detail = $stmt->get_result()->fetch_assoc();
+            $organize_detail['name'] = $organize_detail['name'] ? $organize_detail['name'].'.pdf' : '請選擇檔案';
+            $organize_detail['address_count'] = strlen($organize_detail['address']);
+        }
+
+        /* HTML */
         return <<<body
-<pre id='langJson' style='display: none'>$jsonLang</pre>
+<link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
+<link rel="stylesheet" href="/panel/assets/css/myself/media-select.css">
+<link rel="stylesheet" href="/panel/assets/css/intlTelInput.css">
+<pre id='langJson' class="d-none">$jsonLang</pre>
+<pre id="media-select-LangJson" class="d-none">$mediaSelect_lang</pre>
 <!-- 基本資料 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -134,7 +187,6 @@ class changesetting implements IPage {
         </div>
     </div>
 </div>
-
 <!-- 密碼 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -178,7 +230,114 @@ class changesetting implements IPage {
         </div>
     </div>
 </div>
-body . <<<body2
+<!-- 個人資料 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title float-start'>個人資料</h1>
+            <p><small class="text-muted ms-2">(資料用作確認預約之用)</small></p>
+            <div>
+                <form id='user-detail' novalidate class='needs-validation'>
+                <div class="row gy-2 w-100">
+                    <div class="col-6">
+                        <label class="form-label" for="lastname">姓氏</label>
+                        <input type="text" class="form-control form-rounded" id="lastname" name="lastname" maxlength="10" required value="{$user_detail['last_name']}">
+                        <div class="invalid-feedback">{$Text['Form']['Cant_EMPTY']}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="firstname">名字</label>
+                        <input type="text" class="form-control form-rounded" id="firstname" name="firstname" maxlength="20" required value="{$user_detail['first_name']}">
+                        <div class="invalid-feedback">{$Text['Form']['Cant_EMPTY']}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="country">國家 / 地區</label>
+                        <select class="form-select form-rounded crs-country" id="country" name="country" data-default-value="{$user_detail['country']}" data-value="shortcode" data-default-option="請選擇" data-preferred="HK,TW,MO,CN" data-region-id="null" required></select>
+                        <div class="invalid-feedback">請選擇國家 / 地區</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="phone">電話號碼</label>
+                        <input type="tel" class="form-control form-rounded" id="phone" name="phone" required value="+{$user_detail['phone_code']}{$user_detail['phone']}" maxlength="20">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="sex">性別</label>
+                        <select class="form-select form-rounded" id="sex" name="sex" required>
+                            <option value="1" {$user_detail_sex[1]}>男</option>
+                            <option value="0" {$user_detail_sex[0]}>女</option>
+                        </select>
+                        <div class="invalid-feedback">請選擇性別</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="birth">出生日期</label>
+                        <div class="date-picker">
+                            <input type="date" class="date-picker-toggle form-control form-rounded" id="birth" name="birth" value="{$userdata['birth']}">
+                            <div class="invalid-feedback">請選擇出生日期</div>
+                        </div>
+                    </div>
+                </div>
+                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+body .
+
+/* Role >= 2, 才顯示 */
+($auth->userdata['Role'] >= 2 ? <<<partner
+<!-- 組織資料 -->
+<div class='col-12 mt-4'>
+    <div class='card'>
+        <div class='card-body'>
+            <h1 class='header-title'>組織資料</h1>
+            <form id='organize' novalidate class='needs-validation'>
+                <div class="row">
+                    <div class='col-12'>
+                        <label for='organize-Name' class='col-form-label'>組織名字</label>
+                        <input class='form-control form-rounded' type='text' id='organize-Name' name='organize-Name' required value="{$organize_detail['organize']}" maxlength="100">
+                        <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                    </div>
+                    <div class='col-3'>
+                        <label for="organize-bankCode" class='col-form-label'>銀行SWIFT代碼</label>
+                        <input class='form-control form-rounded' type='text' id='organize-bankCode'  name='organize-bankCode' required value="{$organize_detail['SWIFTCode']}" pattern="^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$" maxlength="11" placeholder="AAAABBCCXXX">
+                        <div class='invalid-feedback'>請輸入正確銀行SWIFT代碼</div>
+                    </div>
+                    <div class='col-9'>
+                        <label for="organize-bankAccount" class='col-form-label'>銀行帳號號碼</label>
+                        <input class='form-control form-rounded' type='text' id='organize-bankAccount' name='organize-bankAccount' required pattern="^[0-9 ]+$" value="{$organize_detail['BankAccount']}" maxlength="25">
+                        <div class='invalid-feedback'>請輸入正確銀行帳號號碼</div>
+                    </div>
+                    <div class='col-6'>
+                        <label class='col-form-label' for='organize-country'>組織所在國家 / 地區</label>
+                            <select class="form-select form-rounded crs-country" id="organize-country" name="organize-country" data-default-value="{$organize_detail['country']}" data-value="shortcode" data-default-option="請選擇" data-preferred="HK,TW,MO,CN" data-region-id="null" required></select>
+                        <div class="invalid-feedback">請選擇國家 / 地區</div>
+                    </div>
+                    <div class='col-6'>
+                        <label for='organize-phone' class='col-form-label'>組織電話號碼</label>
+                        <input type="tel" class="form-control form-rounded" id="organize-phone" name="organize-phone" required value="+{$organize_detail['phone_code']}{$organize_detail['phone']}" maxlength="20">
+                    </div>
+                    <div class='col-12'>
+                        <label for='organize-Address' class='col-form-label'>組織所在地址</label>
+                        <textarea class='form-control input-rounded' type='text' id='organize-Address' name='organize-Address' required maxlength="100" style="resize: none">{$organize_detail['address']}</textarea>
+                        <span class="float-end text-secondary" id="organize-Address-count" style="margin-top: -20px; margin-right: 10px">{$organize_detail['address_count']}/100</span>
+                        <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
+                    </div>
+                    <div class="col-12">
+                        <label for='organize-prove' class='col-form-label'>商業證明</label><br>
+                        <input type="text" class="d-none" name="organize-prove" id="organize-prove" required value="{$organize_detail['prove']}">
+                        <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
+                        <span id="organize-prove-filename" class="ps-2">{$organize_detail['name']}</span>
+                        <div class='invalid-feedback'>必須上載商業證明</div>
+                    </div>
+                </div>
+                <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
+            </form>
+        </div>
+    </div>
+</div>
+partner : "") .
+
+/* 雙重驗證, etc. */
+<<<body
 <!-- 雙重驗證 -->
 <div class='col-12 mt-4'>
     <div class='card'>
@@ -263,18 +422,28 @@ body . <<<body2
         </div>
     </div>
 </div>
-
 <script>
 require.config({
     paths:{
         zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
         forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
         FileSaver: ['FileSaver.min'],
+        'media-select': ['myself/media-select'],
+        'media-select.upload': ['myself/media-select.upload'],
+        'intl-tel-input': ['intlTelInput'],
     },
+    shim:{
+        'intl-tel-input': {
+            deps: ['jquery'],
+            exports: 'intlTelInput'
+        },
+    }
 });
-loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
+loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver','media-select','media-select.upload', 'full.jquery.crs.min', 'intl-tel-input', 'myself/datepicker'])
+
+
 </script>
-body2;
+body;
     }
 
     /* 回傳表單資料 */
@@ -378,6 +547,84 @@ body2;
                     'Message' => $this->ResultMsg($e->getCode())[1],
                 );
             }
+        }
+
+        /* 個人資料 */
+        if($_GET['type'] === "UserDetail"){
+            $stmt = $this->sqlcon->prepare("SELECT COUNT(*) AS `count` FROM User_detail WHERE UUID = ?");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* 處理data */
+            $data['phone'] = preg_replace("([^0-9]*)", "", $data['phone']);
+
+            /* 更新資料 */
+            if($stmt->get_result()->fetch_assoc()['count'] == 0){
+                // 不存在, 創建
+                $stmt->prepare("INSERT INTO User_detail VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssissss", $auth->userdata['UUID'], $data['lastname'], $data['firstname'], $data['sex'], $data['phone_code'], $data['phone'], $data['birth'], $data['country']);
+            }else{
+                // 存在, 更新
+                $stmt = $this->sqlcon->prepare("UPDATE User_detail SET `last_name` = ?, `first_name` = ?, `sex` = ?, `phone_code` = ?, `phone` = ?, `birth` = ?, `country` = ? WHERE UUID = ?");
+                $stmt->bind_param("ssisssss", $data['lastname'], $data['firstname'], $data['sex'], $data['phone_code'], $data['phone'], $data['birth'], $data['country'], $auth->userdata['UUID']);
+            }
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            return array(
+                'code' => 200,
+                'Title' => "個人資料更新成功"
+            );
+        }
+
+        /* 組織資料 */
+        if($_GET['type'] === "organize" && $auth->userdata['Role'] >= 2){
+            $stmt = $this->sqlcon->prepare("SELECT COUNT(*) AS `count` FROM User_detail_collabora WHERE UUID = ?");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error
+                );
+            }
+
+            /* 處理data */
+            $data['organize-phone'] = preg_replace("([^0-9]*)", "", $data['organize-phone']);
+
+            /* 更新資料 */
+            if($stmt->get_result()->fetch_assoc()['count'] == 0) {
+                // 不存在, 創建
+                $stmt->prepare("INSERT INTO User_detail_collabora VALUES (?,?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("sssssssss", $auth->userdata['UUID'], $data['organize-Name'], $data['organize-country'], $data['organize_phone_code'], $data['organize-phone'], $data['organize-Address'], $data['organize-bankCode'], $data['organize-bankAccount'], $data['organize-prove']);
+            }else{
+                // 存在, 更新
+                $stmt = $this->sqlcon->prepare("UPDATE User_detail_collabora SET `organize` = ?, `country` = ?, `phone_code` = ?, `phone` = ?, `Address` = ?, `SWIFTCode` = ?, `bankAccount` = ?, `prove` = ? WHERE UUID = ?");
+                $stmt->bind_param("sssssssss", $data['organize-Name'], $data['organize-country'], $data['organize_phone_code'], $data['organize-phone'], $data['organize-Address'], $data['organize-bankCode'], $data['organize-bankAccount'], $data['organize-prove'], $auth->userdata['UUID']);
+            }
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            return array(
+                'code' => 200,
+                'Title' => "組織資料更新成功"
+            );
         }
 
         return array(

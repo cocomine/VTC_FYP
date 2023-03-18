@@ -290,10 +290,10 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
             }
 
             jq_today_order.html(data.map((item) =>
-                `<tr>
+                `<tr class="position-relative">
                     <td>${item.ID}</td>
                     <td>
-                        <a href="/panel/reserve/${item.event_ID}#${item.ID}">${item.Name} (${item.last_name} ${item.first_name})</a>
+                        <a href="/panel/reserve/${item.event_ID}#${item.ID}" class="stretched-link">${item.Name} (${item.last_name} ${item.first_name})</a>
                     </td>
                     <td>
                         ${item.plan.map((plan) => 
@@ -475,18 +475,18 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
         const json = await response.json();
         if (response.ok && json.code === 200){
             const data = json.data;
-            const jq_comment = $('.owl-carousel');
+            const jq_comment = $('#comment');
             //console.log(json);
 
             if(data.length <= 0){
-                jq_comment.replaceWith('<div class="text-muted py-5 text-center">無資料</div>');
+                jq_comment.replaceWith('<div class="text-light py-5 text-center">最近沒有評論</div>');
                 return;
             }
 
             jq_comment.html(data.map((item) =>
                 `<div class="item">
                     <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
-                        <img class="owl-lazy" data-src="https://www.gravatar.com/avatar/${item.Email}?s=200" alt="avatar">
+                        <a href="https://${location.hostname}/activity_details/${item.event_ID}" class="stretched-link"><img class="owl-lazy" data-src="https://www.gravatar.com/avatar/${item.Email}?s=200" alt="avatar"></a>
                     </div>
                     <div class="text-light">
                         <h5><b>${item.Name}</b></h5>
@@ -510,13 +510,22 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
                 autoplayHoverPause: true,
                 responsive: {
                     0: {
+                        items: 1
+                    },
+                    576: {
                         items: 2
+                    },
+                    768: {
+                        items: 3
                     },
                     992: {
                         items: 1
                     },
                     1200:{
                         items: 2
+                    },
+                    1800:{
+                        items: 3
                     }
                 }
             });

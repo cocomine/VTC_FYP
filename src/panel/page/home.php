@@ -32,20 +32,13 @@ class home implements IPage {
     function access(bool $isAuth, int $role, bool $isPost): int {
         $this->role = $role;
         if (!$isAuth) return 401;
-        if ($role < 1) return 403;
+        if ($role <= 1) return 403;
         return 200;
     }
 
     /* 輸出頁面 */
     function showPage(): string {
-
-        $Text = showText('index.Content');
-        $avatar = md5(strtolower('roguish.6888467468@gmail.com'));
-
-        if ($this->role < 2) {
-            return "<script>location.replace('/')</script>";
-        } else {
-            return <<<body
+        return <<<body
 <style>
 .today-order-list{
     height: 20rem;
@@ -153,19 +146,7 @@ body. <<<body
     <div class="card comment">
         <div class="card-body">
             <h4 class="card-title text-light">最近三日評論</h4>
-            <div class="owl-carousel owl-theme pt-2">
-                <div class="item">
-                    <div class="rounded-circle overflow-hidden float-start me-2" style="max-width: 60px; height: auto">
-                        <img src="https://www.gravatar.com/avatar/$avatar?s=200" alt="avatar" />
-                    </div>
-                    <div class="text-light">
-                        <h5><b>cocomine</b></h5>
-                        <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
-                        <p class="text-light">vsukbvskbkbkjvbkjsbdkdsbjksbkjsdbvkjbvkdbvsdvkdsbvkdsbvksjbvjkbvksjvbsjkvbsjkvbskjvbdkvvksjdbvjkdbvjskdvbkvbsdkvbsdjkvbjkvbjvbkvjkvb
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <div class="owl-carousel owl-theme pt-2" id="comment"></div>
         </div>
     </div>
 </div>
@@ -178,8 +159,6 @@ require.config({
 loadModules(['chartjs', 'myself/page/home']);
 </script>
 body;
-        }
-
     }
 
     /* POST請求 */
@@ -217,9 +196,10 @@ body;
             }
 
             try {
-                /* 列出本月日曆 */
+                /* 本月日曆 */
                 $now = new Moment();
                 $endDay = $now->cloning()->endOf('month');
+                # 本月日曆, 將日期填滿整個陣列
                 for ($i = 1; $i <= intval($endDay->getDay()); $i++) {
                     $now->setDay($i);
                     $output['month'][] = array(
@@ -232,6 +212,7 @@ body;
                 /* 取出結果 */
                 $result = $stmt->get_result();
                 while ($row = $result->fetch_assoc()) {
+                    # 將有資料的日期填入陣列
                     $now = new Moment($row['text']);
                     $output['month'][intval($now->getDay()) - 1] = $row;
                 }
@@ -249,23 +230,23 @@ body;
             for ($x = 0; $x < count($output['month']); $x++) {
                 $value = $output['month'][$x];
                 $i++;
-                if ($i === 1) {
+                if ($i === 1) { //每週第一日
                     $temp[$week]['text'] = $value['text'] . ' ~ ';
                     $temp[$week]['count'] = 0;
                     $temp[$week]['total'] = 0;
                 }
-                if ($i <= 7) {
+                if ($i <= 7) { //每週中的所有日子
                     $temp[$week]['total'] += $value['total'];
                     $temp[$week]['count'] += $value['count'];
                 }
-                if ($i === 7 || $x === count($output['month']) - 1) {
+                if ($i === 7 || $x === count($output['month']) - 1) { //每週最後一日
                     $temp[$week]['text'] .= $value['text'];
                     $week++;
                     $i = 0;
                 }
             }
-            $output['month'] = $temp;
 
+            $output['month'] = $temp;
             return array(
                 'code' => 200,
                 'data' => $output,

@@ -732,13 +732,36 @@ img {
     background-position: center;
     background-size: cover;
     background-image: url("/assets/images/heard_bg.webp");
-    --bs-breadcrumb-divider: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8'><path d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='#{$breadcrumb-divider-color}'/></svg>");
+    --bs-breadcrumb-divider: '\f054';
+    position: relative;
+    z-index: 1;
+}
+
+.heard-area:before{
+    content: ' ';
+    background: linear-gradient(transparent 15%, #F3F8FB 100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.breadcrumb-item::before{
+    font: var(--fa-font-solid);
+    margin-top: 4px;
 }
 
 .heard-area .page-title{
     font-size: 30px;
 }
 
-/* needs-validation IDE auto complete */
-.needs-validation {
+/* card title */
+.card-title{
+    font-weight: bold;
 }
+
+/* needs-validation IDE auto complete */
+.needs-validation {}
+.lazy{}

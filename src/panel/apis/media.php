@@ -212,6 +212,7 @@ class media implements IApi {
         if (preg_match('/(image\/.+)/', $mime)) {
             try {
                 $imgk = new Imagick($_FILES["file"]["tmp_name"]);
+                $imgk->setBackgroundColor('white');
                 $imgk->setImageFormat('WEBP');
                 $imgk->setCompressionQuality(80);
                 $imgk->setOption('webp:lossless', true);
