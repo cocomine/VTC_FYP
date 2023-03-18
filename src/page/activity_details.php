@@ -211,8 +211,8 @@ review;
         <div class="col-12">
             <div class="card bg-danger bg-opacity-10">
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <img src="/assets/images/icon/megaphone.png" alt="" class="p-2 col-auto" style="width: 52px; background-color: var(--bs-light); border-radius: 50%"/> 
+                    <div class="row align-items-center mb-1">
+                        <img src="/assets/images/icon/megaphone.png" alt="" class="p-2 col-auto ms-3" style="width: 52px; background-color: var(--bs-light); border-radius: 50%"/> 
                         <h3 class="card-title col-auto m-0">注意事項</h3>
                     </div>
                     <div class="card-text">{$event_data['precautions_html']}</div>
