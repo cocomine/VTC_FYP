@@ -35,4 +35,29 @@ define(['jquery', 'mapbox-gl', 'toastr'], function (jq, mapboxgl, toastr) {
             `<img src="${url}" class="head-image d-block w-100" alt="${alt}">`
         )
     });
+
+    /* 尋找當月可用日期 */
+    const jq_bookDate = $('#book-date')
+    jq_bookDate.on('datepicker.prev_month', function (e, data) {
+        fetch(location.pathname+'/?type=available_date', {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({date: data.newDate.format('YYYY-MM-DD')})
+        }).then(async (response) => {
+            const json = await response.json();
+            console.log(json); //debug
+            if (response.ok && json.code === 200){
+                const data = json.data;
+
+            }else{
+                toastr.error(json.Message, json.Title ?? globalLang.Error);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    })
 })

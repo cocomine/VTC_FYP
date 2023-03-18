@@ -221,17 +221,42 @@ review;
         </div>
         <!-- 預訂活動 -->
         <div class="col-12">
-            <div class="card">
+            <div class="card" style="background-color: #efefef">
                 <div class="card-body">
                     <h3 class="card-title">預訂活動</h3>
-                    <div class="date-picker date-picker mt-4">
+                    <div class="date-picker date-picker mt-4" id="book-date">
                        <label for="book-date" class="form-label">預約日期</label><br>
-                       <input type="date" class="date-picker-toggle form-control form-rounded w-auto" id="book-date">
+                       <input type="date" class="date-picker-toggle form-control form-rounded w-auto">
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
-                        <div id="plan" class="row gy-2">
-                            
+                        <div id="plan" class="row gy-2 mx-1">
+                            <div class="rounded p-1 bg-light col-12">
+                                <div class="row justify-content-sm-between align-items-center justify-content-center">
+                                    <h5 class="col-auto">XXX</h5>
+                                    <div class="col-auto">
+                                        <div class="row align-items-center">
+                                            <h6 class="col-auto">$ --</h6>
+                                            <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
+                                            <h6 class="col-auto" id="Business-count">-</h6>
+                                            <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rounded p-1 bg-light col-12">
+                                <div class="row justify-content-sm-between align-items-center justify-content-center">
+                                    <h5 class="col-auto">XXX</h5>
+                                    <div class="col-auto">
+                                        <div class="row align-items-center">
+                                            <h6 class="col-auto">$ --</h6>
+                                            <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
+                                            <h6 class="col-auto" id="Business-count">-</h6>
+                                            <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row justify-content-between mt-4 p-1">
@@ -301,7 +326,13 @@ body;
      * @inheritDoc
      */
     function post(array $data): array {
-        return array();
+
+        /* 尋找當月可用日期 */
+        if($_GET['type'] === "available_date"){
+            return $data;
+        }
+
+        return array('code' => 404, 'Message' => 'Required data request type');
     }
 
     /**

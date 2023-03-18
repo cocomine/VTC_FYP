@@ -797,10 +797,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* 結束日期min調整 */
-        jq_schedule.on('focus', "[name^='event-schedule-start']", function (){
-            const value = $(this).val();
+        jq_schedule.on('input focus', "[name^='event-schedule-start']", function (){
+            const value = moment($(this).val());
             const elm = $(this).parents('[data-schedule]').find("[name^='event-schedule-end']");
-            elm.attr('min', value);
+            elm.attr('min', value.add(1, 'days').format('YYYY-MM-DD'));
         });
 
         /* 確保開始時間再結束時間之前 */
