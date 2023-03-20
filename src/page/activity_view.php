@@ -33,7 +33,7 @@ class activity_view implements IPage
             <pre class="d-none" id="datatables_lang_url">$datatables_lang_url</pre>
             <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
             <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
-            <div class="container-nt4">
+            <div class="container mt-4">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
