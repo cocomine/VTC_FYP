@@ -14,7 +14,7 @@ use panel\apis\media;
  * Class water_activites
  * @package cocopixelmc\Page
  */
-class water_activities implements \cocomine\IPage {
+class water_activities implements IPage {
     private mysqli $sqlcon;
 
     /**
@@ -34,9 +34,6 @@ class water_activities implements \cocomine\IPage {
         return 200;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function showPage(): string
     {
         $Text = showText('index.Content');
@@ -45,7 +42,7 @@ class water_activities implements \cocomine\IPage {
         $jsonLang = json_encode(array());
 
         return <<<body
-<link rel="stylesheet" href="/assets/css/myself/page/home.css">
+<link rel="stylesheet" href="/assets/css/myself/page/water_activities.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
 <div id='homeBackground' class="position-relative">
     <div class="row justify-content-center align-items-center">
@@ -124,48 +121,12 @@ class water_activities implements \cocomine\IPage {
     </div>
 </div>
 body . <<<body
-<div class="container mt-4">
-    <div class="row gy-4">
-    
-      <div class="col-12">
-        <h3><b>香港地區最新活動</b></h3></br>
-        <div class="owl-carousel owl-theme"><!-- 呢度要留意要加返 'owl-theme' class -->
-          $hkActivities
-        </div>
-      </div>
-
-      <div class="col-12">
-        <h3><b>中國地區最新活動</b></h3></br>
-        <div class="owl-carousel owl-theme">
-          $cnActivities
-        </div>
-      </div>
-  
-      <div class="col-12">
-        <h3><b>澳門地區最新活動</b></h3></br>
-        <div class="owl-carousel owl-theme">
-          $moActivities
-        </div>
-      </div>
-
-      <div class="col-12">
-        <h3><b>台灣地區最新活動</b></h3></br>
-        <div class="owl-carousel owl-theme">
-          $twActivities
-        </div>
-      </div>
-    </div>
-</div>
-body . <<<body
 <script>
-loadModules(['myself/datepicker', 'myself/page/home'])
+loadModules(['myself/datepicker', 'myself/page/water_activities'])
 </script>
 body;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function post(array $data): array
     {
         global $auth;
@@ -173,12 +134,9 @@ body;
         return array();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function path(): string
     {
-        // TODO: Implement path() method.
+        return '<li class="breadcrumb-item active">水上活動</li>';
     }
 
     /**
@@ -186,7 +144,7 @@ body;
      */
     public function get_Title(): string
     {
-        // TODO: Implement get_Title() method.
+        return "水上活動|X-Travel";
     }
 
     /**
@@ -194,6 +152,6 @@ body;
      */
     public function get_Head(): string
     {
-        // TODO: Implement get_Head() method.
+        return "水上活動";
     }
 }
