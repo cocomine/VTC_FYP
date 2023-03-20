@@ -144,7 +144,7 @@ class activity_view implements IPage
 
     /* 取得頁面標題 */
     public function get_Title(): string {
-        return showText('Activity_View');
+        return showText('查看預約');
     }
 
     /* 取得頁首標題 */
