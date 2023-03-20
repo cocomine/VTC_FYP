@@ -43,7 +43,7 @@ class activity_view implements IPage
                                         <thead class="text-capitalize">
                                             <tr>
                                                 <th>活動</th>
-                                                <th>活動計劃 / 預約價錢</th>
+                                                <th>活動計劃 / 價錢</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
