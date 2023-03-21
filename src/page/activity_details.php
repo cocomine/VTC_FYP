@@ -231,27 +231,10 @@ review;
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
-                        <div id="plan" class="row gy-2 mx-1">
-                            <div class="rounded px-3 py-2 bg-light col-12">
-                                <div class="row justify-content-sm-between align-items-center justify-content-center">
-                                    <div class="col-auto">
-                                        <h5>XXX</h5>
-                                        <p class="text-muted">--:--<i class="fa-solid fa-angles-right mx-2"></i>--:--</p>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="row align-items-center">
-                                            <h6 class="col-auto">$ --</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
-                                            <h6 class="col-auto" data-count>-</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="plan" class="row gy-2 mx-1"></div>
                     </div>
                     <div class="row justify-content-between mt-4 p-1">
-                        <h4 class="col-auto ali" id="total">$ --</h4>
+                        <h4 class="col-auto ali" id="total">$ 0</h4>
                         <button type="button" class="btn btn-primary btn-rounded col-auto" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>立即預訂</button>
                     </div>
                 </div>

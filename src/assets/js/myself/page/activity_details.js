@@ -1,4 +1,4 @@
-define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toastr, moment) {
+define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, toastr, moment){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     /**
@@ -7,8 +7,10 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
      */
     const map_location = JSON.parse($('#map-location').text());
     const jq_bookDate = $('#book-date');
+    const jq_plan = $('#plan');
     jq_bookDate.children('input').attr('min', moment().format('YYYY-MM-DD')); // 設定最小日期
     let _plan; // 計劃
+    let _select_plan = []; // 選擇的計劃
 
     /* Load map */
     const map = new mapboxgl.Map({
@@ -31,33 +33,33 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
     map.addControl(new mapboxgl.NavigationControl());
 
     /* 放大圖片 */
-    $('#review').on('click', '.review-image', function (e) {
+    $('#review').on('click', '.review-image', function (e){
         const elm = $(this);
         const url = elm.data('src');
         const alt = elm.attr('alt');
         elm.parents('.card-body').children('.zoom-image').show().html(
             `<img src="${url}" class="head-image d-block w-100" alt="${alt}">`
-        )
+        );
     });
 
     /* 尋找選擇月份可用日期 */
-    jq_bookDate.on('datepicker.prev_month datepicker.next_month', function (e, data) {
+    jq_bookDate.on('datepicker.prev_month datepicker.next_month', function (e, data){
         available_date(data.newDate);
-    })
+    });
 
     /**
      * 尋找當月可用日期
      * @param {moment.Moment} newDate 日期
      */
     function available_date(newDate){
-        fetch(location.pathname+'/?type=available_date', {
+        fetch(location.pathname + '/?type=available_date', {
             method: 'POST',
             redirect: 'error',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({date: newDate.format('YYYY-MM-DD')})
+            body: JSON.stringify({ date: newDate.format('YYYY-MM-DD') })
         }).then(async (response) => {
             const json = await response.json();
             if (response.ok && json.code === 200){
@@ -69,27 +71,27 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
                 let disableDate = []; // 不可用日期
 
                 // 計算當月不可用日期
-                for(let i = 0; i < end.date(); i++){
+                for (let i = 0; i < end.date(); i++){
                     let isDisable = true;
                     // 重複日期
                     data.repeat.forEach((item) => {
                         const repeat_week = JSON.parse(item.repeat_week);
                         //console.log(correct.isSameOrAfter(item.start_date), correct.isSameOrBefore(item.end_date), repeat_week.includes(correct.day().toString()), correct.format('YYYY-MM-DD'), repeat_week); //debug
-                        if(correct.isSameOrAfter(item.start_date) // 日期在範圍內
+                        if (correct.isSameOrAfter(item.start_date) // 日期在範圍內
                             && correct.isSameOrBefore(item.end_date) // 日期在範圍內
                             && repeat_week.includes(correct.day().toString()) // 重複日期
                             && !disableDate.includes(correct.format('YYYY-MM-DD')) // 不在不可用日期內
-                        )isDisable = false;
-                    })
+                        ) isDisable = false;
+                    });
 
                     // 單次日期
                     data.single.forEach((item) => {
-                        if(correct.isSame(item.start_date) && !disableDate.includes(correct.format('YYYY-MM-DD'))) // 日期相同 & 不在不可用日期內
+                        if (correct.isSame(item.start_date) && !disableDate.includes(correct.format('YYYY-MM-DD'))) // 日期相同 & 不在不可用日期內
                             isDisable = false;
                     });
 
                     // 加入不可用日期
-                    if(isDisable) disableDate.push(correct.format('YYYY-MM-DD'));
+                    if (isDisable) disableDate.push(correct.format('YYYY-MM-DD'));
                     correct.add(1, 'day'); // 加一天
                 }
                 jq_bookDate[0].datepicker.disableDate = disableDate; // 設定不可用日期
@@ -101,28 +103,29 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
             console.log(error);
         });
     }
+
     available_date(moment()); // 預設當月
 
     /* 選擇日期 */
-    jq_bookDate.on('datepicker.select_date datepicker.select_today', function (e, data) {
+    jq_bookDate.on('datepicker.select_date datepicker.select_today', function (e, data){
         const input_elm = jq_bookDate.children('input');
 
         // 檢查日期是否可用
-        if(input_elm[0].checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(data.newSelect.format('YYYY-MM-DD'))){
+        if (input_elm[0].checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(data.newSelect.format('YYYY-MM-DD'))){
             input_elm.removeClass('is-invalid');
             show_plan(data.newSelect);
         }else{
             input_elm.addClass('is-invalid');
         }
-    })
+    });
 
     /* input直接輸入, 日期改變 */
-    jq_bookDate.children('input').blur(function (e) {
+    jq_bookDate.children('input').blur(function (e){
         console.log($(this).val()); //debug
         const val = $(this).val();
 
         // 檢查日期是否可用
-        if(this.checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(val)){
+        if (this.checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(val)){
             $(this).removeClass('is-invalid');
             show_plan(moment(val));
         }else{
@@ -130,8 +133,8 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
         }
     })
 
-    /* input直接輸入, 尋找選擇月份可用日期 */
-    .change(function (e) {
+        /* input直接輸入, 尋找選擇月份可用日期 */
+        .change(function (e){
         available_date(moment($(this).val()));
     });
 
@@ -140,21 +143,96 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
      * @param date {moment.Moment} 日期
      */
     function show_plan(date){
-        fetch(location.pathname+'/?type=available_plan', {
+        fetch(location.pathname + '/?type=available_plan', {
             method: 'POST',
             redirect: 'error',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({date: date.format('YYYY-MM-DD')})
+            body: JSON.stringify({ date: date.format('YYYY-MM-DD') })
         }).then(async (response) => {
             const json = await response.json();
             console.log(json); //debug
             if (response.ok && json.code === 200){
                 _plan = json.data;
+                _select_plan = [];
 
-                //todo: 顯示計劃
+                //顯示計劃
+                const plan_html = _plan.map((item) => {
+                    const tmp = $(`<div class="rounded px-3 py-2 bg-light col-12">
+                            <div class="row justify-content-sm-between align-items-center justify-content-center">
+                                <div class="col-auto">
+                                    <h5>${item.plan_name}</h5>
+                                    <p class="text-muted">${item.start_time.slice(0, -3)}<i class="fa-solid fa-angles-right mx-2"></i>${item.end_time.slice(0, -3)}</p>
+                                </div>
+                                <div class="col">
+                                    <p class="text-muted"><i class="fa-solid fa-users"></i> 空位: ${item.max_people}</p>
+                                    <p class="text-muted">最多可預訂空位: ${item.max_each_user}</p>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="row align-items-center">
+                                        <h6 class="col-auto">$ ${formatPrice(item.price)}</h6>
+                                        <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-plan="add" style="--bs-btn-disabled-opacity: 0.3"><i class="fa-solid fa-plus"></i></button></div>
+                                        <h6 class="col-auto" data-plan="count">0</h6>
+                                        <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-plan="sub" disabled style="--bs-btn-disabled-opacity: 0.3"><i class="fa-solid fa-minus"></i></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`);
+
+                    // 增加人數
+                    tmp.find('[data-plan="add"]').click(function (){
+                        const count_elm = tmp.find('[data-plan="count"]');
+                        const select_plan = _select_plan.find(({plan}) => plan === item.Schedule_ID);
+                        if (select_plan){
+                            select_plan.count++;
+                            count_elm.text(select_plan.count);
+
+                            // 人數達上限, 禁用按鈕
+                            if(select_plan.count >= item.max_people || select_plan.count >= item.max_each_user)
+                                $(this).prop('disabled', true);
+                        }else{
+                            _select_plan.push({ plan: item.Schedule_ID, count: 1 });
+                            count_elm.text(1);
+                            tmp.find('[data-plan="sub"]').prop('disabled', false); // 啟用減少按鈕
+                        }
+                        console.log(_select_plan); //debug
+                    });
+
+                    // 減少人數
+                    tmp.find('[data-plan="sub"]').click(function (){
+                        const count_elm = tmp.find('[data-plan="count"]');
+                        const select_plan = _select_plan.find(({plan}) => plan === item.Schedule_ID);
+                        if(select_plan){
+                            select_plan.count--;
+                            count_elm.text(select_plan.count);
+
+                            // 人數未達上限, 啟用按鈕
+                            if(select_plan.count < item.max_people && select_plan.count < item.max_each_user)
+                                tmp.find('[data-plan="add"]').prop('disabled', false);
+
+                            // 人數為0, 移除
+                            if (select_plan.count === 0){
+                                _select_plan.splice(_select_plan.indexOf(select_plan), 1);
+                                $(this).prop('disabled', true); // 人數為0, 禁用減少按鈕
+                            }
+                        }
+                    });
+
+                    // 人數改變時, 更新總價錢
+                    tmp.find('[data-plan="sub"], [data-plan="add"]').click(function (){
+                        const total_elm = $('#total');
+                        let total = 0;
+                        _select_plan.forEach(({plan, count}) => {
+                            total += _plan.find(({Schedule_ID}) => Schedule_ID === plan).price * count;
+                        });
+                        total_elm.text("$ " + formatPrice(total));
+                    });
+                    return tmp;
+                });
+
+                jq_plan.html(plan_html);
             }else{
                 toastr.error(json.Message, json.Title ?? globalLang.Error);
             }
@@ -162,5 +240,6 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
             console.log(error);
         });
     }
+
     show_plan(moment()); // 預設當日
-})
+});
