@@ -93,7 +93,7 @@ class activity_details implements IPage {
 
         # 取得評論圖片
         $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
-        $book_reviews = array_map(function ($review) use ($stmt){
+        $book_reviews = array_map(function ($review) use ($stmt) {
             $stmt->bind_param("s", $review['Book_ID']);
             if (!$stmt->execute()) {
                 echo_error(500);
@@ -114,10 +114,10 @@ class activity_details implements IPage {
         }, $book_reviews);
 
         # 將array轉換為review html
-        $event_data['review'] = join("", array_map(function ($review){
+        $event_data['review'] = join("", array_map(function ($review) {
             $avatar = md5($review['Email']); //將email轉換為md5
             $post_date = date("Y/m/d", strtotime($review['DateTime'])); //將日期轉換為Y/m/d格式
-            $images = join("", array_map(function ($img){
+            $images = join("", array_map(function ($img) {
                 return
                     "<div class='col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1'>
                         <div class='ratio ratio-1x1 rounded overflow-hidden'>
@@ -127,7 +127,7 @@ class activity_details implements IPage {
             }, $review['img'])); //將圖片轉換為img html
             $rate = join("", array_fill(0, $review['rate'], "<i class='fa-solid fa-star text-warning'></i>")); //將評分轉換為星星html
             $rate .= join("", array_fill(0, 5 - $review['rate'], "<i class='fa-regular fa-star text-muted'></i>")); //將評分轉換為星星html
-            $plan = join("", array_map(function ($plan){
+            $plan = join("", array_map(function ($plan) {
                 return "<span class='status-p bg-primary bg-opacity-75 text-center me-2 plan-name'>{$plan['plan_name']}</span>";
             }, $review['plan'])); //將預約方案轉換為badge html
 
@@ -158,7 +158,7 @@ review;
         $event_data['review_total'] = count($book_reviews); //取得評論總數
         $event_data['avg_rate'] = $event_data['review_total'] <= 0 ? 5 : round(array_sum(array_column($book_reviews, 'rate')) / $event_data['review_total'], 1); //取得平均評分
         $event_data['rate_start'] = join("", array_fill(0, floor($event_data['avg_rate']), "<i class='fa-solid fa-star text-warning'></i>")); //將平均評分轉換為星星html
-        if($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
+        if ($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
             $event_data['rate_start'] .= "<i class='fa-solid fa-star-half-alt text-warning'></i>"; //將平均評分轉換為星星html (0.5分)
         $event_data['rate_start'] .= join("", array_fill(0, 5 - ceil($event_data['avg_rate']), "<i class='fa-regular fa-star text-muted'></i>")); //將平均評分轉換為星星html
 
@@ -318,8 +318,49 @@ body;
     function post(array $data): array {
 
         /* 尋找當月可用日期 */
-        if($_GET['type'] === "available_date"){
-            return $data;
+        if ($_GET['type'] === "available_date") {
+            # 尋找重複可用日期
+            $stmt = $this->sqlcon->prepare("SELECT DISTINCT start_date, end_date, repeat_week FROM Event_schedule 
+                                                  WHERE Event_ID = ? AND type = 1 
+                                                    AND MONTH(?) BETWEEN MONTH(start_date) AND MONTH(end_date) 
+                                                    AND YEAR(?) BETWEEN YEAR(start_date) AND YEAR(end_date) ORDER BY start_date");
+            $stmt->bind_param("sss", $this->UpPath[0], $data['date'], $data['date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+            $repeat = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            # 尋找單次可用日期
+            $stmt->prepare("SELECT start_date FROM Event_schedule WHERE Event_ID = ? AND type = 0 AND MONTH(start_date) = MONTH(?) AND YEAR(start_date) = YEAR(?)");
+            $stmt->bind_param("sss", $this->UpPath[0], $data['date'], $data['date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+            $single = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            return array('code' => 200, 'data' => array('repeat' => $repeat, 'single' => $single));
+        }
+
+
+        if($_GET['type'] === "available_plan"){
+            $stmt = $this->sqlcon->prepare("SELECT * FROM Event_schedule WHERE Event_ID = ? AND type = 1 AND start_date = ? AND end_date = ?");
+            $stmt->bind_param("sss", $this->UpPath[0], $data['start_date'], $data['end_date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            $plan = array();
+            foreach ($result as $value){
+                $plan[] = array(
+                    'plan_id' => $value['plan_id'],
+                    'plan_name' => $value['plan_name'],
+                    'price' => $value['price'],
+                    'currency' => $value['currency'],
+                    'available' => $value['available'],
+                    'repeat_week' => $value['repeat_week'],
+                );
+            }
+            return array('code' => 200, 'data' => $plan);
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');
