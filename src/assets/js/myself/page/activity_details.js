@@ -8,6 +8,7 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
     const map_location = JSON.parse($('#map-location').text());
     const jq_bookDate = $('#book-date');
     jq_bookDate.children('input').attr('min', moment().format('YYYY-MM-DD')); // 設定最小日期
+    let _plan; // 計劃
 
     /* Load map */
     const map = new mapboxgl.Map({
@@ -104,7 +105,7 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
 
     /* 選擇日期 */
     jq_bookDate.on('datepicker.select_date', function (e, data) {
-        show_plan(data.newDate);
+        show_plan(data.newSelect);
     })
 
     /**
@@ -119,12 +120,12 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
                 'Content-Type': 'application/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({date: newDate.format('YYYY-MM-DD')})
+            body: JSON.stringify({date: date.format('YYYY-MM-DD')})
         }).then(async (response) => {
             const json = await response.json();
             console.log(json); //debug
             if (response.ok && json.code === 200){
-                const data = json.data;
+                _plan = json.data;
 
 
             }else{
@@ -134,5 +135,5 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
             console.log(error);
         });
     }
-    show_plan(moment()
+    show_plan(moment()); // 預設當日
 })

@@ -341,26 +341,34 @@ body;
             return array('code' => 200, 'data' => array('repeat' => $repeat, 'single' => $single));
         }
 
-
+        /* 尋找當日可用時段 */
         if($_GET['type'] === "available_plan"){
-            $stmt = $this->sqlcon->prepare("SELECT * FROM Event_schedule WHERE Event_ID = ? AND type = 1 AND start_date = ? AND end_date = ?");
-            $stmt->bind_param("sss", $this->UpPath[0], $data['start_date'], $data['end_date']);
+            $weekday = '%'.date('w', strtotime($data['date'])).'%'; // 取得當日星期幾
+            $stmt = $this->sqlcon->prepare(
+                "SELECT s.Schedule_ID, p.plan_name, s.start_time, s.end_time, p.price, p.max_each_user, 
+                         # 計算當日剩餘人數
+                         p.max_people - IFNULL((
+                             # 計算當日已預訂人數
+                             SELECT SUM(bp.plan_people) FROM Book_event b, Book_event_plan bp 
+                             # 尋找當日已預訂人數
+                             WHERE b.ID = bp.Book_ID AND b.event_ID = s.Event_ID AND bp.event_schedule = s.Schedule_ID AND b.book_date = ?
+                             GROUP BY bp.event_schedule
+                         ), 0) AS `max_people` 
+                     FROM Event_schedule s, Event_plan p 
+                     # 尋找當日可用時段
+                     WHERE s.Event_ID = p.Event_ID AND s.plan = p.plan_ID AND s.Event_ID = ? AND (
+                         # 尋找重複可用時段
+                         (type = 1 AND ? BETWEEN s.start_date AND s.end_date AND repeat_week LIKE ?) OR 
+                         # 尋找單次可用時段
+                         (type = 0 AND start_date = ?)
+                     ) ORDER BY s.start_time");
+            $stmt->bind_param("sssss", $data['date'], $this->UpPath[0], $data['date'], $weekday, $data['date']);
             if (!$stmt->execute()) {
                 return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
             }
+
             $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-            $plan = array();
-            foreach ($result as $value){
-                $plan[] = array(
-                    'plan_id' => $value['plan_id'],
-                    'plan_name' => $value['plan_name'],
-                    'price' => $value['price'],
-                    'currency' => $value['currency'],
-                    'available' => $value['available'],
-                    'repeat_week' => $value['repeat_week'],
-                );
-            }
-            return array('code' => 200, 'data' => $plan);
+            return array('code' => 200, 'data' => $result);
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');
