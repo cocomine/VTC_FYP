@@ -102,6 +102,7 @@ body. <<<body
                         <tr>
                             <th>#</th>
                             <th>客戶</th>
+                            <th>活動</th>
                             <th>活動計劃 / 預約人數</th>
                             <th>預約時間</th>
                         </tr>
@@ -134,7 +135,7 @@ body. <<<body
 <div class="col-lg-7">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title float-start">最熱門活動</h4>
+            <h4 class="card-title float-start">頭五位熱門活動</h4>
             <p class="text-end"><small class="text-muted">(過去6個月)</small></p>
             <div style="max-height: 350px">
                 <canvas id="heat-event" height="233" class="w-100"></canvas>
@@ -255,7 +256,7 @@ body;
 
         /* 今日預約 */
         if($_GET['type'] === "today"){
-            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.last_name, d.first_name, b.event_ID FROM Book_event b, User u, User_detail d, Event e 
+            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Name, d.last_name, d.first_name, b.event_ID, e.name AS `eventName` FROM Book_event b, User u, User_detail d, Event e 
                                                WHERE b.book_date = CURRENT_DATE AND b.User = u.UUID AND b.User = d.UUID AND b.event_ID = e.ID AND e.UUID = ?");
             $stmt->bind_param("s", $auth->userdata['UUID']);
             if (!$stmt->execute()) {

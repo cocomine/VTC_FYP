@@ -285,7 +285,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
             //console.log(json);
 
             if(data.length <= 0){
-                jq_today_order.html('<tr><td colspan="4"><div class="text-center text-muted">今日無預約</div></td></tr>');
+                jq_today_order.html('<tr><td colspan="5"><div class="text-center text-muted">今日無預約</div></td></tr>');
                 return;
             }
 
@@ -295,6 +295,7 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
                     <td>
                         <a href="/panel/reserve/${item.event_ID}#${item.ID}" class="stretched-link">${item.Name} (${item.last_name} ${item.first_name})</a>
                     </td>
+                    <td>${item.eventName}</td>
                     <td>
                         ${item.plan.map((plan) => 
                             `<b>${plan.plan_name}:</b> <code class="bg-light">${plan.plan_people}</code>`
@@ -501,7 +502,6 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
             ));
             
             jq_comment.owlCarousel({
-                loop: true,
                 margin: 15,
                 nav: false,
                 dots: true,
