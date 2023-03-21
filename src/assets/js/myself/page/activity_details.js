@@ -100,10 +100,9 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                 toastr.error(json.Message, json.Title ?? globalLang.Error);
             }
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
         });
     }
-
     available_date(moment()); // 預設當月
 
     /* 選擇日期 */
@@ -131,10 +130,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
         }else{
             $(this).addClass('is-invalid');
         }
-    })
-
-        /* input直接輸入, 尋找選擇月份可用日期 */
-        .change(function (e){
+    }).change(function (e){ // input直接輸入, 尋找選擇月份可用日期
         available_date(moment($(this).val()));
     });
 
@@ -153,10 +149,10 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
             body: JSON.stringify({ date: date.format('YYYY-MM-DD') })
         }).then(async (response) => {
             const json = await response.json();
-            console.log(json); //debug
             if (response.ok && json.code === 200){
                 _plan = json.data;
                 _select_plan = [];
+                $('#total').text("$ 0");
 
                 //顯示計劃
                 const plan_html = _plan.map((item) => {
@@ -197,7 +193,6 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                             count_elm.text(1);
                             tmp.find('[data-plan="sub"]').prop('disabled', false); // 啟用減少按鈕
                         }
-                        console.log(_select_plan); //debug
                     });
 
                     // 減少人數
@@ -237,9 +232,40 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                 toastr.error(json.Message, json.Title ?? globalLang.Error);
             }
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
         });
     }
-
     show_plan(moment()); // 預設當日
+
+    /* 送出訂單 */
+    $('#checkout').click(function (){
+        const id = location.pathname.split('/').pop();
+
+        fetch('/api/checkout/', {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ plan: _select_plan, id: id})
+        }).then(async (response) => {
+            const json = await response.json();
+            console.log(json); //debug
+            if (response.ok){
+                if(response.status === 200){
+
+                }
+            }else{
+                if(response.status === 401){
+                    sessionStorage.setItem('returnPath', location.pathname);
+                    location.replace(json.path)
+                }else{
+                    toastr.error(json.Message, json.Title ?? globalLang.Error);
+                }
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    });
 });

@@ -192,7 +192,7 @@ function run_apis(array $path, MyAuth $auth) {
                     $api->get();
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                     /* Delete 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -207,7 +207,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -222,7 +222,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
