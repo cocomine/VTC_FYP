@@ -104,9 +104,36 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
     available_date(moment()); // 預設當月
 
     /* 選擇日期 */
-    jq_bookDate.on('datepicker.select_date', function (e, data) {
-        show_plan(data.newSelect);
+    jq_bookDate.on('datepicker.select_date datepicker.select_today', function (e, data) {
+        const input_elm = jq_bookDate.children('input');
+
+        // 檢查日期是否可用
+        if(input_elm[0].checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(data.newSelect.format('YYYY-MM-DD'))){
+            input_elm.removeClass('is-invalid');
+            show_plan(data.newSelect);
+        }else{
+            input_elm.addClass('is-invalid');
+        }
     })
+
+    /* input直接輸入, 日期改變 */
+    jq_bookDate.children('input').blur(function (e) {
+        console.log($(this).val()); //debug
+        const val = $(this).val();
+
+        // 檢查日期是否可用
+        if(this.checkValidity() && !jq_bookDate[0].datepicker.disableDate.includes(val)){
+            $(this).removeClass('is-invalid');
+            show_plan(moment(val));
+        }else{
+            $(this).addClass('is-invalid');
+        }
+    })
+
+    /* input直接輸入, 尋找選擇月份可用日期 */
+    .change(function (e) {
+        available_date(moment($(this).val()));
+    });
 
     /**
      * 顯示計劃
@@ -127,7 +154,7 @@ define(['jquery', 'mapbox-gl', 'toastr', 'moment'], function (jq, mapboxgl, toas
             if (response.ok && json.code === 200){
                 _plan = json.data;
 
-
+                //todo: 顯示計劃
             }else{
                 toastr.error(json.Message, json.Title ?? globalLang.Error);
             }

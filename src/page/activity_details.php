@@ -227,6 +227,7 @@ review;
                     <div class="date-picker date-picker mt-4" id="book-date">
                        <label for="book-date" class="form-label">預約日期</label><br>
                        <input type="date" class="date-picker-toggle form-control form-rounded w-auto">
+                       <div class="invalid-feedback">請選擇正確可預約日期</div>
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
