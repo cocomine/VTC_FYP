@@ -40,7 +40,7 @@ class checkout implements IApi {
      * 處理預約
      * @inheritDoc
      */
-    public function post(array $data) {
+    public function post(?array $data) {
         header("Content-Type: text/json");
         global $auth;
 
@@ -65,7 +65,7 @@ class checkout implements IApi {
         }
 
         // Check if the user has filled in the personal information
-        $stmt = $this->sqlcon->prepare("SELECT COUNT(*) FROM User_detail WHERE UUID = ?");
+        $stmt = $this->sqlcon->prepare("SELECT phone_code, phone, first_name, last_name FROM User_detail WHERE UUID = ?");
         $stmt->bind_param("s", $auth->userdata['UUID']);
         if (!$stmt->execute()) {
             http_response_code(500);
@@ -76,7 +76,9 @@ class checkout implements IApi {
             ]);
             return;
         }
-        if ($stmt->get_result()->fetch_row()[0] <= 0) {
+        $result = $stmt->get_result();
+
+        if ($result->num_rows <= 0) {
             http_response_code(400);
             echo json_encode([
                 "code" => 400,
@@ -85,7 +87,9 @@ class checkout implements IApi {
             ]);
             return;
         }
+        $user_detail = $result->fetch_assoc();
         $stmt->close();
+        $result->close();
 
         /* 取得活動名稱 */
         $stmt = $this->sqlcon->prepare("SELECT name FROM Event WHERE ID = ?");
@@ -136,12 +140,6 @@ class checkout implements IApi {
         try {
             $checkout = $stripe->checkout->sessions->create([
                 'line_items' => $stripe_items,
-                'metadata' => [
-                    'event_id' => strval($data['eventId']),
-                    'date' => $data['date'],
-                    'plan' => json_encode($data['plan']),
-                    'User' => $auth->userdata['UUID'],
-                ],
                 'customer_email' => $auth->userdata['Email'],
                 'custom_text' => [
                     'submit' => [
@@ -152,8 +150,35 @@ class checkout implements IApi {
                 'mode' => 'payment',
                 'invoice_creation' => [
                     'enabled' => true,
+                    'invoice_data' => [
+                        'custom_fields' => [
+                            [
+                                'name' => '活動名稱',
+                                'value' => $event_name
+                            ],
+                            [
+                                'name' => '預約日期',
+                                'value' => $data['date']
+                            ],
+                            [
+                                'name' => '預約人',
+                                'value' => $user_detail['first_name'] . ' ' . $user_detail['last_name']
+                            ],
+                            [
+                                'name' => '預約人電話',
+                                'value' => '+'.$user_detail['phone_code'] .' '. $user_detail['phone']
+                            ],
+                        ],
+                        'description' => $event_name,
+                        'metadata' => [
+                            'event_id' => strval($data['eventId']),
+                            'date' => $data['date'],
+                            'plan' => json_encode($data['plan']),
+                            'User' => $auth->userdata['UUID'],
+                        ],
+                    ]
                 ],
-                'success_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/success/?session_id={CHECKOUT_SESSION_ID}',
+                'success_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/success',
                 'cancel_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/activity_details/' . $data['eventId']
             ]);
         } catch (ApiErrorException $e) {
@@ -179,14 +204,14 @@ class checkout implements IApi {
     /**
      * @inheritDoc
      */
-    public function put(array $data) {
+    public function put(?array $data) {
         http_response_code(204);
     }
 
     /**
      * @inheritDoc
      */
-    public function delete(array $data) {
+    public function delete(?array $data) {
         http_response_code(204);
     }
 }

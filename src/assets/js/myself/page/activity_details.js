@@ -155,6 +155,13 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
                 _select_plan = [];
                 $('#total').text("$ 0");
 
+                if(_plan.length <= 0){
+                    jq_plan.html(`<div class="rounded px-3 py-2 bg-light col-12 text-center">
+                        <p class="text-muted">無可預訂計劃</p>
+                    </div>`);
+                    return;
+                }
+
                 //顯示計劃
                 const plan_html = _plan.map((item) => {
                     const tmp = $(`<div class="rounded px-3 py-2 bg-light col-12">

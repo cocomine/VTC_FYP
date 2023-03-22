@@ -129,7 +129,7 @@ class media implements IApi {
      * 上載媒體
      * @inheritDoc
      */
-    public function post($data) {
+    public function post(?array $data) {
         global $auth;
         header("content-type: text/json; charset=utf-8");
 
@@ -278,7 +278,7 @@ class media implements IApi {
      * 更新檔案名稱
      * @inheritDoc
      */
-    public function put($data) {
+    public function put(?array $data) {
         global $auth;
 
         if (sizeof($this->upPath) < 1) {
@@ -316,7 +316,7 @@ class media implements IApi {
     /**
      * @inheritDoc
      */
-    public function delete($data) {
+    public function delete(?array $data) {
         global $auth;
         header("content-type: text/json; charset=utf-8");
 
