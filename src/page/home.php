@@ -8,6 +8,7 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
+use panel\apis\media;
 
 /**
  * Class home
@@ -15,6 +16,7 @@ use mysqli;
  */
 class home implements IPage {
     private mysqli $sqlcon;
+
 
     /**
      * home constructor.
@@ -38,6 +40,69 @@ class home implements IPage {
         /* json 語言 */
         $jsonLang = json_encode(array());
 
+        $hkActivities = '';
+
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'HK' ORDER BY create_time DESC LIMIT 5");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $hkActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
+            $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
+            $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
+            $hkActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+        }
+
+        $cnActivities = '';
+
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'CN' ORDER BY create_time DESC LIMIT 5");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $cnActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
+            $cnActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $cnActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
+            $cnActivities .= "<p class='card-text'>".$row['summary']."</p>";
+            $cnActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+        }
+
+        $moActivities = '';
+
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'MO' ORDER BY create_time DESC LIMIT 5");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $moActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
+            $moActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $moActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
+            $moActivities .= "<p class='card-text'>".$row['summary']."</p>";
+            $moActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+        }
+
+        $twActivities = '';
+
+        $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'TW' ORDER BY create_time DESC LIMIT 5");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $twActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
+            $twActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $twActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
+            $twActivities .= "<p class='card-text'>".$row['summary']."</p>";
+            $twActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+        }
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/home.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
@@ -117,251 +182,35 @@ class home implements IPage {
         </div>
     </div>
 </div>
-body. <<<body
+body . <<<body
 <div class="container mt-4">
     <div class="row gy-4">
     
       <div class="col-12">
         <h3><b>香港地區最新活動</b></h3></br>
         <div class="owl-carousel owl-theme"><!-- 呢度要留意要加返 'owl-theme' class -->
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-                <!-- card-img-top start; 用呢一段code,先可以唔同圖片嘅比例亦不會出現拉伸情況 -->
-                <div class="ratio ratio-4x3 position-relative">
-                    <div class="overflow-hidden card-img-top">
-                        <div class="media-list-center">
-                            <img class="owl-lazy" data-src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" alt=""><!-- 要用lazyload請咁樣寫 -->
-                        </div>
-                    </div>
-                </div>
-                <!-- card-img-top stop -->
-              <div class="card-body">
-                <h5 class="card-title">激海獨木舟探索</h5>
-                <p class="card-text">炎炎夏日，最重要暢旺大海。</p>
-                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a><!-- 呢度要留意要加返 'btn-rounded' class-->
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-                <div class="ratio ratio-4x3 position-relative">
-                    <div class="overflow-hidden card-img-top">
-                        <div class="media-list-center">
-                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-              <div class="card-body">
-                <h5 class="card-title">「兄弟爬山」攀岩體驗</h5>
-                <p class="card-text">在美麗的香港維海面前攀登。</p>
-                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-                <div class="ratio ratio-4x3 position-relative">
-                    <div class="overflow-hidden card-img-top">
-                        <div class="media-list-center">
-                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-              <div class="card-body">
-                <h5 class="card-title">海下世界潛水班</h5>
-                <p class="card-text">在西貢海底中心呼喚愛。</p>
-                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">越嶺攀岩探索</h5>
-                <p class="card-text">西貢糧船灣超級火山?我就攀!</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Canoeing_Hong_Kong_02.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">JoJo 獨木舟體驗</h5>
-                <p class="card-text">提供雙人獨木舟，情侶的夏天拍拖體驗。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Trekking_Hong_Kong_01.jpg" class="card-img-top" alt="..." width="300" height="200">
-              <div class="card-body">
-                <h5 class="card-title">毅行遠足旅行團</h5>
-                <p class="card-text">本地的遠足旅行團，帶你走足四大徑。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
+          $hkActivities
         </div>
       </div>
 
       <div class="col-12">
         <h3><b>中國地區最新活動</b></h3></br>
         <div class="owl-carousel owl-theme">
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Mountaineering_China_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">哈巴雪山嚮導服務</h5>
-                <p class="card-text">哈巴村的資深嚮導，帶你登上五千米雪山。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_China_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">陽朔攀岩社</h5>
-                <p class="card-text">帶你逛逛中國攀岩聖地，一生人也未必攀得完。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Canoeing_China_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">桂林獨木舟協會</h5>
-                <p class="card-text">沿河飽覽桂林甲天下的山水。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Skiing_China_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">北京軍刀山滑雪場</h5>
-                <p class="card-text">北京最佳滑雪地，適合初學者、窮遊旅客。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Canoeing_China_02.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">中國龍獨木舟</h5>
-                <p class="card-text">榮獲全中國最佳獨木舟服務獎項。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>  
-          </div>
+          $cnActivities
         </div>
       </div>
   
       <div class="col-12">
         <h3><b>澳門地區最新活動</b></h3></br>
         <div class="owl-carousel owl-theme">
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Jump_Macau_01.jpeg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">澳門旅遊塔笨豬跳</h5>
-                <p class="card-text">你跳我跳大家跳。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Macau_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Solution 抱石館</h5>
-                <p class="card-text">澳門高質室內抱石館，想爬一爬的你不妨一試。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Macau_03.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Macau's Crux 抱石館</h5>
-                <p class="card-text">澳門路氹區內攀岩館，自認文青之餘又十分運動風的你一定要試。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
+          $moActivities
         </div>
       </div>
 
       <div class="col-12">
         <h3><b>台灣地區最新活動</b></h3></br>
         <div class="owl-carousel owl-theme">
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Taiwan_01.jpeg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">龍洞攀岩協會</h5>
-                <p class="card-text">提供資深教練，帶你享受台灣最大面積戶外攀岩場。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Diving_Taiwan_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">藍天海潛水公司</h5>
-                <p class="card-text">龜山島的碧海藍天，與綠海龜一起暢遊大海。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Taiwan_02.jpeg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">山緣抱石小館</h5>
-                <p class="card-text">位於台北市的小區之內，能在攀岩之餘享受繁華都市中的一點寧靜。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Trekking_Taiwan_01.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">台灣登山俱樂部</h5>
-                <p class="card-text">一條龍式為你辦理登山證、預訂山屋，帶你登上台灣最高。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Diving_Taiwan_02.jpg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">「看海」潛水俱樂部</h5>
-                <p class="card-text">提供全面式浮潛、水肺潛水服務，資深教練無時無刻陪伴你在大海中遊曆。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Paragliding_Taiwan_01.jpeg" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">台東天下滑翔傘公司</h5>
-                <p class="card-text">提供兩小時的滑翔傘體驗服務，一睹台灣東部海岸景色。另有提供國際級標準滑翔傘訓練課程。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
-              </div>
-            </div>
-          </div>
+          $twActivities
         </div>
       </div>
     </div>
@@ -394,4 +243,5 @@ body;
     public function get_Head(): string {
         return showText("index.home");
     }
+
 }

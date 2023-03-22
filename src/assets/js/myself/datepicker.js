@@ -1,118 +1,117 @@
 /*
  * Copyright (c) 2023.
  * Create by cocomine
- * 1.1.5
+ * 1.2.8
  */
 
 /*
  * css must be loaded before each use
  * <link rel="stylesheet" href="/panel/assets/css/myself/datetimepicker.css">
  */
-define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
+define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
     "use strict";
-    const pickers = $('.date-picker')
+    const pickers = $('.date-picker');
 
     /* 初始化 */
     pickers.each((index, picker) => {
-        setup(picker)
+        setup(picker);
     });
 
-    function setup(picker) {
+    function setup(picker){
         picker = $(picker);
         let selectDate = moment();
         let activateDate = moment();
         let minDate = null;
         let maxDate = null;
         const children = picker.children('.date-picker-toggle');
-        picker[0].datepicker = {disableDate: []};
+        picker[0].datepicker = { disableDate: [] };
 
-        if(children.length <= 0){
+        if (children.length <= 0){
             throw new Error('Children element class="date-picker-toggle" not found. Please check your code.');
         }
 
         /* 預設日期(今日) */
-        if (children.val().length <= 0) {
+        if (children.val().length <= 0){
             children.val(activateDate.format('YYYY-MM-DD'));
         }
 
         /* 用戶點擊 */
-        children.on('input focus', function () {
-            update($(this));
-        })
+        children.on('input focus', function (){
+            update();
+        });
 
         /* 強制重新繪製 */
-        picker[0].datepicker.draw = function () {
-            update(children)
-        }
+        picker[0].datepicker.draw = function (){
+            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
+        };
 
         /* 是否使用dropdown */
-        if (!picker.hasClass('date-picker-inline')) {
-            picker.append('<div class="dropdown-menu date-calendar"></div>')
-            new bootstrap.Dropdown(children[0], {autoClose: 'outside'});
-        } else {
-            children.click((e) => e.preventDefault())
-            update(children)
+        if (!picker.hasClass('date-picker-inline')){
+            picker.append('<div class="dropdown-menu date-calendar"></div>');
+            new bootstrap.Dropdown(children[0], { autoClose: 'outside' });
+        }else{
+            children.click((e) => e.preventDefault());
+            update(children);
         }
 
         /* event */
         /* 上一個月 */
         picker.on('click', '[data-dt-type="last"]', (e) => {
             const prevDate = selectDate.clone();
-            selectDate.subtract(1, 'months')
-            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate))
-            picker.trigger('datepicker.prev_month', {prevDate: prevDate, newDate: selectDate})
-        })
+            selectDate.subtract(1, 'months');
+            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
+            picker.trigger('datepicker.prev_month', { prevDate: prevDate, newDate: selectDate });
+        });
 
         /* 下一個月 */
         picker.on('click', '[data-dt-type="next"]', (e) => {
             const prevDate = selectDate.clone();
-            selectDate.add(1, 'months')
-            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate))
-            picker.trigger('datepicker.next_month', {prevDate: prevDate, newDate: selectDate})
-        })
+            selectDate.add(1, 'months');
+            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
+            picker.trigger('datepicker.next_month', { prevDate: prevDate, newDate: selectDate });
+        });
 
         /* 選擇日期 */
-        picker.on('click', '.day:not(.disable)', function (e) {
+        picker.on('click', '.day:not(.disable)', function (e){
             const day = $(this).text();
             const prevDate = activateDate.clone();
 
             activateDate = selectDate.clone().set('date', parseInt(day));
             picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
             children.val(activateDate.format('YYYY-MM-DD')).trigger('input');
-            picker.trigger('datepicker.select_date', {prevSelect: prevDate, newSelect: activateDate})
-        })
+            picker.trigger('datepicker.select_date', { prevSelect: prevDate, newSelect: activateDate });
+        });
 
         /* 今天 */
         picker.on('click', '[data-dt-type="today"]', (e) => {
             const prevDate = activateDate.clone();
             selectDate = moment();
             activateDate = moment();
-            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate))
+            picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
             children.val(activateDate.format('YYYY-MM-DD')).trigger('input');
-            picker.trigger('datepicker.select_today', {prevSelect: prevDate, newSelect: activateDate})
-        })
+            picker.trigger('datepicker.select_today', { prevSelect: prevDate, newSelect: activateDate });
+        });
 
         /**
          * 更新 html
-         * @param {jQuery<HTMLElement>} input
          */
-        function update(input) {
+        function update(){
             /* 手機螢幕尺寸使用系統自帶 */
-            if (!picker.hasClass('date-picker-inline')) {
-                if (window.innerWidth < 576) input.removeAttr('data-bs-toggle');
-                else input.attr('data-bs-toggle', 'dropdown');
+            if (!picker.hasClass('date-picker-inline')){
+                if (window.innerWidth < 576) children.removeAttr('data-bs-toggle');
+                else children.attr('data-bs-toggle', 'dropdown');
             }
 
             //更新 activate day
-            const temp = moment(input.val());
-            if (temp.isValid()) {
-                activateDate = moment(temp)
+            const temp = moment(children.val());
+            if (temp.isValid()){
+                activateDate = moment(temp);
                 selectDate = moment(temp);
-                minDate = input.attr('min')
+                minDate = children.attr('min');
                 minDate = minDate === undefined ? null : moment(minDate);
-                maxDate = input.attr('max')
+                maxDate = children.attr('max');
                 maxDate = maxDate === undefined ? null : moment(maxDate);
-                input.parent('.date-picker').children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, input[0].disableDate));
+                picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
             }
         }
     }
@@ -121,11 +120,11 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
      * 添加新 date-picker
      * @param {jQuery<HTMLElement>} pickers
      */
-    const addPicker = function (pickers) {
+    const addPicker = function (pickers){
         pickers.each((index, picker) => {
-            setup(picker)
+            setup(picker);
         });
-    }
+    };
 
     /**
      * 檢查日期是否禁用
@@ -133,12 +132,12 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
      * @param {string[]} disableDates
      * @return boolean
      */
-    function checkDisableDate(correctDay, disableDates) {
+    function checkDisableDate(correctDay, disableDates){
         if (!disableDates) return false;
 
-        const dates = disableDates.map((value) => moment(value))
+        const dates = disableDates.map((value) => moment(value));
         const tmp = dates.filter((value) => value.isSame(correctDay, 'day'));
-        return tmp.length > 0
+        return tmp.length > 0;
     }
 
     /**
@@ -150,28 +149,32 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
      * @param {string[]} disableDates
      * @return {string}
      */
-    function calendar(date, activateDate, minDate, maxDate, disableDates) {
-        let table = '<tr>'
-        const endDay = moment(date).endOf('month');
-        const startDay = moment(date).startOf('month');
+    function calendar(date, activateDate, minDate, maxDate, disableDates){
+        let table = '<tr>';
+        const endDay = date.clone().endOf('month');
+        const startDay = date.clone().startOf('month');
 
         /* 開始空格 */
-        const n = startDay.day()
-        for (let i = 0; i < n; i++) {
-            table += '<td></td>'
+        const n = startDay.day();
+        for (let i = 0; i < n; i++){
+            table += '<td></td>';
         }
 
         /* 日期 */
         let correctDay = moment(startDay);
-        while (true) {
-            const disable = (minDate != null && minDate.isAfter(correctDay, 'day')) || (maxDate != null && maxDate.isBefore(correctDay, 'day')) || (checkDisableDate(correctDay, disableDates)) ? 'disable' : ''; //最少日期 || 最大日期
+        while (true){
+            const disable = (minDate != null && minDate.isAfter(correctDay, 'day'))
+            || (maxDate != null && maxDate.isBefore(correctDay, 'day'))
+            || (checkDisableDate(correctDay, disableDates)) ? 'disable' : '';
+
             const activate = activateDate.isSame(correctDay, 'day') ? 'activate' : ''; //當天
-            table += `<td class="day ${activate} ${disable}">` + correctDay.date() + '</td>'
-            if (correctDay.day() === 6) table += '</tr><tr>' //逢週六下一行
+
+            table += `<td class="day ${activate} ${disable}">` + correctDay.date() + '</td>';
+            if (correctDay.day() === 6) table += '</tr><tr>'; //逢週六下一行
             if (correctDay.date() + 1 > endDay.date()) break; //月尾結束
             correctDay.add(1, 'days');
         }
-        table += '</tr>'
+        table += '</tr>';
 
         const disable_last = minDate != null && minDate.isSameOrAfter(correctDay, 'month') ? 'disabled' : ''; //最少日期
         const disable_next = maxDate != null && maxDate.isSameOrBefore(correctDay, 'month') ? 'disabled' : ''; //最大日期
@@ -204,5 +207,5 @@ define(['jquery', 'moment', 'bootstrap'], function (jq, moment, bootstrap) {
         </div>`;
     }
 
-    return {addPicker}
-})
+    return { addPicker };
+});

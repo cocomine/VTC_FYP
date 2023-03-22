@@ -1,0 +1,219 @@
+<!--
+  ~ Copyright (c) 2020.
+  ~ Create by cocomine
+  -->
+
+<!DOCTYPE html>
+<html lang="%localCode%">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            font-family: 'Noto Sans TC', sans-serif;
+            --primary-color: #12a0ff;
+        }
+
+        body {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .head {
+            background: -webkit-linear-gradient(left, var(--primary-color) 0%, #80c3ff 100%);
+            background: linear-gradient(to right, var(--primary-color) 0%, #80c3ff 100%);
+            width: auto;
+            height: auto;
+            text-align: center;
+            padding: 14px 30px 20px;
+            overflow: hidden;
+        }
+
+        .head-Logo {
+            max-width: 100%;
+            max-height: 100px;
+            vertical-align: middle;
+        }
+
+        .text-body {
+            padding: 30px 5% 30px;
+        }
+
+        .foot {
+            background: -webkit-linear-gradient(left, var(--primary-color) 0%, #80c3ff 100%);
+            background: linear-gradient(to right, var(--primary-color) 0%, #80c3ff 100%);
+            width: auto;
+            height: auto;
+            padding: 10px 20px 10px;
+            text-align: center;
+        }
+
+        .block {
+            display: inline-block;
+            width: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .foot-Logo {
+            max-width: 100%;
+            max-height: 60px;
+            vertical-align: middle;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .btn {
+            color: #fff !important;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 50px;
+            background-color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        table tr td:last-child {
+            text-align: right;
+        }
+
+        #detail tr td:first-child {
+            font-weight: bold;
+        }
+
+        #plan {
+            border: 1px solid lightgray;
+        }
+
+        #plan td {
+            border: 1px solid lightgray;
+            padding: 10px;
+        }
+
+        .text-muted {
+            color: #797979;
+        }
+
+        .angles-right {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 7px solid #797979;
+        }
+
+        #pay {
+            text-align: right;
+        }
+
+        #pay > span > span {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        #contact {
+            padding: 1.1rem 1.1rem 1.05rem;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: rgba(245, 245, 245, 0.6);
+        }
+    </style>
+</head>
+<body>
+<div class="head">
+    <img src="https://cdn.discordapp.com/attachments/1068503944545972234/1074997270468116551/Logo-big.png" class="head-Logo" alt="logo">
+</div>
+<div class="text-body">
+    <p>Hello %user%,</p>
+    <div>
+        <p>感謝你的預約! 我們已收到你的預約, 以下是你的預約資料:</p>
+        <table id="detail">
+            <tr>
+                <td>活動名稱</td>
+                <td>%event_name%</td>
+            </tr>
+            <tr>
+                <td>預約人</td>
+                <td>%full_name%</td>
+            </tr>
+            <tr>
+                <td>預約人電話</td>
+                <td>%phone%</td>
+            </tr>
+            <tr>
+                <td>預約日期(年/月/日)</td>
+                <td>%date%</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding-top: 2rem">
+        <p>以下是你的預約時段:</p>
+        <table id="plan">
+            <tr>
+                <th>計劃/時段</th>
+                <th>人數</th>
+            </tr>
+            %plans%
+            <tr>
+                <td>
+                    XXXX<br>
+                    <span class="text-muted">--:-- &nbsp;<i class="angles-right"></i> &nbsp;--:--</span>
+                </td>
+                <td>-</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding-top: 1.5rem;">
+        <p id="pay">
+            <span class="text-muted">實付 <span>$ %pay%</span></span>
+        </p>
+    </div>
+
+    <div>
+        <hr class="text-muted">
+        <p>你可以隨時查看預約的帳單及詳情</p>
+        <a class="btn" href="%book_url%">查看預約</a>
+        <a class="btn" href="%invoice_url%">查看帳單</a>
+    </div>
+
+    <div style="padding-top: 1.5rem">
+        <hr class="text-muted">
+        <p>以下是你的進場QR code, 場地人員可能有機會要求你掃描</p>
+        <img src="%qr_code%" alt="QR code">
+    </div>
+
+    <div style="padding-top: 2rem">
+        <p>如果你有任何問題, 請直接透過以下資料聯絡活動負責人</p>
+        <div id="contact">
+            <b>聯絡電郵:</b> %event_email%<br>
+            <b>聯絡電話:</b> %event_phone%
+        </div>
+        <p>活動負責人亦有可能透過以上資料聯絡你</p>
+    </div>
+
+</div>
+<div class="foot">
+    <div class="block">
+        <img src="https://cdn.discordapp.com/attachments/1068503944545972234/1074997270245810186/logo.png" class="foot-Logo" alt="logo">
+    </div>
+    <div class="block" style="text-align: left; vertical-align:middle;">
+        <p>
+            由<a href="https://www.facebook.com/profile.php?id=100006297815529">cocomine</a>製作。
+            <a href="https://www.facebook.com/profile.php?id=100006297815529">Cocomine</a>提供翻譯。<br>
+            support@cocopixelmc.com
+        </p>
+    </div>
+</div>
+<div style="color: #797979; text-align: center">
+    <p>
+        <Lang Email.activated.privacy/>
+    </p>
+</div>
+</body>
+</html>

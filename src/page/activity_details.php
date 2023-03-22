@@ -93,7 +93,7 @@ class activity_details implements IPage {
 
         # 取得評論圖片
         $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
-        $book_reviews = array_map(function ($review) use ($stmt){
+        $book_reviews = array_map(function ($review) use ($stmt) {
             $stmt->bind_param("s", $review['Book_ID']);
             if (!$stmt->execute()) {
                 echo_error(500);
@@ -114,10 +114,10 @@ class activity_details implements IPage {
         }, $book_reviews);
 
         # 將array轉換為review html
-        $event_data['review'] = join("", array_map(function ($review){
+        $event_data['review'] = join("", array_map(function ($review) {
             $avatar = md5($review['Email']); //將email轉換為md5
             $post_date = date("Y/m/d", strtotime($review['DateTime'])); //將日期轉換為Y/m/d格式
-            $images = join("", array_map(function ($img){
+            $images = join("", array_map(function ($img) {
                 return
                     "<div class='col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1'>
                         <div class='ratio ratio-1x1 rounded overflow-hidden'>
@@ -127,7 +127,7 @@ class activity_details implements IPage {
             }, $review['img'])); //將圖片轉換為img html
             $rate = join("", array_fill(0, $review['rate'], "<i class='fa-solid fa-star text-warning'></i>")); //將評分轉換為星星html
             $rate .= join("", array_fill(0, 5 - $review['rate'], "<i class='fa-regular fa-star text-muted'></i>")); //將評分轉換為星星html
-            $plan = join("", array_map(function ($plan){
+            $plan = join("", array_map(function ($plan) {
                 return "<span class='status-p bg-primary bg-opacity-75 text-center me-2 plan-name'>{$plan['plan_name']}</span>";
             }, $review['plan'])); //將預約方案轉換為badge html
 
@@ -158,7 +158,7 @@ review;
         $event_data['review_total'] = count($book_reviews); //取得評論總數
         $event_data['avg_rate'] = $event_data['review_total'] <= 0 ? 5 : round(array_sum(array_column($book_reviews, 'rate')) / $event_data['review_total'], 1); //取得平均評分
         $event_data['rate_start'] = join("", array_fill(0, floor($event_data['avg_rate']), "<i class='fa-solid fa-star text-warning'></i>")); //將平均評分轉換為星星html
-        if($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
+        if ($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
             $event_data['rate_start'] .= "<i class='fa-solid fa-star-half-alt text-warning'></i>"; //將平均評分轉換為星星html (0.5分)
         $event_data['rate_start'] .= join("", array_fill(0, 5 - ceil($event_data['avg_rate']), "<i class='fa-regular fa-star text-muted'></i>")); //將平均評分轉換為星星html
 
@@ -227,40 +227,14 @@ review;
                     <div class="date-picker date-picker mt-4" id="book-date">
                        <label for="book-date" class="form-label">預約日期</label><br>
                        <input type="date" class="date-picker-toggle form-control form-rounded w-auto">
+                       <div class="invalid-feedback">請選擇正確可預約日期</div>
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
-                        <div id="plan" class="row gy-2 mx-1">
-                            <div class="rounded p-1 bg-light col-12">
-                                <div class="row justify-content-sm-between align-items-center justify-content-center">
-                                    <h5 class="col-auto">XXX</h5>
-                                    <div class="col-auto">
-                                        <div class="row align-items-center">
-                                            <h6 class="col-auto">$ --</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
-                                            <h6 class="col-auto" id="Business-count">-</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="rounded p-1 bg-light col-12">
-                                <div class="row justify-content-sm-between align-items-center justify-content-center">
-                                    <h5 class="col-auto">XXX</h5>
-                                    <div class="col-auto">
-                                        <div class="row align-items-center">
-                                            <h6 class="col-auto">$ --</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-reserve="Business-add"><i class="fa-solid fa-plus"></i></button></div>
-                                            <h6 class="col-auto" id="Business-count">-</h6>
-                                            <div class="col-auto"><button type="button" class="btn btn-outline-primary btn-rounded" data-reserve="Business-sub"><i class="fa-solid fa-minus"></i></button></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="plan" class="row gy-2 mx-1"></div>
                     </div>
                     <div class="row justify-content-between mt-4 p-1">
-                        <h4 class="col-auto ali" id="total">$ --</h4>
+                        <h4 class="col-auto ali" id="total">$ 0</h4>
                         <button type="button" class="btn btn-primary btn-rounded col-auto" id="checkout"><i class="fa-solid fa-cart-shopping me-2"></i>立即預訂</button>
                     </div>
                 </div>
@@ -328,8 +302,57 @@ body;
     function post(array $data): array {
 
         /* 尋找當月可用日期 */
-        if($_GET['type'] === "available_date"){
-            return $data;
+        if ($_GET['type'] === "available_date") {
+            # 尋找重複可用日期
+            $stmt = $this->sqlcon->prepare("SELECT DISTINCT start_date, end_date, repeat_week FROM Event_schedule 
+                                                  WHERE Event_ID = ? AND type = 1 
+                                                    AND MONTH(?) BETWEEN MONTH(start_date) AND MONTH(end_date) 
+                                                    AND YEAR(?) BETWEEN YEAR(start_date) AND YEAR(end_date) ORDER BY start_date");
+            $stmt->bind_param("sss", $this->UpPath[0], $data['date'], $data['date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+            $repeat = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            # 尋找單次可用日期
+            $stmt->prepare("SELECT start_date FROM Event_schedule WHERE Event_ID = ? AND type = 0 AND MONTH(start_date) = MONTH(?) AND YEAR(start_date) = YEAR(?)");
+            $stmt->bind_param("sss", $this->UpPath[0], $data['date'], $data['date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+            $single = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            return array('code' => 200, 'data' => array('repeat' => $repeat, 'single' => $single));
+        }
+
+        /* 尋找當日可用時段 */
+        if($_GET['type'] === "available_plan"){
+            $weekday = '%'.date('w', strtotime($data['date'])).'%'; // 取得當日星期幾
+            $stmt = $this->sqlcon->prepare(
+                "SELECT s.Schedule_ID, p.plan_name, s.start_time, s.end_time, p.price, p.max_each_user, 
+                         # 計算當日剩餘人數
+                         p.max_people - IFNULL((
+                             # 計算當日已預訂人數
+                             SELECT SUM(bp.plan_people) FROM Book_event b, Book_event_plan bp 
+                             # 尋找當日已預訂人數
+                             WHERE b.ID = bp.Book_ID AND b.event_ID = s.Event_ID AND bp.event_schedule = s.Schedule_ID AND b.book_date = ?
+                             GROUP BY bp.event_schedule
+                         ), 0) AS `max_people` 
+                     FROM Event_schedule s, Event_plan p 
+                     # 尋找當日可用時段
+                     WHERE s.Event_ID = p.Event_ID AND s.plan = p.plan_ID AND s.Event_ID = ? AND (
+                         # 尋找重複可用時段
+                         (type = 1 AND ? BETWEEN s.start_date AND s.end_date AND repeat_week LIKE ?) OR 
+                         # 尋找單次可用時段
+                         (type = 0 AND start_date = ?)
+                     ) ORDER BY s.start_time");
+            $stmt->bind_param("sssss", $data['date'], $this->UpPath[0], $data['date'], $weekday, $data['date']);
+            if (!$stmt->execute()) {
+                return array('code' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened'));
+            }
+
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            return array('code' => 200, 'data' => $result);
         }
 
         return array('code' => 404, 'Message' => 'Required data request type');

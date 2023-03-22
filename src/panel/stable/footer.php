@@ -86,9 +86,13 @@
         /* 自動跳轉登入前url */
         const returnPath = sessionStorage.getItem('returnPath');
         if(returnPath !== null) {
-            ajex.ajexLoad(returnPath);
-            ajex.updateNavBar(returnPath);
-            sessionStorage.removeItem('returnPath');
+            if(/^\/panel.*/.test(returnPath)){
+                ajex.ajexLoad(returnPath);
+                ajex.updateNavBar(returnPath);
+                sessionStorage.removeItem('returnPath');
+            }else{
+                window.location.href = returnPath;
+            }
         }else {
             ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI']?>', false);
             ajex.updateNavBar('<?php echo $_SERVER['REQUEST_URI'] ?>');

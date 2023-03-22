@@ -167,14 +167,14 @@ function run_apis(array $path, MyAuth $auth) {
         //開始遍歴
         for ($i = count($path); $i >= 1; $i--) {
             //重組class路徑
-            $class = '\\apis';
+            $class = 'apis';
             for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
             $up_path = array_sanitize($up_path); //消毒
 
             //建立頁面
             try {
-                $api = LoadPageFactory::createApi($class, __DIR__ . '/../', $up_path);
+                $api = LoadPageFactory::createApi($class, __DIR__ . '/', $up_path);
             } catch (Exception $e) {
                 continue; //如不存在跳過
             }
@@ -188,7 +188,7 @@ function run_apis(array $path, MyAuth $auth) {
                     $api->get();
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                     /* Delete 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -203,7 +203,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -218,7 +218,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -358,9 +358,9 @@ function run_apis(array $path, MyAuth $auth) {
                                     <li>
                                         <a href="javascript:void(0)" role="button">玩樂體驗</a>
                                         <ul class="submenu">
-                                            <li><a href="#">水上活動</a></li>
-                                            <li><a href="#">陸上活動</a></li>
-                                            <li><a href="#">空中活動</a></li>
+                                            <li><a href="/water_activities.php">水上活動</a></li>
+                                            <li><a href="/land_activities.php">陸上活動</a></li>
+                                            <li><a href="/air_activities.php">空中活動</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="#">關於我們</a></li>
