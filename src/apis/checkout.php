@@ -33,7 +33,7 @@ class checkout implements IApi {
      * @inheritDoc
      */
     public function get() {
-        http_response_code(204);
+        http_response_code(403);
     }
 
     /**
@@ -205,13 +205,13 @@ class checkout implements IApi {
      * @inheritDoc
      */
     public function put(?array $data) {
-        http_response_code(204);
+        http_response_code(403);
     }
 
     /**
      * @inheritDoc
      */
     public function delete(?array $data) {
-        http_response_code(204);
+        http_response_code(403);
     }
 }

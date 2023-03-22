@@ -100,6 +100,8 @@ class stripe implements \cocomine\IApi {
                     return;
                 }
             }
+
+            //todo: send email
         }
     }
 
