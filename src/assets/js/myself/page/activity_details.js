@@ -1,4 +1,4 @@
-define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, toastr, moment){
+define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq, mapboxgl, toastr, moment){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     /**
@@ -244,7 +244,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
         const id = location.pathname.split('/').pop();
 
         /* 封鎖按鈕 */
-        const bt = $(this).children('.form-submit');
+        const bt = $(this);
         const html = bt.html();
         bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
@@ -260,19 +260,21 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
             const json = await response.json();
             console.log(json); //debug
             if (response.ok){
-                if (response.status === 200){
-
+                if (response.status === 200){ // 前往付款畫面
+                    toastr.info(json.Message, json.Title);
+                    setTimeout(() => {
+                        location.replace(json.data.url);
+                    }, 2000);
                 }
             }else{
-                if (response.status === 401){
+                if (response.status === 401){ // 未登入
                     sessionStorage.setItem('returnPath', location.pathname);
                     location.replace(json.path);
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
                 }
+                bt.html(html).removeAttr('disabled');
             }
-        }).finally(() => {
-            bt.html(html).removeAttr('disabled');
         }).catch((error) => {
             console.error(error);
         });

@@ -8,6 +8,7 @@ namespace apis;
 
 use cocomine\IApi;
 use mysqli;
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
 class checkout implements IApi {
@@ -23,8 +24,8 @@ class checkout implements IApi {
      * @inheritDoc
      */
     public function access(bool $isAuth, int $role): int {
-        if(!$isAuth) return 401;
-        if($role < 1) return 403;
+        if (!$isAuth) return 401;
+        if ($role < 1) return 403;
         return 200;
     }
 
@@ -43,8 +44,18 @@ class checkout implements IApi {
         header("Content-Type: text/json");
         global $auth;
 
+        // Check if the request is malformed
+        if (!(isset($data['plan']) && is_array($data['plan']) && isset($data['eventId']) && is_numeric($data['eventId']) && isset($data['date']))) {
+            http_response_code(400);
+            echo json_encode([
+                "code" => 400,
+                "Title" => "Your request is malformed",
+            ]);
+            return;
+        }
+
         // Check if the user has selected any plan
-        if(sizeof($data['plan']) <= 0){
+        if (sizeof($data['plan']) <= 0) {
             http_response_code(400);
             echo json_encode([
                 "code" => 400,
@@ -56,7 +67,7 @@ class checkout implements IApi {
         // Check if the user has filled in the personal information
         $stmt = $this->sqlcon->prepare("SELECT COUNT(*) FROM User_detail WHERE UUID = ?");
         $stmt->bind_param("s", $auth->userdata['UUID']);
-        if(!$stmt->execute()){
+        if (!$stmt->execute()) {
             http_response_code(500);
             echo json_encode([
                 "code" => 500,
@@ -65,7 +76,7 @@ class checkout implements IApi {
             ]);
             return;
         }
-        if($stmt->get_result()->fetch_row()[0] <= 0){
+        if ($stmt->get_result()->fetch_row()[0] <= 0) {
             http_response_code(400);
             echo json_encode([
                 "code" => 400,
@@ -74,29 +85,94 @@ class checkout implements IApi {
             ]);
             return;
         }
+        $stmt->close();
 
-        /* 這裏做輸入檢查, 但跳過 */
+        /* 取得活動名稱 */
+        $stmt = $this->sqlcon->prepare("SELECT name FROM Event WHERE ID = ?");
+        $stmt->bind_param("i", $data['eventId']);
+        if (!$stmt->execute()) {
+            http_response_code(500);
+            echo json_encode([
+                "code" => 500,
+                'Message' => $stmt->error,
+                'Title' => showText('Error_Page.something_happened')
+            ]);
+            return;
+        }
+        $event_name = $stmt->get_result()->fetch_row()[0];
 
+        /* 取得活動計劃資料 */
+        $stripe_items = [];
+        $stmt->prepare("SELECT p.plan_name, p.price, s.start_time, s.end_time FROM Event_plan p, Event_schedule s 
+                            WHERE s.plan = p.plan_ID AND s.Event_ID = p.Event_ID AND s.Event_ID = ? AND s.Schedule_ID =?");
+        foreach ($data['plan'] as $plan) {
+            $stmt->bind_param("ii", $data['eventId'], $plan['plan']);
+            if (!$stmt->execute()) {
+                http_response_code(500);
+                echo json_encode([
+                    "code" => 500,
+                    'Message' => $stmt->error,
+                    'Title' => showText('Error_Page.something_happened')
+                ]);
+                return;
+            }
+            $result = $stmt->get_result()->fetch_assoc();
+            $stripe_items[] = [
+                'price_data' => [
+                    'currency' => 'hkd',
+                    'unit_amount' => $result['price']*100,
+                    'product_data' => [
+                        'name' => $result['plan_name'],
+                        'description' => $result['start_time'] . ' ~ ' . $result['end_time'],
+                    ],
+                ],
+                'quantity' => $plan['count'],
+            ];
+        }
 
 
         /* 創建付款 */
         $stripe = new StripeClient(Cfg_stripe_test_key);
-        $checkout = $stripe->checkout->sessions->create([
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'hkd',
-                        'unit_amount' => 1000,
-                        'product_data' => [
-                            'name' => 'T-shirt',
-                        ],
-                    ],
-                    'quantity' => 1,
+        try {
+            $checkout = $stripe->checkout->sessions->create([
+                'line_items' => $stripe_items,
+                'metadata' => [
+                    'event_id' => strval($data['eventId']),
+                    'date' => $data['date'],
+                    'plan' => json_encode($data['plan']),
+                    'User' => $auth->userdata['UUID'],
                 ],
+                'customer_email' => $auth->userdata['Email'],
+                'custom_text' => [
+                    'submit' => [
+                        'message' => '你正在預訂: ' . $event_name,
+                    ]
+                ],
+                'submit_type' => 'book',
+                'mode' => 'payment',
+                'invoice_creation' => [
+                    'enabled' => true,
+                ],
+                'success_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/success/?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/activity_details/' . $data['eventId']
+            ]);
+        } catch (ApiErrorException $e) {
+            http_response_code(500);
+            echo json_encode([
+                "code" => 500,
+                'Message' => $e->getMessage(),
+                'Title' => showText('Error_Page.something_happened')
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            'code' => 200,
+            'data' => [
+                'url' => $checkout->url
             ],
-            'mode' => 'payment',
-            'success_url' => 'https://example.com/success',
-            'cancel_url' => 'https://example.com/cancel',
+            'Message' => '請稍等, 我們即將帶您前往付款',
+            'Title' => '前往付款...'
         ]);
     }
 
