@@ -358,9 +358,9 @@ function run_apis(array $path, MyAuth $auth) {
                                     <li>
                                         <a href="javascript:void(0)" role="button">玩樂體驗</a>
                                         <ul class="submenu">
-                                            <li><a href="#">水上活動</a></li>
-                                            <li><a href="#">陸上活動</a></li>
-                                            <li><a href="#">空中活動</a></li>
+                                            <li><a href="/water_activities.php">水上活動</a></li>
+                                            <li><a href="/land_activities.php">陸上活動</a></li>
+                                            <li><a href="/air_activities.php">空中活動</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="#">關於我們</a></li>
