@@ -66,10 +66,40 @@ class stripe implements \cocomine\IApi {
 
         // 處理預約
         if($event->type === "invoice.payment_succeeded"){
-            ob_flush();
+            $metadata = $event->data->object->metadata;
+            $pay_price = $event->data->object->amount_paid/100;
+            $invoice_url = $event->data->object->hosted_invoice_url;
+            $invoice_number = $event->data->object->number;
+            $plan = json_decode($metadata['plan'], true);
 
-            $stmt = $this->sqlcon->prepare("SELECT * FROM `booking` WHERE `stripe_invoice_id` = ?");
+            // 插入數據
+            $stmt = $this->sqlcon->prepare("INSERT INTO Book_event (User, event_ID, pay_price, book_date, invoice_url, invoice_number) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $metadata['User'], $metadata['event_id'], $pay_price, $metadata['date'], $invoice_url, $invoice_number);
+            if(!$stmt->execute()) {
+                http_response_code(500);
+                echo $stmt->error;
+                return;
+            }
 
+            // 取得預約ID
+            $stmt->prepare("SELECT LAST_INSERT_ID() AS `id`");
+            if(!$stmt->execute()) {
+                http_response_code(500);
+                echo $stmt->error;
+                return;
+            }
+            $book_id = $stmt->get_result()->fetch_assoc()['id'];
+
+            // 插入預約計劃
+            $stmt = $this->sqlcon->prepare("INSERT INTO Book_event_plan VALUES (?, ?, ?)");
+            foreach ($plan as $item) {
+                $stmt->bind_param("sss", $book_id, $item['plan'], $item['count']);
+                if(!$stmt->execute()) {
+                    http_response_code(500);
+                    echo $stmt->error;
+                    return;
+                }
+            }
         }
     }
 

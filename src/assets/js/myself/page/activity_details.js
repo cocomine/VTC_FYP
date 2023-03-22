@@ -267,7 +267,8 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
             const json = await response.json();
             console.log(json); //debug
             if (response.ok){
-                if (response.status === 200){ // 前往付款畫面
+                // 前往付款畫面
+                if (response.status === 200){
                     toastr.info(json.Message, json.Title);
                     setTimeout(() => {
                         location.replace(json.data.url);
