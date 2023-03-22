@@ -103,6 +103,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
             console.error(error);
         });
     }
+
     available_date(moment()); // 預設當月
 
     /* 選擇日期 */
@@ -180,13 +181,13 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                     // 增加人數
                     tmp.find('[data-plan="add"]').click(function (){
                         const count_elm = tmp.find('[data-plan="count"]');
-                        const select_plan = _select_plan.find(({plan}) => plan === item.Schedule_ID);
+                        const select_plan = _select_plan.find(({ plan }) => plan === item.Schedule_ID);
                         if (select_plan){
                             select_plan.count++;
                             count_elm.text(select_plan.count);
 
                             // 人數達上限, 禁用按鈕
-                            if(select_plan.count >= item.max_people || select_plan.count >= item.max_each_user)
+                            if (select_plan.count >= item.max_people || select_plan.count >= item.max_each_user)
                                 $(this).prop('disabled', true);
                         }else{
                             _select_plan.push({ plan: item.Schedule_ID, count: 1 });
@@ -198,13 +199,13 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                     // 減少人數
                     tmp.find('[data-plan="sub"]').click(function (){
                         const count_elm = tmp.find('[data-plan="count"]');
-                        const select_plan = _select_plan.find(({plan}) => plan === item.Schedule_ID);
-                        if(select_plan){
+                        const select_plan = _select_plan.find(({ plan }) => plan === item.Schedule_ID);
+                        if (select_plan){
                             select_plan.count--;
                             count_elm.text(select_plan.count);
 
                             // 人數未達上限, 啟用按鈕
-                            if(select_plan.count < item.max_people && select_plan.count < item.max_each_user)
+                            if (select_plan.count < item.max_people && select_plan.count < item.max_each_user)
                                 tmp.find('[data-plan="add"]').prop('disabled', false);
 
                             // 人數為0, 移除
@@ -219,8 +220,8 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                     tmp.find('[data-plan="sub"], [data-plan="add"]').click(function (){
                         const total_elm = $('#total');
                         let total = 0;
-                        _select_plan.forEach(({plan, count}) => {
-                            total += _plan.find(({Schedule_ID}) => Schedule_ID === plan).price * count;
+                        _select_plan.forEach(({ plan, count }) => {
+                            total += _plan.find(({ Schedule_ID }) => Schedule_ID === plan).price * count;
                         });
                         total_elm.text("$ " + formatPrice(total));
                     });
@@ -235,11 +236,17 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
             console.error(error);
         });
     }
+
     show_plan(moment()); // 預設當日
 
     /* 送出訂單 */
     $('#checkout').click(function (){
         const id = location.pathname.split('/').pop();
+
+        /* 封鎖按鈕 */
+        const bt = $(this).children('.form-submit');
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
         fetch('/api/checkout/', {
             method: 'POST',
@@ -248,22 +255,24 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment' ], function (jq, mapboxgl, to
                 'Content-Type': 'application/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({ plan: _select_plan, id: id})
+            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val() })
         }).then(async (response) => {
             const json = await response.json();
             console.log(json); //debug
             if (response.ok){
-                if(response.status === 200){
+                if (response.status === 200){
 
                 }
             }else{
-                if(response.status === 401){
+                if (response.status === 401){
                     sessionStorage.setItem('returnPath', location.pathname);
-                    location.replace(json.path)
+                    location.replace(json.path);
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
                 }
             }
+        }).finally(() => {
+            bt.html(html).removeAttr('disabled');
         }).catch((error) => {
             console.error(error);
         });
