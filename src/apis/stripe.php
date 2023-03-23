@@ -126,7 +126,7 @@ class stripe implements \cocomine\IApi {
             $event_owner = $stmt->get_result()->fetch_assoc();
             
             /* 發送郵件 */
-            $mail_template = file_get_contents("/stable/confirm-mail.html");
+            $mail_template = file_get_contents("./stable/confirm-mail.html");
 
             // 替換內容
             $mail_template = str_replace("%user%", $userData['Name'], $mail_template);
@@ -135,7 +135,7 @@ class stripe implements \cocomine\IApi {
             $mail_template = str_replace("%phone%", '+'.$userData['phone_code'].' '.$userData['phone'], $mail_template);
             $mail_template = str_replace("%date%", $metadata['date'], $mail_template);
             $mail_template = str_replace("%pay%", $pay_price, $mail_template);
-            $mail_template = str_replace("%book_url%", 'https://'.$_SERVER['HTTP_HOST'].'/xxx/'.$book_id, $mail_template);
+            $mail_template = str_replace("%book_url%", 'https://'.$_SERVER['HTTP_HOST'].'/reservedetail/'.$book_id, $mail_template);
             $mail_template = str_replace("%invoice_url%", $invoice_url, $mail_template);
             $mail_template = str_replace("%event_email%", $event_owner['Email'], $mail_template);
             $mail_template = str_replace("%event_phone%", '+'.$event_owner['phone_code'].' '.$event_owner['phone'], $mail_template);
@@ -158,25 +158,25 @@ class stripe implements \cocomine\IApi {
                     <span class='text-muted'>{$plan_data['start_time']}&nbsp;&nbsp;<i class='angles-right'></i>&nbsp;&nbsp;{$plan_data['end_time']}</span></td>
                     <td>{$item['count']}</td></tr>";
             }
-            $mail_template = str_replace("%plan%", $plan_html, $mail_template);
+            $mail_template = str_replace("%plans%", $plan_html, $mail_template);
 
             // 替換QR code
-            $mail_template = str_replace("%book_url%", $plan, $mail_template);
-            $renderer = new ImageRenderer(
-                new RendererStyle(100),
-                new ImagickImageBackEnd()
-            );
-            $writer = new Writer($renderer);
-            $qrcode = base64_encode($writer->writeString("xx"));
-            $mail_template = str_replace("%qr_code%", $qrcode, $mail_template);
+            $mail_template = str_replace("%qr_code%", 'https://'.$_SERVER['HTTP_HOST'].'/reservedetail/'.$book_id, $mail_template);
 
             // 發送
-            SendMail($userData['Email'], $mail_template, 0, $this->sqlcon, '預約確認信');
+            if(!SendMail($userData['Email'], $mail_template, 0, $this->sqlcon, '預約確認信')) {
+                http_response_code(210);
+                echo '預約成功，但發送郵件失敗。';
+            };
 
             /* notify */
             $notify = new Notify($this->sqlcon);
-            $notify->Send_notify($metadata['User'], 'fa-solid fa-calendar-check', Notify::$Status_Success,  '您已成功預約'.$event->data->object->description.'，請至預約詳細頁面查看詳細資訊。', 'https://'.$_SERVER['HTTP_HOST'].'/xxx/'.$book_id);
-            $notify->Send_notify($event_owner['UUID'], 'fa-solid fa-user-plus', Notify::$Status_Info,  '您的活動'.$event->data->object->description.'有新的預約，請至預約管理頁面查看詳細資訊。', 'https://'.$_SERVER['HTTP_HOST'].'/panel/'.$book_id);
+            $notify_state[0] = $notify->Send_notify($metadata['User'], 'fa-solid fa-calendar-check', Notify::$Status_Success,  'https://'.$_SERVER['HTTP_HOST'].'/reservedetail/'.$book_id, '您已成功預約'.$event->data->object->description.'，請至預約詳細頁面查看詳細資訊。');
+            $notify_state[1] = $notify->Send_notify($event_owner['UUID'], 'fa-solid fa-user-plus', Notify::$Status_Info,  'https://'.$_SERVER['HTTP_HOST'].'/panel/reserve/'.$metadata['event_id'].'#'.$book_id, '您的活動'.$event->data->object->description.'有新的預約，請至預約管理頁面查看詳細資訊。');
+            if($notify_state[0] === false && $notify_state[1] === false) {
+                http_response_code(210);
+                echo '預約成功，但發送通知失敗。';
+            }
         }
     }
 

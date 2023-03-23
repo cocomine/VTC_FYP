@@ -288,7 +288,7 @@ function run_apis(array $path, MyAuth $auth) {
                                         <ul class="notification-area">
                                             <!-- notify START -->
                                             <li class="dropdown">
-                                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
+                                                <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" data-notify-bell></i>
                                                 <div class="dropdown-menu bell-notify-box notify-box">
                                                     <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
                                                     <div class="nofity-list scrollbar-dynamic" data-notify>

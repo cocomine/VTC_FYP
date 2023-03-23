@@ -64,7 +64,7 @@ define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
                     notifyList += notify;
                 })
                 $('[data-notify]').html(notifyList);
-                if (newNotifyCount > 0) $('#notify-bell').html('<span>' + newNotifyCount + '</span>');
+                if (newNotifyCount > 0) $('[data-notify-bell]').html('<span>' + newNotifyCount + '</span>');
             }
         })
     }
