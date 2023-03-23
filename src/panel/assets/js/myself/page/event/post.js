@@ -599,7 +599,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 </div>
                 <div class="w-100"></div>
                 <div class="col-6 col-md-2">
-                    <label for="event-plan-max-${id}" class="form-label">計劃最大人數</label>
+                    <label for="event-plan-max-${id}" class="form-label">同時段內最大人數</label>
                     <input type="number" class="form-control form-rounded" name="event-plan-max-${id}" id="event-plan-max-${id}" min="1" required ${editableClass}>
                     <div class="invalid-feedback">至少需要一位以上~~</div>
                 </div>
