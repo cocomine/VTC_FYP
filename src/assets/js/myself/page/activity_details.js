@@ -1,4 +1,4 @@
-define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq, mapboxgl, toastr, moment){
+define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], function (jq, mapboxgl, toastr, moment, bootstrap){
     "use strict";
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29jb21pbmUiLCJhIjoiY2xhanp1Ymh1MGlhejNvczJpbHhpdjV5dSJ9.oGNqsDB7ybqV5q6T961bqA';
     /**
@@ -38,7 +38,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
         const url = elm.data('src');
         const alt = elm.attr('alt');
         elm.parents('.card-body').children('.zoom-image').show().html(
-            `<img src="${url}" class="head-image d-block w-100" alt="${alt}">`
+            `<img src="${url}" class="head-image d-block w-100" alt="${alt}" draggable='false'>`
         );
     });
 
@@ -166,11 +166,11 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
                 const plan_html = _plan.map((item) => {
                     const tmp = $(`<div class="rounded px-3 py-2 bg-light col-12">
                             <div class="row justify-content-sm-between align-items-center justify-content-center">
-                                <div class="col-auto">
+                                <div class="col-6 col-sm-auto">
                                     <h5>${item.plan_name}</h5>
                                     <p class="text-muted">${item.start_time.slice(0, -3)}<i class="fa-solid fa-angles-right mx-2"></i>${item.end_time.slice(0, -3)}</p>
                                 </div>
-                                <div class="col">
+                                <div class="col-6 col-sm">
                                     <p class="text-muted"><i class="fa-solid fa-users"></i> 空位: ${item.max_people}</p>
                                     <p class="text-muted">最多可預訂空位: ${item.max_each_user}</p>
                                 </div>
@@ -247,8 +247,9 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
     show_plan(moment()); // 預設當日
 
     /* 送出訂單 */
-    $('#checkout').click(function (){
+    $('#checkout, #confirm-checkout').click(function (){
         const id = location.pathname.split('/').pop();
+        const ignore_conflict = $(this).attr('id') === 'confirm-checkout';
 
         /* 封鎖按鈕 */
         const bt = $(this);
@@ -261,25 +262,32 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
-            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val() })
+            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val(), ignore_conflict })
         }).then(async (response) => {
             const json = await response.json();
-            console.log(json); //debug
             if (response.ok){
                 // 前往付款畫面
-                if (response.status === 200){
+                if (json.code === 200){
                     toastr.info(json.Message, json.Title);
                     setTimeout(() => {
                         location.replace(json.data.url);
                     }, 2000);
                 }
             }else{
-                if (response.status === 401){ // 未登入
+
+                if (response.status === 401){
+                    // 未登入
                     sessionStorage.setItem('returnPath', location.pathname);
                     location.replace(json.path);
+                }else if(response.status === 400){
+                    // 顯示確認視窗
+                    const jq_confirm = $('#confirm');
+                    bootstrap.Modal.getOrCreateInstance(jq_confirm[0]).show();
+                    jq_confirm.find('ul').html(json.data.map(({ name, start_time, end_time }) => `<li>${name} <span class="text-muted">${start_time} ~ ${end_time}</span></li>`));
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
                 }
+
                 bt.html(html).removeAttr('disabled');
             }
         }).catch((error) => {

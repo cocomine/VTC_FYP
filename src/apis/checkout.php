@@ -82,7 +82,7 @@ class checkout implements IApi {
             echo json_encode([
                 "code" => 400,
                 "Title" => "你還沒有填寫個人資料",
-                "Message" => "請先填寫個人資料，再預約",
+                "Message" => "請先前往帳號設定填寫個人資料，再預約",
             ]);
             return;
         }
@@ -104,6 +104,7 @@ class checkout implements IApi {
 
         /* 取得活動計劃資料 */
         $stripe_items = [];
+        $check_conflict = [];
         $stmt->prepare("SELECT p.plan_name, p.price, s.start_time, s.end_time FROM Event_plan p, Event_schedule s 
                             WHERE s.plan = p.plan_ID AND s.Event_ID = p.Event_ID AND s.Event_ID = ? AND s.Schedule_ID =?");
         foreach ($data['plan'] as $plan) {
@@ -118,6 +119,7 @@ class checkout implements IApi {
                 return;
             }
             $result = $stmt->get_result()->fetch_assoc();
+            $check_conflict[] = ['start_time' => $result['start_time'], 'end_time' => $result['end_time']];
             $stripe_items[] = [
                 'price_data' => [
                     'currency' => 'hkd',
@@ -129,6 +131,35 @@ class checkout implements IApi {
                 ],
                 'quantity' => $plan['count'],
             ];
+        }
+
+        /* 檢查衝突 */
+        if(!$data['ignore_conflict']) {
+            $stmt->prepare("SELECT DISTINCT e.name, s.start_time, s.end_time FROM Book_event b, Book_event_plan p, Event_schedule s, Event e 
+              WHERE b.ID = p.Book_ID AND p.event_schedule = s.Schedule_ID AND b.event_ID = s.Event_ID AND b.event_ID = e.ID AND b.User = ? 
+                AND (s.start_time BETWEEN ? AND ? OR s.end_time BETWEEN ? AND ? 
+                         OR ? BETWEEN s.start_time AND s.end_time OR ? BETWEEN s.start_time AND s.end_time)");
+            foreach ($check_conflict as $conflict) {
+                $stmt->bind_param("sssssss", $auth->userdata['UUID'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time']);
+                if (!$stmt->execute()) {
+                    http_response_code(500);
+                    echo json_encode([
+                        "code" => 500,
+                        'Message' => $stmt->error,
+                        'Title' => showText('Error_Page.something_happened')
+                    ]);
+                    return;
+                }
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    http_response_code(400);
+                    echo json_encode([
+                        "code" => 400,
+                        "data" => $result->fetch_all(MYSQLI_ASSOC),
+                    ]);
+                    return;
+                }
+            }
         }
 
         /* 創建付款 */
