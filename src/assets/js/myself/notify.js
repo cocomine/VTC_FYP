@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2020.
  * Create by cocomine
+ * v2-1.0.0
  */
 
 define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
@@ -70,7 +71,7 @@ define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
     }
 
     /* notify bell click */
-    $('#notify-bell').click(function () {
+    $('[data-notify-bell]').click(function () {
         $(this).html('');
         localStorage.setItem('seenNotifyID', JSON.stringify(NotifyIDList));
     });

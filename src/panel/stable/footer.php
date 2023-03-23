@@ -64,7 +64,8 @@
         "plugins",
         "scripts",
         "moment",
-        "myself/notify"
+        "myself/notify",
+        "myself/collabora_check"
     ], (toastr, ajex) => {
         toastr.options = {
             "progressBar": true,

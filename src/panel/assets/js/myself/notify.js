@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2020.
  * Create by cocomine
+ * v1.0.0
  */
 
 define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {

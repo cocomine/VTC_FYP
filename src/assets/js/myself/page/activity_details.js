@@ -260,7 +260,6 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'datepicker' ], function (jq
             redirect: 'error',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
-                'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val() })
         }).then(async (response) => {

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
+ * v1-1.0.2
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
@@ -64,7 +65,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* 載入頁面 */
     const ajexLoad = (link, putState = true) => {
-        if (!/[$\/]/.test(link)) link = link + '/';
+        if (!/^.*\/$/.test(link)) link = link + '/';
         $('#content').html(loadingPlaceholder)
 
         /* send */
@@ -80,7 +81,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#content').html(data.content)
 
                 if (putState) window.history.pushState({url: link}, data.title, link);
-                window.dispatchEvent(new Event('load', {bubbles: true}));
+                $(document).trigger('load')
             },
             error: (xhr, textStatus) => {
                 if (textStatus === 'error') {
@@ -98,7 +99,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                         }
 
                         if (putState) window.history.pushState({url: link}, '', link);
-                        window.dispatchEvent(new Event('load'));
+                        $(document).trigger('load');
                     } else toastr.error(Lang.Error);
                 } else if (textStatus === 'timeout') toastr.error('Request Timeout', '408');
                 else toastr.error(Lang.Error);
