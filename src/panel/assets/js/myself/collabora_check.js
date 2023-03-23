@@ -8,7 +8,6 @@ define([ 'jquery', 'toastr' ], function (jq, toastr){
 
     /* 檢查是否已經輸入了組織資料 */
     $(document).on('load', function (){
-        console.log('hkhj')
         $(document).ready(this);
         if (!/^\/panel\/ChangeSetting.*/.test(location.pathname)){
             fetch('/panel/api/collabora_check/', {

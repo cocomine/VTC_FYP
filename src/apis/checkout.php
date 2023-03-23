@@ -77,7 +77,6 @@ class checkout implements IApi {
             return;
         }
         $result = $stmt->get_result();
-
         if ($result->num_rows <= 0) {
             http_response_code(400);
             echo json_encode([
@@ -88,11 +87,9 @@ class checkout implements IApi {
             return;
         }
         $user_detail = $result->fetch_assoc();
-        $stmt->close();
-        $result->close();
 
         /* 取得活動名稱 */
-        $stmt = $this->sqlcon->prepare("SELECT name FROM Event WHERE ID = ?");
+        $stmt->prepare("SELECT name FROM Event WHERE ID = ?");
         $stmt->bind_param("i", $data['eventId']);
         if (!$stmt->execute()) {
             http_response_code(500);
@@ -133,7 +130,6 @@ class checkout implements IApi {
                 'quantity' => $plan['count'],
             ];
         }
-
 
         /* 創建付款 */
         $stripe = new StripeClient(Cfg_stripe_test_key);

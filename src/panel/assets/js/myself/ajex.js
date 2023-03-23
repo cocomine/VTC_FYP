@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * v1-1.0.2
+ * v1-1.0.3
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
@@ -52,14 +52,14 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* requireJS 加載模組活動 */
     require.onResourceLoad = function (context, map, depArray) {
-        console.debug(`➡ ${map.name} Modules Loaded`);
+        console.debug(`>> ${map.name} Modules Loaded`);
     };
 
     /* 卸載模組 */
     function unModules(){
         Modules.map(function(item){
             require.undef(item);
-            console.debug(`⬅ ${item} Modules unLoaded`);
+            console.debug(`<< ${item} Modules unLoaded`);
         });
     }
 
