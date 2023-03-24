@@ -131,9 +131,6 @@ class _ReservePost implements \cocomine\IPage {
                             <label class="form-label" for="birth">出生日期</label>
                             <input type="text" class="form-control form-rounded" id="birth" readonly>
                         </div>
-                        <div class="col-12 pt-2">
-                            <button class="btn btn-rounded btn-danger" id="cancel">取消該預約單</button>
-                        </div>
                     </div>
                 </div>
             </div>

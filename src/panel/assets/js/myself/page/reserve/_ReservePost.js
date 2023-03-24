@@ -159,31 +159,4 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
             console.log(error);
         });
     }
-
-    /* 取消訂單 */
-    $('#cancel').click(function (){
-        /* 封鎖按鈕 */
-        const bt = $(this);
-        const html = bt.html();
-        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
-
-        fetch('/api/checkout/', {
-            method: 'POST',
-            redirect: 'error',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val(), ignore_conflict })
-        }).then(async (response) => {
-            const json = await response.json();
-            if (response.ok && json.code === 200){
-                toastr.success(json.Message, json.Title);
-
-            }else{
-                toastr.error(json.Message, json.Title ?? globalLang.Error);
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    });
 });
