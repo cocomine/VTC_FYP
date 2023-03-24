@@ -34,10 +34,15 @@ class xmap implements \cocomine\IPage {
     <div class="row gy-4">
         <div class="col-12">
             <div class="card overflow-hidden position-relative">
-                <div id="map" style="height: 80vh"></div>
-                <div class="position-absolute start-0 end-0" style="top: 5rem">
+                <div id="map" style="height: 90vh"></div>
+                <div class="position-absolute start-0 end-0" style="top: 5rem;">
                     <div class="row justify-content-center">
-                        <button class="btn btn-rounded btn-primary col-auto shadow">搜尋這個區域</button>
+                        <button class="btn btn-rounded btn-primary col-auto shadow" id="search-map">搜尋這個區域</button>
+                    </div>
+                </div>
+                <div class="position-absolute start-0 end-0" style="bottom: 2.5rem">
+                    <div class="w-100" id="carousel-list">
+                        <div class="owl-carousel owl-theme"></div>
                     </div>
                 </div>
             </div>
@@ -51,7 +56,7 @@ class xmap implements \cocomine\IPage {
             'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.1/mapbox-gl'],
         },
     });
-    loadModules(['myself/page/xmap', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder']);
+    loadModules(['myself/page/xmap', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', 'owl.carousel']);
 </script>
 HTML;
     }
@@ -60,7 +65,14 @@ HTML;
      * @inheritDoc
      */
     public function post(array $data): array {
-        return $data;
+        $stmt = $this->sqlcon->prepare("SELECT ID, name, summary, thumbnail, longitude, latitude FROM Event WHERE longitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ? AND state = 1 ORDER BY create_time DESC");
+        $stmt->bind_param("dddd", $data['NorthWest']['lng'], $data['SouthEast']['lng'], $data['SouthEast']['lat'], $data['NorthWest']['lat']);
+        if (!$stmt->execute()) {
+            return ['status' => 500, 'Message' => $stmt->error, 'Title' => showText('Error_Page.something_happened')];
+        }
+
+        $result = $stmt->get_result();
+        return ['code' => 200, 'data' => $result->fetch_all(MYSQLI_ASSOC)];
     }
 
     /**
