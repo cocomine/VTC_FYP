@@ -6,6 +6,7 @@
 
 define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
     let NotifyIDList = [];
+    console.log("notify.js v2-1.0.0 loaded");
 
     /* load notify when ready*/
     window.addEventListener('load', load_notify);

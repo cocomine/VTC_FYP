@@ -141,7 +141,8 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
                 $('#birth').val(data.birth);
 
                 $('#reserve_date').text(moment(data.book_date).format('YYYY/M/DD'));
-                $('#order_time').text(data.order_datetime);
+                $('#invoice_id').text(data.invoice_number)
+                .parent('a').attr('href', data.invoice_url);
                 $('#order_id').text(data.ID);
                 $('#reserve_detail').html(data.plan.map((value) => {
                     return `<tr>
@@ -158,4 +159,31 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
             console.log(error);
         });
     }
+
+    /* 取消訂單 */
+    $('#cancel').click(function (){
+        /* 封鎖按鈕 */
+        const bt = $(this);
+        const html = bt.html();
+        bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
+
+        fetch('/api/checkout/', {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val(), ignore_conflict })
+        }).then(async (response) => {
+            const json = await response.json();
+            if (response.ok && json.code === 200){
+                toastr.success(json.Message, json.Title);
+
+            }else{
+                toastr.error(json.Message, json.Title ?? globalLang.Error);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    });
 });

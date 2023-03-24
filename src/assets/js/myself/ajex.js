@@ -7,6 +7,7 @@
 
 define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
+    console.log("ajex.js v2-1.0.3 loaded");
 
     /* 語言載入 */
     let Lang = $('#globalLang').text();

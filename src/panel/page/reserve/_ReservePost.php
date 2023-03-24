@@ -131,6 +131,9 @@ class _ReservePost implements \cocomine\IPage {
                             <label class="form-label" for="birth">出生日期</label>
                             <input type="text" class="form-control form-rounded" id="birth" readonly>
                         </div>
+                        <div class="col-12 pt-2">
+                            <button class="btn btn-rounded btn-danger" id="cancel">取消該預約單</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,6 +165,7 @@ class _ReservePost implements \cocomine\IPage {
                         <div class="col-12">
                             <p class="text-secondary">下單預約時間: <span id="order_time">000.000.000</span></p>
                             <p class="text-secondary">預約編號: # <span id="order_id">00</span></p>
+                            <p class="text-secondary">帳單編號: <a href="#" target="_blank"><span id="invoice_id">xxx</span></a></p>
                         </div>
                     </div>
                 </div>
@@ -191,7 +195,7 @@ body;
 
         /* 展示用戶預約詳情 */
         if($_GET['type'] === "detail"){
-            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
+            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID, b.invoice_number, b.invoice_url
                 FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
             $stmt->bind_param('ss', $data['id'], $this->upPath[0]);
             if (!$stmt->execute()) {
@@ -239,6 +243,7 @@ body;
             );
         }
 
+        /* 展示用戶預約計劃 */
         $output = array();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -256,7 +261,7 @@ body;
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
-                    'Title' => 'Database Error!',
+                    'Title' => showText('Error_Page.some_thing_happen'),
                     'Message' => $stmt->error,
                 );
             }
