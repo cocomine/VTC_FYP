@@ -64,7 +64,8 @@
         "plugins",
         "scripts",
         "moment",
-        "myself/notify"
+        "myself/notify",
+        "myself/collabora_check"
     ], (toastr, ajex) => {
         toastr.options = {
             "progressBar": true,
@@ -79,9 +80,7 @@
             "hideMethod": "slideUp"
         };
         /* loading畫面 */
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
+        $('#preloader').fadeOut('slow', function() { $(this).remove(); });
 
         /* 自動跳轉登入前url */
         const returnPath = sessionStorage.getItem('returnPath');

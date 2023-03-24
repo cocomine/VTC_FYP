@@ -141,7 +141,8 @@ define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 
                 $('#birth').val(data.birth);
 
                 $('#reserve_date').text(moment(data.book_date).format('YYYY/M/DD'));
-                $('#order_time').text(data.order_datetime);
+                $('#invoice_id').text(data.invoice_number)
+                .parent('a').attr('href', data.invoice_url);
                 $('#order_id').text(data.ID);
                 $('#reserve_detail').html(data.plan.map((value) => {
                     return `<tr>

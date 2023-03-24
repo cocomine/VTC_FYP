@@ -2,11 +2,12 @@
  * Copyright (c) 2022.
  * Create by cocomine
  * for Horizontal Menu
- * v1.5
+ * v2-1.0.3
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
+    console.log("ajex.js v2-1.0.3 loaded");
 
     /* 語言載入 */
     let Lang = $('#globalLang').text();
@@ -57,20 +58,20 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* requireJS 加載模組活動 */
     require.onResourceLoad = function (context, map, depArray) {
-        console.debug(`➡ ${map.name} Modules Loaded`);
+        console.debug(`>> ${map.name} Modules Loaded`);
     };
 
     /* 卸載模組 */
     function unModules(){
         Modules.map(function(item){
             require.undef(item);
-            console.debug(`⬅ ${item} Modules unLoaded`);
+            console.debug(`<< ${item} Modules unLoaded`);
         });
     }
 
     /* 載入頁面 */
     const ajexLoad = (link, putState = true) => {
-        if (!/[$\/]/.test(link)) link = link + '/';
+        if (!/^.*\/$/.test(link)) link = link + '/';
         $('#content').html(loadingPlaceholder)
 
         /* send */
@@ -86,7 +87,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 $('#content').html(data.content)
 
                 if (putState) window.history.pushState({url: link}, data.title, link);
-                window.dispatchEvent(new Event('load'));
+                $(document).trigger('load');
 
                 if(link === '/'){
                     $(".heard-area").hide();
@@ -110,7 +111,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                         }
 
                         if (putState) window.history.pushState({url: link}, '', link);
-                        window.dispatchEvent(new Event('load'));
+                        $(document).trigger('load');
                     } else toastr.error(Lang.Error);
                 } else if (textStatus === 'timeout') toastr.error('Request Timeout', '408');
                 else toastr.error(Lang.Error);
