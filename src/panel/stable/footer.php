@@ -80,7 +80,7 @@
             "hideMethod": "slideUp"
         };
         /* loading畫面 */
-        $(window).on('load', function() {
+        $(document).on('load', function() {
             $('#preloader').fadeOut('slow', function() { $(this).remove(); });
         });
 
