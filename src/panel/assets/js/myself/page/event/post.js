@@ -502,7 +502,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             limit: 8,
             countries: _support_country.join(','),
             localGeocoder: coordinatesGeocoder,
-
             reverseGeocode: true
         });
         map.addControl(map_geo);
