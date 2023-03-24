@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "12/2/2023",
+  "Last_Update": "12/3/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -465,6 +465,7 @@
         "Upload_Time": "Upload Time:",
         "MIME_type": "MIME type:",
         "URL": "URL:",
+        "name": "File name:",
         "No_media": "No Media",
         "respond": {
           "single": {
@@ -475,6 +476,10 @@
             "success": "The selected media have been successfully deleted",
             "partially": "The Selected media have partially deleted",
             "fail": "The Selected media deleted fail"
+          },
+          "edit": {
+            "success": "Media has been modified successfully",
+            "fail": "Media modification failed"
           }
         },
         "Media_Select": {
@@ -484,7 +489,8 @@
             "Media"
           ],
           "drag": "You can drag files here to upload"
-        }
+        },
+        "unsupportedView": "Your browser does not support direct viewing, please download the file first"
       }
     },
     "Media-upload": {

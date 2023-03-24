@@ -1851,7 +1851,7 @@ table.dbkit-table tr td {
 .btn-primary {
     --bs-btn-bg: var(--primary-color);
     --bs-btn-border-color: var(--primary-color);
-    --bs-btn-hover-bg: #cc5a0e;
+    --bs-btn-hover-bg: #0b6099;
     --bs-btn-hover-border-color: var(--primary-color);
 }
 

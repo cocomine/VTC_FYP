@@ -8,6 +8,7 @@ namespace panel\page;
 
 use cocomine\IPage;
 use mysqli;
+use panel\page\review\_ReviewPost;
 
 class review implements IPage {
 
@@ -32,7 +33,7 @@ class review implements IPage {
         }
 
         if (!$isAuth) return 401;
-        if ($role < 2) return 403;
+        if ($role < 3) return 403;
         return 200;
     }
 
@@ -97,12 +98,11 @@ body;
         global $auth;
 
         /* 取得該用戶建立的活動 */
-        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, review, state, type, name, post_time FROM Event WHERE UUID = ? AND state >= 0 AND review != 1");
-        $stmt->bind_param('s', $auth->userdata['UUID']);
+        $stmt = $this->sqlcon->prepare("SELECT ID, thumbnail, summary, review, state, type, name, post_time FROM Event WHERE state >= 0 AND review != 1");
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }

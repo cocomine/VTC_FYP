@@ -68,7 +68,7 @@ class media implements IApi {
             }
 
             /* 取得所有媒體 */
-            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Datetime FROM media WHERE User = ? ORDER BY Datetime DESC');
+            $stmt = $this->sqlcon->prepare('SELECT ID, MIME, Datetime, name FROM media WHERE User = ? ORDER BY Datetime DESC');
             $stmt->bind_param('s', $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 echo_error(500);
@@ -82,7 +82,8 @@ class media implements IApi {
                 $data[] = array(
                     'id' => $row['ID'],
                     'mime' => $row['MIME'],
-                    'datetime' => $row['Datetime']
+                    'datetime' => $row['Datetime'],
+                    'name' => $row['name']
                 );
             }
 
@@ -110,7 +111,7 @@ class media implements IApi {
                 return;
             }
 
-            /* 檔案存在 */
+            /* 檔案不存在 */
             if(!file_exists($row['path'])){
                 http_response_code(404);
                 header("Content-type: image/webp");
@@ -178,7 +179,7 @@ class media implements IApi {
 
         /* 判斷限制 */
         //檢查文件類型
-        if (!preg_match('/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)/', $mime)) {
+        if (!preg_match('/(image\/jpeg)|(image\/png)|(image\/webp)|(image\/gif)|(application\/pdf)/', $mime)) {
             http_response_code(400);
             echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_FILE_TYPE', 'Message' => showText("Media-upload.Content.respond.File_type_not_mach")));
             return;
@@ -192,7 +193,9 @@ class media implements IApi {
         }
 
         //檔案名稱20個字或以下
-        if (strlen($_FILES["file"]["name"]) > 100) {
+        $path = pathinfo($_FILES["file"]["name"]);
+        $name = filter_var($path['filename'], FILTER_SANITIZE_STRING);
+        if (strlen($name) > 20) {
             http_response_code(400);
             echo json_encode(array('code' => 400, 'Error' => 'UPLOAD_ERR_NAME_SIZE', 'Message' => showText("Media-upload.Content.respond.File_name_over")));
             return;
@@ -209,6 +212,7 @@ class media implements IApi {
         if (preg_match('/(image\/.+)/', $mime)) {
             try {
                 $imgk = new Imagick($_FILES["file"]["tmp_name"]);
+                $imgk->setBackgroundColor('white');
                 $imgk->setImageFormat('WEBP');
                 $imgk->setCompressionQuality(80);
                 $imgk->setOption('webp:lossless', true);
@@ -225,12 +229,13 @@ class media implements IApi {
         if ($mime === "image/webp") {
             //webp格式
             $extension = '.webp';
+            $Scan = true;
         } else {
             //其他格式
-            $path = pathinfo($_FILES["file"]["name"]);
-            $extension = '.' . filter_has_var($path['extension'], FILTER_SANITIZE_STRING);
+            $extension = '.' . filter_var($path['extension'], FILTER_SANITIZE_STRING);
+            $Scan = false;
         }
-        $save_path = ["./upload/" . $nowYear . '/' . $nowMonth . "/", 'tmp', $extension]; // [文件夾, 檔案名稱, 副檔名]
+        $save_path = ["./upload/" . $nowYear . '/' . $nowMonth . "/", $name, $extension]; // [文件夾, 檔案名稱, 副檔名]
 
         /* 添加資料到數據庫 */
         $try = 10;
@@ -238,8 +243,8 @@ class media implements IApi {
             $save_path[1] = Generate_Code(6);
             $tmp = join('', $save_path);
 
-            $stmt = $this->sqlcon->prepare("INSERT INTO media (ID, path, User, MIME, Scan) VALUES (?, ?, ?, ?, TRUE)");
-            $stmt->bind_param("ssss", $save_path[1], $tmp, $auth->userdata['UUID'], $mime);
+            $stmt = $this->sqlcon->prepare("INSERT INTO media (ID, path, User, MIME, Scan, name) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssis", $save_path[1], $tmp, $auth->userdata['UUID'], $mime, $Scan, $name);
             $try--;
             if ($stmt->execute()) break;
             if ($try <= 0) {
@@ -270,10 +275,42 @@ class media implements IApi {
     }
 
     /**
+     * 更新檔案名稱
      * @inheritDoc
      */
-    public function put(array $data) {
-        http_response_code(204);
+    public function put($data) {
+        global $auth;
+
+        if (sizeof($this->upPath) < 1) {
+            echo_error(400);
+            return;
+        }
+
+        /* 檢查權限 */
+        if (!$auth->islogin) {
+            echo_error(401);
+            return;
+        }
+        if ($auth->userdata['Role'] < 2 || $data === null) {
+            echo_error(403);
+            return;
+        }
+
+        /* 修改檔案名稱 */
+        $stmt = $this->sqlcon->prepare('UPDATE media SET name = ? WHERE ID = ? AND User = ?');
+        $stmt->bind_param('sss', $data['name'] ,$this->upPath[0], $auth->userdata['UUID']);
+        if (!$stmt->execute()) {
+            echo_error(500);
+            return;
+        }
+
+        /* 檢查刪除結果 */
+        if ($stmt->affected_rows >= 1) {
+            echo json_encode(array('code' => 200, 'Message' => showText('Media.Content.respond.edit.success')));
+        }else{
+            http_response_code(400);
+            echo json_encode(array('code' => 400, 'Message' => showText('Media.Content.respond.edit.fail')));
+        }
     }
 
     /**
@@ -307,6 +344,7 @@ class media implements IApi {
             if ($stmt->affected_rows >= 1) {
                 echo json_encode(array('code' => 200, 'Message' => showText('Media.Content.respond.single.success')));
             }else{
+                http_response_code(400);
                 echo json_encode(array('code' => 400, 'Message' => showText('Media.Content.respond.single.fail')));
             }
 

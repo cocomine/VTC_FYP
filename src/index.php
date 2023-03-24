@@ -60,6 +60,9 @@ function fetch_path(): array {
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
+    if (preg_match("/^\?.*$/", $path[count($path) - 1])) {
+        $path = array_slice($path, 0, -1);
+    }
     if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
@@ -164,14 +167,14 @@ function run_apis(array $path, MyAuth $auth) {
         //開始遍歴
         for ($i = count($path); $i >= 1; $i--) {
             //重組class路徑
-            $class = '\\apis';
+            $class = 'apis';
             for ($x = 1; $x < $i; $x++) $class .= '\\' . $path[$x];
             $up_path = array_slice($path, $i); //傳入在此之前的路徑
             $up_path = array_sanitize($up_path); //消毒
 
             //建立頁面
             try {
-                $api = LoadPageFactory::createApi($class, __DIR__ . '/../', $up_path);
+                $api = LoadPageFactory::createApi($class, __DIR__ . '/', $up_path);
             } catch (Exception $e) {
                 continue; //如不存在跳過
             }
@@ -185,7 +188,7 @@ function run_apis(array $path, MyAuth $auth) {
                     $api->get();
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                     /* Delete 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -200,7 +203,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -215,7 +218,7 @@ function run_apis(array $path, MyAuth $auth) {
                     }
                 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
-                    if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
+                    if (preg_match('/((text|application)\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
                         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -243,7 +246,7 @@ function run_apis(array $path, MyAuth $auth) {
     <!-- main wrapper start -->
     <div class="horizontal-main-wrapper">
         <!-- main header area start -->
-        <div class="col-12 col-sm py-1 fixed-top bg-light" style="display: none" id="fixed-header">
+        <div class="col-12 col-sm py-1 fixed-top bg-light top-0" style="display: none" id="fixed-header">
             <div class="row justify-content-between align-items-center">
                 <div class="col-auto">
                     <a href="/"><img src="/assets/images/icon/logo.png" alt="logo" style="max-width: 150px"></a>
@@ -312,7 +315,7 @@ function run_apis(array $path, MyAuth $auth) {
                                     </h4>
                                     <div class="dropdown-menu" style="z-index: 1030">
                                         <!-- dropdown menu content START -->
-                                        <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" data-ajax="GET">
+                                        <a class="dropdown-item" href="https://<?php echo $_SERVER['SERVER_NAME'] ?>/panel/ChangeSetting" target="_blank">
                                             <i class="ti-settings pr--10"></i><?php echo showText("ChangeSetting.setting") ?>
                                         </a>
                                         <?php
@@ -452,13 +455,13 @@ function run_apis(array $path, MyAuth $auth) {
 
             <!-- global language translate -->
             <pre style="display: none" id="globalLang">
-                    <?php
-                    echo json_encode(array(
-                        'Error' => showText('Error'),
-                        'notify' => showText('notify.Content.Time')
-                    ))
-                    ?>
-                </pre>
+                <?php
+                echo json_encode(array(
+                    'Error' => showText('Error'),
+                    'notify' => showText('notify.Content.Time')
+                ))
+                ?>
+            </pre>
             <!-- global language translate End -->
 
             <div class="heard-area pt-4 pb-3">

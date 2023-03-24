@@ -98,6 +98,7 @@
         window.ajexLoad = ajex.ajexLoad;
         window.loadModules = ajex.loadModules;
         window.formatPrice = ajex.formatPrice
+        window.globalLang = ajex.Lang;
     })
 </script>
 <script src="/panel/assets/js/sw-register.min.js"></script>

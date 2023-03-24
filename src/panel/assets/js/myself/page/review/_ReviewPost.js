@@ -109,7 +109,6 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'mapbox-gl', '@mapbox/mapbox-gl
                 body: "{}"
             }).then((response) => {
                 response.json().then((json) => {
-                    console.log(json);
 
                     if (json.code === 200){
                         fillData(json.data);
