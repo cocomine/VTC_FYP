@@ -365,14 +365,14 @@ body;
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             //儲存數據 Event
-            $isPost = $data['status']['event-status'] === '1';
+            $isPost = $data['status']['event-status'] === 1;
             $stmt = $this->sqlcon->prepare(
-                "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, 
-                   description_html, location, country, region, longitude, latitude, post_time, isPost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            $stmt->bind_param("siisssssssssssddsi", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
+                "INSERT INTO Event (UUID, state, type, isPost, tag, name, thumbnail, summary, precautions, precautions_html, description, 
+                   description_html, location, country, region, longitude, latitude, post_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("siiisssssssssssdds", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $isPost, $data['attribute']['event-tag'],
                 $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
                 $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
-                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $isPost);
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post']);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -486,14 +486,25 @@ body;
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             # 儲存數據 Event
-            $isPost = $data['status']['event-status'] === '1';
             $stmt = $this->sqlcon->prepare(
                 "UPDATE Event SET state=?, type=?, tag=?, name=?, thumbnail=?, summary=?, precautions=?, precautions_html=?, description=?, 
-                   description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=?, isPost=? WHERE UUID = ? AND ID = ?");
+                   description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=? WHERE UUID = ? AND ID = ?");
             $stmt->bind_param("iisssssssssssddssi", $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
                 $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
                 $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
-                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $auth->userdata['UUID'], $isPost, $post_id);
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $auth->userdata['UUID'], $post_id);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            # 修改是否曾經發佈, 如果未曾發布則修改
+            $isPost = $data['status']['event-status'] === 1;
+            $stmt->prepare("UPDATE Event SET isPost = ? WHERE ID = ? AND UUID = ? AND isPost = 0");
+            $stmt->bind_param('iis', $isPost, $post_id, $auth->userdata['UUID']);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -529,6 +540,18 @@ body;
             }
             $stmt->close();
 
+            # 清除已刪除 Event_plan
+            $plan_id_list = join(',', array_column($data['plan'], 'id'));
+            $delete_stmt = $this->sqlcon->prepare("DELETE Event_plan FROM Event_plan WHERE Event_ID = ? AND plan_ID NOT IN(?)");
+            $delete_stmt->bind_param("is", $post_id, $plan_id_list);
+            if (!$delete_stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $delete_stmt->error,
+                );
+            }
+
             # 儲存數據 Event_plan
             $insert_stmt = $this->sqlcon->prepare("INSERT INTO Event_plan (Event_ID, plan_ID, plan_name, price, max_people, max_each_user) VALUES (?, ?, ?, ?, ?, ?)");
             $update_stmt = $this->sqlcon->prepare("UPDATE Event_plan SET plan_name = ?, price = ?, max_people = ?, max_each_user = ? WHERE Event_ID = ? AND plan_ID = ?");
@@ -539,6 +562,8 @@ body;
                 $plan['max'] = intval($plan['max']);
                 $plan['max_each'] = intval($plan['max_each']);
                 $plan['price'] = floatval($plan['price']);
+
+                if($plan['name'] === null) continue; //跳過空的
 
                 //檢查是否存在
                 $select_stmt->bind_param("ii", $post_id, $plan['id']);
@@ -572,6 +597,19 @@ body;
             $insert_stmt->close();
             $update_stmt->close();
             $select_stmt->close();
+            $delete_stmt->close();
+
+            # 清除已刪除 Event_schedule
+            $schedule_id_list = join(',', array_column($data['schedule'], 'id'));
+            $delete_stmt = $this->sqlcon->prepare("DELETE FROM Event_schedule WHERE Event_ID = ? AND Schedule_ID NOT IN(?)");
+            $delete_stmt->bind_param("is", $post_id, $schedule_id_list);
+            if (!$delete_stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $delete_stmt->error,
+                );
+            }
 
             # 儲存數據 Event_schedule
             $insert_stmt = $this->sqlcon->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -585,6 +623,9 @@ body;
                 $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
                 $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
 
+                if($schedule['start'] === null) continue;
+
+                //檢查是否存在
                 $select_stmt->bind_param("ii", $post_id, $schedule['id']);
                 if (!$select_stmt->execute()) {
                     return array(
@@ -612,10 +653,6 @@ body;
                     );
                 }
             }
-            //關閉 stmt
-            $insert_stmt->close();
-            $update_stmt->close();
-            $select_stmt->close();
 
             return array(
                 'code' => 200,
@@ -727,11 +764,11 @@ body;
     public function path(): string {
         if (sizeof($this->upPath) > 0) {
             return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><a href='/panel/post'>活動</a></li>
+            <li><a href='/panel/event'>活動</a></li>
             <li><span>" . $this->event_name . "</span></li>";
         } else {
             return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><a href='/panel/post'>活動</a></li>
+            <li><a href='/panel/event'>活動</a></li>
             <li><span>增加活動</span></li>";
         }
     }
