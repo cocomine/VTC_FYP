@@ -46,3 +46,6 @@
     height: 100%;
     max-width: none;
 }
+.tooltips-warning{
+    --bs-tooltip-bg: var(--bs-warning);
+}

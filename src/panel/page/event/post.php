@@ -246,6 +246,7 @@ body . <<<body
                                     <div class="invalid-feedback">這裏不能留空哦~~</div>
                                 </div>
                             </div>
+                            <div class="col-12 mt-3" id="isPost-alert"></div>
                         </form>
                         <div class="text-end mt-3">
                             <div class="float-start my-1" id="event-recycle" style="display: none">
@@ -364,13 +365,14 @@ body;
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             //儲存數據 Event
+            $isPost = $data['status']['event-status'] === '1';
             $stmt = $this->sqlcon->prepare(
                 "INSERT INTO Event (UUID, state, type, tag, name, thumbnail, summary, precautions, precautions_html, description, 
-                   description_html, location, country, region, longitude, latitude, post_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            $stmt->bind_param("siisssssssssssdds", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
+                   description_html, location, country, region, longitude, latitude, post_time, isPost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("siisssssssssssddsi", $auth->userdata['UUID'], $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
                 $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
                 $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
-                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post']);
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $isPost);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -484,13 +486,14 @@ body;
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             # 儲存數據 Event
+            $isPost = $data['status']['event-status'] === '1';
             $stmt = $this->sqlcon->prepare(
                 "UPDATE Event SET state=?, type=?, tag=?, name=?, thumbnail=?, summary=?, precautions=?, precautions_html=?, description=?, 
-                   description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=? WHERE UUID = ? AND ID = ?");
+                   description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=?, isPost=? WHERE UUID = ? AND ID = ?");
             $stmt->bind_param("iisssssssssssddssi", $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
                 $data['title']['event-title'], $data['thumbnail']['event-thumbnail'], $data['data']['event-summary'], $data['data']['event-precautions'], $data['data']['event-precautions-html'],
                 $data['data']['event-description'], $data['data']['event-description-html'], $data['location']['event-location'], $data['location']['event-country'], $data['location']['event-region'],
-                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $auth->userdata['UUID'], $post_id);
+                $data['location']['event-longitude'], $data['location']['event-latitude'], $data['status']['event-post'], $auth->userdata['UUID'], $isPost, $post_id);
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
@@ -635,6 +638,7 @@ body;
         }
 
         $row = $stmt->get_result()->fetch_assoc();
+        $output['isPost'] = $row['isPost'];
         $output['title']['event-title'] = $row['name'];
         $output['thumbnail']['event-thumbnail'] = $row['thumbnail'];
         $output['data'] = array(

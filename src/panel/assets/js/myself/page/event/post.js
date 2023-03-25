@@ -10,6 +10,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         media_upload.setInputAccept("image/png, image/jpeg, image/gif, image/webp");
         crs.init();
         const _support_country = [ 'hk', 'mo', 'tw', 'cn' ];
+        let _isPost = false; //是否曾經發佈
 
         /* Count content length */
         $('#event-summary, #event-precautions, #event-location, #event-title').on('input focus', function (){
@@ -26,7 +27,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         });
 
         /* set time to today */
-        $('#event-post-time').timepicker('setTime', new Date());
+        const jq_event_post_time = $('#event-post-time');
+        jq_event_post_time.timepicker('setTime', new Date());
         $('#event-schedule-time-start-1').timepicker('setTime', new Date());
         $('#event-schedule-time-end-1').timepicker('setTime', moment().add(30, 'minute').toDate());
 
@@ -53,7 +55,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             jq_plan.html("");
             plans = [];
             draft.plan.forEach((plan) => {
-                const tmp = plan_html(plan.id, false, false);
+                const tmp = plan_html(plan.id, false, draft.isPost === 0);
                 tmp.find(`[name^="event-plan-name"]`).val(plan.name);
                 tmp.find(`[name^="event-plan-max"]`).val(plan.max);
                 tmp.find(`[name^="event-plan-max-each"]`).val(plan.max_each);
@@ -65,7 +67,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             //活動時段
             jq_schedule.html("");
             draft.schedule.forEach((schedule) => {
-                const tmp = schedule_html(schedule.id, false, false);
+                const tmp = schedule_html(schedule.id, false, draft.isPost === 0);
                 tmp.find(`[name^="event-schedule-start"]`).val(schedule.start);
                 tmp.find(`[name^="event-schedule-end"]`).val(schedule.end);
                 tmp.find(`[name^="event-schedule-time-start"]`).val(schedule.time_start);
@@ -75,7 +77,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
                 //時段類型重複 -> 顯示和取消禁用
                 if (schedule.type){
-                    tmp.find('.event-schedule-week, .event-schedule-end').show().find('input');
+                    tmp.find('.event-schedule-week, .event-schedule-end').show().find('input').prop('disabled', draft.isPost === 1); //如果是發佈過的草稿 -> 禁用
                 }
 
                 //week
@@ -116,9 +118,15 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             }
 
             //活動狀態
-            $('#event-status').val(draft.status["event-status"]);
+            const jq_event_status = $('#event-status').val(draft.status["event-status"]);
             $('#event-post-date').val(draft.status["event-post-date"]);
-            $('#event-post-time').val(draft.status["event-post-time"]);
+            jq_event_post_time.val(draft.status["event-post-time"]);
+            if (draft.isPost === 1){ //如果是發佈過的 -> 禁用
+                _isPost = true;
+                jq_event_status.children('option[value="0"]').remove();
+                $('#event-post-date, #event-post-time').prop('disabled', true);
+                $('#isPost-alert').html(`<div class="alert alert-warning" role="alert"><i class="fa-solid fa-triangle-exclamation me-2"></i>已發佈過的活動不可修改日期</div>`);
+            }
 
             //活動屬性
             $('#event-type').val(draft.attribute['event-type']);
@@ -857,6 +865,24 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             jq_attribute: $('#event-form-attribute'),
             jq_thumbnail: $('#event-form-thumbnail'),
         };
+
+        /* 設置為公開模式, 設置為今日並禁止修改 */
+        $('#event-status').change(function (){
+            const value = $(this).val();
+
+            // 當曾經已發佈則不執行
+            if (!_isPost){
+                if (value === '1'){
+                    $('#event-post-date').prop('disabled', true).val(moment().format('YYYY-MM-DD'));
+                    jq_event_post_time.prop('disabled', true).val(moment().format('HH:mm'));
+                    $('#isPost-alert').html(`<div class="alert alert-warning" role="alert"><i class="fa-solid fa-triangle-exclamation me-2"></i>即時公開不可修改日期</div>`)
+                }else{
+                    $('#event-post-date').prop('disabled', false);
+                    jq_event_post_time.prop('disabled', false);
+                    $('#isPost-alert').html('')
+                }
+            }
+        });
 
         /* 儲存草稿 */
         $('#event-daft').click(function (){
