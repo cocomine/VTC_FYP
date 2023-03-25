@@ -483,10 +483,22 @@ body;
             $post_id = intval($data['id']);
             $data = $this->serializeData($data['data']);
 
+            /* 取得是否曾經發佈 */
+            $stmt = $this->sqlcon->prepare("SELECT isPost FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt->bind_param('ss', $post_id, $auth->userdata['UUID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
+            $isPost = $stmt->get_result()->fetch_assoc()['isPost'];
+
             /* 這裏會進行輸入檢查,但非公開網頁跳過 */
 
             # 儲存數據 Event
-            $stmt = $this->sqlcon->prepare(
+            $stmt->prepare(
                 "UPDATE Event SET state=?, type=?, tag=?, name=?, thumbnail=?, summary=?, precautions=?, precautions_html=?, description=?, 
                    description_html=?, location=?, country=?, region=?, longitude=?, latitude=?, post_time=? WHERE UUID = ? AND ID = ?");
             $stmt->bind_param("iisssssssssssddssi", $data['status']['event-status'], $data['attribute']['event-type'], $data['attribute']['event-tag'],
@@ -502,15 +514,17 @@ body;
             }
 
             # 修改是否曾經發佈, 如果未曾發布則修改
-            $isPost = $data['status']['event-status'] === 1;
-            $stmt->prepare("UPDATE Event SET isPost = ? WHERE ID = ? AND UUID = ? AND isPost = 0");
-            $stmt->bind_param('iis', $isPost, $post_id, $auth->userdata['UUID']);
-            if (!$stmt->execute()) {
-                return array(
-                    'code' => 500,
-                    'Title' => showText('Error_Page.something_happened'),
-                    'Message' => $stmt->error,
-                );
+            if ($isPost === 0) {
+                $new_isPost = $data['status']['event-status'] === 1;
+                $stmt->prepare("UPDATE Event SET isPost = ? WHERE ID = ? AND UUID = ? AND isPost = 0");
+                $stmt->bind_param('iis', $new_isPost, $post_id, $auth->userdata['UUID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
             }
 
             # 刪除舊數據
@@ -563,8 +577,6 @@ body;
                 $plan['max_each'] = intval($plan['max_each']);
                 $plan['price'] = floatval($plan['price']);
 
-                if($plan['name'] === null) continue; //跳過空的
-
                 //檢查是否存在
                 $select_stmt->bind_param("ii", $post_id, $plan['id']);
                 if (!$select_stmt->execute()) {
@@ -576,8 +588,11 @@ body;
                 }
                 if ($select_stmt->get_result()->fetch_assoc()['count'] > 0) {
                     //存在
-                    $stmt = $update_stmt;
-                    $stmt->bind_param("sdiiii", $plan['name'], $plan['price'], $plan['max'], $plan['max_each'], $post_id, $plan['id']);
+                    //發布過不修改
+                    if ($isPost === 0) {
+                        $stmt = $update_stmt;
+                        $stmt->bind_param("sdiiii", $plan['name'], $plan['price'], $plan['max'], $plan['max_each'], $post_id, $plan['id']);
+                    }
                 } else {
                     //不存在
                     $stmt = $insert_stmt;
@@ -623,7 +638,7 @@ body;
                 $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
                 $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
 
-                if($schedule['start'] === null) continue;
+                if ($schedule['start'] === null) continue;
 
                 //檢查是否存在
                 $select_stmt->bind_param("ii", $post_id, $schedule['id']);
@@ -636,8 +651,11 @@ body;
                 }
                 if ($select_stmt->get_result()->fetch_assoc()['count'] > 0) {
                     //存在
-                    $stmt = $update_stmt;
-                    $stmt->bind_param("iisssssii", $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week'], $post_id, $schedule['id']);
+                    //發布過不修改
+                    if ($isPost === 0) {
+                        $stmt = $update_stmt;
+                        $stmt->bind_param("iisssssii", $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week'], $post_id, $schedule['id']);
+                    }
                 } else {
                     //不存在
                     $stmt = $insert_stmt;
