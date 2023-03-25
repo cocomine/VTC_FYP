@@ -590,33 +590,31 @@ body;
                     //存在
                     //發布過不修改
                     if ($isPost === 0) {
-                        $stmt = $update_stmt;
-                        $stmt->bind_param("sdiiii", $plan['name'], $plan['price'], $plan['max'], $plan['max_each'], $post_id, $plan['id']);
+                        $update_stmt->bind_param("sdiiii", $plan['name'], $plan['price'], $plan['max'], $plan['max_each'], $post_id, $plan['id']);
+                        if (!$update_stmt->execute()) {
+                            return array(
+                                'code' => 500,
+                                'Title' => showText('Error_Page.something_happened'),
+                                'Message' => $stmt->error,
+                            );
+                        }
                     }
                 } else {
                     //不存在
-                    $stmt = $insert_stmt;
-                    $stmt->bind_param("iisdii", $post_id, $plan['id'], $plan['name'], $plan['price'], $plan['max'], $plan['max_each']);
-                }
-
-                //執行
-                if (!$stmt->execute()) {
-                    return array(
-                        'code' => 500,
-                        'Title' => showText('Error_Page.something_happened'),
-                        'Message' => $stmt->error,
-                    );
+                    $insert_stmt->bind_param("iisdii", $post_id, $plan['id'], $plan['name'], $plan['price'], $plan['max'], $plan['max_each']);
+                    if (!$insert_stmt->execute()) {
+                        return array(
+                            'code' => 500,
+                            'Title' => showText('Error_Page.something_happened'),
+                            'Message' => $stmt->error,
+                        );
+                    }
                 }
             }
-            //關閉 stmt
-            $insert_stmt->close();
-            $update_stmt->close();
-            $select_stmt->close();
-            $delete_stmt->close();
 
             # 清除已刪除 Event_schedule
             $schedule_id_list = join(',', array_column($data['schedule'], 'id'));
-            $delete_stmt = $this->sqlcon->prepare("DELETE FROM Event_schedule WHERE Event_ID = ? AND Schedule_ID NOT IN(?)");
+            $delete_stmt->prepare("DELETE FROM Event_schedule WHERE Event_ID = ? AND Schedule_ID NOT IN(?)");
             $delete_stmt->bind_param("is", $post_id, $schedule_id_list);
             if (!$delete_stmt->execute()) {
                 return array(
@@ -627,9 +625,9 @@ body;
             }
 
             # 儲存數據 Event_schedule
-            $insert_stmt = $this->sqlcon->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $update_stmt = $this->sqlcon->prepare("UPDATE Event_schedule SET type = ?, plan = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?, repeat_week = ? WHERE Event_ID = ? AND Schedule_ID = ?");
-            $select_stmt = $this->sqlcon->prepare("SELECT COUNT(*) AS `count` FROM Event_schedule WHERE Event_ID = ? AND Schedule_ID = ?");
+            $insert_stmt->prepare("INSERT INTO Event_schedule (Event_ID, Schedule_ID, type, plan, start_date, end_date, start_time, end_time, repeat_week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $update_stmt->prepare("UPDATE Event_schedule SET type = ?, plan = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?, repeat_week = ? WHERE Event_ID = ? AND Schedule_ID = ?");
+            $select_stmt->prepare("SELECT COUNT(*) AS `count` FROM Event_schedule WHERE Event_ID = ? AND Schedule_ID = ?");
             foreach ($data['schedule'] as $schedule) {
                 //轉換數據類型
                 $schedule['id'] = intval($schedule['id']);
@@ -637,8 +635,6 @@ body;
                 $schedule['plan'] = intval($schedule['plan']);
                 $schedule['end'] = $schedule['end'] === "" ? null : $schedule['end'];
                 $schedule['week'] = $schedule['week'] !== "" ? json_encode($schedule['week']) : null;
-
-                if ($schedule['start'] === null) continue;
 
                 //檢查是否存在
                 $select_stmt->bind_param("ii", $post_id, $schedule['id']);
@@ -653,22 +649,25 @@ body;
                     //存在
                     //發布過不修改
                     if ($isPost === 0) {
-                        $stmt = $update_stmt;
-                        $stmt->bind_param("iisssssii", $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week'], $post_id, $schedule['id']);
+                        $update_stmt->bind_param("iisssssii", $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week'], $post_id, $schedule['id']);
+                        if (!$update_stmt->execute()) {
+                            return array(
+                                'code' => 500,
+                                'Title' => showText('Error_Page.something_happened'),
+                                'Message' => $stmt->error,
+                            );
+                        }
                     }
                 } else {
                     //不存在
-                    $stmt = $insert_stmt;
-                    $stmt->bind_param("iiiisssss", $post_id, $schedule['id'], $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week']);
-                }
-
-                //執行
-                if (!$stmt->execute()) {
-                    return array(
-                        'code' => 500,
-                        'Title' => showText('Error_Page.something_happened'),
-                        'Message' => $stmt->error,
-                    );
+                    $insert_stmt->bind_param("iiiisssss", $post_id, $schedule['id'], $schedule['type'], $schedule['plan'], $schedule['start'], $schedule['end'], $schedule['time_start'], $schedule['time_end'], $schedule['week']);
+                    if (!$insert_stmt->execute()) {
+                        return array(
+                            'code' => 500,
+                            'Title' => showText('Error_Page.something_happened'),
+                            'Message' => $stmt->error,
+                        );
+                    }
                 }
             }
 

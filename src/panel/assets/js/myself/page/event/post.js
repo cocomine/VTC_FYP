@@ -1104,10 +1104,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             });
 
             // 如曾經發佈, 則補回時間日期
-            if(_isPost){
-                form.status['event-post-date'] = $('#event-post-date').val();
-                form.status['event-post-time'] = jq_event_post_time.val();
-            }
+            form.status['event-post-date'] = $('#event-post-date').val();
+            form.status['event-post-time'] = jq_event_post_time.val();
 
             return form;
         }
