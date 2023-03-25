@@ -6,9 +6,10 @@
 
 namespace page;
 
+use cocomine\IPage;
 use mysqli;
 
-class xmap implements \cocomine\IPage {
+class xmap implements IPage {
 
     private mysqli $sqlcon;
 
@@ -32,6 +33,9 @@ class xmap implements \cocomine\IPage {
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
 <div class="container mt-4">
     <div class="row gy-4">
+        <div class="col-12">
+            <h3>查看一下你附近都有什麼活動可以參與!😎</h3>
+        </div>
         <div class="col-12">
             <div class="card overflow-hidden position-relative">
                 <div id="map" style="height: 90vh"></div>
