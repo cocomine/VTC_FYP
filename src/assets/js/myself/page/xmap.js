@@ -121,11 +121,28 @@ define([ 'jquery', 'toastr', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', 'owl.car
     map.addControl(map_geo);
     map.addControl(new mapboxgl.ScaleControl());
     map.addControl(new mapboxgl.NavigationControl());
-    const map_track = new mapboxgl.GeolocateControl({ fitBoundsOptions: { zoom: 15 } });
+    const map_track = new mapboxgl.GeolocateControl({
+        fitBoundsOptions: { zoom: 14 },
+        showUserHeading: true,
+        positionOptions: { enableHighAccuracy: true }
+    });
     map.addControl(map_track);
 
+    /* auto location */
+    map.on('load', () => {
+        map_track.trigger();
+
+    });
+
+    /* auto search */
+    map_track.on('geolocate', () => {
+        setTimeout(() => {search()}, 2000);
+    });
+
     /* 搜尋區域 */
-    $('#search-map').click(function (){
+    $('#search-map').click(search);
+
+    function search(){
         /* get map view area log lnt */
         const bounds = map.getBounds();
         const NorthWest = bounds.getNorthWest();
@@ -153,7 +170,6 @@ define([ 'jquery', 'toastr', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', 'owl.car
             body: JSON.stringify({NorthWest, SouthEast})
         }).then(async (response) => {
             const json = await response.json();
-            console.log(json); //debug
             if (response.ok && json.code === 200){
 
                 /* analyze new list */
@@ -195,5 +211,5 @@ define([ 'jquery', 'toastr', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', 'owl.car
         }).catch((error) => {
             console.log(error);
         });
-    });
+    }
 });
