@@ -57,9 +57,9 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 data: 'plan',
                 render: (data, type) => {
                     if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.total}</b>`).join('<br>') : "沒有任何活動號數"
+                        return data ? data.map((value) => `<b>${value.total}</b>`).join('<br>') : "沒有任何活動人數"
                     }else{
-                        return data ? data.map((value) => value.total).join(';') : "沒有任何活動號數";
+                        return data ? data.map((value) => value.total).join(';') : "沒有任何活動人數";
                     }
                 }
             },
@@ -70,6 +70,16 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                         return data ? data.map((value) => `<b>${value.plan_name}:</b> <code class="bg-light">${value.pay_price}</code>`).join('<br>') : "沒有任何活動計劃"
                     }else{
                         return data ? data.map((value) => value.plan_name + ',' +value.pay_price).join(';') : "沒有任何活動計劃";
+                    }
+                }
+            },
+            {
+                data: 'plan',
+                render: (data, type) => {
+                    if (type === 'display'){
+                        return data ? data.map((value) => `<b>${value.order_datetime}:</b> `).join('<br>') : "沒有任何預約時間"
+                    }else{
+                        return data ? data.map((value) => value.order_datetime ).join(';') : "沒有任何預約時間";
                     }
                 }
             },
