@@ -109,15 +109,15 @@ class notify implements IApi {
         }
     }
 
-    public function post(array $data) {
+    public function post(?array $data) {
         http_response_code(204);
     }
 
-    public function put(array $data) {
+    public function put(?array $data) {
         http_response_code(204);
     }
 
-    public function delete(array $data) {
+    public function delete(?array $data) {
         http_response_code(204);
     }
 }
