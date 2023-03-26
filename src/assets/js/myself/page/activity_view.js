@@ -21,7 +21,9 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 data: 'name',
                 render: (data, type, row) => {
                     if (type === 'display'){
-                        return `<div class="row">
+                        return `
+                                                    
+                                 <div class="row">
                                     <div class="col-auto">
                                         <a href="/Activity_View/${row.ID}">
                                             <div class="ratio ratio-16x9" style="width: 160px;">
@@ -32,10 +34,32 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                                     <div class="col">
                                         <a href="/Activity_View/${row.ID}">${data}</a><br>
                                         <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
-                                    </div>
-                                </div>`;
+                                    </div>    
+   
+
+                        `;
                     }else{
                         return data + ';' + row.summary;
+                    }
+                }
+            },
+            {
+                data: 'plan',
+                render: (data, type) => {
+                    if (type === 'display'){
+                        return data ? data.map((value) => `<b>${value.Book_eventID}</b>`).join('<br>') : "沒有任何活動號數"
+                    }else{
+                        return data ? data.map((value) => value.Book_eventID).join(';') : "沒有任何活動號數";
+                    }
+                }
+            },
+            {
+                data: 'total',
+                render: (data, type) => {
+                    if (type === 'display'){
+                        return data ? data.map((value) => `<b>${value.total}</b>`).join('<br>') : "沒有任何活動號數"
+                    }else{
+                        return data ? data.map((value) => value.total).join(';') : "沒有任何活動號數";
                     }
                 }
             },

@@ -43,6 +43,8 @@ class activity_view implements IPage
                                         <thead class="text-capitalize">
                                             <tr>
                                                 <th>活動</th>
+                                                <th>活動號數</th>
+                                                <th>參加人數</th>
                                                 <th>活動計劃 / 價錢</th>
                                             </tr>
                                         </thead>
@@ -77,7 +79,7 @@ class activity_view implements IPage
 
         /* 取得該用戶建立的活動給參與人數 */
         /* */
-        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price FROM Book_event, Event WHERE  Event.ID = Book_event.event_ID AND User = ? ");
+        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price, Book_event.ID AS 'Book_eventID'FROM Book_event, Event WHERE  Event.ID = Book_event.event_ID AND User = ? ");
         $stmt->bind_param('s', $id);
         if (!$stmt->execute()) {
             return array(
@@ -96,7 +98,9 @@ class activity_view implements IPage
                 'summary' => $row['summary'],
                 'name' => $row['name'],
                 'pay_price' => $row['pay_price'],
-                'plan' => null
+                'plan' => null,
+                'Book_eventID' => $row['Book_eventID']
+
             );
 
 
@@ -113,7 +117,7 @@ class activity_view implements IPage
             /* get schedule */
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT event_ID, pay_price FROM Book_event WHERE event_ID = ? AND User = ?");
+                $stmt->prepare("SELECT event_ID, pay_price, ID AS 'Book_eventID' FROM Book_event WHERE event_ID = ? AND User = ?");
                 $stmt->bind_param('ii', $row['ID'],$id);
                 if (!$stmt->execute()) {
                     return array(
@@ -127,7 +131,44 @@ class activity_view implements IPage
                 $schedule_row = $stmt->get_result()->fetch_assoc();
                 $temp['plan'][] = array(
                     'plan_name' => $row['plan_name'],
-                    'pay_price' => $schedule_row['pay_price']
+                    'pay_price' => $schedule_row['pay_price'],
+                    'Book_eventID' => $schedule_row['Book_eventID']
+                );
+
+
+            }
+
+            /* get plan */
+            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->bind_param('i', $row['ID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* get schedule */
+            $schedule_result = $stmt->get_result();
+            while ($row = $schedule_result->fetch_assoc()){
+                $stmt->prepare("SELECT COALESCE(SUM(p.plan_people), 0) AS `total` FROM Book_event_plan p, Book_event b 
+                                    WHERE p.Book_ID = b.ID AND b.book_date >= CURDATE() AND p.event_schedule IN
+                                        (SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
+                $stmt->bind_param('ii', $row['plan'], $row['Event_ID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.500_title'),
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                /* get result */
+                $schedule_row = $stmt->get_result()->fetch_assoc();
+                $temp['total'][] = array(
+                    'plan_name' => $row['plan_name'],
+                    'total' => $schedule_row['total']
                 );
             }
 
