@@ -98,9 +98,9 @@ body;
         global $auth;
         $output = [];
 
-        $airActivitiesSelection = $data['airActivitiesSelection'];
-        if($airActivitiesSelection == 'allAirBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0");
+        $activitiesSelection = $data['activitiesSelection'];
+        if($activitiesSelection == 'allAirBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }

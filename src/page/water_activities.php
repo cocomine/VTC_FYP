@@ -53,6 +53,9 @@ class water_activities implements IPage {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="allWaterBtn">全部</button>
+                    </li>
+                    <li class="nav-item">
                       <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="divingBtn">潛水</button>
                     </li>
                     <li class="nav-item">
@@ -65,7 +68,7 @@ class water_activities implements IPage {
                       <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="surfBtn">衝浪</button>
                     </li>
                     <li class="nav-item">
-                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="otherwaterBtn">其他</button>
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="otherWaterBtn">其他</button>
                     </li>
                   </ul>
                 </div>
@@ -76,79 +79,8 @@ class water_activities implements IPage {
 </div>
 body . <<<body
 <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-    
-        <div class="col">
-    <div class="card">
-      <img src="/assets/images/background/air_activities_bg.webp" class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.坏地灶米坏杜杯坏杜米坏杜米地灶米地灶米坏杜米坏杜杯坏木</p>
-        <a href='/' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col">
-    <div class="card">
-      <img src="" class="card-img-top" alt="">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="waterEvent">
+ 
     </div>
 </div>
 body . <<<body
@@ -161,8 +93,30 @@ body;
     public function post(array $data): array
     {
         global $auth;
+        $output = [];
 
-        return array();
+        $activitiesSelection = $data['activitiesSelection'];
+        if($activitiesSelection == 'allWaterBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        return array(
+            'code' => 200,
+            'data' => $output,
+        );
     }
 
     public function path(): string

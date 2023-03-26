@@ -6,34 +6,72 @@
 define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
     "use strict";
 
-    /* 輪播圖 */
-    let owl = $('.owl-carousel');
-    owl.owlCarousel({
-        margin: 10,
-        nav: true,
-        dots: true,
-        mergeFit:false,
-        navText: [
-            "<i class=\"fa-solid fa-chevron-left\"></i>",
-            "<i class=\"fa-solid fa-chevron-right\"></i>"
-        ],
-        stagePadding: 40,
-        lazyLoad:true,
-        responsive: {
-            0: {
-                items: 1,
+    $('#allLandBtn, #mountaineeringBtn, #hikingBtn, #climbingBtn, #skiingBtn, #otherlandBtn').click(function(){
+
+        const activitiesSelection = $(this).attr('id');
+
+        $('#allLandBtn, #mountaineeringBtn, #hikingBtn, #climbingBtn, #skiingBtn, #otherlandBtn').removeClass('btn-primary');
+        $('#allLandBtn, #mountaineeringBtn, #hikingBtn, #climbingBtn, #skiingBtn, #otherlandBtn').addClass('btn-light');
+        $(this).removeClass('btn-light');
+        $(this).addClass('btn-primary');
+        $('#landEvent').empty();
+
+        fetch(/*Here type url*/location.pathname, {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            576: {
-                items: 2,
-            },
-            992: {
-                items: 3,
-            },
-            1200: {
-                items: 4,
+            body: JSON.stringify({activitiesSelection})
+        }).then(async (response) => {
+            const data = await response.json();
+            console.log(data);
+            if (data.code === 200){
+                if (data.data.length <= 0){
+                    $('#landEvent').html(empty);
+                    return;
+                }
+
+                const map = data.data.map((value) => {
+                    let server = value.serverName;
+
+                    return `<div class="col-auto">
+                               <div class=\'item\'>
+                                 <div class="card card-block mx-2" style=\'min-width: 300px;\'>
+                                   <div class=\'ratio ratio-4x3 position-relative\'>
+                                     <div class=\'overflow-hidden card-img-top\'>
+                                       <div class=\'media-list-center\'>
+                                         <img src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
+                                       </div>
+                                     </div>
+                                   </div>
+                                   <div class="card-body">
+                                    <h5 class="card-title">${value.title}</h5>
+                                    <p class="card-text">${value.summary}</p>
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <i class="fs-10 fa-solid fa-star text-warning"></i>
+                                        <span id="airRatingScore" class="fs-10">5.0</span>
+                                      </div>
+                                    </div>
+                                    <a href='https://${server}/activity_details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>`;
+                });
+                $('#landEvent').html(map);
+
+            } else {
+                toastr.error(data.code);
             }
-        }
-    })
+
+            //do something with json
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
 
     /* 視差效果 */
     document.addEventListener('scroll', function(){

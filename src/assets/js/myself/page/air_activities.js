@@ -8,7 +8,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').click(function() {
 
-        const airActivitiesSelection = $(this).attr('id');
+        const activitiesSelection = $(this).attr('id');
 
         $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').removeClass('btn-primary');
         $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').addClass('btn-light');
@@ -24,7 +24,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                 'Content-Type': 'application/json; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({airActivitiesSelection})
+            body: JSON.stringify({activitiesSelection})
         }).then(async (response) => {
             const data = await response.json();
             console.log(data);
@@ -36,14 +36,14 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
                 const map = data.data.map((value) => {
                     let server = value.serverName;
-                    let link = 'panel/api/media/' + value.link;
+
                     return `<div class="col-auto">
                                <div class=\'item\'>
                                  <div class="card card-block mx-2" style=\'min-width: 300px;\'>
                                    <div class=\'ratio ratio-4x3 position-relative\'>
                                      <div class=\'overflow-hidden card-img-top\'>
                                        <div class=\'media-list-center\'>
-                                         <img data-src="${link}" class="owl-lazy" alt="">
+                                         <img src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                                        </div>
                                      </div>
                                    </div>
