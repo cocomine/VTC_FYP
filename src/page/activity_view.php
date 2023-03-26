@@ -116,7 +116,9 @@ class activity_view implements IPage
             /* get pay_price Book_eventID */
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT event_ID, pay_price, ID AS 'Book_eventID', order_datetime FROM Book_event, Book_event_plan WHERE event_ID = ? AND User = ?");
+                $stmt->prepare("SELECT event_ID, pay_price, Book_event.ID AS 'Book_eventID', order_datetime, Book_event_plan.plan_people AS `total` FROM Book_event, Book_event_plan 
+                                                                                                        WHERE event_ID = ? AND User = ? AND Book_event.ID = Book_event_plan.Book_ID
+                                                                                                        ");
                 $stmt->bind_param('ii', $row['ID'],$id);
                 if (!$stmt->execute()) {
                     return array(
@@ -133,6 +135,7 @@ class activity_view implements IPage
                     'pay_price' => $schedule_row['pay_price'],
                     'Book_eventID' => $schedule_row['Book_eventID'],
                     'order_datetime' => $schedule_row['order_datetime'],
+                    'total' => $schedule_row['total']
                 );
 
 
