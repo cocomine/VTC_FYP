@@ -166,7 +166,7 @@ class activity_view implements IPage
 
                 /* get result */
                 $schedule_row = $stmt->get_result()->fetch_assoc();
-                $temp['total'][] = array(
+                $temp['plan'][] = array(
                     'plan_name' => $row['plan_name'],
                     'total' => $schedule_row['total']
                 );
