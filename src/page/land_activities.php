@@ -45,80 +45,111 @@ class land_activities implements IPage {
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/land_activities.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<div id='homeBackground' class="position-relative">
+<div id='landActivitiesBackground' class="position-relative">
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
-            <h5>體驗刺激，享受不一樣的生活點滴</h5>
-            <div class="dropdown">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-              選擇地區或活動
-              </button>
-              <form class="dropdown-menu p-4">
-                  <div class="mb-3">
-                      <div class="search-box">
-                          <input type="text" name="search" placeholder="搜尋地點或活動" required>
-                          <i class="ti-search"></i>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              香港地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              中國地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">熱氣球</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑雪</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              澳門地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">笨豬跳</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              台灣地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">跳傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>      
+            <h5>探索大地 感受自然</h5>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+              <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="mountaineeringBtn">登山</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hikingBtn">遠足</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="climbingBtn">攀登</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="skiingBtn">滑雪</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="otherlandBtn">其他</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>    
         </div>
+    </div>
+</div>
+body . <<<body
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+    
+        <div class="col">
+    <div class="card">
+      <img src="/assets/images/background/air_activities_bg.webp" class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.坏地灶米坏杜杯坏杜米坏杜米地灶米地灶米坏杜米坏杜杯坏木</p>
+        <a href='/' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="..." class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="..." class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="..." class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="..." class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="..." class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col">
+    <div class="card">
+      <img src="" class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+
     </div>
 </div>
 body . <<<body

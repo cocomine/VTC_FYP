@@ -1,9 +1,9 @@
-#homeBackground {
+#airActivitiesBackground {
     height: 100vh;
     overflow: hidden;
 }
 
-#homeBackground > div{
+#airActivitiesBackground > div{
     background-image: url('/assets/images/background/air_activities_bg.webp');
     background-repeat: no-repeat;
     background-position: center;
@@ -13,7 +13,7 @@
     z-index: 1;
 }
 
-#homeBackground:before{
+#airActivitiesBackground:before{
     content: '';
     background-image: url("/assets/images/mask.webp");
     background-repeat: repeat-x;
@@ -27,7 +27,7 @@
     z-index: 5;
 }
 
-#homeBackground> div:before {
+#airActivitiesBackground> div:before {
     content: '';
     background-color: black;
     opacity: 0.3;
@@ -39,7 +39,7 @@
     z-index: -1;
 }
 
-#homeBackground h5 {
+#airActivitiesBackground h5 {
     font-size: 3em;
     text-shadow: 1px 1px 2px black, 5px 7px 1em black, 4px 2px 0.2em black;
     color: white;
@@ -62,5 +62,10 @@
 }
 
 .card{
-    min-height: 25rem;
+    min-height: 10rem;
+}
+
+#airRatingScore {
+    color: #ffb82a;
+    font-weight: bold;
 }

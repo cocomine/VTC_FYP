@@ -43,84 +43,47 @@ class air_activities implements IPage {
         /* json 語言 */
         $jsonLang = json_encode(array());
 
+        $selectActivities = "";
+
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/air_activities.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<div id='homeBackground' class="position-relative">
+<div id='airActivitiesBackground' class="position-relative">
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
-            <h5>體驗刺激，享受不一樣的生活點滴</h5>
-            <div class="dropdown">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-              選擇地區或活動
-              </button>
-              <form class="dropdown-menu p-4">
-                  <div class="mb-3">
-                      <div class="search-box">
-                          <input type="text" name="search" placeholder="搜尋地點或活動" required>
-                          <i class="ti-search"></i>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              香港地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              中國地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">熱氣球</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑雪</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              澳門地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">笨豬跳</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              台灣地區
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">跳傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>      
+            <h5>與你一起 遨遊天際</h5>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+              <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="allAirBtn">全部</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="parachuteBtn">跳傘</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="paraglidingBtn">滑翔傘</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="bungyBtn">笨豬跳</button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="otherAirBtn">其他</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>     
         </div>
     </div>
+</div>
+body . <<<body
+<div class="container mt-4">
+  <div class="row row-cols-1 row-cols-md-4 g-4" id="airEvent">
+    <!--提取活動--->
+
+  </div>
 </div>
 body . <<<body
 <script>
@@ -133,8 +96,30 @@ body;
     public function post(array $data): array
     {
         global $auth;
+        $output = [];
 
-        return array();
+        $airActivitiesSelection = $data['airActivitiesSelection'];
+        if($airActivitiesSelection == 'allAirBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        return array(
+            'code' => 200,
+            'data' => $output,
+        );
     }
 
     public function path(): string

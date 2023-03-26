@@ -3,43 +3,82 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
+define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
 
-    /* 輪播圖 */
-    let owl = $('.owl-carousel');
-    owl.owlCarousel({
-        margin: 10,
-        nav: true,
-        dots: true,
-        mergeFit:false,
-        navText: [
-            "<i class=\"fa-solid fa-chevron-left\"></i>",
-            "<i class=\"fa-solid fa-chevron-right\"></i>"
-        ],
-        stagePadding: 40,
-        lazyLoad:true,
-        responsive: {
-            0: {
-                items: 1,
+    $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').click(function() {
+
+        const airActivitiesSelection = $(this).attr('id');
+
+        $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').removeClass('btn-primary');
+        $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').addClass('btn-light');
+        $(this).removeClass('btn-light');
+        $(this).addClass('btn-primary');
+        $('#airEvent').empty();
+
+
+        fetch(/*Here type url*/location.pathname, {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            576: {
-                items: 2,
-            },
-            992: {
-                items: 3,
-            },
-            1200: {
-                items: 4,
+            body: JSON.stringify({airActivitiesSelection})
+        }).then(async (response) => {
+            const data = await response.json();
+            console.log(data);
+            if (data.code === 200){
+                if (data.data.length <= 0){
+                    $('#airEvent').html(empty);
+                    return;
+                }
+
+                const map = data.data.map((value) => {
+                    let server = value.serverName;
+                    let link = 'panel/api/media/' + value.link;
+                    return `<div class="col-auto">
+                               <div class=\'item\'>
+                                 <div class="card card-block mx-2" style=\'min-width: 300px;\'>
+                                   <div class=\'ratio ratio-4x3 position-relative\'>
+                                     <div class=\'overflow-hidden card-img-top\'>
+                                       <div class=\'media-list-center\'>
+                                         <img data-src="${link}" class="owl-lazy" alt="">
+                                       </div>
+                                     </div>
+                                   </div>
+                                   <div class="card-body">
+                                    <h5 class="card-title">${value.title}</h5>
+                                    <p class="card-text">${value.summary}</p>
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <i class="fs-10 fa-solid fa-star text-warning"></i>
+                                        <span id="airRatingScore" class="fs-10">5.0</span>
+                                      </div>
+                                    </div>
+                                    <a href='https://${server}/activity_details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>`;
+                });
+                $('#airEvent').html(map);
+
+            } else {
+                toastr.error(data.code);
             }
-        }
-    })
+
+            //do something with json
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
 
     /* 視差效果 */
     document.addEventListener('scroll', function(){
         //index-head Parallax scrolling
         const scroll = window.scrollY;
-        const index_head = $('#homeBackground > div');
+        const index_head = $('#airActivitiesBackground > div');
         index_head[0].style.transform = `translateY(${scroll * 0.4}px)`
     }, (Modernizr.passiveeventlisteners ? {passive: true} : false))
 })

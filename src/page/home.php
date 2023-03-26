@@ -50,7 +50,7 @@ class home implements IPage {
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $hkActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 position-relative'>";
-            $hkActivities .= "<div class='overflow-hidden card-img-top'><div class='media-list-center'>";
+            $hkActivities .= "<div class='overflow-hidden card-img-top'><div class='media-lpanel/api/media/".$row['thumbnail']."ist-center'>";
             $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div></div></div><div class='card-body'>";
             $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
