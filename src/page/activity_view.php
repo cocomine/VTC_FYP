@@ -114,7 +114,7 @@ class activity_view implements IPage
                 );
             }
 
-            /* get schedule */
+            /* get pay_price Book_eventID */
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
                 $stmt->prepare("SELECT event_ID, pay_price, ID AS 'Book_eventID' FROM Book_event, Book_event_plan WHERE event_ID = ? AND User = ?");
@@ -138,6 +138,43 @@ class activity_view implements IPage
 
             }
 
+            /*TEST*/
+            
+            /* get plan */
+            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->bind_param('i', $row['ID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            /* get schedule */
+            $schedule_result = $stmt->get_result();
+            while ($row = $schedule_result->fetch_assoc()){
+                $stmt->prepare("SELECT COALESCE(SUM(p.plan_people), 0) AS `total` FROM Book_event_plan p, Book_event b 
+                                    WHERE p.Book_ID = b.ID AND b.book_date >= CURDATE() AND p.event_schedule IN
+                                        (SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
+                $stmt->bind_param('ii', $row['plan'], $row['Event_ID']);
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.500_title'),
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                /* get result */
+                $schedule_row = $stmt->get_result()->fetch_assoc();
+                $temp['plan'][] = array(
+                    'plan_name' => $row['plan_name'],
+                    'total' => $schedule_row['total']
+                );
+            }
+
+            /*END TEST*/
 
 
             $output[] = $temp;
