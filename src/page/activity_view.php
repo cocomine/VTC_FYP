@@ -139,7 +139,7 @@ class activity_view implements IPage
             }
 
             /*TEST*/
-            
+
             /* get plan */
             $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
             $stmt->bind_param('i', $row['ID']);
@@ -152,8 +152,8 @@ class activity_view implements IPage
             }
 
             /* get schedule */
-            $schedule_result = $stmt->get_result();
-            while ($row = $schedule_result->fetch_assoc()){
+            $schedule_result2 = $stmt->get_result();
+            while ($row = $schedule_result2->fetch_assoc()){
                 $stmt->prepare("SELECT COALESCE(SUM(p.plan_people), 0) AS `total` FROM Book_event_plan p, Book_event b 
                                     WHERE p.Book_ID = b.ID AND b.book_date >= CURDATE() AND p.event_schedule IN
                                         (SELECT Schedule_ID FROM Event_schedule WHERE plan = ? AND Event_ID = ?)");
@@ -167,10 +167,10 @@ class activity_view implements IPage
                 }
 
                 /* get result */
-                $schedule_row = $stmt->get_result()->fetch_assoc();
+                $schedule_row2 = $stmt->get_result()->fetch_assoc();
                 $temp['plan'][] = array(
                     'plan_name' => $row['plan_name'],
-                    'total' => $schedule_row['total']
+                    'total' => $schedule_row2['total']
                 );
             }
 
