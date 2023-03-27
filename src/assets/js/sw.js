@@ -4,9 +4,10 @@
  */
 
 // This is the "Offline page" service worker
-const CACHE = "v1";
+const CACHE = "v2";
 
 const offlineFallbackPage = "/panel/offline.html";
+const loading_lottie = "/panel/assets/images/logo_lottie.json";
 
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener("install", function (event) {
@@ -15,7 +16,7 @@ self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE).then(function (cache) {
       console.log("Cached offline page during install");
-      return cache.add(offlineFallbackPage);
+      return cache.addAll([ offlineFallbackPage, loading_lottie ]);
     })
   );
 });
@@ -23,6 +24,17 @@ self.addEventListener("install", function (event) {
 // If any fetch fails, it will show the offline page.
 self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
+
+    // 如果logo_lottie.json優先從快取中加載
+    if (/^.+\/panel\/assets\/images\/logo_lottie.json$/.test(event.request.url)){
+        event.respondWith(
+            caches.open(CACHE).then(function (cache){
+                console.error("Serving lottie page " + error);
+                return cache.match(loading_lottie).then((response) => response || fetch(event.request));
+            })
+        )
+        return;
+    }
 
   event.respondWith(
     fetch(event.request).catch(function (error) {
