@@ -6,7 +6,7 @@ use cocomine\IPage;
 use mysqli;
 
 
-class reserveView implements IPage
+class Reserve_View implements IPage
 {
 
     private mysqli $sqlcon;
