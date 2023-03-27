@@ -354,7 +354,7 @@ partner : "") .
                         <div class='modal-body'>
                             <p>{$Text['2FA']['2FA_register_modal']['body'][0]}</p>
                             <div class='row justify-content-center g-0' id='qr'>
-                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
+                                <lottie-player src='/panel/assets/images/logo_lottie.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
                             </div>
                             <p>{$Text['2FA']['2FA_register_modal']['body'][1]}</p>
                             <pre id='secret' class='text-center text-uppercase fs-2 bg-secondary bg-opacity-50' style='color: #dc3545;'><div id='pre-submit-load' style='height: 40px; margin-top: -5px'> <div class='submit-load'><div></div><div></div><div></div><div></div></div> </div></pre>
@@ -410,7 +410,7 @@ partner : "") .
                             <p>{$Text['2FA']['TwoFA_BackupCode_modal']['body']}</p>
                             <div class='table-responsive mt-2' id='BackupCodeShowArea'></div>
                             <div class='row justify-content-center' id='BackupCodeLoading'>
-                                <lottie-player src='https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
+                                <lottie-player src='/panel/assets/images/logo_lottie.json' background='transparent' speed='1' style='width: 300px; height: 300px;' loop autoplay></lottie-player>
                             </div>
                         </div>
                         <div class='modal-footer'>

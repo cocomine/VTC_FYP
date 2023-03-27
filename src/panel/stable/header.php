@@ -87,7 +87,7 @@ header('Content-Type:text/html; charset=utf-8');
     <div id="preloader">
         <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
         <div class="position-absolute top-50 start-50 translate-middle">
-            <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+            <lottie-player src="/panel/assets/images/logo_lottie.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
         </div>
     </div>
 <!-- preloader area end -->
@@ -96,7 +96,7 @@ header('Content-Type:text/html; charset=utf-8');
 if(empty($_COOKIE['_ID'])){
     echo '<div id="g_id_onload"
      data-client_id="415107965516-cv5638cgsp5hcau4i5ts1ub9otktu3sp.apps.googleusercontent.com"
-     data-login_uri="https://fyp.cocomine.cc/panel/login"
+     data-login_uri="https://'.$_SERVER['HTTP_HOST'].'/panel/login"
      data-login="google">
      </div>';
 }

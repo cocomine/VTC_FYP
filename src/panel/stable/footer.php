@@ -104,7 +104,7 @@
         window.globalLang = ajex.Lang;
     })
 </script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<script src="/panel/assets/js/sw-register.js"></script>
 <!-- script load end -->
 </body>
 </html>
