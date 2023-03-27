@@ -3,7 +3,7 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
     const table = $('#dataTable').DataTable({
         responsive: true,
         ajax: {
-            url: '/Activity_View',
+            url: '/Reserve_View',
             type: 'POST',
             data: function (d){
                 return JSON.stringify(d);
