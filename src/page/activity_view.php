@@ -42,11 +42,11 @@ class activity_view implements IPage
                                     <table id="dataTable" class="w-100">
                                         <thead class="text-capitalize">
                                             <tr>
+                                                <th>#</th>
                                                 <th>活動</th>
-                                                <th>活動號數</th>
-                                                <th>參加人數</th>
-                                                <th>活動計劃 / 價錢</th>
+                                                <th>活動計劃 / 人數</th>
                                                 <th>預約時間</th>
+                                                <th>total price</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -76,12 +76,13 @@ class activity_view implements IPage
 
         global $auth;
         $output = array();
-        $id = $auth->userdata['UUID'];
+        $uuid = $auth->userdata['UUID'];
 
         /* 取得該用戶建立的活動給參與人數 */
         /* */
-        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price, Book_event.ID AS 'Book_eventID' FROM Book_event, Event WHERE  Event.ID = Book_event.event_ID AND User = ?");
-        $stmt->bind_param('s', $id);
+        $stmt = $this->sqlcon->prepare("SELECT b.ID AS 'BookID', e.ID AS 'EventID', e.thumbnail, e.summary, e.name, b.pay_price, b.book_date
+            FROM Book_event b, Event e WHERE e.ID = b.event_ID AND b.User = ?");
+        $stmt->bind_param('s', $uuid);
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
@@ -94,17 +95,35 @@ class activity_view implements IPage
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()){
             $temp = array(
-                'ID' => $row['ID'],
+                'BookID' => $row['BookID'],
                 'thumbnail' => $row['thumbnail'],
                 'summary' => $row['summary'],
                 'name' => $row['name'],
                 'pay_price' => $row['pay_price'],
-                'plan' => null,
-                'Book_eventID' => $row['Book_eventID']
+                'book_date' => $row['book_date'],
+                'plan' => array(),
             );
 
+            $stmt->prepare("SELECT p.plan_name, b.plan_people  FROM Book_event_plan b, Event_schedule e, Event_plan p 
+                                    WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
+            $stmt->bind_param('iii', $row['BookID'], $row['EventID'], $row['EventID']);
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => 'Database Error!',
+                    'Message' => $stmt->error,
+                );
+            }
 
-            $stmt->prepare("SELECT ID, name AS plan_name FROM Event WHERE ID = ?");
+            $plan_result = $stmt->get_result();
+            while ($plan_row = $plan_result->fetch_assoc()){
+                $temp['plan'][] = array(
+                    'plan_name' => $plan_row['plan_name'],
+                    'total' => $plan_row['plan_people']
+                );
+            }
+
+            /*$stmt->prepare("SELECT Event_ID, plan_name FROM Event_plan WHERE Event_ID = ?");
             $stmt->bind_param('i', $row['ID']);
             if (!$stmt->execute()) {
                 return array(
@@ -114,13 +133,13 @@ class activity_view implements IPage
                 );
             }
 
-            /* get pay_price Book_eventID */
+            /* get pay_price Book_eventID
             $schedule_result = $stmt->get_result();
             while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT event_ID, pay_price, Book_event.ID AS 'Book_eventID', order_datetime, Book_event_plan.plan_people AS `total` FROM Book_event, Book_event_plan 
-                                                                                                        WHERE event_ID = ? AND User = ? AND Book_event.ID = Book_event_plan.Book_ID
-                                                                                                        ");
-                $stmt->bind_param('ii', $row['ID'],$id);
+                $stmt->prepare("SELECT event_ID, pay_price, Book_event.ID AS 'Book_eventID', order_datetime, Book_event_plan.plan_people AS `total` 
+                    FROM Book_event, Book_event_plan 
+                    WHERE event_ID = ? AND User = ? AND Book_event.ID = Book_event_plan.Book_ID");
+                $stmt->bind_param('ii', $row['ID'],$uuid);
                 if (!$stmt->execute()) {
                     return array(
                         'code' => 500,
@@ -129,25 +148,21 @@ class activity_view implements IPage
                     );
                 }
 
-                /* get result */
+                /* get result
                 $schedule_row = $stmt->get_result()->fetch_assoc();
                 $temp['plan'][] = array(
                     'plan_name' => $row['plan_name'],
-                    'pay_price' => $schedule_row['pay_price'],
                     'Book_eventID' => $schedule_row['Book_eventID'],
                     'order_datetime' => $schedule_row['order_datetime'],
                     'total' => $schedule_row['total']
                 );
 
 
-            }
+            }*/
 
             /*TEST*/
 
-
-
             /*END TEST*/
-
 
             $output[] = $temp;
         }
@@ -156,7 +171,8 @@ class activity_view implements IPage
 
     /* path輸出 */
     function path(): string {
-        return '<li class="breadcrumb-item active"><a href="/home">' . showText("index.home") . '</a></li>'." >  <li><span>查看預約</span></li>";
+        return '<li class="breadcrumb-item active"><a href="/home">' . showText("index.home") . '</a></li>'.
+            "<li class='breadcrumb-item active'><span>查看預約</span></li>";
     }
 
     /* 取得頁面標題 */

@@ -16,16 +16,21 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
         order: [
             [ 1, 'desc' ]
         ],
+        createdRow: function (row){
+            $(row).addClass('position-relative');
+        },
         columns: [
+            {
+                data: 'BookID'
+            },
             {
                 data: 'name',
                 render: (data, type, row) => {
                     if (type === 'display'){
-                        return `
-                                                    
+                        return `                     
                                  <div class="row">
                                     <div class="col-auto">
-                                        <a href="/Activity_View/${row.ID}">
+                                        <a href="/Activity_View/${row.BookID}" class="stretched-link">
                                             <div class="ratio ratio-16x9" style="width: 160px;">
                                                 <img src="/panel/api/media/${row.thumbnail}" alt="${row.thumbnail}" class="w-auto mh-100 h-auto">
                                             </div>
@@ -35,8 +40,6 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                                         <a href="/Activity_View/${row.ID}">${data}</a><br>
                                         <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>    
-   
-
                         `;
                     }else{
                         return data + ';' + row.summary;
@@ -47,42 +50,21 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 data: 'plan',
                 render: (data, type) => {
                     if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.Book_eventID}</b>`).join('<br>') : "沒有任何活動號數"
+                        return data ? data.map((value) => `<b>${value.plan_name}:</b><code>${value.total}</code>`).join('<br>') : "沒有任何活動號數"
                     }else{
-                        return data ? data.map((value) => value.Book_eventID).join(';') : "沒有任何活動號數";
+                        return data ? data.map((value) => value.plan_name).join(';') : "沒有任何活動號數";
                     }
                 }
             },
             {
-                data: 'plan',
-                render: (data, type) => {
-                    if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.total}</b>`).join('<br>') : "沒有任何活動人數"
-                    }else{
-                        return data ? data.map((value) => value.total).join(';') : "沒有任何活動人數";
-                    }
-                }
+                data: 'book_date',
             },
             {
-                data: 'plan',
+                data: 'pay_price',
                 render: (data, type) => {
-                    if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.plan_name}:</b> <code class="bg-light">${value.pay_price}</code>`).join('<br>') : "沒有任何活動計劃"
-                    }else{
-                        return data ? data.map((value) => value.plan_name + ',' +value.pay_price).join(';') : "沒有任何活動計劃";
-                    }
+                    return `$ `+ formatPrice(data);
                 }
-            },
-            {
-                data: 'plan',
-                render: (data, type) => {
-                    if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.order_datetime}:</b> `).join('<br>') : "沒有任何預約時間"
-                    }else{
-                        return data ? data.map((value) => value.order_datetime ).join(';') : "沒有任何預約時間";
-                    }
-                }
-            },
+            }
         ]
     });
 });
