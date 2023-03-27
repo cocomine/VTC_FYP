@@ -34,7 +34,7 @@ class xmap implements IPage {
 <div class="container mt-4">
     <div class="row gy-4">
         <div class="col-12">
-            <h3>查看一下你附近都有什麼活動可以參與!😎</h3>
+            <h3>查看一下你附近都有什麼活動可以參與! (*≧︶≦))(￣▽￣* )ゞ</h3>
         </div>
         <div class="col-12">
             <div class="card overflow-hidden position-relative">
