@@ -6,7 +6,7 @@ use cocomine\IPage;
 use mysqli;
 
 
-class reservedetail_view implements IPage
+class reserveView implements IPage
 {
 
     private mysqli $sqlcon;
@@ -66,7 +66,7 @@ class reservedetail_view implements IPage
                 'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
             },
         });
-        loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reservedetail_view'])
+        loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserveView'])
         </script>
         body;
     }
