@@ -8,7 +8,7 @@ use cocomine\VirusTotalApiV2;
 
 ini_set('error_log', '/volume1/web/error_log/scanVirus.log');
 
-require(__DIR__ . "/../config.inc.php");
+require(__DIR__.'/../../../../secret/config.inc.php');
 require(__DIR__ . "/../../../cocomine/VirusTotalApiV2.php");
 
 $virus = new VirusTotalApiV2(Cfg_virusTotal_key);

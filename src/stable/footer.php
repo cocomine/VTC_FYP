@@ -27,7 +27,7 @@
 <!-- page container area end -->
 <!-- script load start-->
 <!-- require js -->
-<script src="/panel/assets/js/require.js"></script>
+<script src="/assets/js/require.js"></script>
 <script>
     require.config({
         baseUrl: "/assets/js",
@@ -99,10 +99,11 @@
         /* 註冊全景參數 */
         window.ajexLoad = ajex.ajexLoad;
         window.loadModules = ajex.loadModules;
-        window.formatPrice = ajex.formatPrice
+        window.formatPrice = ajex.formatPrice;
+        window.globalLang = ajex.Lang;
     })
 </script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<script src="/assets/js/sw-register.js"></script>
 <!-- script load end -->
 </body>
 </html>

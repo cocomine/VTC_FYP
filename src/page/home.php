@@ -4,7 +4,7 @@
  * Create by cocomine
  */
 
-namespace panel\page;
+namespace page;
 
 use cocomine\IPage;
 use mysqli;
@@ -39,117 +39,83 @@ class home implements IPage {
         $jsonLang = json_encode(array());
 
         return <<<body
+<link rel="stylesheet" href="/assets/css/myself/page/home.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<style>
-#homeBackground {
-    background-image: url('/assets/images/background/hot-air-balloon-back.jpg');
-    height: 100vh; 
-    background-repeat: no-repeat; 
-    background-position: center; 
-    background-size: cover;
-    z-index: 1;
-}
-
-#homeBackground:before {
-    content: '';
-    background-color: black;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -1;
-}
-
-.card-img-top {
-    width: 300px;
-    height: 300px;
-    clip: rect(10px,290px,290px,10px);
-}
-
-#homeBackground h5 {
-    font-size: 3em;
-    text-shadow: 1px 1px 2px black, 5px 7px 1em black, 4px 2px 0.2em black;
-    color: white;
-}
-</style>
-
-<div class='container-fluid'>
-  <div class="row justify-content-center align-items-center position-relative" id='homeBackground'>
-    <div class="col-auto">
-      <h5>體驗刺激，享受不一樣的生活點滴</h5>
-      <div class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        選擇地區或活動
-        </button>
-          <form class="dropdown-menu p-4">
-            <div class="mb-3">
-                <div class="search-box">
-                    <input type="text" name="search" placeholder="搜尋地點或活動" required>
-                    <i class="ti-search"></i>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        香港地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">潛水</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
+<div id='homeBackground' class="position-relative">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-auto">
+            <h5>體驗刺激，享受不一樣的生活點滴</h5>
+            <div class="dropdown">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              選擇地區或活動
+              </button>
+              <form class="dropdown-menu p-4">
+                  <div class="mb-3">
+                      <div class="search-box">
+                          <input type="text" name="search" placeholder="搜尋地點或活動" required>
+                          <i class="ti-search"></i>
+                    </div>
                   </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        中國地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">熱氣球</a></li>
-                        <li><a class="dropdown-item" href="#">登山</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">滑雪</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
+                  <div class="mb-3">
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              香港地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">潛水</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              中國地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">熱氣球</a></li>
+                              <li><a class="dropdown-item" href="#">登山</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">滑雪</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              澳門地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">笨豬跳</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              台灣地區
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
+                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <li><a class="dropdown-item" href="#">潛水</a></li>
+                              <li><a class="dropdown-item" href="#">登山</a></li>
+                              <li><a class="dropdown-item" href="#">跳傘</a></li>
+                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
+                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                            </ul>
+                        </div>
+                    </div>
                   </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        澳門地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">笨豬跳</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                      </ul>
-                  </div>
-                  
-                  <div class="btn-group dropend">
-                      <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        台灣地區
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                        <li><a class="dropdown-item" href="#">攀岩</a></li>
-                        <li><a class="dropdown-item" href="#">潛水</a></li>
-                        <li><a class="dropdown-item" href="#">登山</a></li>
-                        <li><a class="dropdown-item" href="#">跳傘</a></li>
-                        <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                        <li><a class="dropdown-item" href="#">遠足</a></li>
-                      </ul>
-                  </div>
-              </div>
-            </div>
-          </form>
-        </div>      
+              </form>
+            </div>      
+        </div>
     </div>
-  </div>
 </div>
 body. <<<body
 <div class="container mt-4">
@@ -157,34 +123,54 @@ body. <<<body
     
       <div class="col-12">
         <h3><b>香港地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme"><!-- 呢度要留意要加返 'owl-theme' class -->
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <!-- card-img-top start; 用呢一段code,先可以唔同圖片嘅比例亦不會出現拉伸情況 -->
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Canoeing_Hong_Kong_01.jpg" alt=""><!-- 要用lazyload請咁樣寫 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- card-img-top stop -->
               <div class="card-body">
                 <h5 class="card-title">激海獨木舟探索</h5>
                 <p class="card-text">炎炎夏日，最重要暢旺大海。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a><!-- 呢度要留意要加返 'btn-rounded' class-->
               </div>
             </div>
           </div>
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Climbing_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
               <div class="card-body">
                 <h5 class="card-title">「兄弟爬山」攀岩體驗</h5>
                 <p class="card-text">在美麗的香港維海面前攀登。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
               </div>
             </div>
           </div>
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
-              <img src="/assets/images/event/Diving_Hong_Kong_01.jpg" class="card-img-top" alt="...">
+                <div class="ratio ratio-4x3 position-relative">
+                    <div class="overflow-hidden card-img-top">
+                        <div class="media-list-center">
+                            <img class="owl-lazy" data-src="/assets/images/event/Climbing_Hong_Kong_01.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
               <div class="card-body">
                 <h5 class="card-title">海下世界潛水班</h5>
                 <p class="card-text">在西貢海底中心呼喚愛。</p>
-                <a href="#" class="btn btn-primary stretched-link">了解更多</a>
+                <a href="#" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
               </div>
             </div>
           </div>
@@ -223,7 +209,7 @@ body. <<<body
 
       <div class="col-12">
         <h3><b>中國地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Mountaineering_China_01.jpg" class="card-img-top" alt="...">
@@ -279,7 +265,7 @@ body. <<<body
   
       <div class="col-12">
         <h3><b>澳門地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Jump_Macau_01.jpeg" class="card-img-top" alt="...">
@@ -315,7 +301,7 @@ body. <<<body
 
       <div class="col-12">
         <h3><b>台灣地區最新活動</b></h3></br>
-        <div class="owl-carousel">
+        <div class="owl-carousel owl-theme">
           <div class="item">
             <div class="card card-block mx-2" style="min-width: 300px;">
               <img src="/assets/images/event/Climbing_Taiwan_01.jpeg" class="card-img-top" alt="...">
@@ -380,25 +366,8 @@ body. <<<body
       </div>
     </div>
 </div>
-body. <<<body
+body . <<<body
 <script>
-  var owl = $('.owl-carousel');
-  owl.owlCarousel({
-    margin: 10,
-    loop: true,
-    responsive: {
-      0: {
-        items: 1
-      },
-      600: {
-        items: 2
-      },
-      1000: {
-        items: 3
-      }
-    }
-  })
-
 loadModules(['myself/datepicker', 'myself/page/home'])
 </script>
 body;

@@ -4,7 +4,7 @@
  */
 
 define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr){
-    const table = $('#dataTable').DataTable({
+    $('#dataTable').DataTable({
         responsive: true,
         ajax: {
             url: '/panel/event/',
@@ -14,7 +14,8 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
             }
         },
         language: {
-            url: $('#datatables_lang_url').text()
+            loadingRecords: `<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>`,
+            url: $('#datatables_lang_url').text(),
         },
         order: [
             [ 3, 'desc' ]
@@ -34,7 +35,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
                                     </div>
                                     <div class="col">
                                         <a href="/panel/event/post/${row.ID}">${data}</a><br>
-                                        <p class="text-secondary">${row.summary}</p>
+                                        <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>
                                 </div>`;
                     }else{

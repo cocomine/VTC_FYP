@@ -35,6 +35,7 @@ body {
     -webkit-font-smoothing: antialiased;
     /* Fix for webkit rendering */
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
 }
 
 img {
@@ -45,12 +46,12 @@ img {
 /*custome css*/
 
 ::selection {
-    background: #FF7112;
+    background: var(--primary-color);
     color: #fff;
 }
 
 ::-moz-selection {
-    background: #FF7112;
+    background: var(--primary-color);
     color: #fff;
 }
 

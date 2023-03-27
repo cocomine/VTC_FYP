@@ -43,7 +43,7 @@ header('Content-Type:text/html; charset=utf-8');
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://www.gstatic.com https://cdn.datatables.net https://api.mapbox.com;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://www.gstatic.com https://cdn.datatables.net https://api.mapbox.com https://cdn.amcharts.com;
               style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net https://*.googleapis.com https://*.google.com https://cdn.datatables.net https://api.mapbox.com;
               connect-src 'self' https://*.google.com https://*.lottiefiles.com https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://cdn.datatables.net;
               img-src 'self' data: blob: https://www.gravatar.com;
@@ -62,6 +62,7 @@ header('Content-Type:text/html; charset=utf-8');
         <link rel="stylesheet" href="/panel/assets/css/metisMenu.min.css">
         <link rel="stylesheet" href="/panel/assets/css/scrollbar.css">
         <link rel="stylesheet" href="/panel/assets/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="/panel/assets/css/owl.theme.default.css">
         <link rel="stylesheet" href="/panel/assets/css/slicknav.min.css">
         <!-- others css -->
         <link rel="stylesheet" href="/panel/assets/css/typography.css">
@@ -78,17 +79,17 @@ header('Content-Type:text/html; charset=utf-8');
     </head>
 <body>
 <!-- head start -->
-<!--[if lt IE 8]>
+    <!--[if lt IE 8]>
     <p class="browserupgrade"><?php echo showText("header.browserupgrade"); ?></p>
-<![endif]-->
-<noscript><p id="noscript"><?php echo showText("header.noscript"); ?></noscript>
-<!-- preloader area start -->
-<div id="preloader">
-    <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
-    <div class="position-absolute top-50 start-50 translate-middle">
-        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+    <![endif]-->
+    <noscript><p id="noscript"><?php echo showText("header.noscript"); ?></noscript>
+    <!-- preloader area start -->
+    <div id="preloader">
+        <!--<div class="loader"><div></div><div></div><div></div><div></div></div>-->
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+        </div>
     </div>
-</div>
 <!-- preloader area end -->
 <!--google one tap -->
 <?php

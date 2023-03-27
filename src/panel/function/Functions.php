@@ -4,10 +4,10 @@
  * Create by cocomine
  */
 
-use apis\notify;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\Reader\InvalidDatabaseException;
+use panel\apis\notify;
 
 //自動載入器
 spl_autoload_register(function ($class) {
@@ -239,12 +239,12 @@ function getBrowser(string $user_agent = null) {
 
 /**
  * 帳戶啟動後執行掛勾function
+ * @param string $uuid
  * @param mysqli $sqlcon 數據庫連接[option]
- * @param array $code 用戶code
  */
-function acc_activated_Hook(array $code, mysqli $sqlcon) {
+function acc_activated_Hook(string $uuid, mysqli $sqlcon) {
     $notify = new notify($sqlcon);
-    $notify->Send_notify($code[0], "fa-regular fa-thumbs-up", notify::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
+    $notify->Send_notify($uuid, "fa-regular fa-thumbs-up", notify::$Status_Success, '/panel', '你的帳號已成功啟動!ヾ(≧▽≦*)o<br>Your account has been activated successfully!ヾ(≧▽≦*)o');
 }
 
 /**

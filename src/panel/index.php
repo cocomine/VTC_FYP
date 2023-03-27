@@ -60,10 +60,13 @@ function fetch_path(): array {
     if ($path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
-    if($path[0] === ""){
+    if (preg_match("/^\?.*$/", $path[count($path) - 1])) {
+        $path = array_slice($path, 0, -1);
+    }
+    if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
-    if($path[0] === "panel"){
+    if ($path[0] === "panel") {
         $path = array_slice($path, 1);
     }
 
@@ -107,6 +110,7 @@ function run_page(array $path, MyAuth $auth) {
                     'content' => $homePage->showPage()
                 ));
             }
+            exit();
         }
     } else {
 
@@ -186,7 +190,7 @@ function run_apis(array $path, MyAuth $auth) {
                 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     /* Get 請求 */
                     $api->get();
-                } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                     /* Delete 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -201,7 +205,7 @@ function run_apis(array $path, MyAuth $auth) {
                     } else {
                         $api->delete(null);
                     }
-                } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     /* Post 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -216,7 +220,7 @@ function run_apis(array $path, MyAuth $auth) {
                     } else {
                         $api->post(null);
                     }
-                } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     /* Put 請求 */
                     if (preg_match('/(text\/json).*/', $_SERVER['CONTENT_TYPE'])) {
                         /* json type content */
@@ -268,40 +272,36 @@ function run_apis(array $path, MyAuth $auth) {
                                     <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
                                 </a>
                             </li>
-                            <?php /* 導航 */
-                            if ($auth->userdata['Role'] >= 1) {
-                                echo '';
-                            }
-                            if ($auth->userdata['Role'] >= 2) {
-                                echo
-                                '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a>
-                                    <ul>
-                                        <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span>' . showText("Media.Head") . '</span></a></li>
-                                        <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span>' . showText("Media-upload.Head") . '</span></a></li>
-                                    </ul>
-                                </li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a>
+                                <ul>
+                                    <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a></li>
+                                    <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span><?php echo showText("Media-upload.Head") ?></span></a></li>
+                                </ul>
+                            </li>
+                            <?php if ($auth->userdata['Role'] > 1) { ?>
+                                <hr class="text-light">
+                                <li><a href="/panel/reserve/"><i class="fa-solid fa-people-roof"></i><span>預約管理</span></a></li>
                                 <li>
                                     <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-regular fa-calendar"></i><span>活動</span></a>
                                     <ul>
-                                        <li><a href="/panel/event/"><i class="fa-regular fa-calendar-check"></i><span>全部活動</span></a></li>
-                                        <li><a href="/panel/event/post/"><i class="fa-regular fa-calendar-plus"></i><span>增加活動</span></a></li>
+                                        <li><a href="/panel/event/"><i class="fa-solid fa-calendar-week"></i><span>全部活動</span></a></li>
+                                        <li><a href="/panel/event/post/"><i class="fa-solid fa-calendar-plus"></i><span>增加活動</span></a></li>
                                     </ul>
-                                </li>';
-                            }
-                            if ($auth->userdata['Role'] >= 3) {
-                                echo
-                                '<li>
-                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span>' . showText("admin.Head") . '</span></a>
+                                </li>
+                            <?php }
+                            if ($auth->userdata['Role'] > 2) { ?>
+                                <hr class="text-light">
+                                <li><a href="/panel/review/"><i class="fa-solid fa-calendar-check"></i><span>審核活動</span></a></li>
+                                <li>
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-screwdriver-wrench"></i><span><?php echo showText("admin.Head") ?></span></a>
                                     <ul>
-                                        <li><a href="/panel/admin/notify_mg/"><i class="fa-solid fa-bell"></i><span>' . showText("notify.Head") . '</span></a></li>
-                                        <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span>' . showText("Account.Head") . '</span></a></li>
+                                        <li><a href="/panel/admin/notify_mg/"><i class="fa-solid fa-bell"></i><span><?php echo showText("notify.Head") ?></span></a></li>
+                                        <li><a href="/panel/admin/account/"><i class="fa fa-wrench"></i><span><?php echo showText("Account.Head") ?></span></a></li>
                                     </ul>
-                                </li>';
-                            }
-                            ?>
+                                </li>
+                            <?php } ?>
                             <!-- sidebar content End-->
-
                         </ul>
                     </nav>
                 </div>
@@ -334,7 +334,7 @@ function run_apis(array $path, MyAuth $auth) {
                             <li class="dropdown">
                                 <i class="ti-bell dropdown-toggle" data-bs-toggle="dropdown" id="notify-bell"></i>
                                 <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title"><?php echo showText('notify.Content.Notify')?></span>
+                                    <span class="notify-title"><?php echo showText('notify.Content.Notify') ?></span>
                                     <div class="nofity-list scrollbar-dynamic" id="notify">
                                         <!-- notify-item -->
                                     </div>
