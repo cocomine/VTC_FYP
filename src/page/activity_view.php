@@ -46,7 +46,7 @@ class activity_view implements IPage
                                                 <th>活動</th>
                                                 <th>活動計劃 / 人數</th>
                                                 <th>預約時間</th>
-                                                <th>total price</th>
+                                                <th>活動總價錢</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>

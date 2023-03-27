@@ -50,9 +50,9 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 data: 'plan',
                 render: (data, type) => {
                     if (type === 'display'){
-                        return data ? data.map((value) => `<b>${value.plan_name}:</b><code>${value.total}</code>`).join('<br>') : "沒有任何活動號數"
+                        return data ? data.map((value) => `<b>${value.plan_name}:</b><code>${value.total}</code>`).join('<br>') : "沒有任何活動計劃"
                     }else{
-                        return data ? data.map((value) => value.plan_name).join(';') : "沒有任何活動號數";
+                        return data ? data.map((value) => value.plan_name).join(';') : "沒有任何活動計劃";
                     }
                 }
             },
