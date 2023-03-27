@@ -67,7 +67,7 @@ class activity_details implements IPage {
             return
                 "<div class='carousel-item {$active}'>
                     <div class='ratio ratio-21x9'>
-                        <img src='/panel/assets/images/image_loading.webp' data-src='/panel/api/media/{$img['media_ID']}' class='d-block w-100 lazy head-image' alt='{$img['media_ID']} Image'>
+                        <img src='/panel/assets/images/image_loading.webp' data-src='/panel/api/media/{$img['media_ID']}' class='d-block w-100 lazy head-image' draggable='false' alt='{$img['media_ID']} Image'>
                     </div>
                 </div>";
         }, $event_img, array_keys($event_img)));
@@ -121,7 +121,7 @@ class activity_details implements IPage {
                 return
                     "<div class='col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1'>
                         <div class='ratio ratio-1x1 rounded overflow-hidden'>
-                            <img src='/panel/assets/images/image_loading.webp' data-src='/panel/api/media/{$img['media_ID']}' class='d-block w-100 lazy review-image' alt='{$img['media_ID']} Image'>
+                            <img src='/panel/assets/images/image_loading.webp' data-src='/panel/api/media/{$img['media_ID']}' class='d-block w-100 lazy review-image' draggable='false' alt='{$img['media_ID']} Image'>
                         </div>
                     </div>";
             }, $review['img'])); //將圖片轉換為img html
@@ -283,6 +283,24 @@ body. <<<body
         </div>
     </div>
 </div>
+<div class="modal fade" tabindex="-1" id="confirm">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">發現衝突時段</h5>
+      </div>
+      <div class="modal-body">
+        <p>我們發現了相同時段, 有其他活動預定</p>
+        <ul style="list-style: disc"></ul>
+        <p>你要繼續預定嗎?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>取消</button>
+        <button type="button" class="btn btn-primary btn-rounded" id="confirm-checkout"><i class="fa-solid fa-arrow-right me-2"></i>繼續預定</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
     require.config({
         paths:{
@@ -291,7 +309,7 @@ body. <<<body
             'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.1/mapbox-gl'],
         },
     });
-    loadModules(['activity_details', 'datepicker', 'mapbox-gl'])
+    loadModules(['activity_details', 'datepicker', 'mapbox-gl']);
 </script>
 body;
     }

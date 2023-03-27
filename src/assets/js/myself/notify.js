@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 2020.
  * Create by cocomine
+ * v2-1.0.0
  */
 
 define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
     let NotifyIDList = [];
+    console.log("notify.js v2-1.0.0 loaded");
 
     /* load notify when ready*/
     window.addEventListener('load', load_notify);
@@ -64,13 +66,13 @@ define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
                     notifyList += notify;
                 })
                 $('[data-notify]').html(notifyList);
-                if (newNotifyCount > 0) $('#notify-bell').html('<span>' + newNotifyCount + '</span>');
+                if (newNotifyCount > 0) $('[data-notify-bell]').html('<span>' + newNotifyCount + '</span>');
             }
         })
     }
 
     /* notify bell click */
-    $('#notify-bell').click(function () {
+    $('[data-notify-bell]').click(function () {
         $(this).html('');
         localStorage.setItem('seenNotifyID', JSON.stringify(NotifyIDList));
     });

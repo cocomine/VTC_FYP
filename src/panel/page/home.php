@@ -108,7 +108,7 @@ body. <<<body
                         </tr>
                     </thead>
                     <tbody id="today-order">
-                        <tr><td colspan="4" class="text-center">
+                        <tr><td colspan="5" class="text-center">
                             <div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>
                         </td></tr>
                     </tbody>
