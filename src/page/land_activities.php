@@ -42,6 +42,27 @@ class land_activities implements IPage {
         /* json 語言 */
         $jsonLang = json_encode(array());
 
+        /* 初始提取 */
+        $allActivities = '';
+
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
+            $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
+            $allActivities .= "<img src='panel/api/media/" .$row['thumbnail']. "' class='owl-lazy' alt='".$row['thumbnail']."'></div></div></div>";
+
+            $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
+            $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
+            $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>5.0</span>";
+            $allActivities .= "</div></div><a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
+            $allActivities .= " </div></div></div></div>";
+        }
+
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/land_activities.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
@@ -81,7 +102,7 @@ class land_activities implements IPage {
 body . <<<body
 <div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-4 g-4" id="landEvent">
-
+    $allActivities
     </div>
 </div>
 body . <<<body
@@ -95,10 +116,101 @@ body;
     {
         global $auth;
         $output = [];
-
         $activitiesSelection = $data['activitiesSelection'];
+
+        /* 提供全部陸上活動 */
         if($activitiesSelection == 'allLandBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供登山活動 */
+        if($activitiesSelection == 'mountaineeringBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND tag LIKE '%登山%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供遠足活動 */
+        if($activitiesSelection == 'hikingBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND tag LIKE '%遠足%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供攀岩活動 */
+        if($activitiesSelection == 'climbingBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND tag LIKE '%岩%' OR tag LIKE '%攀岩%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供滑雪活動 */
+        if($activitiesSelection == 'skiingBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND tag LIKE '%滑雪%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供其他陸上活動 */
+        if($activitiesSelection == 'otherlandBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND tag NOT LIKE '%滑雪%' AND tag NOT LIKE '%岩%' AND tag NOT LIKE '%攀岩%' AND tag NOT LIKE '%遠足%' AND tag NOT LIKE '%登山%'");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }

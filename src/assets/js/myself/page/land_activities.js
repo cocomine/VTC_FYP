@@ -14,7 +14,6 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
         $('#allLandBtn, #mountaineeringBtn, #hikingBtn, #climbingBtn, #skiingBtn, #otherlandBtn').addClass('btn-light');
         $(this).removeClass('btn-light');
         $(this).addClass('btn-primary');
-        $('#landEvent').empty();
 
         fetch(/*Here type url*/location.pathname, {
             method: 'POST',
@@ -29,7 +28,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             console.log(data);
             if (data.code === 200){
                 if (data.data.length <= 0){
-                    $('#landEvent').html(empty);
+                    $('#landEvent').empty();
                     return;
                 }
 
@@ -61,6 +60,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                               </div>
                             </div>`;
                 });
+                $('#landEvent').empty();
                 $('#landEvent').html(map);
 
             } else {
@@ -77,7 +77,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
     document.addEventListener('scroll', function(){
         //index-head Parallax scrolling
         const scroll = window.scrollY;
-        const index_head = $('#homeBackground > div');
+        const index_head = $('#landActivitiesBackground > div');
         index_head[0].style.transform = `translateY(${scroll * 0.4}px)`
     }, (Modernizr.passiveeventlisteners ? {passive: true} : false))
 })

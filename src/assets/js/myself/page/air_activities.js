@@ -14,7 +14,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         $('#allAirBtn, #parachuteBtn, #paraglidingBtn, #bungyBtn, #otherAirBtn').addClass('btn-light');
         $(this).removeClass('btn-light');
         $(this).addClass('btn-primary');
-        $('#airEvent').empty();
 
 
         fetch(/*Here type url*/location.pathname, {
@@ -30,7 +29,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             console.log(data);
             if (data.code === 200){
                 if (data.data.length <= 0){
-                    $('#airEvent').html(empty);
+                    $('#airEvent').empty();
                     return;
                 }
 
@@ -62,6 +61,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                               </div>
                             </div>`;
                 });
+                $('#airEvent').empty();
                 $('#airEvent').html(map);
 
             } else {

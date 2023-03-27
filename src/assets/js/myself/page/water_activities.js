@@ -14,7 +14,6 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
         $('#allWaterBtn, #divingBtn, #canoeingBtn, #riptideBtn, #surfBtn, #otherWaterBtn').addClass('btn-light');
         $(this).removeClass('btn-light');
         $(this).addClass('btn-primary');
-        $('#waterEvent').empty();
 
         fetch(/*Here type url*/location.pathname, {
             method: 'POST',
@@ -29,7 +28,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             console.log(data);
             if (data.code === 200){
                 if (data.data.length <= 0){
-                    $('#waterEvent').html(empty);
+                    $('#waterEvent').empty();
                     return;
                 }
 
@@ -37,11 +36,11 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                     let server = value.serverName;
 
                     return `<div class="col-auto">
-                               <div class=\'item\'>
-                                 <div class="card card-block mx-2" style=\'min-width: 300px;\'>
-                                   <div class=\'ratio ratio-4x3 position-relative\'>
-                                     <div class=\'overflow-hidden card-img-top\'>
-                                       <div class=\'media-list-center\'>
+                               <div class="item">
+                                 <div class="card card-block mx-2" style="min-width: 300px;">
+                                   <div class="ratio ratio-4x3 position-relative">
+                                     <div class="overflow-hidden card-img-top">
+                                       <div class="media-list-center">
                                          <img src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                                        </div>
                                      </div>
@@ -55,12 +54,13 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                                         <span id="airRatingScore" class="fs-10">5.0</span>
                                       </div>
                                     </div>
-                                    <a href='https://${server}/activity_details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
+                                    <a href="https://${server}/activity_details/${value.id}" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
                                   </div>
                                 </div>
                               </div>
                             </div>`;
                 });
+                $('#waterEvent').empty();
                 $('#waterEvent').html(map);
 
             } else {
@@ -72,6 +72,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             console.log(error);
         });
     });
+
 
     /* 視差效果 */
     document.addEventListener('scroll', function(){

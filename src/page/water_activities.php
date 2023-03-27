@@ -41,6 +41,27 @@ class water_activities implements IPage {
         /* json 語言 */
         $jsonLang = json_encode(array());
 
+        /* 初始提取 */
+        $allActivities = '';
+
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0");
+        if (!$stmt->execute()) {
+            return 'Database Error!';
+        }
+
+        $rs = $stmt->get_result();
+        while($row = $rs->fetch_assoc()) {
+            $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
+            $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
+            $allActivities .= "<img src='panel/api/media/" .$row['thumbnail']. "' class='owl-lazy' alt='".$row['thumbnail']."'></div></div></div>";
+
+            $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
+            $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
+            $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>5.0</span>";
+            $allActivities .= "</div></div><a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
+            $allActivities .= " </div></div></div></div>";
+        }
+
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/water_activities.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
@@ -80,7 +101,7 @@ class water_activities implements IPage {
 body . <<<body
 <div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-4 g-4" id="waterEvent">
- 
+    $allActivities
     </div>
 </div>
 body . <<<body
@@ -94,10 +115,29 @@ body;
     {
         global $auth;
         $output = [];
-
         $activitiesSelection = $data['activitiesSelection'];
+
+        /* 提供全部水上活動 */
         if($activitiesSelection == 'allWaterBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while ($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供潛水活動 */
+        if($activitiesSelection == 'divingBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND tag LIKE '%潛%'");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -112,6 +152,79 @@ body;
                 );
             }
         }
+
+        /* 提供獨木舟活動 */
+        if($activitiesSelection == 'canoeingBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND tag LIKE '%獨木%' OR tag LIKE '%舟%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供激流活動 */
+        if($activitiesSelection == 'riptideBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND tag LIKE '%激%' OR tag LIKE '%激流%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供衝浪活動 */
+        if($activitiesSelection == 'surfBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND tag LIKE '%衝浪%' OR tag LIKE '%滑浪%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
+        /* 提供其他水上活動 */
+        if($activitiesSelection == 'otherWaterBtn') {
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND tag NOT LIKE '%衝浪%' AND tag NOT LIKE '%滑浪%' AND tag NOT LIKE '%激%' AND tag NOT LIKE '%激流%' AND tag NOT LIKE '%獨木%' AND tag NOT LIKE '%舟%' AND tag NOT LIKE '%潛%'");
+            if (!$stmt->execute()) {
+                return 'Database Error!';
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $output[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                    'serverName' => $_SERVER['SERVER_NAME'],
+                );
+            }
+        }
+
 
         return array(
             'code' => 200,
