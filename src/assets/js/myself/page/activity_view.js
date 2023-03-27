@@ -30,14 +30,14 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                         return `                     
                                  <div class="row">
                                     <div class="col-auto">
-                                        <a href="/Activity_View/${row.BookID}" class="stretched-link">
+                                        <a href="/reservedetail/${row.BookID}" class="stretched-link">
                                             <div class="ratio ratio-16x9" style="width: 160px;">
                                                 <img src="/panel/api/media/${row.thumbnail}" alt="${row.thumbnail}" class="w-auto mh-100 h-auto">
                                             </div>
                                         </a>
                                     </div>
                                     <div class="col">
-                                        <a href="/Activity_View/${row.ID}">${data}</a><br>
+                                        <a href="/reservedetail/${row.ID}">${data}</a><br>
                                         <p class="text-secondary" style="max-width: 300px">${row.summary}</p>
                                     </div>    
                         `;
