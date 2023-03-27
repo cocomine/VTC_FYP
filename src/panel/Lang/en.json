@@ -1,6 +1,6 @@
 {
   "Lang": "en",
-  "Last_Update": "12/2/2023",
+  "Last_Update": "12/3/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
@@ -519,15 +519,6 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/en-GB.json"
-    },
-    "UserDetail": {
-      "Detail": "User Profile",
-      "Organize": "Organize",
-      "Country": "Country",
-      "Phone": "Phone Number",
-      "Address": "Address",
-      "prove": "Proof Document"
-
     }
   }
 }

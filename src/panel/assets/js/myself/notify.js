@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2020.
  * Create by cocomine
+ * v1-1.0.0
  */
 
 define(['jquery', 'myself/ajex', 'moment'], function (jq, ajex, moment) {
     let NotifyIDList = [];
+    console.log("notify.js v1-1.0.0 loaded");
 
     /* load notify when ready*/
-    window.addEventListener('load', load_notify);
+    $(document).on('load', load_notify);
 
     /* load notify */
     function load_notify() {

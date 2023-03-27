@@ -35,7 +35,7 @@ interface IApi {
      * @param array|null $data 收到資料
      * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#postarray-data
      */
-    public function post(array $data);
+    public function post(?array $data);
 
     /**
      * Put 請求
@@ -43,7 +43,7 @@ interface IApi {
      * @param array|null $data 收到資料
      * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#putarray-data
      */
-    public function put(array $data);
+    public function put(?array $data);
 
     /**
      * Delete 請求
@@ -51,5 +51,5 @@ interface IApi {
      * @param array|null $data 收到資料
      * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IApi.php.md#deletearray-data
      */
-    public function delete(array $data);
+    public function delete(?array $data);
 }

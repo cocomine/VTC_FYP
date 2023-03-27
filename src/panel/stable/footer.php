@@ -64,7 +64,8 @@
         "plugins",
         "scripts",
         "moment",
-        "myself/notify"
+        "myself/notify",
+        "myself/collabora_check"
     ], (toastr, ajex) => {
         toastr.options = {
             "progressBar": true,
@@ -79,16 +80,18 @@
             "hideMethod": "slideUp"
         };
         /* loading畫面 */
-        $(window).on('load', function() {
-            $('#preloader').fadeOut('slow', function() { $(this).remove(); });
-        });
+        $('#preloader').fadeOut('slow', function() { $(this).remove(); });
 
         /* 自動跳轉登入前url */
         const returnPath = sessionStorage.getItem('returnPath');
         if(returnPath !== null) {
-            ajex.ajexLoad(returnPath);
-            ajex.updateNavBar(returnPath);
-            sessionStorage.removeItem('returnPath');
+            if(/^\/panel.*/.test(returnPath)){
+                ajex.ajexLoad(returnPath);
+                ajex.updateNavBar(returnPath);
+                sessionStorage.removeItem('returnPath');
+            }else{
+                window.location.href = returnPath;
+            }
         }else {
             ajex.ajexLoad('<?php echo $_SERVER['REQUEST_URI']?>', false);
             ajex.updateNavBar('<?php echo $_SERVER['REQUEST_URI'] ?>');
@@ -101,7 +104,7 @@
         window.globalLang = ajex.Lang;
     })
 </script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<script src="/panel/assets/js/sw-register.js"></script>
 <!-- script load end -->
 </body>
 </html>

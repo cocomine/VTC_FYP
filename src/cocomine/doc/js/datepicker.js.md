@@ -1,4 +1,4 @@
-datepicker javascript library
+datepicker javascript library v1.1.5
 ===
 
 需要載入css檔案
@@ -39,12 +39,12 @@ datepicker javascript library
 
 禁用個別日期
 ---
-使用方法是在HTMLelement上面設置`disableDate`屬性
+使用方法是在HTMLelement上面設置`datepicker.disableDate`屬性
 
-1. 在input element上面設置`id`屬性
+1. 在date-picker上面設置`id`屬性
    ```html
-   <div class="date-picker">
-      <input type="date" class="date-picker-toggle" id="abc">
+   <div class="date-picker" id="ccc">
+      <input type="date" class="date-picker-toggle">
    </div>
    ```
    
@@ -60,35 +60,83 @@ datepicker javascript library
 3. 設置`disableDate`屬性, 屬性類型是`string[]`
    ```javascript
    //原生
-   document.getElementById('ccc').disableDate = []
+   document.getElementById('ccc').datepicker.disableDate = []
    
    //jquery
-   $('#ccc')[0].disableDate = []
+   $('#ccc')[0].datepicker.disableDate = []
    ```
 
 4. 設置要禁用日期(`MM-dd-yyyy`),
    ```javascript
    //原生
-   document.getElementById('ccc').disableDate = ["01-02-2023"]
+   document.getElementById('ccc').datepicker.disableDate = ["01-02-2023"]
    
    //jquery
-   $('#ccc')[0].disableDate = ["01-02-2023"]
+   $('#ccc')[0].datepicker.disableDate = ["01-02-2023"]
    ```
 
 5. 要禁用更多日期, 則在array上增加數值
    ```javascript
    //原生
-   document.getElementById('ccc').disableDate = ["01-02-2023", "01-03-2023"]
+   document.getElementById('ccc').datepicker.disableDate = ["01-02-2023", "01-03-2023"]
    
    //jquery
-   $('#ccc')[0].disableDate = ["01-02-2023", "01-03-2023"]
+   $('#ccc')[0].datepicker.disableDate = ["01-02-2023", "01-03-2023"]
    ```
    
 > 如發現設置後仍沒有反應, 請嘗試之後使用`drawDatePicker()`function
 > ```javascript
 > //原生
-> document.getElementById('ccc').drawDatePicker()
+> document.getElementById('ccc').datepicker.drawDatePicker()
 > 
 > //jquery
-> $('#ccc')[0].drawDatePicker()
+> $('#ccc')[0].datepicker.draw()
 > ```
+
+Event 事件
+---
+根據用戶操作會有不同的事件
+
+1. `datepicker.prev_month` 當用戶點擊上個月按鈕時觸發
+
+   data.prevDate: 觸發前的日期<br>
+   data.newDate: 觸發後的日期
+   ```javascript
+    //jquery
+    $('#ccc').on('datepicker.prev_month', function(e, data){
+        //do something
+    })
+   ```
+   
+2. `datepicker.next_month` 當用戶點擊下個月按鈕時觸發
+
+    data.prevDate: 觸發前的日期<br>
+    data.newDate: 觸發後的日期
+    ```javascript
+     //jquery
+     $('#ccc').on('datepicker.next_month', function(e, data){
+          //do something
+     })
+    ```
+   
+3. `datepicker.select_date` 當用戶點擊日期時觸發
+
+    data.prevSelect: 觸發前的選擇<br>
+    data.newSelect: 觸發後的選擇
+    ```javascript
+     //jquery
+     $('#ccc').on('datepicker.select_date', function(e, data){
+          //do something
+     })
+    ```
+   
+4. `datepicker.select_today` 當用戶點擊Today按鈕時觸發
+
+    data.prevSelect: 觸發前的選擇<br>
+    data.newSelect: 觸發後的選擇
+    ```javascript
+     //jquery
+     $('#ccc').on('datepicker.select_today', function(e, data){
+          //do something
+     })
+    ```

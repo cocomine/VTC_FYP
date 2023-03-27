@@ -3,7 +3,12 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment){
+define([ 'jquery', 'toastr', 'moment', 'full.jquery.crs.min', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr, moment, crs){
+    const sex = { 1: "男", 0: "女" };
+    crs.init();
+    let prev_select_user;
+    let loaded_dataTable = 0;
+
     const dataTable_Options = {
         ajax: {
             url: location.pathname + '/',
@@ -17,13 +22,16 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             loadingRecords: `<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>`,
             url: $('#datatables_lang_url').text()
         },
+        createdRow: function (row){
+            $(row).addClass('position-relative');
+        },
         columns: [
             {data: "ID"},
             {
                 data: 'Name',
                 render: function (data, type, row){
                     if (type === 'display'){
-                        return `<a href="#" data-id="${row.ID}">${data} (${row.full_name})</a>`;
+                        return `<a href="#" data-id="${row.ID}" class="stretched-link">${data} (${row.full_name})</a>`;
                     }else{
                         return data + ";" + row.full_name;
                     }
@@ -42,11 +50,10 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
             }
         ]
     };
-    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
-    const sex = { 1: "男", 0: "女" };
 
     /* load user list */
-    $('#dataTable').dataTable({
+    $('#dataTable').on('init.dt', dataTableInit)
+        .dataTable({
         ...dataTable_Options,
         ajax: {
             ...dataTable_Options.ajax,
@@ -63,7 +70,8 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
     });
 
     /* 過去預約用戶 */
-    $('#dataTable2').dataTable({
+    $('#dataTable2').on('init.dt', dataTableInit)
+        .dataTable({
         ...dataTable_Options,
         ajax: {
             ...dataTable_Options.ajax,
@@ -79,6 +87,17 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
         ],
     });
 
+    /* When 2 datatable is loaded, 自動載入用戶詳細資訊 */
+    function dataTableInit(){
+        loaded_dataTable++;
+        if(loaded_dataTable >= 2){
+            const hashtag = location.hash;
+            if(hashtag.length > 0) {
+                showUserInfo(hashtag.slice(1))
+            }
+        }
+    }
+
     /* 請求用戶詳細資訊 */
     $("#dataTable, #dataTable2").on('click', 'a[data-id]', function (e){
         e.preventDefault();
@@ -86,17 +105,16 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
         showUserInfo(id)
     });
 
-    /* 自動載入用戶詳細資訊 */
-    const hashtag = location.hash;
-    if(hashtag.length > 0) {
-        showUserInfo(hashtag.slice(1))
-    }
-
     /**
      * 顯示用戶詳細資訊
      * @param id 訂單id
      */
     function showUserInfo(id){
+        /* height light table row */
+        if(prev_select_user) prev_select_user.css('background-color', '');
+        prev_select_user = $(`a[data-id="${id}"]`).parents(".position-relative").css('background-color', '#dedede');
+
+        /* send request */
         fetch(location.pathname+'?type=detail', {
             method: 'POST',
             redirect: 'error',
@@ -118,12 +136,13 @@ define([ 'jquery', 'toastr', 'moment', 'datatables.net', 'datatables.net-bs5', '
                 $('#firstname').val(data.first_name);
                 $('#email').val(data.Email);
                 $('#phone').val('+' + data.phone_code + ' ' + data.phone);
-                $('#country').val(country[data.country]);
+                $('#country').val(data.country);
                 $('#sex').val(sex[data.sex]);
                 $('#birth').val(data.birth);
 
                 $('#reserve_date').text(moment(data.book_date).format('YYYY/M/DD'));
-                $('#order_time').text(data.order_datetime);
+                $('#invoice_id').text(data.invoice_number)
+                .parent('a').attr('href', data.invoice_url);
                 $('#order_id').text(data.ID);
                 $('#reserve_detail').html(data.plan.map((value) => {
                     return `<tr>

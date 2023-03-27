@@ -8,6 +8,7 @@ class _ReservePost implements \cocomine\IPage {
 
     private mysqli $sqlcon;
     private array $upPath;
+    private string $event_name;
 
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
@@ -25,7 +26,7 @@ class _ReservePost implements \cocomine\IPage {
 
         //check the event is true owner
         if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
-            $stmt = $this->sqlcon->prepare("SELECT COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
+            $stmt = $this->sqlcon->prepare("SELECT name, COUNT(ID) AS 'count' FROM Event WHERE ID = ? AND UUID = ?");
             $stmt->bind_param('ss', $this->upPath[0], $auth->userdata['UUID']);
             if (!$stmt->execute()) return 500;
 
@@ -33,6 +34,7 @@ class _ReservePost implements \cocomine\IPage {
             $row = $result->fetch_assoc();
 
             if ($row['count'] <= 0) return 403;
+            $this->event_name = $row['name'];
         }
         return 200;
     }
@@ -53,8 +55,8 @@ class _ReservePost implements \cocomine\IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">已遞交預約用戶</h4>
-                    <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇用戶查看資料</div>
+                    <h4 class="card-title">已遞交預約客戶</h4>
+                    <div class="alert alert-info"><i class="fa-solid fa-circle-info me-2"></i>選擇客戶查看資料</div>
                     <div class="data-tables datatable-primary">
                         <table id="dataTable" class="w-100">
                             <thead class="text-capitalize">
@@ -74,7 +76,7 @@ class _ReservePost implements \cocomine\IPage {
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">過去預約用戶</h4>
+                    <h4 class="card-title">過去預約客戶</h4>
                     <div class="data-tables datatable-primary">
                         <table id="dataTable2" class="w-100">
                             <thead class="text-capitalize">
@@ -115,7 +117,7 @@ class _ReservePost implements \cocomine\IPage {
                         </div>
                         <div class="col-6">
                             <label class="form-label" for="country">國家 / 地區</label>
-                            <input type="text" class="form-control form-rounded" id="country" readonly>
+                            <select class="form-control form-rounded crs-country" id="country" readonly data-value="shortcode" data-default-option="請選擇" data-region-id="null" disabled style="background-color: initial"></select>
                         </div>
                         <div class="col-6">
                             <label class="form-label" for="phone">電話號碼</label>
@@ -160,6 +162,7 @@ class _ReservePost implements \cocomine\IPage {
                         <div class="col-12">
                             <p class="text-secondary">下單預約時間: <span id="order_time">000.000.000</span></p>
                             <p class="text-secondary">預約編號: # <span id="order_id">00</span></p>
+                            <p class="text-secondary">帳單編號: <a href="#" target="_blank"><span id="invoice_id">xxx</span></a></p>
                         </div>
                     </div>
                 </div>
@@ -176,7 +179,7 @@ require.config({
             'datatables.net-responsive-bs5': ['https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5'],
         },
     });
-loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/_ReservePost']);
+loadModules(['datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5', 'myself/page/reserve/_ReservePost', 'full.jquery.crs.min']);
 </script>
 body;
     }
@@ -189,7 +192,7 @@ body;
 
         /* 展示用戶預約詳情 */
         if($_GET['type'] === "detail"){
-            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID
+            $stmt = $this->sqlcon->prepare("SELECT b.ID, u.Email, d.first_name, d.last_name, d.phone_code, d.phone, d.country, d.sex, d.birth, b.book_date, b.order_datetime, b.event_ID, b.invoice_number, b.invoice_url
                 FROM Book_event b, User u, User_detail d WHERE b.ID = ? AND b.event_ID = ? AND b.User = u.UUID AND b.User = d.UUID");
             $stmt->bind_param('ss', $data['id'], $this->upPath[0]);
             if (!$stmt->execute()) {
@@ -232,11 +235,12 @@ body;
         if (!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
+                'Title' => showText('Error_Page.500_title'),
                 'Message' => $stmt->error,
             );
         }
 
+        /* 展示用戶預約計劃 */
         $output = array();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -254,7 +258,7 @@ body;
             if (!$stmt->execute()) {
                 return array(
                     'code' => 500,
-                    'Title' => 'Database Error!',
+                    'Title' => showText('Error_Page.some_thing_happen'),
                     'Message' => $stmt->error,
                 );
             }
@@ -279,20 +283,20 @@ body;
     public function path(): string {
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
             <li><a href='/panel/reserve'>預約管理</a></li>
-            <li><span>活動 " . $this->upPath[0] . "</span></li>";
+            <li><span>" . $this->event_name . "</span></li>";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "預約管理 | X-Travel";
+        return $this->event_name." 預約管理 | X-Travel";
     }
 
     /**
      * @inheritDoc
      */
     public function get_Head(): string {
-        return "預約管理";
+        return $this->event_name." 預約管理";
     }
 }

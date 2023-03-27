@@ -32,7 +32,7 @@ RewriteRule ^.*$ /index.php [L,QSA]
 <FilesMatch "\.(json|sql|inc.php)$">
     Require all denied
 </FilesMatch>
-<FilesMatch "manifest.json">
+<FilesMatch "(manifest.json|lottie.json)">
     Require all granted
 </FilesMatch>
 
@@ -56,7 +56,7 @@ RewriteRule ^.*$ /index.php [L,QSA]
     Header set X-Download-Options "noopen"
     Header set Cache-Control "no-cache, max-age=64000"
   </FilesMatch>
-  <FilesMatch "sw.min.js">
+  <FilesMatch "sw.js">
     Header set Service-Worker-Allowed "/"
   </FilesMatch>
 </IfModule>
