@@ -80,7 +80,7 @@ class activity_view implements IPage
 
         /* 取得該用戶建立的活動給參與人數 */
         /* */
-        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price FROM Book_event, Event WHERE  Event.ID = Book_event.event_ID AND User = ?");
+        $stmt = $this->sqlcon->prepare("SELECT Event.ID, Event.thumbnail, Event.summary, Event.name, Book_event.pay_price, Book_event.ID AS 'Book_eventID' FROM Book_event, Event WHERE  Event.ID = Book_event.event_ID AND User = ?");
         $stmt->bind_param('s', $id);
         if (!$stmt->execute()) {
             return array(
@@ -100,6 +100,7 @@ class activity_view implements IPage
                 'name' => $row['name'],
                 'pay_price' => $row['pay_price'],
                 'plan' => null,
+                'Book_eventID' => $row['Book_eventID']
             );
 
 
