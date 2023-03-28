@@ -234,6 +234,7 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
                     if (json.code === 528){
                         /* 解密訊息 */
                         const codes = json.Data.code.map((item) => key.privateKey.decrypt(forge.util.decode64(item.Code)));
+                        saveText = '';
 
                         /* 排列table */
                         let table = '';

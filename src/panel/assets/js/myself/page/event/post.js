@@ -35,8 +35,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
         /* 載入草稿 */
         $('#load-draft').click((e) => {
             e.preventDefault();
-            //$('#found-draft').hide()
             const draft = JSON.parse(localStorage.getItem("event-draft"));
+            draft.isPost = 0;
             fillData(draft);
         });
 
@@ -46,8 +46,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
          */
         function fillData(draft){
             //活動資料
-            $('#event-title').val(draft.title['event-title']);
-            $('#event-summary').val(draft.data['event-summary'])[0].dispatchEvent(new Event('input', { bubbles: true }));
+            $('#event-title').val(draft.title['event-title']).trigger('input');
+            $('#event-summary').val(draft.data['event-summary']).trigger('input');
             MDE_description.codemirror.setValue(draft.data['event-description']);
             MDE_precautions.codemirror.setValue(draft.data['event-precautions']);
 
@@ -104,8 +104,8 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
             }
 
             //活動地址
-            $("#event-location").val(draft.location['event-location']);
-            $("#event-country").val(draft.location['event-country'])[0].dispatchEvent(new Event('change', { "bubbles": true }));
+            $("#event-location").val(draft.location['event-location']).trigger('input');
+            $("#event-country").val(draft.location['event-country']).trigger('change');
             $("#event-region").val(draft.location['event-region']);
             $("#event-longitude").val(draft.location['event-longitude']);
             $("#event-latitude").val(draft.location['event-latitude']);
@@ -355,7 +355,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
                 //list up
                 img_items = tmp.map((value) => value.find('img')[0]);
-                jq_image.val(images.join(','));
+                jq_image.val(images.map(({ id }) => id).join(','));
             }, 5, /(image\/png)|(image\/jpeg)|(image\/gif)|(image\/webp)/);
         });
 
@@ -875,11 +875,11 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 if (value === '1'){
                     $('#event-post-date').prop('disabled', true).val(moment().format('YYYY-MM-DD'));
                     jq_event_post_time.prop('disabled', true).val(moment().format('HH:mm'));
-                    $('#isPost-alert').html(`<div class="alert alert-warning" role="alert"><i class="fa-solid fa-triangle-exclamation me-2"></i>即時公開不可修改日期</div>`)
+                    $('#isPost-alert').html(`<div class="alert alert-warning" role="alert"><i class="fa-solid fa-triangle-exclamation me-2"></i>即時公開不可修改日期</div>`);
                 }else{
                     $('#event-post-date').prop('disabled', false);
                     jq_event_post_time.prop('disabled', false);
-                    $('#isPost-alert').html('')
+                    $('#isPost-alert').html('');
                 }
             }
         });
@@ -942,7 +942,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
 
             // 檢查 plan & schedule
             // 如果曾經發佈則不檢查
-            if(!_isPost){
+            if (!_isPost){
                 if (data.plan.length <= 0){
                     $('#event-plan-feedback').show();
                     valid = false;
