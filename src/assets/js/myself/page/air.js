@@ -42,7 +42,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                                    <div class=\'ratio ratio-4x3 position-relative\'>
                                      <div class=\'overflow-hidden card-img-top\'>
                                        <div class=\'media-list-center\'>
-                                         <img src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
+                                         <img data-src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                                        </div>
                                      </div>
                                    </div>
@@ -55,7 +55,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
                                         <span id="airRatingScore" class="fs-10">5.0</span>
                                       </div>
                                     </div>
-                                    <a href='https://${server}/activity_details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
+                                    <a href='/details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
                                   </div>
                                 </div>
                               </div>

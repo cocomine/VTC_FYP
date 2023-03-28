@@ -53,7 +53,7 @@ class home implements IPage {
             $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $hkActivities .= "<a href='activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $hkActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $cnActivities = '';
@@ -69,7 +69,7 @@ class home implements IPage {
             $cnActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $cnActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $cnActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $cnActivities .= "<a href='activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $cnActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $moActivities = '';
@@ -85,7 +85,7 @@ class home implements IPage {
             $moActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $moActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $moActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $moActivities .= "<a href='activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $moActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $twActivities = '';
@@ -101,7 +101,7 @@ class home implements IPage {
             $twActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $twActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $twActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $twActivities .= "<a href='activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $twActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/home.css">
