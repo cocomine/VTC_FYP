@@ -152,9 +152,9 @@ class checkout implements IApi {
                 }
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
-                    http_response_code(400);
+                    http_response_code(410);
                     echo json_encode([
-                        "code" => 400,
+                        "code" => 410,
                         "data" => $result->fetch_all(MYSQLI_ASSOC),
                     ]);
                     return;

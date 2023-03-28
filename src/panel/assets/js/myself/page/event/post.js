@@ -204,7 +204,7 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 td: [],
                 tr: [],
                 blockquote: [],
-                img: [ "src", "alt" ],
+                img: [ "src", "alt", "style" ],
                 hr: []
             }
         });
@@ -238,6 +238,10 @@ define([ 'jquery', 'easymde', 'showdown', 'xss', 'media-select', 'media-select.u
                 type: 'output',
                 regex: new RegExp(`<a(.*)>`, 'g'),
                 replace: `<a target="_blank" $1>`
+            }, {
+                type: 'output',
+                regex: new RegExp(`<img(.*)>`, 'g'),
+                replace: `<img style="max-height: 500px; border-radius: 10px" $1>`
             } ]
         });
 

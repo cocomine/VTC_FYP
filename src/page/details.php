@@ -245,7 +245,7 @@ review;
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">活動詳情</h3>
-                    <div class="card-text">{$event_data['description_html']}</div>
+                    <div class="card-text" id="event-detail">{$event_data['description_html']}</div>
                 </div>
             </div>
         </div>

@@ -248,7 +248,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
 
     /* 送出訂單 */
     $('#checkout, #confirm-checkout').click(function (){
-        const id = location.pathname.split('/').pop();
+        const id = location.pathname.split('/').find((item) => /[0-9]+/.test(item));
         const ignore_conflict = $(this).attr('id') === 'confirm-checkout';
 
         /* 封鎖按鈕 */
@@ -262,7 +262,12 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
-            body: JSON.stringify({ plan: _select_plan, eventId: parseInt(id), date: jq_bookDate.children('input').val(), ignore_conflict })
+            body: JSON.stringify({
+                plan: _select_plan,
+                eventId: parseInt(id),
+                date: jq_bookDate.children('input').val(),
+                ignore_conflict
+            })
         }).then(async (response) => {
             const json = await response.json();
             if (response.ok){
@@ -279,7 +284,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
                     // 未登入
                     sessionStorage.setItem('returnPath', location.pathname);
                     location.replace(json.path);
-                }else if(response.status === 400){
+                }else if(response.status === 410){
                     // 顯示確認視窗
                     const jq_confirm = $('#confirm');
                     bootstrap.Modal.getOrCreateInstance(jq_confirm[0]).show();
