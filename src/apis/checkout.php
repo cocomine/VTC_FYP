@@ -206,7 +206,7 @@ class checkout implements IApi {
                     ]
                 ],
                 'success_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/success',
-                'cancel_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/activity_details/' . $data['eventId']
+                'cancel_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/details/' . $data['eventId']
             ]);
         } catch (ApiErrorException $e) {
             http_response_code(500);
