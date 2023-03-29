@@ -8,7 +8,6 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\apis\media;
 
 /**
  * Class air
@@ -59,7 +58,7 @@ class land implements IPage {
             $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
             $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
             $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>5.0</span>";
-            $allActivities .= "</div></div><a href='https://".$_SERVER['SERVER_NAME']."/activity_details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
+            $allActivities .= "</div></div><a href='https://".$_SERVER['SERVER_NAME']."/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
             $allActivities .= " </div></div></div></div>";
         }
 

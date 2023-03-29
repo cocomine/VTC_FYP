@@ -5,7 +5,7 @@ namespace page;
 use cocomine\IPage;
 use mysqli;
 
-class activity_details implements IPage {
+class details implements IPage {
 
     private array $UpPath;
     private string $activity_name;
@@ -305,11 +305,11 @@ body. <<<body
     require.config({
         paths:{
             datepicker: ['myself/datepicker'],
-            activity_details: ['myself/page/activity_details'],
+            details: ['myself/page/details'],
             'mapbox-gl': ['https://api.mapbox.com/mapbox-gl-js/v2.12.1/mapbox-gl'],
         },
     });
-    loadModules(['activity_details', 'datepicker', 'mapbox-gl']);
+    loadModules(['details', 'datepicker', 'mapbox-gl']);
 </script>
 body;
     }
