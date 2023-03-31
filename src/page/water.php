@@ -53,7 +53,7 @@ class water implements IPage {
         while($row = $rs->fetch_assoc()) {
             $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
             $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $allActivities .= "<img data-src='panel/api/media/" .$row['thumbnail']. "' class='owl-lazy' alt='".$row['thumbnail']."'></div></div></div>";
+            $allActivities .= "<img src='/panel/api/media/" .$row['thumbnail']. "' class='owl-lazy' alt='".$row['thumbnail']."'></div></div></div>";
 
             $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
             $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";

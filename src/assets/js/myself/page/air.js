@@ -27,41 +27,44 @@ define(['jquery', 'toastr'], function (jq, toastr) {
         }).then(async (response) => {
             const data = await response.json();
             console.log(data);
-            if (data.code === 200){
+            if (data.code === 200) {
+                let map = '';
+                $('#airEvent').empty();
+
                 if (data.data.length <= 0){
-                    $('#airEvent').empty();
-                    return;
-                }
-
-                const map = data.data.map((value) => {
-                    let server = value.serverName;
-
-                    return `<div class="col-auto">
-                               <div class=\'item\'>
-                                 <div class="card card-block mx-2" style=\'min-width: 300px;\'>
-                                   <div class=\'ratio ratio-4x3 position-relative\'>
-                                     <div class=\'overflow-hidden card-img-top\'>
-                                       <div class=\'media-list-center\'>
-                                         <img data-src="panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
-                                       </div>
-                                     </div>
-                                   </div>
-                                   <div class="card-body">
-                                    <h5 class="card-title">${value.title}</h5>
-                                    <p class="card-text">${value.summary}</p>
-                                    <div class="row align-items-center">
-                                      <div class="col-auto">
-                                        <i class="fs-10 fa-solid fa-star text-warning"></i>
-                                        <span id="airRatingScore" class="fs-10">5.0</span>
-                                      </div>
-                                    </div>
-                                    <a href='/details/${value.id}' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>
-                                  </div>
-                                </div>
+                    map = `<div class="card" style="min-width: 100%;">
+                              <div class="card-body">
+                                <h1 style="font-size:300%; text-align: center; margin: 70px;">噢！沒有找到相關活動。。。</h1>
                               </div>
                             </div>`;
-                });
-                $('#airEvent').empty();
+                } else {
+                    map = data.data.map((value) => {
+                        return `<div class="col-auto">
+                           <div class="item">
+                             <div class="card card-block mx-2" style="min-width: 300px;">
+                               <div class="ratio ratio-4x3 position-relative">
+                                 <div class="overflow-hidden card-img-top">
+                                   <div class="media-list-center">
+                                     <img src="/panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
+                                   </div>
+                                 </div>
+                               </div>
+                               <div class="card-body">
+                                <h5 class="card-title">${value.title}</h5>
+                                <p class="card-text">${value.summary}</p>
+                                <div class="row align-items-center">
+                                  <div class="col-auto">
+                                    <i class="fs-10 fa-solid fa-star text-warning"></i>
+                                    <span id="airRatingScore" class="fs-10">5.0</span>
+                                  </div>
+                                </div>
+                                <a href="/details/${value.id}" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>`;
+                    });
+                }
                 $('#airEvent').html(map);
 
             } else {

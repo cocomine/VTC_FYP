@@ -52,16 +52,17 @@ class air implements IPage {
         }
 
         $rs = $stmt->get_result();
+
         while($row = $rs->fetch_assoc()) {
             $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
             $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $allActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div></div></div>";
+            $allActivities .= "<img class='owl-lazy' src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div></div></div>";
 
             $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
             $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
             $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>5.0</span>";
             $allActivities .= "</div></div><a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
-            $allActivities .= " </div></div></div></div>";
+            $allActivities .= "</div></div></div></div>";
         }
 
         return <<<body
@@ -99,7 +100,7 @@ class air implements IPage {
 </div>
 body . <<<body
 <div class="container mt-4">
-  <div class="row row-cols-1 row-cols-md-4 g-4" id="airEvent">
+  <div class='row row-cols-1 row-cols-md-4 g-4' id="airEvent">
     $allActivities
   </div>
 </div>
