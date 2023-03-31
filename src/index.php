@@ -322,7 +322,10 @@ function run_apis(array $path, MyAuth $auth) {
                                         if ($auth->islogin) {
                                             echo "<a class='dropdown-item g_id_signout' href='https://{$_SERVER['SERVER_NAME']}/panel/login?logout=1'>
                                                     <i class='fa fa-sign-out pr--10'></i>" . showText('index.Logout') .
-                                                "</a>";
+                                                "</a>
+                                                <a class='dropdown-item g_id_signout' href='/reserve_view'>
+                                                    <i class='fa fa-sign-out pr--10'></i>預訂管理
+                                                </a>";
                                         } else {
                                             echo "<a class='dropdown-item' href='https://{$_SERVER['SERVER_NAME']}/panel/login'>
                                                     <i class='fa fa-sign-in pr--10'></i>" . showText('index.Login') .
@@ -387,7 +390,7 @@ function run_apis(array $path, MyAuth $auth) {
                     <div class="col-lg-3 clearfix">
                         <div class="search-box">
                             <form action="#">
-                                <input type="text" name="search" placeholder="Search..." required>
+                                <input type="text" name="search" placeholder="Search..." required aria-label="Search">
                                 <i class="ti-search"></i>
                             </form>
                         </div>
