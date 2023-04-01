@@ -176,6 +176,9 @@ review;
 .plan-name{
     font-size: 0.3em;
 }
+#event-detail img {
+    border-radius: 0.5rem;
+}
 </style>
 <div class="container mt-4">
     <div class="row gy-4">

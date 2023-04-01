@@ -37,7 +37,7 @@ class xmap implements \cocomine\IApi {
      */
     public function post(?array $data) {
         header("Content-Type: text/json");
-        $stmt = $this->sqlcon->prepare("SELECT ID, name, summary, thumbnail, longitude, latitude FROM Event WHERE longitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ? AND state = 1 ORDER BY create_time DESC");
+        $stmt = $this->sqlcon->prepare("SELECT ID, name, summary, thumbnail, longitude, latitude, description_html FROM Event WHERE longitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ? AND state = 1 ORDER BY create_time DESC");
         $stmt->bind_param("dddd", $data['southWest']['longitude'], $data['northEast']['longitude'], $data['southWest']['latitude'], $data['northEast']['latitude']);
         if (!$stmt->execute()) {
             http_response_code(500);
