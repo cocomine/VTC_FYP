@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023.
  * Create by cocomine
- * 1.2.8
+ * 1.2.10
  */
 
 /*
@@ -20,15 +20,15 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
     function setup(picker){
         picker = $(picker);
         const children = picker.children('.date-picker-toggle');
+        if (children.length <= 0){
+            throw new Error('Children element class="date-picker-toggle" not found. Please check your code.');
+        }
+
         let selectDate = moment();
         let activateDate = moment();
         let minDate = children.attr('min');
         let maxDate = children.attr('max');
         picker[0].datepicker = { disableDate: [] };
-
-        if (children.length <= 0){
-            throw new Error('Children element class="date-picker-toggle" not found. Please check your code.');
-        }
 
         /* 預設日期(今日) */
         if (children.val().length <= 0){
@@ -55,7 +55,6 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
             new bootstrap.Dropdown(children[0], { autoClose: 'outside' });
         }else{
             children.click((e) => e.preventDefault());
-            update(children);
         }
 
         /* event */
@@ -118,6 +117,7 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
                 picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
             }
         }
+        update();
     }
 
     /**
