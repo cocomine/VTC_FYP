@@ -9,6 +9,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
     const jq_bookDate = $('#book-date');
     const jq_plan = $('#plan');
     jq_bookDate.children('input').attr('min', moment().format('YYYY-MM-DD')); // 設定最小日期
+    jq_bookDate[0].datepicker.draw(); // 重繪
     let _plan; // 計劃
     let _select_plan = []; // 選擇的計劃
 
@@ -120,8 +121,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
     });
 
     /* input直接輸入, 日期改變 */
-    jq_bookDate.children('input').blur(function (e){
-        console.log($(this).val()); //debug
+    jq_bookDate.children('input').on('blur input change',function (e){
         const val = $(this).val();
 
         // 檢查日期是否可用
@@ -154,7 +154,6 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
                 _plan = json.data;
                 _select_plan = [];
                 $('#total').text("$ 0");
-
                 if(_plan.length <= 0){
                     jq_plan.html(`<div class="rounded px-3 py-2 bg-light col-12 text-center">
                         <p class="text-muted">無可預訂計劃</p>
@@ -200,6 +199,10 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
                             _select_plan.push({ plan: item.Schedule_ID, count: 1 });
                             count_elm.text(1);
                             tmp.find('[data-plan="sub"]').prop('disabled', false); // 啟用減少按鈕
+
+                            // 人數達上限, 禁用按鈕
+                            if (1 >= item.max_people || 1 >= item.max_each_user)
+                                $(this).prop('disabled', true);
                         }
                     });
 

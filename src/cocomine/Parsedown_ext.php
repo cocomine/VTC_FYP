@@ -172,7 +172,8 @@ class Parsedown_ext extends Parsedown {
             return null;
         }
 
-        $image['element']['attributes']['style'] = "max-height: 500px; border-radius: 10px";
+        $image['element']['attributes']['style'] = "max-height: 500px";
+        $image['element']['attributes']['class'] = "rounded";
 
         return $image;
     }

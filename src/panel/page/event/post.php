@@ -819,7 +819,7 @@ body;
 
         //HTML filter xss config
         $filterXSS_description = HTMLPurifier_Config::createDefault();
-        $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt|style]");
+        $filterXSS_description->set('HTML.Allowed', "h1,h2,h3,h4,h5,h6,a[href|target],strong,em,del,br,p,ul[class],ol,li,table,thead,th,tbody,td,tr,blockquote,hr,img[src|alt|style|class]");
         $filterXSS_precautions = HTMLPurifier_Config::createDefault();
         $filterXSS_precautions->set('HTML.Allowed', "strong,em,del,br,p,ul[class],ol,li");
 

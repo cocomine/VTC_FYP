@@ -19,11 +19,11 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
 
     function setup(picker){
         picker = $(picker);
+        const children = picker.children('.date-picker-toggle');
         let selectDate = moment();
         let activateDate = moment();
-        let minDate = null;
-        let maxDate = null;
-        const children = picker.children('.date-picker-toggle');
+        let minDate = children.attr('min');
+        let maxDate = children.attr('max');
         picker[0].datepicker = { disableDate: [] };
 
         if (children.length <= 0){
@@ -36,12 +36,16 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
         }
 
         /* 用戶點擊 */
-        children.on('input focus', function (){
+        children.on('input focus change', function (){
             update();
         });
 
         /* 強制重新繪製 */
         picker[0].datepicker.draw = function (){
+            minDate = children.attr('min');
+            minDate = minDate === undefined ? null : moment(minDate);
+            maxDate = children.attr('max');
+            maxDate = maxDate === undefined ? null : moment(maxDate);
             picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
         };
 
