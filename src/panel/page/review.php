@@ -48,10 +48,14 @@ class review implements IPage {
 
         $datatables_lang_url = showText('datatables_js.url');
 
+        $Text = showText('review.Content'); //php lang
+        $jsText = json_encode(showText('review.js')); //js lang
+
         return <<<body
 <pre class="d-none" id="datatables_lang_url">$datatables_lang_url</pre>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css"/>
+<pre id="jsText" class="d-none">$jsText</pre>
 <div class="col-12">
     <div class="card">
         <div class="card-body">
@@ -59,8 +63,8 @@ class review implements IPage {
                 <table id="dataTable" class="w-100">
                     <thead class="text-capitalize">
                         <tr>
-                            <th>活動</th>
-                            <th>活動種類</th>
+                            <th>{$Text['event']}</th>
+                            <th>{$Text['event_type']}</th>
                             <th>發佈日期</th>
                             <th>狀態</th>
                             <th>審核狀態</th>
@@ -128,7 +132,7 @@ body;
         }
 
         return "<li><a href='/panel'>" . showText("index.home") . "</a></li>
-            <li><span>審核活動</span></li>";
+            <li><span>". showText('review.Head') . "</span></li>";
     }
 
     /**
@@ -140,7 +144,7 @@ body;
             return $this->reviewPost->get_Title();
         }
 
-        return "審核活動 | X-Travel";
+        return showText('review.Title');
     }
 
     /**
@@ -152,6 +156,6 @@ body;
             return $this->reviewPost->get_Head();
         }
 
-        return "審核活動";
+        return showText('review.Head');
     }
 }

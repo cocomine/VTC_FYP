@@ -519,6 +519,18 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh-HANT.json"
+    },
+    "review": {
+      "Title": "審核活動 | X-Travel",
+      "Head": "審核活動",
+      "Content": {
+        "event": "活動",
+        "event_type": "活動種類"
+      },
+      "js": {
+        "water_event": "水上活動",
+        "air_event": "空中活動"
+      }
     }
   }
 }

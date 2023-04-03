@@ -519,6 +519,18 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/en-GB.json"
+    },
+    "review": {
+      "Title": "Audit Activity | X-Travel",
+      "Head": "Audit Activity",
+      "Content": {
+        "event": "event",
+        "event_type": "Event Type"
+      },
+      "js": {
+        "water_event": "Water Event",
+        "air_event": "Air event"
+      }
     }
   }
 }

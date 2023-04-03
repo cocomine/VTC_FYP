@@ -517,6 +517,18 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh.json"
+    },
+    "review": {
+      "Title": "审核活动 | X-Travel",
+      "Head": "审核活动",
+      "Content": {
+        "event": "活动",
+        "event_type": "活动种类"
+      },
+      "js": {
+        "water_event": "水上活动",
+        "air_event": "空中活动"
+      }
     }
   }
 }

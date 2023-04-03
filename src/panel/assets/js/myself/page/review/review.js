@@ -4,6 +4,8 @@
  */
 
 define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables.net-responsive', 'datatables.net-responsive-bs5' ], function (jq, toastr){
+    const lang = JSON.parse($('#jsText').text());
+
     const table = $('#dataTable').DataTable({
         responsive: true,
         ajax: {
@@ -46,7 +48,7 @@ define([ 'jquery', 'toastr', 'datatables.net', 'datatables.net-bs5', 'datatables
             {
                 data: 'type',
                 render: (data) =>
-                    data === 0 ? '水上活動' : data === 1 ? '陸上活動' : '空中活動'
+                    data === 0 ? lang.water_event : data === 1 ? '陸上活動' : lang.air_event
 
             },
             { data: 'post_time' },
