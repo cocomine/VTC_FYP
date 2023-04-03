@@ -54,11 +54,7 @@ define([ 'jquery', 'toastr', 'media-select', 'media-select.upload' ], function (
                 const json = await response.json();
                 if (response.ok && json.code === 200){
                     toastr.success(json.Message, json.Title);
-
-                    /* 禁止表單輸入 */
-                    from.remove();
-
-
+                    ajexLoad(location.pathname);
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
                 }

@@ -107,7 +107,79 @@ class reservedetail implements IPage {
         }
         $total_price = number_format($total_price, 2);
 
-        //* 取得預約活動資料 */
+        /* 取得評論 */
+        $stmt->prepare("SELECT * FROM Book_review WHERE Book_ID = ?");
+        $stmt->bind_param("s", $this->upPath[0]);
+        if (!$stmt->execute()) {
+            echo_error(500);
+            exit;
+        }
+        $result = $stmt->get_result();
+        if($result->num_rows > 0){
+            // 已評論
+            $review_html = <<<HTML
+<div class="row">
+    <div class="col-12">
+        <label for="review-rate" class="m-0">評分</label>
+        <input type="number" class="d-none" id="review-rate" name="review-rate" min="1" max="5" required>
+        <div class="fs-4 test" id="rate-star">
+            <i class='fa-regular fa-star text-muted' data-rate="1"></i>
+            <i class='fa-regular fa-star text-muted' data-rate="2"></i>
+            <i class='fa-regular fa-star text-muted' data-rate="3"></i>
+            <i class='fa-regular fa-star text-muted' data-rate="4"></i>
+            <i class='fa-regular fa-star text-muted' data-rate="5"></i>
+        </div>
+        <div class="invalid-feedback">為活動評個分吧~~</div>
+    </div>
+    <div class="col-12">
+        <label for="review-comment" class="form-label">評論</label>
+        <textarea class="form-control" id="review-comment" name="review-comment" rows="3" maxlength="100" required></textarea>
+        <span class="float-end text-secondary" id="review-comment-count" style="margin-top: -20px; margin-right: 10px">0/100</span>
+        <div class="invalid-feedback">這裏不能留空哦~~</div>
+    </div>
+    <div class="col-12">
+        <input type="text" class="d-none" id="review-img" name="review-img">
+        <button type="button" class="btn btn-rounded btn-outline-primary mt-4 pr-4" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
+        <div class="row gx-2 mt-3" id="review-img-preview"></div>
+    </div>
+</div>
+<button type="submit" class="btn btn-rounded btn-primary mt-4 pr-4 form-submit"><i class="fa-regular fa-paper-plane me-2"></i>送出</button>
+HTML;
+        }else{
+            // 未評論
+            $review_html = <<<HTML
+<form id="review" class="needs-validation" novalidate>
+    <div class="row">
+        <div class="col-12">
+            <label for="review-rate" class="m-0">評分</label>
+            <input type="number" class="d-none" id="review-rate" name="review-rate" min="1" max="5" required>
+            <div class="fs-4 test" id="rate-star">
+                <i class='fa-regular fa-star text-muted' data-rate="1"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="2"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="3"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="4"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="5"></i>
+            </div>
+            <div class="invalid-feedback">為活動評個分吧~~</div>
+        </div>
+        <div class="col-12">
+            <label for="review-comment" class="form-label">評論</label>
+            <textarea class="form-control" id="review-comment" name="review-comment" rows="3" maxlength="100" required></textarea>
+            <span class="float-end text-secondary" id="review-comment-count" style="margin-top: -20px; margin-right: 10px">0/100</span>
+            <div class="invalid-feedback">這裏不能留空哦~~</div>
+        </div>
+        <div class="col-12">
+            <input type="text" class="d-none" id="review-img" name="review-img">
+            <button type="button" class="btn btn-rounded btn-outline-primary mt-4 pr-4" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
+            <div class="row gx-2 mt-3" id="review-img-preview"></div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-rounded btn-primary mt-4 pr-4 form-submit"><i class="fa-regular fa-paper-plane me-2"></i>送出</button>
+</form>
+HTML;
+        }
+
+        /* 取得預約活動資料 */
         $stmt->prepare("SELECT name, location, country, region FROM Event WHERE ID = ?");
         $stmt->bind_param("s", $book_data['event_ID']);
         if (!$stmt->execute()) {
@@ -229,34 +301,7 @@ class reservedetail implements IPage {
             <div class="card">
                 <div class="card-body">  
                     <h4 class="card-title">評論</h4>
-                    <form id="review" class="needs-validation" novalidate>
-                        <div class="row">
-                            <div class="col-12">
-                                <label for="review-rate" class="m-0">評分</label>
-                                <input type="number" class="d-none" id="review-rate" name="review-rate" min="1" max="5" required>
-                                <div class="fs-4 test" id="rate-star">
-                                    <i class='fa-regular fa-star text-muted' data-rate="1"></i>
-                                    <i class='fa-regular fa-star text-muted' data-rate="2"></i>
-                                    <i class='fa-regular fa-star text-muted' data-rate="3"></i>
-                                    <i class='fa-regular fa-star text-muted' data-rate="4"></i>
-                                    <i class='fa-regular fa-star text-muted' data-rate="5"></i>
-                                </div>
-                                <div class="invalid-feedback">為活動評個分吧~~</div>
-                            </div>
-                            <div class="col-12">
-                                <label for="review-comment" class="form-label">評論</label>
-                                <textarea class="form-control" id="review-comment" name="review-comment" rows="3" maxlength="100" required></textarea>
-                                <span class="float-end text-secondary" id="review-comment-count" style="margin-top: -20px; margin-right: 10px">0/100</span>
-                                <div class="invalid-feedback">這裏不能留空哦~~</div>
-                            </div>
-                            <div class="col-12">
-                                <input type="text" class="d-none" id="review-img" name="review-img">
-                                <button type="button" class="btn btn-rounded btn-outline-primary mt-4 pr-4" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
-                                <div class="row gx-2 mt-3" id="review-img-preview"></div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-rounded btn-primary mt-4 pr-4 form-submit"><i class="fa-regular fa-paper-plane me-2"></i>送出</button>
-                    </form>
+                    $review_html
                 </div>
             </div>
         </div>  
