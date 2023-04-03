@@ -121,19 +121,22 @@ class reservedetail implements IPage {
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');
         $LangJson = json_encode(array(
-            'No_media'           => $Text['No_media'],
-            'Media'              => $Text['Media'] . ' %s',
-            'Unknown_Error'      => showText('Error'),
+            'No_media' => $Text['No_media'],
+            'Media' => $Text['Media'] . ' %s',
+            'Unknown_Error' => showText('Error'),
             'title' => $Text['Media_Select']['title'],
             'Select' => $Text['Media_Select']['Select'],
             'upload' => array(
-                'Timeout'            => $Text2['respond']['Timeout'],
-                'File_name_over'     => $Text2['respond']['File_name_over'],
-                'Over_size'          => $Text2['respond']['Over_size'],
+                'Timeout' => $Text2['respond']['Timeout'],
+                'File_name_over' => $Text2['respond']['File_name_over'],
+                'Over_size' => $Text2['respond']['Over_size'],
                 'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
-                'Waiting'            => $Text2['respond']['Waiting'],
+                'Waiting' => $Text2['respond']['Waiting'],
                 'limit_type' => $Text2['limit_type'],
-                'drag' => $Text2['drag']
+                'drag' => $Text2['drag'],
+                'upload' => $Text2['upload'],
+                'or' => $Text2['or'],
+                'limit' => $Text2['limit']
             )
         ));
 
@@ -248,7 +251,7 @@ class reservedetail implements IPage {
                             </div>
                             <div class="col-12">
                                 <input type="text" class="d-none" id="review-img" name="review-img">
-                                <button type="button" class="btn btn-rounded btn-primary mt-4 pr-4" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
+                                <button type="button" class="btn btn-rounded btn-outline-primary mt-4 pr-4" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
                                 <div class="row gx-2 mt-3" id="review-img-preview"></div>
                             </div>
                         </div>
@@ -273,6 +276,8 @@ body;
 
     /* POST請求 */
     function post(array $data): array {
+
+        //增加評論
         $stmt = $this->sqlcon->prepare("INSERT INTO Book_review (book_id, rate, comment) VALUES (?, ?, ?)");
         $stmt->bind_param("sis", $this->upPath[0], $data['review-rate'], $data['review-comment']);
         if(!$stmt->execute()) {
@@ -281,6 +286,22 @@ body;
                 'Title' => '發生錯誤',
                 'Message' => $stmt->error
             );
+        }
+
+        //新增圖片
+        $stmt->prepare("INSERT INTO Book_review_img VALUES (?, ?)");
+        if(!empty($data['review-img'])) {
+            $img = explode(',', $data['review-img']);
+            foreach($img as $i) {
+                $stmt->bind_param("is", $this->upPath[0], $i);
+                if(!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => '發生錯誤',
+                        'Message' => $stmt->error
+                    );
+                }
+            }
         }
 
         if($stmt->affected_rows == 0) {

@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "12/2/2023",
+  "Last_Update": "4/4/2023",
   "Translate": {
     "Error": "发生未知错误!!",
     "header": {
@@ -59,12 +59,21 @@
     },
     "Media-upload": {
       "Content": {
+        "upload": "上传",
         "drag": "将文件拖到这里上传",
+        "or": "或者",
         "limit_type": "接受：.jpg .png .webp .gif",
+        "limit": "单个文件的最大大小为 8MB",
         "respond": {
           "Over_size": "文件过大",
+          "Not_complete": "上传不完整",
+          "Not_complete_upload": "上传失败",
           "File_type_not_mach": "文件格式不匹配",
           "File_name_over": "文件名太长",
+          "File_convert_fail": "文件转换失败",
+          "File_sql_fail": "数据库更新失败",
+          "File_save_fail": "文件保存失败",
+          "Uploaded": "上传成功",
           "Timeout": "上传超时",
           "Waiting": "等待上传..."
         }

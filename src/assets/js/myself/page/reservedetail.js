@@ -55,9 +55,9 @@ define([ 'jquery', 'toastr', 'media-select', 'media-select.upload' ], function (
                 if (response.ok && json.code === 200){
                     toastr.success(json.Message, json.Title);
 
-                    $('#review-comment').prop('disabled', true);
-                    jq_rate_start.off('click');
-                    from.removeClass('was-validated').children('.form-submit').remove();
+                    /* 禁止表單輸入 */
+                    from.remove();
+
 
                 }else{
                     toastr.error(json.Message, json.Title ?? globalLang.Error);
