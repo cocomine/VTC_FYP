@@ -29,7 +29,7 @@ self.addEventListener("fetch", function (event){
     if (/^.+\/panel\/assets\/images\/logo_lottie.json$/.test(event.request.url)){
         event.respondWith(
             caches.open(CACHE).then(function (cache){
-                console.error("Serving lottie page " + error);
+                console.debug("Serving lottie page from cache");
                 return cache.match(loading_lottie).then((response) => response || fetch(event.request));
             })
         )

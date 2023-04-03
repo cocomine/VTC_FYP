@@ -87,7 +87,7 @@
     ==================================*/
 
     /*------------- Start form Validation -------------*/
-    $(document).on('load', function () {
+    $(document).on('load ready', function () {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         const forms = document.querySelectorAll('.needs-validation');
 
@@ -97,7 +97,6 @@
                     event.preventDefault()
                     event.stopPropagation()
                 }
-
                 form.classList.add('was-validated')
             }, false)
         })
@@ -108,7 +107,7 @@
     ref: https://web.dev/lazy-loading-images/
     ==================================*/
 
-    $(document).on('load', function () {
+    $(document).on('load ready', function (e) {
         let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
 
         if ("IntersectionObserver" in window) {

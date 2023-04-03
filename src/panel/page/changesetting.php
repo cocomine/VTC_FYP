@@ -268,8 +268,8 @@ class changesetting implements IPage {
                     </div>
                     <div class="col-6">
                         <label class="form-label" for="birth">出生日期</label>
-                        <div class="date-picker">
-                            <input type="date" class="date-picker-toggle form-control form-rounded" id="birth" name="birth" value="{$userdata['birth']}">
+                        <div class="date-picker" id="birth-date-picker">
+                            <input type="date" class="date-picker-toggle form-control form-rounded" id="birth" name="birth" value="{$user_detail['birth']}">
                             <div class="invalid-feedback">請選擇出生日期</div>
                         </div>
                     </div>

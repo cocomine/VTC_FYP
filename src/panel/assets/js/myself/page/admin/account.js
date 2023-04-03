@@ -21,7 +21,8 @@ define([ 'jquery', 'toastr', 'bootstrap', 'full.jquery.crs.min', 'datatables.net
     const Lang = JSON.parse($('#LangJson').text());
 
     /* 增加帳號 */
-    $('#AddAC').submit(function (e){
+    $('#add-ac').submit(function (e){
+        console.log(this);
         if (!e.isDefaultPrevented() && this.checkValidity()){
             e.preventDefault();
             e.stopPropagation();
@@ -33,7 +34,7 @@ define([ 'jquery', 'toastr', 'bootstrap', 'full.jquery.crs.min', 'datatables.net
             bt.html('<div id="pre-submit-load" style="height: 20px; margin-top: -4px"> <div class="submit-load"><div></div><div></div><div></div><div></div></div> </div>').attr('disabled', 'disabled');
 
             /* send */
-            fetch('/panel/account/', {
+            fetch('/panel/admin/account/', {
                 method: 'POST',
                 redirect: 'error',
                 headers: {
@@ -50,7 +51,13 @@ define([ 'jquery', 'toastr', 'bootstrap', 'full.jquery.crs.min', 'datatables.net
 
                         //update table
                         const role = $(`#Role option[value="${data.role}"]`).text();
-                        let row = [ [ json.data.UUID, data.name, data.email, '-', role, '<span class="status-p bg-success">' + Lang.Activated + '</span>' ] ];
+                        let row = [[
+                            json.data.UUID,
+                            `<a href='#' data-id='${json.data.UUID}' class='stretched-link'>${data.name}</a>`,
+                            data.email,
+                            '-', role,
+                            '<span class="status-p bg-success">' + Lang.Activated + '</span>'
+                        ]];
                         table.rows.add(row).draw();
 
                         $('#Name, #Email').val('');
@@ -68,7 +75,8 @@ define([ 'jquery', 'toastr', 'bootstrap', 'full.jquery.crs.min', 'datatables.net
         }
     });
 
-    $('a[data-id]').click(function (e){
+    /* 查看帳戶詳情 */
+    $('#dataTable').on('click', 'a[data-id]', function (e){
         e.preventDefault();
         const id = $(this).data('id');
 
@@ -82,7 +90,6 @@ define([ 'jquery', 'toastr', 'bootstrap', 'full.jquery.crs.min', 'datatables.net
             body: JSON.stringify({ id })
         }).then(async (response) => {
             const json = await response.json();
-            console.log(json); //debug
             if (response.ok && json.code === 200){
                 const data = json.data;
 

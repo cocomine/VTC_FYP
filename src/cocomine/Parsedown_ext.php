@@ -42,7 +42,7 @@ class Parsedown_ext extends Parsedown {
             }
 
             /* 修改部分 Start */
-            if ($name === 'ul'){
+            if ($name === 'ul') {
                 $Block['element']['attributes']['class'] = "disc";
             }
             /* 修改部分 End */
@@ -61,8 +61,7 @@ class Parsedown_ext extends Parsedown {
         }
     }
 
-    protected function inlineLink($Excerpt)
-    {
+    protected function inlineLink($Excerpt) {
         $Element = array(
             'name' => 'a',
             'handler' => 'line',
@@ -79,46 +78,35 @@ class Parsedown_ext extends Parsedown {
 
         $remainder = $Excerpt['text'];
 
-        if (preg_match('/\[((?:[^][]++|(?R))*+)\]/', $remainder, $matches))
-        {
+        if (preg_match('/\[((?:[^][]++|(?R))*+)\]/', $remainder, $matches)) {
             $Element['text'] = $matches[1];
 
             $extent += strlen($matches[0]);
 
             $remainder = substr($remainder, $extent);
-        }
-        else
-        {
+        } else {
             return;
         }
 
-        if (preg_match('/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*"|\'[^\']*\'))?\s*[)]/', $remainder, $matches))
-        {
+        if (preg_match('/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*"|\'[^\']*\'))?\s*[)]/', $remainder, $matches)) {
             $Element['attributes']['href'] = $matches[1];
 
-            if (isset($matches[2]))
-            {
-                $Element['attributes']['title'] = substr($matches[2], 1, - 1);
+            if (isset($matches[2])) {
+                $Element['attributes']['title'] = substr($matches[2], 1, -1);
             }
 
             $extent += strlen($matches[0]);
-        }
-        else
-        {
-            if (preg_match('/^\s*\[(.*?)\]/', $remainder, $matches))
-            {
+        } else {
+            if (preg_match('/^\s*\[(.*?)\]/', $remainder, $matches)) {
                 $definition = strlen($matches[1]) ? $matches[1] : $Element['text'];
                 $definition = strtolower($definition);
 
                 $extent += strlen($matches[0]);
-            }
-            else
-            {
+            } else {
                 $definition = strtolower($Element['text']);
             }
 
-            if ( ! isset($this->DefinitionData['Reference'][$definition]))
-            {
+            if (!isset($this->DefinitionData['Reference'][$definition])) {
                 return;
             }
 
@@ -134,15 +122,12 @@ class Parsedown_ext extends Parsedown {
         );
     }
 
-    protected function inlineUrl($Excerpt)
-    {
-        if ($this->urlsLinked !== true or ! isset($Excerpt['text'][2]) or $Excerpt['text'][2] !== '/')
-        {
+    protected function inlineUrl($Excerpt) {
+        if ($this->urlsLinked !== true or !isset($Excerpt['text'][2]) or $Excerpt['text'][2] !== '/') {
             return;
         }
 
-        if (preg_match('/\bhttps?:[\/]{2}[^\s<]+\b\/*/ui', $Excerpt['context'], $matches, PREG_OFFSET_CAPTURE))
-        {
+        if (preg_match('/\bhttps?:[\/]{2}[^\s<]+\b\/*/ui', $Excerpt['context'], $matches, PREG_OFFSET_CAPTURE)) {
             $url = $matches[0][0];
 
             $Inline = array(
@@ -162,10 +147,8 @@ class Parsedown_ext extends Parsedown {
         }
     }
 
-    protected function inlineUrlTag($Excerpt)
-    {
-        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'], $matches))
-        {
+    protected function inlineUrlTag($Excerpt) {
+        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'], $matches)) {
             $url = $matches[1];
 
             return array(
@@ -180,5 +163,18 @@ class Parsedown_ext extends Parsedown {
                 ),
             );
         }
+    }
+
+    protected function inlineImage($Excerpt) {
+        $image = parent::inlineImage($Excerpt);
+
+        if (!isset($image)) {
+            return null;
+        }
+
+        $image['element']['attributes']['style'] = "max-height: 500px";
+        $image['element']['attributes']['class'] = "rounded";
+
+        return $image;
     }
 }

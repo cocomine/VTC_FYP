@@ -30,6 +30,7 @@
 <script src="/panel/assets/js/require.js"></script>
 <script>
     require.config({
+        waitSeconds: 60,
         baseUrl: "/panel/assets/js",
         paths: {
             jquery: "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min",

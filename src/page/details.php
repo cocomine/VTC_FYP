@@ -176,6 +176,9 @@ review;
 .plan-name{
     font-size: 0.3em;
 }
+#event-detail img {
+    border-radius: 0.5rem;
+}
 </style>
 <div class="container mt-4">
     <div class="row gy-4">
@@ -224,10 +227,11 @@ review;
             <div class="card" style="background-color: #efefef">
                 <div class="card-body">
                     <h3 class="card-title">預訂活動</h3>
-                    <div class="date-picker date-picker mt-4" id="book-date">
+                    <div class="date-picker date-picker-inline mt-4" id="book-date">
                        <label for="book-date" class="form-label">預約日期</label><br>
                        <input type="date" class="date-picker-toggle form-control form-rounded w-auto">
                        <div class="invalid-feedback">請選擇正確可預約日期</div>
+                       <div class="date-calendar bg-light rounded p-1 d-inline-block mt-1 border border-1"></div>
                     </div>
                     <div class="mt-4">
                         <label class="form-label">可預訂方案時段</label>
@@ -245,7 +249,7 @@ review;
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">活動詳情</h3>
-                    <div class="card-text">{$event_data['description_html']}</div>
+                    <div class="card-text" id="event-detail">{$event_data['description_html']}</div>
                 </div>
             </div>
         </div>
@@ -349,13 +353,13 @@ body;
             $stmt = $this->sqlcon->prepare(
                 "SELECT s.Schedule_ID, p.plan_name, s.start_time, s.end_time, p.price, p.max_each_user, 
                          # 計算當日剩餘人數
-                         p.max_people - IFNULL((
+                         CAST(p.max_people - IFNULL((
                              # 計算當日已預訂人數
                              SELECT SUM(bp.plan_people) FROM Book_event b, Book_event_plan bp 
                              # 尋找當日已預訂人數
                              WHERE b.ID = bp.Book_ID AND b.event_ID = s.Event_ID AND bp.event_schedule = s.Schedule_ID AND b.book_date = ?
                              GROUP BY bp.event_schedule
-                         ), 0) AS `max_people` 
+                         ), 0) AS INT) AS `max_people` 
                      FROM Event_schedule s, Event_plan p 
                      # 尋找當日可用時段
                      WHERE s.Event_ID = p.Event_ID AND s.plan = p.plan_ID AND s.Event_ID = ? AND (

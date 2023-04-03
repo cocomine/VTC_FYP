@@ -64,7 +64,7 @@ define([ 'jquery', 'toastr', 'bootstrap' ], function (jq, toastr, bootstrap){
             //print out
             media_list = data.body;
             $('#media-list').html(map);
-            window.dispatchEvent(new Event('load'));
+            $(document).trigger('load')
         }else{
             toastr.error(data.Message);
         }
