@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2023.
+ * Copyright (c) 2022.
  * Create by cocomine
+ * 1.5
  */
 
 /*
@@ -12,7 +13,7 @@
  * $LangJson => Place text in json format
  * json must conform to the structure, you can refer to lines 22 to 31
  */
-define(['assets/js/myself/media-select'], function (media_select) {
+define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
     const jq_modal = media_select.data.jq_modal();
     let timeout;
     const drop_area = jq_modal.find('.modal-content')
@@ -62,7 +63,7 @@ define(['assets/js/myself/media-select'], function (media_select) {
                 <p class='col-auto'>${Lang.upload.or}</p>
                 <div class='w-100'></div>
                 <div class='col-12 col-sm-4 '>
-                    <input type='file' class='form-control' id='file-sel' multiple accept='${media_select.data}' />
+                    <input type='file' class='form-control' id='file-sel' multiple accept="*/*"/>
                     <label for="file-sel" class="form-label">${Lang.upload.limit_type}</label>
                 </div>
             </div>
@@ -73,12 +74,10 @@ define(['assets/js/myself/media-select'], function (media_select) {
     drop_area.on('dragenter dragover dragleave drop', function (e) {
         e.preventDefault();
     });
-
     drop_area.on('dragenter dragover', function (e) {
         clearTimeout(timeout)
         drop_area.find('.upload-overly').fadeIn()
     })
-
     drop_area.on('dragleave drop', function (e) {
         timeout = setTimeout(() => {
             drop_area.find('.upload-overly').fadeOut();
@@ -89,10 +88,18 @@ define(['assets/js/myself/media-select'], function (media_select) {
     drop_area.on('drop', function (e) {
         handleFiles((e.originalEvent && e.originalEvent.dataTransfer.files));
     })
-    $('#file-sel').change(function (e) {
+    drop_area.find('#file-sel').change(function (e) {
         handleFiles(e.target.files);
-        $('#file-sel').val('');
+        $(this).val('');
     })
+
+    /**
+     * Set input element accept attribute
+     * @param mime
+     */
+    function setInputAccept(mime) {
+        drop_area.find('#file-sel').attr('accept', mime)
+    }
 
     /**
      * 處理檔案
@@ -101,6 +108,9 @@ define(['assets/js/myself/media-select'], function (media_select) {
     function handleFiles(files) {
         let limit = 4;
         let upload_queue = [];
+
+        /* 自動跳回選擇媒體分頁 */
+        bootstrap.Tab.getOrCreateInstance(drop_area.find('[data-bs-target="#Media-select-pane"]')[0]).show();
 
         for (let file of files) {
             /* 顯示進度 */
@@ -114,7 +124,7 @@ define(['assets/js/myself/media-select'], function (media_select) {
                             </div>
                         </div>
                     </div>`);
-            jq_modal.find('.media-list').prepend(tmp);
+            drop_area.find('.media-list').prepend(tmp);
             const progressBar = tmp.find('.progress-bar');
 
             /* 進行檢查 */
@@ -140,7 +150,8 @@ define(['assets/js/myself/media-select'], function (media_select) {
             }
 
             //檔案名稱20字或以下
-            if (file.name.length > 100) {
+            const file_tmp = file.name.match(/(.+)(\..+)/)
+            if (file_tmp[1].length > 20) {
                 progressBar.css('width', '100%');
                 progressBar.addClass('bg-danger');
                 progressBar.removeClass('progress-bar-striped');
@@ -217,5 +228,9 @@ define(['assets/js/myself/media-select'], function (media_select) {
                 }
             }
         }).always(callback);
+    }
+
+    return {
+        setInputAccept
     }
 })

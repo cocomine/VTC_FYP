@@ -48,7 +48,7 @@ class account implements IPage {
     <div class="card">
         <div class="card-body">
             <h4 class="header-title">{$Text['Create']}</h4>
-            <form id='AddAC' novalidate class='needs-validation'>
+            <form id='add-ac' novalidate class='needs-validation'>
                 <div class="row g-2">
                     <div class='col-12 col-md-4'>
                         <label for='Name' class='col-form-label'>{$Text['Name']['Name']}</label>
@@ -71,7 +71,7 @@ class account implements IPage {
                     </div>
                     <div class='col-12 col-md-4'>
                         <label for='Pass' class='col-form-label'>{$Text['password']['password']}</label>
-                        <input class='form-control input-rounded' type='text' id='Pass' disabled value="XTrave!">
+                        <input class='form-control input-rounded' type='text' id='Pass' disabled value="X-Trave!">
                         <small class='form-text text-muted'>{$Text['password']['limit']}</small>
                     </div>
                     <div class="w-100"></div>
@@ -237,7 +237,7 @@ $createAC_html
                                 </div>
                                 <div class="col-12">
                                     <label for='organize-prove' class='col-form-label'>商業證明</label><br>
-                                    <a type='button' id="organize-prove" class='btn btn-rounded btn-outline-primary pr-4 pl-4' target="_blank"><i class="fa-regular fa-eye me-2"></i>查看商業證明</a>
+                                    <a role="button" id="organize-prove" class='btn btn-rounded btn-primary pr-4 pl-4' target="_blank"><i class="fa-regular fa-eye me-2"></i>查看商業證明</a>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +271,7 @@ body;
         /* 查看帳戶詳細資料 */
         if ($_GET['type'] === "viewDetail") {
             /* 個人資料 */
-            $stmt = $this->sqlcon->prepare("SELECT User_detail.*, User.role FROM User_detail, User WHERE User_detail.UUID = User.UUID AND User_detail.`UUID` = ?");
+            $stmt = $this->sqlcon->prepare("SELECT d.*, u.role FROM User_detail d RIGHT JOIN User u ON d.UUID = u.UUID WHERE u.`UUID` = ?");
             $stmt->bind_param("s", $data['id']);
             if (!$stmt->execute()) {
                 return array(
@@ -280,11 +280,12 @@ body;
                     'Message' => $stmt->error,
                 );
             }
-            $user_detail = $stmt->get_result()->fetch_assoc();
+            $row = $stmt->get_result()->fetch_assoc();
+            $user_detail = $row['UUID'] ? $row : null;
 
             /* 組織資料 */
-            if ($user_detail['role'] >= 2) {
-                $stmt->prepare("SELECT * FROM User_detail_collabora u WHERE `UUID` = ?");
+            if ($row['role'] >= 2) {
+                $stmt->prepare("SELECT * FROM User_detail_collabora u WHERE UUID = ?");
                 $stmt->bind_param("s", $data['id']);
                 if (!$stmt->execute()) {
                     return array(
@@ -293,7 +294,8 @@ body;
                         'Message' => $stmt->error,
                     );
                 }
-                $organize_detail = $stmt->get_result()->fetch_assoc();
+                $result = $stmt->get_result();
+                $organize_detail = $result->num_rows >= 1 ? $result->fetch_assoc() : null;
             } else {
                 $organize_detail = false; // 用戶是普通用戶
             }
@@ -308,7 +310,7 @@ body;
         }
 
         /* 創建帳號 */
-        $status = $auth->create_account($data['name'], $data['email'], 'XTrave!', $data['role']);
+        $status = $auth->create_account($data['name'], $data['email'], 'X-Trave!', $data['role']);
 
         /* 設置強制更改 */
         if ($status == AUTH_REGISTER_COMPLETE) {

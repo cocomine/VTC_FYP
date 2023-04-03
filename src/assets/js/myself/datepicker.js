@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023.
  * Create by cocomine
- * 1.2.8
+ * 1.2.10
  */
 
 /*
@@ -19,16 +19,16 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
 
     function setup(picker){
         picker = $(picker);
-        let selectDate = moment();
-        let activateDate = moment();
-        let minDate = null;
-        let maxDate = null;
         const children = picker.children('.date-picker-toggle');
-        picker[0].datepicker = { disableDate: [] };
-
         if (children.length <= 0){
             throw new Error('Children element class="date-picker-toggle" not found. Please check your code.');
         }
+
+        let selectDate = moment();
+        let activateDate = moment();
+        let minDate = children.attr('min');
+        let maxDate = children.attr('max');
+        picker[0].datepicker = { disableDate: [] };
 
         /* 預設日期(今日) */
         if (children.val().length <= 0){
@@ -36,12 +36,16 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
         }
 
         /* 用戶點擊 */
-        children.on('input focus', function (){
+        children.on('input focus change', function (){
             update();
         });
 
         /* 強制重新繪製 */
         picker[0].datepicker.draw = function (){
+            minDate = children.attr('min');
+            minDate = minDate === undefined ? null : moment(minDate);
+            maxDate = children.attr('max');
+            maxDate = maxDate === undefined ? null : moment(maxDate);
             picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
         };
 
@@ -51,7 +55,6 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
             new bootstrap.Dropdown(children[0], { autoClose: 'outside' });
         }else{
             children.click((e) => e.preventDefault());
-            update(children);
         }
 
         /* event */
@@ -114,6 +117,7 @@ define([ 'jquery', 'moment', 'bootstrap' ], function (jq, moment, bootstrap){
                 picker.children('.date-calendar').html(calendar(selectDate, activateDate, minDate, maxDate, picker[0].datepicker.disableDate));
             }
         }
+        update();
     }
 
     /**
