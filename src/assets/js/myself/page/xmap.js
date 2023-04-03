@@ -180,7 +180,7 @@ define([ 'jquery', 'toastr', 'mapbox-gl', '@mapbox/mapbox-gl-geocoder', 'owl.car
                         <div class="card" style="height: 10rem; width: 20rem">
                             <img data-src="/panel/api/media/${item.thumbnail}" alt="${item.thumbnail}" class="card-img-top owl-lazy" style="object-fit: cover; height: 50%">
                             <div class="card-body p-3">
-                                <p class="text-truncate"><a href="/activity_details/${item.ID}" class="stretched-link">${item.name}</a></p>
+                                <p class="text-truncate"><a href="/details/${item.ID}" class="stretched-link">${item.name}</a></p>
                                 <p class="text-secondary text-truncate card-text">${item.summary}</p>
                             </div>
                         </div>
