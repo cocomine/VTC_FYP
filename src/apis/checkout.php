@@ -135,12 +135,12 @@ class checkout implements IApi {
 
         /* 檢查衝突 */
         if(!$data['ignore_conflict']) {
-            $stmt->prepare("SELECT DISTINCT e.name, s.start_time, s.end_time FROM Book_event b, Book_event_plan p, Event_schedule s, Event e 
-              WHERE b.ID = p.Book_ID AND p.event_schedule = s.Schedule_ID AND b.event_ID = s.Event_ID AND b.event_ID = e.ID AND b.User = ? 
+            $stmt->prepare("SELECT DISTINCT b.ID ,e.name, s.start_time, s.end_time FROM Book_event b, Book_event_plan p, Event_schedule s, Event e 
+              WHERE b.User = ? AND b.book_date = ? AND b.ID = p.Book_ID AND p.event_schedule = s.Schedule_ID AND b.event_ID = s.Event_ID AND b.event_ID = e.ID
                 AND (s.start_time BETWEEN ? AND ? OR s.end_time BETWEEN ? AND ? 
                          OR ? BETWEEN s.start_time AND s.end_time OR ? BETWEEN s.start_time AND s.end_time)");
             foreach ($check_conflict as $conflict) {
-                $stmt->bind_param("sssssss", $auth->userdata['UUID'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time']);
+                $stmt->bind_param("ssssssss", $auth->userdata['UUID'], $data['date'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time'], $conflict['start_time'], $conflict['end_time']);
                 if (!$stmt->execute()) {
                     http_response_code(500);
                     echo json_encode([
@@ -150,6 +150,7 @@ class checkout implements IApi {
                     ]);
                     return;
                 }
+
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
                     http_response_code(410);
