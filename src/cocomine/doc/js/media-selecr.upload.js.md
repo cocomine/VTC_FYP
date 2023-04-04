@@ -15,21 +15,24 @@ media-select.upload javascript library
 ```
 ```json
 {
-    "No_media": "",
-    "Unknown_Error": "",
-    "title": "",
-    "Select": ["", ""],
+    "upload": "",
     "drag": "",
-    "Media": "",
-    "upload": {
-        "Timeout": "",
-        "File_name_over": "",
+    "or": "",
+    "limit_type": "",
+    "limit": "",
+    "respond": {
         "Over_size": "",
+        "Not_complete": "",
+        "Not_complete_upload": "",
         "File_type_not_mach": "",
-        "Waiting": "",
-        "limit_type": "",
-        "drag": ""
-    },
+        "File_name_over": "",
+        "File_convert_fail": "",
+        "File_sql_fail": "",
+        "File_save_fail": "",
+        "Uploaded": "",
+        "Timeout": "",
+        "Waiting": ""
+    }
 }
 ```
 > 你可以參考第22到31行

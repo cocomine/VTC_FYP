@@ -6,6 +6,7 @@
 
 
 namespace page;
+
 use cocomine\IPage;
 use mysqli;
 
@@ -15,348 +16,385 @@ use mysqli;
  * @package cocopixelmc\Page
  */
 class reservedetail implements IPage {
-    private array $UpPath;
-    private string $activity_name;
+
+    private static array $country = array(
+        'HK' => '香港',
+        'TW' => '台灣',
+        'CN' => '中國大陸',
+        'MO' => '澳門',
+    );
+    private array $upPath;
     private mysqli $sqlcon;
+    private string $bookID;
+    /**
+     * @var mixed
+     */
+    private string $event_name;
 
 
     /**
      * home constructor.
      * sql連接
-     * @param $sqlcon
+     * @param mysqli $sqlcon
+     * @param array $upPath
      */
     function __construct(mysqli $sqlcon, array $upPath) {
         $this->sqlcon = $sqlcon;
         $this->upPath = $upPath;
+        $this->bookID = $this->upPath[0];
     }
 
 
-    /* 是否有權進入 */
-
+    /**
+     * @inheritDoc
+     */
     public function access(bool $isAuth, int $role, bool $isPost): int {
         global $auth;
-        $this->bookID = $this->upPath[0];
-
-
         if (!$isAuth) return 401;
 
         if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
-            $stmt = $this->sqlcon->prepare("SELECT b.event_ID,e.name ,b.book_date, COUNT(*) as 'count' FROM Book_event as b,Event as e  WHERE b.ID = ? AND b.User = '8be832fd-af63-11ed-9cd6-0011329060ef'");
-            $stmt->bind_param('s', $this->bookID); //測試用：, $auth->userdata['UUID']
-                if (!$stmt->execute()) return 500;
+            $stmt = $this->sqlcon->prepare("SELECT b.event_ID AS event_ID, e.name , b.book_date AS 'count' FROM Book_event b,Event e  WHERE b.ID = ? AND b.User = ?");
+            $stmt->bind_param('ss', $this->bookID, $auth->userdata['UUID']); //測試用：
+            if (!$stmt->execute()) return 500;
 
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
 
-                if ($row['count'] <= 0) return 403; //403
-                $this->event_name = $row['e.name'];
-                $this->book_date = $row['b.book_date'];
-                $this->event_ID = $row['b.event_ID'];
-                print_r($this->event_ID);
-
-            }
-
-            return 200; //代碼問題：無法正確輸出eventID導致下方無法正確運行
+            if ($result->num_rows <= 0) return 403;
+            $this->event_name = $row['name'];
+            return 200;
         }
+        return 404;
+    }
 
     /* 輸出頁面 */
     function showPage(): string {
-        $this->event_ID='52';//測試用
-        $Text = showText('index.home');
-
-        /* json 語言 */
-        $jsonLang = json_encode(array());
-
-        global $auth; //獲取全域變數 $auth, class: cocomine/MyAuth
-        $userdata = $auth->userdata; //獲取用戶資訊
-        $stmt = $this->sqlcon->prepare("SELECT name, summary, precautions_html, description_html, location, country, region, latitude, longitude, post_time, create_time FROM Event WHERE ID = ?");
-        $stmt->bind_param("s", $this->event_ID);
-        if (!$stmt->execute()) {
-            echo_error(500);
-            exit;
-        }
-        $event_data = $stmt->get_result()->fetch_assoc();
-
-        global $auth; //獲取全域變數 $auth, class: cocomine/MyAuth
-        $userdata = $auth->userdata; //獲取用戶資訊
-        $stmt = $this->sqlcon->prepare("SELECT e.ID, e.User, e.event_ID, e.pay_price, e.book_date as date,e.order_datetime as datetime,p.event_schedule,p.plan_people FROM Book_event as e,Book_event_plan as p WHERE e.ID = ?");
-        $stmt->bind_param("s", $this->bookID);
+        /* 取得預約資料 */
+        $stmt = $this->sqlcon->prepare("SELECT event_ID, pay_price, book_date, order_datetime, invoice_number, invoice_url FROM Book_event WHERE ID = ?");
+        $stmt->bind_param("s", $this->upPath[0]);
         if (!$stmt->execute()) {
             echo_error(500);
             exit;
         }
         $book_data = $stmt->get_result()->fetch_assoc();
+        $book_data['pay_price'] = number_format($book_data['pay_price'], 2);
 
+        /* 取得預約計劃 */
+        $stmt->prepare("SELECT p.plan_name, b.plan_people, p.price,e.start_time, e.end_time FROM Book_event_plan b, Event_schedule e, Event_plan p 
+                WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
+        $stmt->bind_param("sss", $this->upPath[0], $book_data['event_ID'], $book_data['event_ID']);//
+        if (!$stmt->execute()) {
+            echo_error(500);
+            exit;
+        }
 
+        $result = $stmt->get_result();
+        $bookPlan_html= ""; // 預約計劃html
+        $total_people = 0; // 總人數
+        $total_price = 0; // 總價格
+        while ($row = $result->fetch_assoc()) {
+            $total_price += $row['price'];
+            $row['price'] = number_format($row['price'] * $row['plan_people'], 2);
+            $total_people += $row['plan_people'];
 
+            $bookPlan_html .=
+                "<tr>
+                    <td>{$row['plan_name']}</td>
+                    <td>{$row['start_time']}<i class='fa-solid fa-angles-right mx-2'></i>{$row['end_time']}</td>
+                    <td>{$row['plan_people']}</td>
+                    <td>{$row['price']}</td>
+                </tr>";
+        }
+        $total_price = number_format($total_price, 2);
 
+        /* 取得評論 */
+        $stmt->prepare("SELECT * FROM Book_review WHERE Book_ID = ?");
+        $stmt->bind_param("s", $this->upPath[0]);
+        if (!$stmt->execute()) {
+            echo_error(500);
+            exit;
+        }
+        $result = $stmt->get_result();
+        if($result->num_rows > 0){
+            // 已評論
+            $review_data = $result->fetch_assoc();
+
+            # 計算星星
+            $rate_star = join(array_fill(0, $review_data['rate'], "<i class='fa-solid fa-star text-warning'></i>"));
+            $rate_star .= join(array_fill(0, 5 - $review_data['rate'], "<i class='fa-regular fa-star text-muted'></i>"));
+
+            # 取得評論圖片
+            $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
+            $stmt->bind_param("s", $review_data['Book_ID']);
+            if (!$stmt->execute()) {
+                echo_error(500);
+                exit;
+            }
+            $result = $stmt->get_result();
+            $review_img_html = "";
+            while ($row = $result->fetch_assoc()) {
+                $review_img_html .=
+                    "<div class='col-6 col-sm-4 col-md-3 col-lg-2'>
+                        <div class='ratio ratio-1x1'>
+                            <img src='/panel/api/media/{$row['media_ID']}' alt='{$row['media_ID']}' class='rounded' draggable='false'>
+                        </div>
+                    </div>";
+            }
+
+            $review_html = <<<HTML
+<div class="row gy-3">
+    <div class="col-12">
+        <label for="review-rate" class="m-0">評分</label>
+        <input type="number" class="d-none" id="review-rate" name="review-rate" min="1" max="5" required>
+        <div class="fs-4 test" id="rate-star">$rate_star</div>
+        <div class="invalid-feedback">為活動評個分吧~~</div>
+    </div>
+    <div class="col-12">
+        <label for="review-comment" class="form-label">評論</label>
+        <textarea class="form-control" id="review-comment" name="review-comment" rows="3" maxlength="100" disabled>{$review_data['comment']}</textarea>
+    </div>
+    <div class="col-12">
+        <label for="review-img" class="form-label">圖片</label>
+        <div class="row gx-2" id="review-img-preview">$review_img_html</div>
+    </div>
+</div>
+HTML;
+        }else{
+            // 未評論
+            $review_html = <<<HTML
+<form id="review" class="needs-validation" novalidate>
+    <div class="row gy-3">
+        <div class="col-12">
+            <label for="review-rate" class="m-0">評分</label>
+            <input type="number" class="d-none" id="review-rate" name="review-rate" min="1" max="5" required>
+            <div class="fs-4 test" id="rate-star">
+                <i class='fa-regular fa-star text-muted' data-rate="1"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="2"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="3"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="4"></i>
+                <i class='fa-regular fa-star text-muted' data-rate="5"></i>
+            </div>
+            <div class="invalid-feedback">為活動評個分吧~~</div>
+        </div>
+        <div class="col-12">
+            <label for="review-comment" class="form-label">評論</label>
+            <textarea class="form-control" id="review-comment" name="review-comment" rows="3" maxlength="100" required></textarea>
+            <span class="float-end text-secondary" id="review-comment-count" style="margin-top: -20px; margin-right: 10px">0/100</span>
+            <div class="invalid-feedback">這裏不能留空哦~~</div>
+        </div>
+        <div class="col-12">
+            <label for="review-img" class="form-label">圖片</label><br>
+            <input type="text" class="d-none" id="review-img" name="review-img">
+            <button type="button" class="btn btn-rounded btn-outline-primary" id="review-img-sel"><i class="fa-regular fa-image me-2"></i>選擇圖片</button>
+            <div class="row gx-2 mt-3" id="review-img-preview"></div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-rounded btn-primary mt-4 pr-4 form-submit"><i class="fa-regular fa-paper-plane me-2"></i>送出</button>
+</form>
+HTML;
+        }
+
+        /* 取得預約活動資料 */
+        $stmt->prepare("SELECT name, location, country, region FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $book_data['event_ID']);
+        if (!$stmt->execute()) {
+            echo_error(500);
+            exit;
+        }
+        $event_data = $stmt->get_result()->fetch_assoc();
+        $event_data['country'] = self::$country[$event_data['country']]; // 國家轉換 e.x.(TW -> 台灣)
+
+        /* 圖片上載多語言 */
+        $Text = showText('Media.Content');
+        $Text2 = showText('Media-upload.Content');
+        $LangJson = json_encode(array(
+            'No_media' => $Text['No_media'],
+            'Media' => $Text['Media'] . ' %s',
+            'Unknown_Error' => showText('Error'),
+            'title' => $Text['Media_Select']['title'],
+            'Select' => $Text['Media_Select']['Select'],
+            'upload' => array(
+                'Timeout' => $Text2['respond']['Timeout'],
+                'File_name_over' => $Text2['respond']['File_name_over'],
+                'Over_size' => $Text2['respond']['Over_size'],
+                'File_type_not_mach' => $Text2['respond']['File_type_not_mach'],
+                'Waiting' => $Text2['respond']['Waiting'],
+                'limit_type' => $Text2['limit_type'],
+                'drag' => $Text2['drag'],
+                'upload' => $Text2['upload'],
+                'or' => $Text2['or'],
+                'limit' => $Text2['limit']
+            )
+        ));
 
         return <<<body
-<pre id='langJson' style='display: none'>$jsonLang</pre>
+<link rel="stylesheet" href="/assets/css/myself/media-select.css">
+<pre id="media-select-LangJson" class="d-none">$LangJson</pre>
 <style>
-#Background {
-    background-image: url('/assets/images/background/hot-air-balloon-back.jpg');
-    height: 100vh; 
-    background-repeat: no-repeat; 
-    background-position: center; 
-    background-size: cover;
+#rate-star i[data-rate]{
+    cursor: pointer;
 }
-
-#Background:before {
-    content: '';
-    background-color: black;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -1;
+.was-validated :invalid~#rate-star > i{
+    color: var(--bs-danger) !important;
 }
-
-.card-img-top {
-    width: 300px;
-    height: 300px;
-    clip: rect(10px,290px,290px,10px);
+#review-img-preview img{
+    object-fit: cover;
 }
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-.form-head {
-    text-align: center;
-    background: -webkit-linear-gradient(left, #ff7112 0%, #ff9e5b 100%);
-    background: linear-gradient(to right, #ff7112 0%, #ff9e5b 100%);
-    padding: 50px;
-}
-
-.form-head h4{
-    letter-spacing: 0;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 7px;
-    color: #fff;
-}
-.form-head h6{
-    letter-spacing: 0;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 7px;
-    color: #fff;
-}
-.form-head p {
-    color: #fff;
-    font-size: 14px;
-    line-height: 22px;
-}
-.
 </style>
-
 <div class='container mt-4'>
     <div class="row gy-4">
-
-            
+        <!-- 預約詳情 -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">預約详细</h3>                   
-                    <div>
-                        <div style="float:left"><p class="text-secondary">活動名字： </div>
-                        <div style="float:right"><span id="event_name">{$event_data['name']}</span></div></p><br>
+                    <h4 class="card-title">預約詳情</h4>                   
+                    <div class="card-text">
+                        <div class="row w-100 fs-6">
+                            <div class="col col-lg-4">活動名稱:</div>
+                            <div class="col-12 col-sm"><a href="/details/{$book_data['event_ID']}">{$event_data['name']}</a></div>
+                            <div class="w-100 py-2 py-sm-0"></div>
+                            <div class="col col-lg-4">活動地點: </div>
+                            <div class="col-12 col-sm">{$event_data['location']}<br>{$event_data['country']}, {$event_data['region']}</div>
+                            <div class="w-100 py-2 py-sm-0"></div>
+                            <div class="col col-lg-4">預約日期(年/月/日): </div>
+                            <div class="col-12 col-sm">{$book_data['book_date']}</div>
+                        </div>
                     </div>
-                    <div style="clear:both"></div>
-                    <div>
-                        <div style="float:left"><p class="text-secondary">活動地址：</div>
-                        <div style="float:right"><span id="location">{$event_data['location']}</span></div></p><br>
-                    </div>
-                     <div style="clear:both"></div>
-                    <div>
-                        <div style="float:left"><p class="text-secondary">預約日期：</div>
-                        <div style="float:right"><span id="date">{$book_data['date']}</span></div></p><br>
-                    </div>
-                    <div style="clear:both"></div>
                 </div>
             </div>
         </div>
+        <!-- 預約時段/詳情 -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">預約计划/預約時段/預約詳情</h3>
+                    <h4 class="card-title">預約時段/詳情</h4>
                     <div class="col-12">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class="table-primary text-light" style="--bs-table-bg: var(--primary-color)">
                                     <tr>
-                                        <th scope="col">活動計劃</th>
-                                        <th scope="col">活動開始結束時段</th>
-                                        <th scope="col">預約人數</th>
-                                        <th scope="col">預約價錢</th>
+                                        <th scope="col">計劃</th>
+                                        <th scope="col">時段</th>
+                                        <th scope="col">人數</th>
+                                        <th scope="col">價錢</th>
                                     </tr>
                                 </thead>
-                                    <tr>
-                                        <th scope="col">{$event_data['name']}</th>
-                                        <th scope="col">12:00:00-18:00:00</th> //時間改！！！
-                                        <th scope="col">1</th>
-                                        <th scope="col">{$book_data['pay_price']}</th>
-                                    </tr>
-                                <tbody id="reserve_detail"></tbody>
+                                <tbody>$bookPlan_html</tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th scope="row">總計</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">總人數</th>
-                                        <th scope="col">總價錢</th>
+                                    <tr class="fs-5 fw-bold">
+                                        <td colspan="2">總計</td>
+                                        <td>$total_people</td>
+                                        <td>{$book_data['pay_price']}</td>
                                     </tr>
-                                
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
-                                    <th scope="col">1</th>
-                                    <th scope="col">{$book_data['pay_price']}</th>
-                                </tr>
                                 </tfoot>
                             </table>
                         </div>
                     </div>    
-                    <p class="card-text"></p>
                 </div>
             </div>
         </div>
+        <!-- 帳單 -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <p class="card-text"></p>
-                    <div>
-                         <div style="float:left"><h3 class="card-title">活動人數: </div>
-                         <div style="float:right"><span id="plan_people">1</span></div>
-                    </div>
-                    <div style="clear:both"></div><br>
-                    <div>
-                         <div style="float:left"><h3 class="card-title">實際付款:</div>
-                         <div style="float:right"><span id="order_time"><h5>HKD{$book_data['pay_price']}</h5></span></div>
-                    </div>
-                    <div style="clear:both"></div>
-                    <hr>
-                <div class="col-12">
-                        
-                     <div style="float:right"><p>下單時間: <span id="order_time">{$book_data['datetime']}</p><div>
-                     <div style="clear:both"></div>
-                     <div style="float:right"><p class="text-secondary">預約編號: # <span id="order_id">{$this->bookID}</span></p></div>
+                    <div class="card-text">
+                        <p class="fs-5">應付款項: <span class="float-end fw-bold">$ $total_price</span></p>
+                        <p class="fs-5">已付款項: <span class="float-end fw-bold">$ {$book_data['pay_price']}</span></p>
+                        <div class="pt-4">
+                            <p class="text-muted">
+                                下單時間: {$book_data['order_datetime']}</br>
+                                帳單編號: <a href="{$book_data['invoice_url']}" target="_blank">{$book_data['invoice_number']}</a></br>
+                                預約編號: #{$this->upPath[0]}
+                            </p>
                         </div>
+                    </div>
                 </div>
-                
-                   
-
             </div>
         </div>
+        <!-- 評論 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">  
+                    <h4 class="card-title">評論</h4>
+                    $review_html
+                </div>
+            </div>
+        </div>  
     </div>    
 </div>
-
-body. <<<body
 <script>
-  var owl = $('.owl-carousel');
-  owl.owlCarousel({
-    margin: 10,
-    loop: true,
-    responsive: {
-      0: {
-        items: 1
-      },
-      600: {
-        items: 2
-      },
-      1000: {
-        items: 3
-      }
-    }
-  })
-      <!-- 載入外部JS -->
-          require.config({
-            paths:{
-                zxcvbn: ['https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn'],
-                forge: ['https://cdn.jsdelivr.net/npm/node-forge/dist/forge.min'],
-                FileSaver: ['FileSaver.min'],
-            },
-          });
-
-loadModules(['myself/datepicker', 'myself/page/ho me'])
-loadModules(['myself/page/ChangeSetting', 'zxcvbn', 'forge', 'FileSaver'])
+require.config({
+        paths:{
+            'media-select': 'myself/media-select',
+            'media-select.upload': 'myself/media-select.upload',
+        }
+    })
+loadModules(['myself/page/reservedetail', 'media-select', 'media-select.upload']);
 </script>
 body;
     }
 
     /* POST請求 */
     function post(array $data): array {
-        global $auth;
-        $output = array();
-        $uuid = '8be832fd-af63-11ed-9cd6-0011329060ef'; //測試中: $auth-> userdata['UUID'];
 
-        /* 取得該用戶建立的活動給參與人數 */
-        /* */
-        $stmt = $this->sqlcon->prepare("SELECT b.ID AS 'BookID', e.ID AS 'EventID', e.thumbnail, e.summary, e.name, b.pay_price, b.book_date
-            FROM Book_event b, Event e WHERE e.ID = b.event_ID AND b.User = ?");
-        $stmt->bind_param('s', $uuid);
-        if (!$stmt->execute()) {
+        //增加評論
+        $stmt = $this->sqlcon->prepare("INSERT INTO Book_review (book_id, rate, comment) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $this->upPath[0], $data['review-rate'], $data['review-comment']);
+        if(!$stmt->execute()) {
             return array(
                 'code' => 500,
-                'Title' => 'Database Error!',
-                'Message' => $stmt->error,
+                'Title' => '發生錯誤',
+                'Message' => $stmt->error
             );
         }
 
-        /* 展示用戶預約計劃 */
-        $output = array();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $tmp = array(
-                'ID' => $row['ID'],
-                'Name' => $row['Name'],
-                'full_name' => $row['last_name'].' '.$row['first_name'],
-                'book_date' => $row['book_date'],
-                'plan' => array(),
-            );
-
-            $stmt->prepare("SELECT p.plan_name, b.plan_people FROM Book_event_plan b, Event_schedule e, Event_plan p 
-                                    WHERE b.event_schedule = e.Schedule_ID AND e.plan = p.plan_ID AND b.Book_ID = ? AND e.Event_ID = ? AND p.Event_ID = ?");
-            $stmt->bind_param('sss', $row['ID'], $this->upPath[0], $this->upPath[0]);
-            if (!$stmt->execute()) {
-                return array(
-                    'code' => 500,
-                    'Title' => showText('Error_Page.some_thing_happen'),
-                    'Message' => $stmt->error,
-                );
+        //新增圖片
+        $stmt->prepare("INSERT INTO Book_review_img VALUES (?, ?)");
+        if(!empty($data['review-img'])) {
+            $img = explode(',', $data['review-img']);
+            foreach($img as $i) {
+                $stmt->bind_param("is", $this->upPath[0], $i);
+                if(!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => '發生錯誤',
+                        'Message' => $stmt->error
+                    );
+                }
             }
-
-            $plan_result = $stmt->get_result();
-            while ($row = $plan_result->fetch_assoc()) {
-                $tmp['plan'][] = array(
-                    'plan_name' => $row['plan_name'],
-                    'plan_people' => $row['plan_people'],
-                );
-            }
-
-            $output[] = $tmp;
         }
-        return array('data' => $output);
+
+        if($stmt->affected_rows == 0) {
+            return array(
+                'code' => 500,
+                'Title' => '發生錯誤',
+                'Message' => '無法新增評論'
+            );
+        }else{
+            return array(
+                'code' => 200,
+                'Title' => '新增成功',
+                'Message' => '感謝您的評論'
+            );
+        }
     }
 
     /* path輸出 */
     function path(): string {
         return '<li class="breadcrumb-item active"><a href="/">' . showText("index.home") . '<a></li>'
-            . '<li class="breadcrumb-item active">' . '预约订单#' . $this->bookID . '</li>';
+            . '<li class="breadcrumb-item active"><a href="/reserve_view">' . '預訂管理' . '<a></li>'
+            . '<li class="breadcrumb-item active">預約詳情 #' . $this->bookID . '</li>';
     }
 
     /* 取得頁面標題 */
     public function get_Title(): string {
-        return showText('預約詳情');
+        return '預約詳情 | X-Travel';
     }
 
     /* 取得頁首標題 */
 
     public function get_Head(): string {
-        return showText("預約詳情");
+        return $this->event_name.' 預約詳情';
     }
 
 }

@@ -1,6 +1,6 @@
 {
   "Lang": "zh",
-  "Last_Update": "12/2/2023",
+  "Last_Update": "4/4/2023",
   "Translate": {
     "Error": "發生未知錯誤!!",
     "header": {
@@ -61,11 +61,21 @@
     },
     "Media-upload": {
       "Content": {
+        "upload": "上傳",
         "drag": "將文件拖到這裡上傳",
+        "or": "或者",
         "limit_type": "接受：.jpg .png .webp .gif",
+        "limit": "單個文件的最大大小為 8MB",
         "respond": {
           "Over_size": "文件過大",
+          "Not_complete": "上傳不完整",
+          "Not_complete_upload": "上傳失敗",
+          "File_type_not_mach": "文件格式不匹配",
           "File_name_over": "文件名太長",
+          "File_convert_fail": "文件轉換失敗",
+          "File_sql_fail": "數據庫更新失敗",
+          "File_save_fail": "文件保存失敗",
+          "Uploaded": "上傳成功",
           "Timeout": "上傳超時",
           "Waiting": "等待上傳..."
         }
