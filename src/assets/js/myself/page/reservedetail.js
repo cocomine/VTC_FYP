@@ -73,9 +73,9 @@ define([ 'jquery', 'toastr', 'media-select', 'media-select.upload' ], function (
 
             medias.forEach(({ id, name }) => {
                 const img = $(`
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 item">
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                         <div class="ratio ratio-1x1">
-                            <img src="/panel/api/media/${id}" alt="${name}" class="rounded">
+                            <img src="/panel/api/media/${id}" alt="${name}" class="rounded" draggable="false">
                         </div>
                     </div>`);
                 $('#review-img-preview').append(img);
