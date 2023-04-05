@@ -51,7 +51,7 @@ class xmap implements \cocomine\IApi {
             $stmt->bind_param("i", $row['ID']);
             $stmt->execute();
             $rate = $stmt->get_result()->fetch_assoc();
-            $row['rate'] = $rate['rate'] ?? 5;
+            $row['rate'] = $rate['rate'] ?? '-';
             $row['total'] = $rate['total'];
             $data[] = $row;
         }
