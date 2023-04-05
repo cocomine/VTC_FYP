@@ -451,5 +451,13 @@ define([ 'jquery', 'toastr', 'zxcvbn', 'forge', 'bootstrap', 'FileSaver', 'media
                     $('#organize-prove-filename').text(prove.name + ".pdf");
                 }, 1, /(application\/pdf)/);
             });
+
+            /* 更多證明 */
+            $('#organize-prove-more-select').click(() => {
+                media_select.select_media((medias) => {
+                    $('#organize-prove-more-filename').html(medias.map(({name}) => `<li class="list-group-item">${name}.pdf</li>`).join(''));
+                    $('#organize-prove-more').val(medias.map(({id}) => id).join(','));
+                }, 0, /(application\/pdf)/);
+            })
         }
     });

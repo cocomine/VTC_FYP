@@ -131,6 +131,8 @@ class changesetting implements IPage {
             $organize_detail = $stmt->get_result()->fetch_assoc();
             $organize_detail['name'] = $organize_detail['name'] ? $organize_detail['name'].'.pdf' : '請選擇檔案';
             $organize_detail['address_count'] = strlen($organize_detail['address']);
+
+            //todo: 接收更多證明文件
         }
 
         /* HTML */
@@ -322,11 +324,18 @@ body .
                         <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                     </div>
                     <div class="col-12">
-                        <label for='organize-prove' class='col-form-label'>商業證明</label><br>
+                        <label for='organize-prove' class='col-form-label'>商業證明或資質證明</label><br>
                         <input type="text" class="d-none" name="organize-prove" id="organize-prove" required value="{$organize_detail['prove']}">
                         <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
                         <span id="organize-prove-filename" class="ps-2">{$organize_detail['name']}</span>
-                        <div class='invalid-feedback'>必須上載商業證明</div>
+                        <div class='invalid-feedback'>必須上載證明</div>
+                    </div>
+                    <div class="col-12">
+                        <label for='organize-prove-more' class='col-form-label'>其他更多證明</label><br>
+                        <input type="text" class="d-none" name="organize-prove-more" id="organize-prove-more" required value="{$organize_detail['prove']}">
+                        <button type='button' id="organize-prove-more-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
+                        <br>
+                        <ul class="list-group d-inline-block mt-1" id="organize-prove-more-filename">{$organize_detail['more']}</ul>
                     </div>
                 </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
@@ -602,6 +611,8 @@ body;
 
             /* 處理data */
             $data['organize-phone'] = preg_replace("([^0-9]*)", "", $data['organize-phone']);
+
+            //todo: 接收更多證明文件
 
             /* 更新資料 */
             if($stmt->get_result()->fetch_assoc()['count'] == 0) {
