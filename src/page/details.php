@@ -156,11 +156,16 @@ review;
 
         # 計算評論總數及平均評分
         $event_data['review_total'] = count($book_reviews); //取得評論總數
-        $event_data['avg_rate'] = $event_data['review_total'] <= 0 ? 5 : round(array_sum(array_column($book_reviews, 'rate')) / $event_data['review_total'], 1); //取得平均評分
-        $event_data['rate_start'] = join("", array_fill(0, floor($event_data['avg_rate']), "<i class='fa-solid fa-star text-warning'></i>")); //將平均評分轉換為星星html
-        if ($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
-            $event_data['rate_start'] .= "<i class='fa-solid fa-star-half-alt text-warning'></i>"; //將平均評分轉換為星星html (0.5分)
-        $event_data['rate_start'] .= join("", array_fill(0, 5 - ceil($event_data['avg_rate']), "<i class='fa-regular fa-star text-muted'></i>")); //將平均評分轉換為星星html
+        if($event_data['avg_rate'] > 0){
+            $event_data['avg_rate'] = round(array_sum(array_column($book_reviews, 'rate')) / $event_data['review_total'], 1); //取得平均評分
+            $event_data['rate_start'] = join("", array_fill(0, floor($event_data['avg_rate']), "<i class='fa-solid fa-star text-warning'></i>")); //將平均評分轉換為星星html
+            if ($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
+                $event_data['rate_start'] .= "<i class='fa-solid fa-star-half-alt text-warning'></i>"; //將平均評分轉換為星星html (0.5分)
+            $event_data['rate_start'] .= join("", array_fill(0, 5 - ceil($event_data['avg_rate']), "<i class='fa-regular fa-star text-muted'></i>")); //將平均評分轉換為星星html
+        }else{
+            $event_data['avg_rate'] = '-';
+            $event_data['rate_start'] = join(array_fill(0, 5, "<i class='fa-regular fa-star text-muted'></i>")); //將平均評分轉換為星星html (0分
+        }
 
         return <<<body
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />

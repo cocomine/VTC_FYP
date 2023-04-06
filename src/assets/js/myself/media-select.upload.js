@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * 1.5
+ * 1.5.5
  */
 
 /*
@@ -194,11 +194,30 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
             timeout: 0,
             success: function (data) {
                 /* 顯示完成 */
-                progressBar.parents('.media-list-focus').attr('data-id', data.body);
-                progressBar.parents('.overflow-hidden').html(`
-                    <div class="media-list-center">
-                        <img src="/panel/api/media/${data.body}" draggable="false" alt="${Lang.Media.replace('%s', data.body)}"/>
-                    </div>`);
+                const file_name = file.name.match(/(.+)(\..+)/)
+                progressBar.parents('.media-list-focus').attr('data-id', data.body).attr('data-name', file_name[1]);
+
+                const tmp = progressBar.parents('.overflow-hidden');
+                if(/(image\/.+)/.test(file.type)){
+                    tmp.html(`
+                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${file.name}</span>
+                        <div class="media-list-center">
+                            <img src="/panel/api/media/${data.body}" draggable="false" alt="${file.name}"/>
+                        </div>`);
+                }else if(file.type === "application/pdf"){
+                    tmp.html(`
+                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${file.name}</span>
+                        <div class="media-list-center">
+                            <img src="/panel/assets/images/file-pdf-solid.svg" draggable="false" alt="${file.name}"/>
+                        </div>`);
+                }else{
+                    tmp.html(`
+                        <span class="position-absolute bottom-0 start-0 end-0 bg-opacity-75 bg-black text-center py-1 text-light" style="z-index: 1">${file.name}</span>
+                        <div class="media-list-center">
+                            <img src="/panel/assets/images/file-solid.svg" draggable="false" alt="${file.name}"/>
+                        </div>`);
+                }
+
             },
             xhr: function () {
                 /* 更新進度 */

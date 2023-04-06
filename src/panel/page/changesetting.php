@@ -131,6 +131,18 @@ class changesetting implements IPage {
             $organize_detail = $stmt->get_result()->fetch_assoc();
             $organize_detail['name'] = $organize_detail['name'] ? $organize_detail['name'].'.pdf' : '請選擇檔案';
             $organize_detail['address_count'] = strlen($organize_detail['address']);
+
+            // 接收更多證明文件
+            $stmt->prepare("SELECT p.prove, m.name FROM User_collabora_more_prove p, media m WHERE p.prove = m.ID AND p.UUID = ?");
+            $stmt->bind_param("s", $userdata['UUID']);
+            if(!$stmt->execute()){
+                return showText('Error');
+            }
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            $organize_detail['more_prove']['id'] = join(',', array_column($result, 'prove'));
+            $organize_detail['more_prove']['html'] = join('', array_map(function($v){
+                return "<li class='list-group-item'>{$v['name']}.pdf</li>";
+            }, $result));
         }
 
         /* HTML */
@@ -322,11 +334,18 @@ body .
                         <div class='invalid-feedback'>{$Text['Form']['Cant_EMPTY']}</div>
                     </div>
                     <div class="col-12">
-                        <label for='organize-prove' class='col-form-label'>商業證明</label><br>
+                        <label for='organize-prove' class='col-form-label'>商業證明或資質證明</label><br>
                         <input type="text" class="d-none" name="organize-prove" id="organize-prove" required value="{$organize_detail['prove']}">
                         <button type='button' id="organize-prove-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
                         <span id="organize-prove-filename" class="ps-2">{$organize_detail['name']}</span>
-                        <div class='invalid-feedback'>必須上載商業證明</div>
+                        <div class='invalid-feedback'>必須上載證明</div>
+                    </div>
+                    <div class="col-12">
+                        <label for='organize-prove-more' class='col-form-label'>其他更多證明</label><br>
+                        <input type="text" class="d-none" name="organize-prove-more" id="organize-prove-more" required value="{$organize_detail['more_prove']['id']}">
+                        <button type='button' id="organize-prove-more-select" class='btn btn-rounded btn-outline-primary pr-4 pl-4'><i class="fa-solid fa-upload me-2"></i>選擇證明</button>
+                        <br>
+                        <ul class="list-group d-inline-block mt-1" id="organize-prove-more-filename">{$organize_detail['more_prove']['html']}</ul>
                     </div>
                 </div>
                 <button type='submit' class='btn btn-rounded btn-primary mt-4 pr-4 pl-4 form-submit'><i class='fa fa-save pe-2'></i>{$Text['Submit']}</button>
@@ -619,6 +638,33 @@ body;
                     'Title' => showText('Error_Page.500_title'),
                     'Message' => $stmt->error,
                 );
+            }
+
+            /* 接收更多證明文件 */
+            $more_prove = explode(",", $data['organize-prove-more']);
+
+            // 刪除舊的
+            $stmt->prepare("DELETE FROM User_collabora_more_prove WHERE UUID = ?");
+            $stmt->bind_param("s", $auth->userdata['UUID']);
+            if(!$stmt->execute()){
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.500_title'),
+                    'Message' => $stmt->error,
+                );
+            }
+
+            // 新增新的
+            $stmt->prepare("INSERT INTO User_collabora_more_prove VALUES (?, ?)");
+            foreach($more_prove as $prove){
+                $stmt->bind_param("ss", $auth->userdata['UUID'], $prove);
+                if(!$stmt->execute()){
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.500_title'),
+                        'Message' => $stmt->error,
+                    );
+                }
             }
 
             return array(
