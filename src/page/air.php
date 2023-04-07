@@ -57,10 +57,34 @@ class air implements IPage {
             $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
             $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
             $allActivities .= "<img class='owl-lazy' src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div></div></div>";
-
             $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
             $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
-            $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>5.0</span>";
+
+            $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+            $stmt->bind_param("i", $row['ID']);
+            $stmt->execute();
+            $rate = $stmt->get_result()->fetch_assoc();
+
+            $row['rate'] = $rate['rate'];
+            $row['total'] = $rate['total'];
+            $row['comments'] = $rate['comments'];
+
+            if ($row['comments'] == 0) {
+                $comments = $row['comments'] . '則評論';
+            } else {
+                $comments = '暫無評論';
+            }
+
+            if($row['rate'] != null) {
+                if($row['rate'] < 4) {
+                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>".$row['rate']."</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+                } else {
+                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScoreOverEqual4' class='fs-10'>".$row['rate']."</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+                }
+            } else {
+                $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span class='fs-10'>-</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+            }
+
             $allActivities .= "</div></div><a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
             $allActivities .= "</div></div></div></div>";
         }
@@ -126,12 +150,20 @@ body;
             }
             $rs = $stmt->get_result();
             while($row = $rs->fetch_assoc()) {
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->bind_param("i", $row['ID']);
+                $stmt->execute();
+                $rate = $stmt->get_result()->fetch_assoc();
+
                 $output[] = array(
                     'id' => $row['ID'],
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'serverName' => $_SERVER['SERVER_NAME'],
+                    'rate' => $rate['rate'],
+                    'total' => $rate['rate'],
+                    'comments' => $rate['comments'],
                 );
             }
         }
@@ -144,12 +176,20 @@ body;
             }
             $rs = $stmt->get_result();
             while($row = $rs->fetch_assoc()) {
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->bind_param("i", $row['ID']);
+                $stmt->execute();
+                $rate = $stmt->get_result()->fetch_assoc();
+
                 $output[] = array(
                     'id' => $row['ID'],
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'serverName' => $_SERVER['SERVER_NAME'],
+                    'rate' => $rate['rate'],
+                    'total' => $rate['rate'],
+                    'comments' => $rate['comments'],
                 );
             }
         }
@@ -162,12 +202,20 @@ body;
             }
             $rs = $stmt->get_result();
             while($row = $rs->fetch_assoc()) {
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->bind_param("i", $row['ID']);
+                $stmt->execute();
+                $rate = $stmt->get_result()->fetch_assoc();
+
                 $output[] = array(
                     'id' => $row['ID'],
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'serverName' => $_SERVER['SERVER_NAME'],
+                    'rate' => $rate['rate'],
+                    'total' => $rate['rate'],
+                    'comments' => $rate['comments'],
                 );
             }
         }
@@ -180,12 +228,20 @@ body;
             }
             $rs = $stmt->get_result();
             while($row = $rs->fetch_assoc()) {
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->bind_param("i", $row['ID']);
+                $stmt->execute();
+                $rate = $stmt->get_result()->fetch_assoc();
+
                 $output[] = array(
                     'id' => $row['ID'],
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'serverName' => $_SERVER['SERVER_NAME'],
+                    'rate' => $rate['rate'],
+                    'total' => $rate['rate'],
+                    'comments' => $rate['comments'],
                 );
             }
         }
@@ -198,12 +254,20 @@ body;
             }
             $rs = $stmt->get_result();
             while($row = $rs->fetch_assoc()) {
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->bind_param("i", $row['ID']);
+                $stmt->execute();
+                $rate = $stmt->get_result()->fetch_assoc();
+
                 $output[] = array(
                     'id' => $row['ID'],
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'serverName' => $_SERVER['SERVER_NAME'],
+                    'rate' => $rate['rate'],
+                    'total' => $rate['rate'],
+                    'comments' => $rate['comments'],
                 );
             }
         }

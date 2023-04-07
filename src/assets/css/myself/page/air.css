@@ -66,6 +66,11 @@
 }
 
 #airRatingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#airRatingScoreOverEqual4 {
     color: #ffb82a;
     font-weight: bold;
 }
