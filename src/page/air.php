@@ -46,7 +46,7 @@ class air implements IPage {
         /* 初始提取 */
         $allActivities = '';
 
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2");
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 ORDER BY create_time DESC");
         if (!$stmt->execute()) {
             return 'Database Error!';
         }
@@ -69,7 +69,7 @@ class air implements IPage {
             $row['total'] = $rate['total'];
             $row['comments'] = $rate['comments'];
 
-            if ($row['comments'] == 0) {
+            if ($row['comments'] != 0) {
                 $comments = $row['comments'] . '則評論';
             } else {
                 $comments = '暫無評論';
@@ -144,7 +144,7 @@ body;
 
         /* 提供全部空中活動 */
         if($activitiesSelection == 'allAirBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2");
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -160,7 +160,6 @@ body;
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
-                    'serverName' => $_SERVER['SERVER_NAME'],
                     'rate' => $rate['rate'],
                     'total' => $rate['rate'],
                     'comments' => $rate['comments'],
@@ -170,7 +169,7 @@ body;
 
         /* 提供跳傘活動 */
         if($activitiesSelection == 'parachuteBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '跳傘'");
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '跳傘' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -186,7 +185,6 @@ body;
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
-                    'serverName' => $_SERVER['SERVER_NAME'],
                     'rate' => $rate['rate'],
                     'total' => $rate['rate'],
                     'comments' => $rate['comments'],
@@ -196,7 +194,7 @@ body;
 
         /* 提供滑翔傘活動 */
         if($activitiesSelection == 'paraglidingBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%滑翔%'");
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%滑翔%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -212,7 +210,6 @@ body;
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
-                    'serverName' => $_SERVER['SERVER_NAME'],
                     'rate' => $rate['rate'],
                     'total' => $rate['rate'],
                     'comments' => $rate['comments'],
@@ -222,7 +219,7 @@ body;
 
         /* 提供笨豬跳活動 */
         if($activitiesSelection == 'bungyBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%笨豬跳%'");
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%笨豬跳%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -238,7 +235,6 @@ body;
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
-                    'serverName' => $_SERVER['SERVER_NAME'],
                     'rate' => $rate['rate'],
                     'total' => $rate['rate'],
                     'comments' => $rate['comments'],
@@ -248,7 +244,7 @@ body;
 
         /* 提供其他空中活動 */
         if($activitiesSelection == 'otherAirBtn') {
-            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag NOT LIKE '%笨豬跳%' AND tag NOT LIKE '%滑翔%' AND tag NOT LIKE '%跳傘%'");
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag NOT LIKE '%笨豬跳%' AND tag NOT LIKE '%滑翔%' AND tag NOT LIKE '%跳傘%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
@@ -264,7 +260,6 @@ body;
                     'title' => $row['name'],
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
-                    'serverName' => $_SERVER['SERVER_NAME'],
                     'rate' => $rate['rate'],
                     'total' => $rate['rate'],
                     'comments' => $rate['comments'],

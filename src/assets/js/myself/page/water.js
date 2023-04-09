@@ -36,7 +36,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                                 <h1 style="font-size:300%; text-align: center; margin: 70px;">噢！沒有找到相關活動。。。</h1>
                               </div>
                             </div>`;
-                }else{
+                } else {
                     map = data.data.map((value) => {
                         let rate, comments;
 
@@ -87,8 +87,6 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             } else {
                 toastr.error(data.code);
             }
-
-            //do something with json
         }).catch((error) => {
             console.log(error);
         });

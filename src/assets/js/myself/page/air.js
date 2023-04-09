@@ -88,8 +88,6 @@ define(['jquery', 'toastr'], function (jq, toastr) {
             } else {
                 toastr.error(data.code);
             }
-
-            //do something with json
         }).catch((error) => {
             console.log(error);
         });
