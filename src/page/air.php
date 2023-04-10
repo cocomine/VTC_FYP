@@ -20,7 +20,7 @@ class air implements IPage {
 
 
     /**
-     * home constructor.
+     * air page constructor.
      * sql連接
      * @param $sqlcon
      */
@@ -31,13 +31,11 @@ class air implements IPage {
     /**
      * @inheritDoc
      */
-    public function access(bool $isAuth, int $role, bool $isPost): int
-    {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
         return 200;
     }
 
-    public function showPage(): string
-    {
+    public function showPage(): string {
         $Text = showText('index.Content');
 
         /* json 語言 */
@@ -136,8 +134,7 @@ body;
 
     }
 
-    public function post(array $data): array
-    {
+    public function post(array $data): array {
         global $auth;
         $output = [];
         $activitiesSelection = $data['activitiesSelection'];
@@ -273,18 +270,16 @@ body;
         );
     }
 
-    public function path(): string
-    {
-        return '<li class="breadcrumb-item active">空中活動</li>';
+    public function path(): string {
+        return '<li class="breadcrumb-item"><a href="/">' . showText("index.home") . '</a></li>'
+        . '<li class="breadcrumb-item active">空中活動</li>';
     }
 
-    public function get_Title(): string
-    {
-        return "空中活動|X-Travel";
+    public function get_Title(): string {
+        return "空中活動 | X-Travel";
     }
 
-    public function get_Head(): string
-    {
+    public function get_Head(): string {
         return "空中活動";
     }
 }

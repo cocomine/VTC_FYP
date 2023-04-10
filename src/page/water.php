@@ -18,7 +18,7 @@ class water implements IPage {
     private mysqli $sqlcon;
 
     /**
-     * home constructor.
+     * water page constructor.
      * sql連接
      * @param $sqlcon
      */
@@ -29,13 +29,11 @@ class water implements IPage {
     /**
      * @inheritDoc
      */
-    public function access(bool $isAuth, int $role, bool $isPost): int
-    {
+    public function access(bool $isAuth, int $role, bool $isPost): int {
         return 200;
     }
 
-    public function showPage(): string
-    {
+    public function showPage(): string {
         $Text = showText('index.Content');
 
         /* json 語言 */
@@ -135,8 +133,7 @@ loadModules(['myself/datepicker', 'myself/page/water'])
 body;
     }
 
-    public function post(array $data): array
-    {
+    public function post(array $data): array {
         global $auth;
         $output = [];
         $activitiesSelection = $data['activitiesSelection'];
@@ -298,24 +295,22 @@ body;
         );
     }
 
-    public function path(): string
-    {
-        return '<li class="breadcrumb-item active">水上活動</li>';
+    public function path(): string {
+        return '<li class="breadcrumb-item"><a href="/">' . showText("index.home") . '</a></li>'
+        . '<li class="breadcrumb-item active">水上活動</li>';
     }
 
     /**
      * @inheritDoc
      */
-    public function get_Title(): string
-    {
-        return "水上活動|X-Travel";
+    public function get_Title(): string {
+        return "水上活動 | X-Travel";
     }
 
     /**
      * @inheritDoc
      */
-    public function get_Head(): string
-    {
+    public function get_Head(): string {
         return "水上活動";
     }
 }
