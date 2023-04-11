@@ -4,11 +4,10 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\apis\media;
 
 class search implements IPage {
     private mysqli $sqlcon;
-
+    private string $keyword;
 
     /**
      * search constructor.
@@ -18,6 +17,7 @@ class search implements IPage {
 
     function __construct($sqlcon) {
         $this->sqlcon = $sqlcon;
+        $this->keyword = filter_var($_GET['search'], FILTER_SANITIZE_STRING);
     }
 
     /**
@@ -35,6 +35,7 @@ class search implements IPage {
 
         /* json 語言 */
         $jsonLang = json_encode(array());
+        //$this->keyword  <-- 從這裏取得搜尋關鍵字
         //我打算利用取得$_POST['search'],放在getSearchInput(下面)的value中,再以search.js 的jquery方式取得data,但是無法取得$_POST['search'] for index.php
         //另外get_Head()同樣問題
 
@@ -112,6 +113,6 @@ body;
      */
     public function get_Head(): string {
 
-        return "搜尋「".$_POST["search"]."」";
+        return "搜尋「".$this->keyword."」";
     }
 }
