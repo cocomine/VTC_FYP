@@ -66,6 +66,9 @@ function fetch_path(): array {
     if ($path[0] === "") {
         $path = array_slice($path, 1);
     }
+    if (preg_match("/^(.+)(\?.*)$/", $path[count($path) - 1], $matches)) {
+        $path[count($path) - 1] = $matches[1];
+    }
 
     return $path;
 }
@@ -389,8 +392,8 @@ function run_apis(array $path, MyAuth $auth) {
                     <!-- nav and search button -->
                     <div class="col-lg-3 clearfix">
                         <div class="search-box">
-                            <form action="#">
-                                <input type="text" name="search" placeholder="Search..." required aria-label="Search">
+                            <form method="GET" action="/search">
+                                <input type="text" name="search" placeholder="Search..." required>
                                 <i class="ti-search"></i>
                             </form>
                         </div>

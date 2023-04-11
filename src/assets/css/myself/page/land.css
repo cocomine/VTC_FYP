@@ -64,3 +64,13 @@
 .card{
     min-height: 25rem;
 }
+
+#landRatingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#landRatingScoreOverEqual4 {
+    color: #ffb82a;
+    font-weight: bold;
+}

@@ -69,6 +69,9 @@ function fetch_path(): array {
     if ($path[0] === "panel") {
         $path = array_slice($path, 1);
     }
+    if (preg_match("/^(.+)(\?.*)$/", $path[count($path) - 1], $matches)) {
+        $path[count($path) - 1] = $matches[1];
+    }
 
     return $path;
 }
