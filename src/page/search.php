@@ -35,7 +35,7 @@ class search implements IPage {
 
         /* json 語言 */
         $jsonLang = json_encode(array());
-
+        //無法取得$_POST['search'] for index.php
 
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/search.css">
