@@ -64,3 +64,13 @@
 .card{
     min-height: 25rem;
 }
+
+#waterRatingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#waterRatingScoreOverEqual4 {
+    color: #ffb82a;
+    font-weight: bold;
+}

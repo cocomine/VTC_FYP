@@ -389,8 +389,8 @@ function run_apis(array $path, MyAuth $auth) {
                     <!-- nav and search button -->
                     <div class="col-lg-3 clearfix">
                         <div class="search-box">
-                            <form action="#">
-                                <input type="text" name="search" placeholder="Search..." required aria-label="Search">
+                            <form method="post" action="/search">
+                                <input type="text" name="search" placeholder="Search..." required>
                                 <i class="ti-search"></i>
                             </form>
                         </div>

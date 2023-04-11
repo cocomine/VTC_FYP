@@ -1,0 +1,13 @@
+.card-img-top > img{
+    object-fit: cover;
+}
+
+#searchRatingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#searchRatingScoreOverEqual4 {
+    color: #ffb82a;
+    font-weight: bold;
+}

@@ -48,3 +48,13 @@
 .card-img-top > img{
     object-fit: cover;
 }
+
+#ratingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#ratingScoreOverEqual4 {
+    color: #ffb82a;
+    font-weight: bold;
+}
