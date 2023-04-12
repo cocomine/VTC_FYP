@@ -36,6 +36,20 @@ class home implements IPage {
         return 200;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
     /* 輸出頁面 */
     function showPage(): string {
         return <<<body

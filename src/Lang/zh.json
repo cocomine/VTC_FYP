@@ -1,11 +1,13 @@
 {
   "Lang": "zh",
-  "Last_Update": "4/4/2023",
+  "Last_Update": "13/4/2023",
   "Translate": {
     "Error": "發生未知錯誤!!",
     "header": {
       "browserupgrade": "我知道你對<b>IE</b>有一份特別的<b>忠誠</b>, 但是他實在有點太舊... 你至少也要把它<a href=\"http://browsehappy.com/\">升級成IE 11</a>吧!",
-      "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>"
+      "noscript": "你封鎖了<b>javascript</b>! 這樣做的話我們就無法將包裹送給你了!</p>",
+      "description": "體驗刺激，享受不一樣的生活點滴! 尋找有興趣的運動!",
+      "title": "X-Sport | 體驗刺激，享受不一樣的生活點滴! 尋找有興趣的運動!"
     },
     "footer": {
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
@@ -16,8 +18,7 @@
       "home": "首頁",
       "Logout": "登出",
       "Login": "登入",
-      "visitor": "訪客",
-      "Content": {}
+      "visitor": "訪客"
     },
     "Error_Page": {
       "403_title": "停!停! | X-Sport",

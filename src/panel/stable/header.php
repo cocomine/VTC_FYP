@@ -28,6 +28,9 @@ require_once('./Lang/Lang.php');
 
 header('Content-Type:text/html; charset=utf-8');
 
+global $path;
+$og = run_og($path); //取得og
+
 /* IP Block */
 //IP_Block();
 
@@ -37,7 +40,11 @@ header('Content-Type:text/html; charset=utf-8');
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title><?php echo showText(title); ?></title>
+        <title><?php echo $og['title'] ?? showText('header.title'); ?></title>
+        <meta name="og:site_name" content="<?php echo Cfg_site_title; ?>">
+        <meta name="description" content="<?php echo $og['description'] ?? showText('header.description'); ?>">
+        <meta name="og:image" content="<?php echo $og['image'] ?? "/panel/assets/images/icon/seo-logo.png"?>">
+        <meta name="twitter:card" content="summary_large_image">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ff7112"/>
         <meta name="robots" content="noindex">

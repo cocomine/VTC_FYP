@@ -32,6 +32,20 @@ class water implements IPage {
         return 200;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return "清爽玩樂 水之王國! ".showText('header.description');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
     public function showPage(): string {
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/water.css">
@@ -39,7 +53,7 @@ class water implements IPage {
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
             <h5>清爽玩樂 水之王國</h5>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand bg-body-tertiary">
               <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">

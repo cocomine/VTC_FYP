@@ -44,6 +44,14 @@ class post implements IPage {
         return 200;
     }
 
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
+    }
+
     public function showPage(): string {
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');

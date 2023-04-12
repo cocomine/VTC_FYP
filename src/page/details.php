@@ -406,4 +406,28 @@ body;
     public function get_Head(): string {
         return $this->activity_name;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        $stmt = $this->sqlcon->prepare("SELECT summary FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if (!$stmt->execute()) return null;
+
+        return $stmt->get_result()->fetch_assoc()['summary'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        $stmt  = $this->sqlcon->prepare("SELECT thumbnail FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if (!$stmt->execute()) return null;
+
+        return '/panel/api/media/'.$stmt->get_result()->fetch_assoc()['thumbnail'];
+    }
+
+
 }

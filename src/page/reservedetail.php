@@ -44,6 +44,19 @@ class reservedetail implements IPage {
         $this->bookID = $this->upPath[0];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
 
     /**
      * @inheritDoc

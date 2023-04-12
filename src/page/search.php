@@ -30,6 +30,20 @@ class search implements IPage {
     /**
      * @inheritDoc
      */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function showPage(): string {
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/search.css">

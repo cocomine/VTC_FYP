@@ -1,11 +1,13 @@
 {
   "Lang": "en",
-  "Last_Update": "4/4/2023",
+  "Last_Update": "13/4/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
       "browserupgrade": "I know you have a special <b>loyalty</b> to <b>IE</b>, but he's a little too old... you should at least <a href=\"http://browsehappy.com/\">Upgrade to IE 11</a>!",
-      "noscript": "You've blocked <b>javascript</b>! We won't be able to deliver packages to you if you do!</p>"
+      "noscript": "You've blocked <b>javascript</b>! We won't be able to deliver packages to you if you do!</p>",
+      "description": "Experience the excitement and enjoy a different life! Looking for interesting sports!",
+      "title": "X-Sport | Experience excitement and enjoy a different life! Looking for interesting sports!"
     },
     "footer": {
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council"

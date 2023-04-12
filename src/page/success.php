@@ -19,6 +19,20 @@ class success implements \cocomine\IPage {
     /**
      * @inheritDoc
      */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function showPage(): string {
         return <<<body
 <div class="container mt-4">

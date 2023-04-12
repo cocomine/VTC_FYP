@@ -27,6 +27,20 @@ class xmap implements IPage {
     /**
      * @inheritDoc
      */
+    public function get_description(): ?string {
+        return "查看一下你附近都有什麼活動可以參與! (*≧︶≦))(￣▽￣* )ゞ ".showText('header.description');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function showPage(): string {
         return <<<HTML
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />

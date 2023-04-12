@@ -22,7 +22,23 @@ class reserve_view implements IPage
 
     /* 是否有權進入 */
     function access(bool $isAuth, int $role, bool $isPost): int {
+        if(!$isAuth) return 401;
+        if($role < 1) return 403;
         return 200;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
     }
 
     /* 輸出頁面 */

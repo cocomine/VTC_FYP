@@ -1,11 +1,13 @@
 {
   "Lang": "zh-CN",
-  "Last_Update": "12/3/2023",
+  "Last_Update": "13/4/2023",
   "Translate": {
     "Error": "发生未知错误!!",
     "header": {
       "browserupgrade": "我知道你对<b>IE</b>有一份特别的<b>忠诚</b>, 但是他实在有点太旧... 你至少也要把它<a href=\"http://browsehappy.com/\">升级成IE 11</a>吧!",
-      "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>"
+      "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>",
+      "description": "体验刺激，享受不一样的生活点滴! 寻找有兴趣的运动!",
+      "title": "X-Sport | 体验刺激，享受不一样的生活点滴! 寻找有兴趣的运动!"
     },
     "footer": {
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"

@@ -83,7 +83,7 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
                         return `<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                             <div class="card card-block overflow-hidden">
                                 <div class="ratio ratio-4x3 card-img-top">
-                                    <img src="/assets/images/image_loading.webp" data-src="/panel/api/media/${value.link}" class="owl-lazy lazy" alt="${value.link}">
+                                    <img src="/assets/images/image_loading.webp" data-src="/panel/api/media/${value.link}" class="lazy" alt="${value.link}">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">${value.title}</h5>
@@ -145,7 +145,7 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
                         return `<div class="item">
                                     <div class="card card-block mx-2" style="min-width: 300px;">
                                         <div class="ratio ratio-4x3 card-img-top overflow-hidden">
-                                            <img class="owl-lazy" data-src="panel/api/media/${value.link}" alt="${value.link}">
+                                            <img class="owl-lazy" data-src="/panel/api/media/${value.link}" alt="${value.link}">
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">${value.title}</h5>
