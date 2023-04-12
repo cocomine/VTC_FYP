@@ -71,7 +71,7 @@ class land implements IPage {
 </div>
 body. <<<body
 <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="landEvent"></div>
+    <div class="row g-4" id="landEvent"></div>
 </div>
 body . <<<body
 <script>

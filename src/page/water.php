@@ -70,7 +70,7 @@ class water implements IPage {
 </div>
 body. <<<body
 <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="waterEvent"></div>
+    <div class="row g-4" id="waterEvent"></div>
 </div>
 body . <<<body
 <script>

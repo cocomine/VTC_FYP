@@ -83,7 +83,7 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
                         return `<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                             <div class="card card-block overflow-hidden">
                                 <div class="ratio ratio-4x3 card-img-top">
-                                    <img src="/panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
+                                    <img src="/assets/images/image_loading.webp" data-src="/panel/api/media/${value.link}" class="owl-lazy lazy" alt="${value.link}">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">${value.title}</h5>
@@ -98,6 +98,8 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
                     }).join('');
                 }
                 jq_activitiesResult.html(start + map + end);
+                $(document).trigger('lazyload'); // Lazyload
+
             }else{
                 toastr.error(data.Message, data.Title);
             }
@@ -132,7 +134,6 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
             body: JSON.stringify({ activitiesSelection })
         }).then(async (response) => {
             const data = await response.json();
-            console.log(data);
             if (data.code === 200){
                 let map = '';
                 let start = '<div class="row gy-4">';
