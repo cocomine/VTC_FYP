@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
+define([ 'jquery', 'toastr'], function (jq, toastr){
     "use strict";
     const jq_btn = $('#allLandBtn, #mountaineeringBtn, #hikingBtn, #climbingBtn, #skiingBtn, #otherlandBtn');
     const jq_landEvent = $('#landEvent');
@@ -21,13 +21,13 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
     function loadData(activitiesSelection, btn){
         // Loading
         jq_landEvent.html(
-            `<div class="col-12">
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <lottie-player src="/assets/images/logo_lottie.json"  background="transparent"  speed="1"  style="width: 200px; height: 200px;" autoplay loop></lottie-player>
+                `<div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <lottie-player src="/assets/images/logo_lottie.json"  background="transparent"  speed="1"  style="width: 200px; height: 200px;" autoplay loop></lottie-player>
+                    </div>
                 </div>
-            </div>
-        </div>`
+            </div>`
         )
 
         // Button

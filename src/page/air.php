@@ -34,60 +34,8 @@ class air implements IPage {
     }
 
     public function showPage(): string {
-        $Text = showText('index.Content');
-
-        /* json 語言 */
-        $jsonLang = json_encode(array());
-
-        /* 初始提取 */
-        $allActivities = '';
-
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 ORDER BY create_time DESC");
-        if (!$stmt->execute()) {
-            return 'Database Error!';
-        }
-
-        $rs = $stmt->get_result();
-
-        while ($row = $rs->fetch_assoc()) {
-            $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
-            $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $allActivities .= "<img class='owl-lazy' src='/panel/api/media/" . $row['thumbnail'] . "' alt='" . $row['thumbnail'] . "'></div></div></div>";
-            $allActivities .= "<div class='card-body'><h5 class='card-title'>" . $row['name'] . "</h5>";
-            $allActivities .= "<p class='card-text'>" . $row['summary'] . "</p><div class='row align-items-center'><div class='col-auto'>";
-
-            $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
-            $stmt->bind_param("i", $row['ID']);
-            $stmt->execute();
-            $rate = $stmt->get_result()->fetch_assoc();
-
-            $row['rate'] = $rate['rate'];
-            $row['total'] = $rate['total'];
-            $row['comments'] = $rate['comments'];
-
-            if ($row['comments'] != 0) {
-                $comments = $row['comments'] . '則評論';
-            } else {
-                $comments = '暫無評論';
-            }
-
-            if ($row['rate'] != null) {
-                if ($row['rate'] < 4) {
-                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>" . $row['rate'] . "</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
-                } else {
-                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScoreOverEqual4' class='fs-10'>" . $row['rate'] . "</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
-                }
-            } else {
-                $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span class='fs-10'>-</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
-            }
-
-            $allActivities .= "</div></div><a href='/details/" . $row['ID'] . "' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
-            $allActivities .= "</div></div></div></div>";
-        }
-
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/air.css">
-<pre id='langJson' style='display: none'>$jsonLang</pre>
 <div id='airActivitiesBackground' class="position-relative">
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
@@ -120,13 +68,11 @@ class air implements IPage {
 </div>
 body. <<<body
 <div class="container mt-4">
-  <div class='row row-cols-1 row-cols-md-4 g-4' id="airEvent">
-    $allActivities
-  </div>
+  <div class='row row-cols-1 row-cols-md-4 g-4' id="airEvent"></div>
 </div>
 body . <<<body
 <script>
-loadModules(['myself/datepicker', 'myself/page/air'])
+loadModules(['myself/page/air'])
 </script>
 body;
 
@@ -141,11 +87,15 @@ body;
         if ($activitiesSelection == 'allAirBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 ORDER BY create_time DESC");
             if (!$stmt->execute()) {
-                return 'Database Error!';
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -156,7 +106,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -166,11 +115,15 @@ body;
         if ($activitiesSelection == 'parachuteBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '跳傘' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
-                return 'Database Error!';
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -181,7 +134,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -191,11 +143,15 @@ body;
         if ($activitiesSelection == 'paraglidingBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%滑翔%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
-                return 'Database Error!';
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -206,7 +162,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -216,11 +171,15 @@ body;
         if ($activitiesSelection == 'bungyBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%笨豬跳%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
-                return 'Database Error!';
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -231,7 +190,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -241,11 +199,15 @@ body;
         if ($activitiesSelection == 'otherAirBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag NOT LIKE '%笨豬跳%' AND tag NOT LIKE '%滑翔%' AND tag NOT LIKE '%跳傘%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
-                return 'Database Error!';
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -256,7 +218,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
