@@ -1012,4 +1012,17 @@ body;
         return showText("index.home");
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
 }

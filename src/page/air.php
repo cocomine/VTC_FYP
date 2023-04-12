@@ -29,6 +29,20 @@ class air implements IPage {
     /**
      * @inheritDoc
      */
+    public function get_description(): ?string {
+        return "與你一起 遨遊天際! ".showText('header.description');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function access(bool $isAuth, int $role, bool $isPost): int {
         return 200;
     }
@@ -40,7 +54,7 @@ class air implements IPage {
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
             <h5>與你一起 遨遊天際</h5>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand bg-body-tertiary">
               <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">

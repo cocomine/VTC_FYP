@@ -27,6 +27,9 @@ require_once('./Lang/Lang.php');
 # require_once ('../cocomine/IPage.php');
 header('Content-Type:text/html; charset=utf-8');
 
+global $path;
+$og = run_og($path); //取得標題
+
 /* IP Block */
 //IP_Block();
 ob_clean();
@@ -36,13 +39,10 @@ ob_clean();
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title><?php echo showText('header.title'); ?></title>
+        <title><?php echo $og['title'] ?? showText('header.title'); ?></title>
         <meta name="og:site_name" content="<?php echo Cfg_site_title; ?>">
-        <meta name="description" content="<?php echo showText('header.description'); ?>">
-        <meta name="og:image" content="https://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/icon/seo-logo.png">
-        <meta name="og:image:type" content="image/png" />
-        <meta name="og:image:width" content="1200" />
-        <meta name="og:image:height" content="630" />
+        <meta name="description" content="<?php echo $og['description'] ?? showText('header.description'); ?>">
+        <meta name="og:image" content="<?php echo $og['image'] ?? "/assets/images/icon/seo-logo.png"?>">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#12a0ff"/>
