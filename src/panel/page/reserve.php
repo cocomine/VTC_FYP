@@ -179,7 +179,7 @@ body;
             return $this->reservePost->get_Title();
         }
 
-        return "預約管理 | X-Travel";
+        return "預約管理 | X-Sport";
     }
 
     /**

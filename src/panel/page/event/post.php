@@ -791,7 +791,7 @@ body;
     }
 
     public function get_Title(): string {
-        return sizeof($this->upPath) > 0 ? $this->event_name . " 修改活動 | X-Travel" : "增加活動 | X-Travel";
+        return sizeof($this->upPath) > 0 ? $this->event_name . " 修改活動 | X-Sport" : "增加活動 | X-Sport";
     }
 
     public function get_Head(): string {

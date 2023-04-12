@@ -1,5 +1,5 @@
 #airActivitiesBackground {
-    height: 100vh;
+    height: 50vh;
     overflow: hidden;
 }
 
@@ -45,20 +45,8 @@
     color: white;
 }
 
-.media-list-center{
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translate(50%,50%);
-}
-.media-list-center > img{
-    width: auto!important;
-    transform: translate(-50%,-50%);
-    height: 100%;
-    max-width: none;
+.card-img-top > img{
+    object-fit: cover;
 }
 
 .card{

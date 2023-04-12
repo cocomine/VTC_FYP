@@ -408,7 +408,7 @@ body;
     }
 
     public function get_Title(): string {
-        return "審核活動 | X-Travel";
+        return "審核活動 | X-Sport";
     }
 
     public function get_Head(): string {

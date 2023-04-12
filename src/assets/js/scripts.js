@@ -108,7 +108,7 @@
     ref: https://web.dev/lazy-loading-images/
     ==================================*/
 
-    $(document).on('load', function () {
+    $(document).on('load lazyload', function () {
         let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
 
         if ("IntersectionObserver" in window) {

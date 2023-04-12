@@ -397,7 +397,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return $this->activity_name . ' | X-Travel';
+        return $this->activity_name . ' | X-Sport';
     }
 
     /**

@@ -140,7 +140,7 @@ body;
             return $this->reviewPost->get_Title();
         }
 
-        return "審核活動 | X-Travel";
+        return "審核活動 | X-Sport";
     }
 
     /**
