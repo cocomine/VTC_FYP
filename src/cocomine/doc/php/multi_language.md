@@ -36,7 +36,7 @@ function showText(string $Path, string $localCode = null)
   "Last_Update": "9/1/2023",
   "Translate": {
     "Account": { //<--自由填寫名稱
-      "Title": "帳戶管理 | X-Travel",
+      "Title": "帳戶管理 | X-Sport",
       "Head": "帳戶管理",
       "Content": {
         /* 其他翻譯 */

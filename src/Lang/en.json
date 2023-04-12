@@ -11,7 +11,7 @@
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council"
     },
     "index": {
-      "title": "Home | X-Travel",
+      "title": "Home | X-Sport",
       "Console": "Console",
       "home": "Home",
       "Logout": "Logout",
@@ -20,11 +20,11 @@
       "Content": {}
     },
     "Error_Page": {
-      "403_title": "Stop! Stop! | X-Travel",
+      "403_title": "Stop! Stop! | X-Sport",
       "Dont_Come": "Hey hey hey! You shouldn't be here!",
-      "404_title": "Where have you been! | X-Travel",
+      "404_title": "Where have you been! | X-Sport",
       "Where_you_go": "Wait! Where did you go!",
-      "500_title": "Dead fire! | X-Travel",
+      "500_title": "Dead fire! | X-Sport",
       "something_happened": "Ouch! Dead fire! Something happened!",
       "GoBack": "Go back",
       "400_title": "There was a problem with the request!",

@@ -388,7 +388,7 @@ body;
 
     /* 取得頁面標題 */
     public function get_Title(): string {
-        return '預約詳情 | X-Travel';
+        return '預約詳情 | X-Sport';
     }
 
     /* 取得頁首標題 */

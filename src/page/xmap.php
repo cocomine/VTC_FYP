@@ -91,7 +91,7 @@ HTML;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return 'X-Map | X-Travel';
+        return 'X-Map | X-Sport';
     }
 
     /**

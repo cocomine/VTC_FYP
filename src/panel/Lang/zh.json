@@ -11,7 +11,7 @@
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
-      "title": "首頁 | X-Travel",
+      "title": "首頁 | X-Sport",
       "Console": "控制台",
       "home": "首頁",
       "Logout": "登出",
@@ -20,7 +20,7 @@
       "Content": {}
     },
     "ChangeSetting": {
-      "title": "設定 | X-Travel",
+      "title": "設定 | X-Sport",
       "setting": "帳號設定",
       "ChangeData": "個人檔案",
       "Gravatar": "前往Gravatar修改",
@@ -164,7 +164,7 @@
       ]
     },
     "Login": {
-      "title": "登入 | X-Travel",
+      "title": "登入 | X-Sport",
       "Login": "登入",
       "welcome": "<b>Hello!</b> 登入就可以了",
       "email": "電郵地址",
@@ -206,7 +206,7 @@
       }
     },
     "Register": {
-      "title": "註冊 | X-Travel",
+      "title": "註冊 | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> 兩次輸入的密碼不是一樣的哦!",
       "PASS_NOT_STRONG": "<b>Umm..</b> 密碼不太強哦!",
@@ -250,7 +250,7 @@
       ]
     },
     "ForgotPass": {
-      "title": "忘記密碼 | X-Travel",
+      "title": "忘記密碼 | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 電郵寄不出去! 檢查有沒有打錯吧~~",
       "LASTSTEP": "<b>最後兩步!</b> 快點到你的郵箱查看吧!",
       "CODE_WRONG": "<b>Hey!</b> 失效啦!",
@@ -293,11 +293,11 @@
       ]
     },
     "Error_Page": {
-      "403_title": "停!停! | X-Travel",
+      "403_title": "停!停! | X-Sport",
       "Dont_Come": "喂喂喂! 你不應該來這裏!",
-      "404_title": "你去哪裏了! | X-Travel",
+      "404_title": "你去哪裏了! | X-Sport",
       "Where_you_go": "等等! 你去哪裏了!",
-      "500_title": "死火啦! | X-Travel",
+      "500_title": "死火啦! | X-Sport",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧",
       "400_title": "請求出現問題!",
@@ -355,7 +355,7 @@
       }
     },
     "Account": {
-      "Title": "帳戶管理 | X-Travel",
+      "Title": "帳戶管理 | X-Sport",
       "Head": "帳戶管理",
       "Content": {
         "Name": {
@@ -401,7 +401,7 @@
       "Head": "管理員控制"
     },
     "notify": {
-      "Title": "通知管理 | X-Travel",
+      "Title": "通知管理 | X-Sport",
       "Head": "通知管理",
       "Content": {
         "Notify": "通知",
@@ -450,7 +450,7 @@
       }
     },
     "Media": {
-      "Title": "媒體 | X-Travel",
+      "Title": "媒體 | X-Sport",
       "Head": "媒體",
       "Content": {
         "Select_on": "選擇模式",
@@ -494,7 +494,7 @@
       }
     },
     "Media-upload": {
-      "Title": "上傳媒體 | X-Travel",
+      "Title": "上傳媒體 | X-Sport",
       "Head": "上傳媒體",
       "Content": {
         "upload": "上傳",

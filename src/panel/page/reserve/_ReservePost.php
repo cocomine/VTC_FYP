@@ -290,7 +290,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return $this->event_name." 預約管理 | X-Travel";
+        return $this->event_name." 預約管理 | X-Sport";
     }
 
     /**

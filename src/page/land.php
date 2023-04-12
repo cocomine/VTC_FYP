@@ -8,7 +8,6 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\apis\media;
 
 /**
  * Class air
@@ -302,7 +301,7 @@ body;
     }
 
     public function get_Title(): string {
-        return "陸上活動 | X-Travel";
+        return "陸上活動 | X-Sport";
     }
 
     public function get_Head(): string {

@@ -110,7 +110,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "活動 | X-Travel";
+        return "活動 | X-Sport";
     }
 
     /**

@@ -11,7 +11,7 @@
       "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"
     },
     "index": {
-      "title": "首页 | IVE airline",
+      "title": "首页 | X-Sport",
       "Console": "控制台",
       "home": "首页",
       "Logout": "登出",
@@ -20,11 +20,11 @@
       "Content": {}
     },
     "Error_Page": {
-      "403_title": "停!停! | IVE airline",
+      "403_title": "停!停! | X-Sport",
       "Dont_Come": "喂喂喂! 你不应该来这里!",
-      "404_title": "你去哪里了! | IVE airline",
+      "404_title": "你去哪里了! | X-Sport",
       "Where_you_go": "等等! 你去哪里了!",
-      "500_title": "死火啦! | IVE airline",
+      "500_title": "死火啦! | X-Sport",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧",
       "400_title": "请求出现问题!"

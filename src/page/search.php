@@ -105,7 +105,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "搜尋 | X-Travel";
+        return "搜尋 | X-Sport";
     }
 
     /**

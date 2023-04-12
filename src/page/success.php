@@ -6,9 +6,6 @@
 
 namespace page;
 
-use mysqli;
-use Stripe\StripeClient;
-
 class success implements \cocomine\IPage {
 
     /**
@@ -65,7 +62,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "預訂成功 | X-Travel";
+        return "預訂成功 | X-Sport";
     }
 
     /**

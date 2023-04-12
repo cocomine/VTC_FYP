@@ -8,7 +8,6 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\apis\media;
 
 /**
  * Class water_activites
@@ -304,7 +303,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "水上活動 | X-Travel";
+        return "水上活動 | X-Sport";
     }
 
     /**
