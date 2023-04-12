@@ -31,18 +31,11 @@ class search implements IPage {
      * @inheritDoc
      */
     public function showPage(): string {
-        $Text = showText('index.Content');
-
-        /* json 語言 */
-        $jsonLang = json_encode(array());
-
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/search.css">
-<pre id='langJson' style='display: none'>$jsonLang</pre>
 <input type="text" id="getSearchInput" value='{$this->keyword}' hidden>
 <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="getResult">
-    </div>
+    <div class="row g-4" id="getResult"></div>
 </div>
 body . <<<body
 <script>
@@ -59,19 +52,31 @@ body;
 
         $output = [];
         $searchInput = "%".$data['searchInput']."%";
+        //$searchInput = "%"; //debug
 
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE tag LIKE ?");
-        $stmt->bind_param("s", $searchInput);
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE tag LIKE ? OR name LIKE ? OR summary LIKE ? ORDER BY create_time DESC");
+        $stmt->bind_param("sss", $searchInput, $searchInput, $searchInput);
         if (!$stmt->execute()) {
-            return 'Database Error!';
+            return array(
+                'code' => 500,
+                'Title' => showText('Error_Page.something_happened'),
+                'Message' => $stmt->error,
+            );
         }
+
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
             $stmt->bind_param("i", $row['ID']);
-            $stmt->execute();
-            $rate = $stmt->get_result()->fetch_assoc();
+            if (!$stmt->execute()) {
+                return array(
+                    'code' => 500,
+                    'Title' => showText('Error_Page.something_happened'),
+                    'Message' => $stmt->error,
+                );
+            }
 
+            $rate = $stmt->get_result()->fetch_assoc();
             $output[] = array(
                 'id' => $row['ID'],
                 'title' => $row['name'],

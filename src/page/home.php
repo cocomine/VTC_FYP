@@ -8,7 +8,6 @@ namespace page;
 
 use cocomine\IPage;
 use mysqli;
-use panel\apis\media;
 
 /**
  * Class home
@@ -252,8 +251,13 @@ body;
             if ($activitiesSelection == 'hotHkCanoeing') {
                 $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'HK' AND tag LIKE '%獨木%' AND tag LIKE '%舟%'");
                 if (!$stmt->execute()) {
-                    return 'Database Error!';
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
                 }
+
                 $rs = $stmt->get_result();
                 while ($row = $rs->fetch_assoc()) {
                     $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");

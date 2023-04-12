@@ -393,7 +393,7 @@ function run_apis(array $path, MyAuth $auth) {
                     <div class="col-lg-3 clearfix">
                         <div class="search-box">
                             <form method="GET" action="/search">
-                                <input type="text" name="search" placeholder="Search..." required>
+                                <input type="text" name="search" placeholder="Search..." required value="<?php echo $_GET['search']?>">
                                 <i class="ti-search"></i>
                             </form>
                         </div>
