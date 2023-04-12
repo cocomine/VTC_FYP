@@ -22,10 +22,11 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
             const data = await response.json();
             if (data.code === 200) {
                 let map = '';
-                let topicStart = "<h3><b>" + data.country + "熱門活動-" + data.type + "</b></h3></br><div class='row row-cols-1 row-cols-md-4 g-4'>";
-                let topicEnd = "</div>";
+                let start = "<h3><b>" + data.country + "熱門活動-" + data.type + "</b></h3></br><div class='row row-cols-1 row-cols-md-4 g-4'>";
+                let end = "</div>";
                 $('#activitiesResult').empty();
                 console.log(data);
+
                 if (data.data.length <= 0) {
                     map = `<div class="row gy-4" style="min-width: 100%;">
                               <div class="col-12">
@@ -84,9 +85,61 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                                     </div>
                                   </div>
                                 </div>`;
-                    });
+                    }).join('');
                 }
-                $('#activitiesResult').html(topicStart + map + topicEnd);
+                $('#activitiesResult').html(start + map + end);
+            } else {
+                toastr.error(data.code);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
+
+    $('#allNew').click(function() {
+        const activitiesSelection = $(this).attr('id');
+
+        fetch(/*Here type url*/location.pathname, {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({activitiesSelection})
+        }).then(async (response) => {
+            const data = await response.json();
+            console.log(data);
+            if (data.code === 200) {
+                let map = '';
+                let start = '<div class="row gy-4">';
+                let end = '</div>';
+
+                for(let i = 0; i < data.country.length; i++){
+                    if (data.data[i].length <= 0){
+                        map = '<div class="row gy-4" style="min-width: 100%;"><div class="col-12"><h1 style="font-size:300%; text-align: center; margin: 70px;">噢！' + data.country[i] + '地區沒有找到最新活動。。。</h1></div></div>';
+                    } else {
+                        map += '<div class="col-12"><h3><b>' + data.country[i] + '地區最新活動</b></h3></br><div class="owl-carousel owl-theme">';
+                        map += data.data[i].map((value) => {
+                            return `<div class="item">
+                                        <div class="card card-block mx-2" style="min-width: 300px;">
+                                            <div class="ratio ratio-4x3 card-img-top overflow-hidden">
+                                                <img class="owl-lazy" data-src="panel/api/media/${value.link}" alt="${value.link}">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">${value.title}</h5>
+                                                <p class="card-text">${value.summary}</p>
+                                                <a href="/details/${value.id}" class="btn btn-primary stretched-link btn-rounded">了解更多</a>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        }).join('');
+                        map += '</div></div>';
+                    }
+                }
+
+                $('#activitiesResult').html(start + map + end);
+                owlCarousel();
             } else {
                 toastr.error(data.code);
             }
@@ -96,33 +149,37 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
     });
 
     /* 輪播圖 */
-    let owl = $('.owl-carousel');
-    owl.owlCarousel({
-        margin: 10,
-        nav: true,
-        dots: true,
-        mergeFit:false,
-        navText: [
-            "<i class=\"fa-solid fa-chevron-left\"></i>",
-            "<i class=\"fa-solid fa-chevron-right\"></i>"
-        ],
-        stagePadding: 40,
-        lazyLoad:true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            576: {
-                items: 2,
-            },
-            992: {
-                items: 3,
-            },
-            1200: {
-                items: 4,
+
+    function owlCarousel(){
+        let owl = $('.owl-carousel');
+        owl.owlCarousel({
+            margin: 10,
+            nav: true,
+            dots: true,
+            mergeFit: false,
+            navText: [
+                "<i class=\"fa-solid fa-chevron-left\"></i>",
+                "<i class=\"fa-solid fa-chevron-right\"></i>"
+            ],
+            stagePadding: 40,
+            lazyLoad: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                576: {
+                    items: 2,
+                },
+                992: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                }
             }
-        }
-    })
+        });
+    }
+
 
     /* 視差效果 */
     document.addEventListener('scroll', function(){
@@ -130,5 +187,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
         const scroll = window.scrollY;
         const index_head = $('#homeBackground > div');
         index_head[0].style.transform = `translateY(${scroll * 0.4}px)`
-    }, (Modernizr.passiveeventlisteners ? {passive: true} : false))
+    }, (Modernizr.passiveeventlisteners ? {passive: true} : false));
+
+    owlCarousel();
 })

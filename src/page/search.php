@@ -35,14 +35,11 @@ class search implements IPage {
 
         /* json 語言 */
         $jsonLang = json_encode(array());
-        //$this->keyword  <-- 從這裏取得搜尋關鍵字
-        //我打算利用取得$_POST['search'],放在getSearchInput(下面)的value中,再以search.js 的jquery方式取得data,但是無法取得$_POST['search'] for index.php
-        //另外get_Head()同樣問題
 
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/search.css">
 <pre id='langJson' style='display: none'>$jsonLang</pre>
-<input type="text" id="getSearchInput" value='{$_POST["search"]}' hidden>
+<input type="text" id="getSearchInput" value='{$this->keyword}' hidden>
 <div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-4 g-4" id="getResult">
     </div>
