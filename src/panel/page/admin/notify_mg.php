@@ -7,8 +7,8 @@
 namespace panel\page\admin;
 
 use cocomine\IPage;
-use panel\apis\notify;
 use mysqli;
+use panel\apis\notify;
 
 /**
  * Class notify
@@ -32,6 +32,14 @@ class notify_mg implements IPage {
         if(!$isAuth) return 401;
         if($role < 3) return 403;
         return 200;
+    }
+
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
     }
 
     public function get_Title(): string {

@@ -16,6 +16,10 @@ use cocomine\MyAuth;
 use cocomine\MyAuthException;
 use panel\page\home;
 
+/* 取得路徑 */
+static $path;
+$path = fetch_path();
+
 /* header */
 require_once('./stable/header.php');
 
@@ -31,8 +35,6 @@ try {
     exit();
 }
 
-$path = fetch_path(); //取得路徑
-
 /* API互動介面 (即係唔係俾人睇) */
 if ($path[0] == "api") {
     run_apis($path, $auth);
@@ -44,6 +46,69 @@ $_SERVER['HTTP_X_REQUESTED_WITH'] = strtolower(@$_SERVER['HTTP_X_REQUESTED_WITH'
 if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
     run_page($path, $auth);
     exit();
+}
+
+/**
+ * 取得前往頁面的og
+ * @param array $path
+ * @return array|null
+ */
+function run_og(array $path): ?array{
+    $access = 404;
+
+    //輸出頁面 home 頁面
+    if (count($path) < 1) {
+        require_once('./page/home.php');
+
+        //建立頁面
+        try {
+            $page = LoadPageFactory::createPage('panel\\page\\home', __DIR__ . '/', array());
+            $access = $page->access(true, 0, false);
+
+            if($access === 200){
+                return array(
+                    'title' => $page->get_Title(),
+                    'description' => $page->get_description() ?? null,
+                    'image' => $page->get_image() ?? null
+                );
+            }
+        } catch (Exception $e) {}
+    } else {
+        /* 頁面搜尋 */
+        for ($i = count($path); $i >= 0; $i--) {
+            //重組class路徑
+            $class = 'panel\\page';
+            for ($x = 0; $x < $i; $x++) $class .= '\\' . $path[$x];
+            $up_path = array_slice($path, $i); //傳入在此之前的路徑
+            $up_path = array_sanitize($up_path); //消毒
+
+            //建立頁面
+            try {
+                $page = LoadPageFactory::createPage($class, __DIR__ . '/', $up_path);
+                $access = $page->access(true, 0, false);
+
+                if($access === 200){
+                    return array(
+                        'title' => $page->get_Title(),
+                        'description' => $page->get_description() ?? null,
+                        'image' => $page->get_image() ?? null
+                    );
+                }
+            } catch (Exception $e) {
+                continue; //如不存在跳過
+            }
+        }
+        return array(
+            'title' => showText('Error_Page.404_title'),
+            'description' => showText('Error_Page.Where_you_go'),
+            'image' => null
+        );
+    }
+    return array(
+        'title' => showText('Error_Page.500_title'),
+        'description' => showText('Error_Page.something_happened'),
+        'image' => null
+    );
 }
 
 /**

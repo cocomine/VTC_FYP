@@ -49,7 +49,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'xmlhttprequest') {
 }
 
 /**
- * 取得前往頁面的title
+ * 取得前往頁面的og
  * @param array $path
  * @return array|null
  */

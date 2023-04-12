@@ -25,6 +25,14 @@ class upload implements IPage {
         return 200;
     }
 
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
+    }
+
     public function get_Title(): string {
         return showText("Media-upload.Title");
     }

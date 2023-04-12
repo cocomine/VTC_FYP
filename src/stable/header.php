@@ -28,7 +28,7 @@ require_once('./Lang/Lang.php');
 header('Content-Type:text/html; charset=utf-8');
 
 global $path;
-$og = run_og($path); //取得標題
+$og = run_og($path); //取得og
 
 /* IP Block */
 //IP_Block();
