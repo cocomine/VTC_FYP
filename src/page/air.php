@@ -13,7 +13,6 @@ use mysqli;
  * Class air
  * @package cocopixelmc\Page
  */
-
 class air implements IPage {
     private mysqli $sqlcon;
 
@@ -50,12 +49,12 @@ class air implements IPage {
 
         $rs = $stmt->get_result();
 
-        while($row = $rs->fetch_assoc()) {
+        while ($row = $rs->fetch_assoc()) {
             $allActivities .= "<div class='col-auto'><div class='item'><div class='card card-block mx-2' style='min-width: 300px;'>";
             $allActivities .= "<div class='ratio ratio-4x3 position-relative'><div class='overflow-hidden card-img-top'><div class='media-list-center'>";
-            $allActivities .= "<img class='owl-lazy' src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div></div></div>";
-            $allActivities .= "<div class='card-body'><h5 class='card-title'>".$row['name']."</h5>";
-            $allActivities .= "<p class='card-text'>".$row['summary']."</p><div class='row align-items-center'><div class='col-auto'>";
+            $allActivities .= "<img class='owl-lazy' src='/panel/api/media/" . $row['thumbnail'] . "' alt='" . $row['thumbnail'] . "'></div></div></div>";
+            $allActivities .= "<div class='card-body'><h5 class='card-title'>" . $row['name'] . "</h5>";
+            $allActivities .= "<p class='card-text'>" . $row['summary'] . "</p><div class='row align-items-center'><div class='col-auto'>";
 
             $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
             $stmt->bind_param("i", $row['ID']);
@@ -72,17 +71,17 @@ class air implements IPage {
                 $comments = '暫無評論';
             }
 
-            if($row['rate'] != null) {
-                if($row['rate'] < 4) {
-                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>".$row['rate']."</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+            if ($row['rate'] != null) {
+                if ($row['rate'] < 4) {
+                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScore' class='fs-10'>" . $row['rate'] . "</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
                 } else {
-                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScoreOverEqual4' class='fs-10'>".$row['rate']."</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+                    $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span id='airRatingScoreOverEqual4' class='fs-10'>" . $row['rate'] . "</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
                 }
             } else {
-                $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span class='fs-10'>-</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp". $comments ."</span>";
+                $allActivities .= "<i class='fs-10 fa-solid fa-star text-warning'></i><span class='fs-10'>-</span><span class='fs-5'>/5.0</span><span class='fs-10'>&nbsp&nbsp&nbsp" . $comments . "</span>";
             }
 
-            $allActivities .= "</div></div><a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
+            $allActivities .= "</div></div><a href='/details/" . $row['ID'] . "' class='btn btn-primary stretched-link btn-rounded'>了解更多</a>";
             $allActivities .= "</div></div></div></div>";
         }
 
@@ -119,7 +118,7 @@ class air implements IPage {
         </div>
     </div>
 </div>
-body . <<<body
+body. <<<body
 <div class="container mt-4">
   <div class='row row-cols-1 row-cols-md-4 g-4' id="airEvent">
     $allActivities
@@ -139,13 +138,13 @@ body;
         $activitiesSelection = $data['activitiesSelection'];
 
         /* 提供全部空中活動 */
-        if($activitiesSelection == 'allAirBtn') {
+        if ($activitiesSelection == 'allAirBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
             $rs = $stmt->get_result();
-            while($row = $rs->fetch_assoc()) {
+            while ($row = $rs->fetch_assoc()) {
                 $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
@@ -164,13 +163,13 @@ body;
         }
 
         /* 提供跳傘活動 */
-        if($activitiesSelection == 'parachuteBtn') {
+        if ($activitiesSelection == 'parachuteBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '跳傘' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
             $rs = $stmt->get_result();
-            while($row = $rs->fetch_assoc()) {
+            while ($row = $rs->fetch_assoc()) {
                 $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
@@ -189,13 +188,13 @@ body;
         }
 
         /* 提供滑翔傘活動 */
-        if($activitiesSelection == 'paraglidingBtn') {
+        if ($activitiesSelection == 'paraglidingBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%滑翔%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
             $rs = $stmt->get_result();
-            while($row = $rs->fetch_assoc()) {
+            while ($row = $rs->fetch_assoc()) {
                 $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
@@ -214,13 +213,13 @@ body;
         }
 
         /* 提供笨豬跳活動 */
-        if($activitiesSelection == 'bungyBtn') {
+        if ($activitiesSelection == 'bungyBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag LIKE '%笨豬跳%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
             $rs = $stmt->get_result();
-            while($row = $rs->fetch_assoc()) {
+            while ($row = $rs->fetch_assoc()) {
                 $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
@@ -239,13 +238,13 @@ body;
         }
 
         /* 提供其他空中活動 */
-        if($activitiesSelection == 'otherAirBtn') {
+        if ($activitiesSelection == 'otherAirBtn') {
             $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND tag NOT LIKE '%笨豬跳%' AND tag NOT LIKE '%滑翔%' AND tag NOT LIKE '%跳傘%' ORDER BY create_time DESC");
             if (!$stmt->execute()) {
                 return 'Database Error!';
             }
             $rs = $stmt->get_result();
-            while($row = $rs->fetch_assoc()) {
+            while ($row = $rs->fetch_assoc()) {
                 $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
@@ -271,7 +270,7 @@ body;
 
     public function path(): string {
         return '<li class="breadcrumb-item"><a href="/">' . showText("index.home") . '</a></li>'
-        . '<li class="breadcrumb-item active">空中活動</li>';
+            . '<li class="breadcrumb-item active">空中活動</li>';
     }
 
     public function get_Title(): string {

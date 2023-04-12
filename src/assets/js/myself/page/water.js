@@ -3,7 +3,7 @@
  * Create by cocomine
  */
 
-define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
+define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
     const jq_waterEvent = $('#waterEvent');
     const jq_btn = $('#allWaterBtn, #divingBtn, #canoeingBtn, #riptideBtn, #surfBtn, #otherWaterBtn');
@@ -12,6 +12,11 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
         loadData(activitiesSelection, $(this));
     });
 
+    /**
+     * Load data
+     * @param activitiesSelection {string} - Activities selection
+     * @param btn {JQuery<HTMLElement>} - Button
+     */
     function loadData(activitiesSelection, btn){
         // Loading
         jq_waterEvent.html(
@@ -91,7 +96,7 @@ define(['jquery', 'toastr', 'owl.carousel.min'], function (jq, toastr) {
                         </div>`;
                     });
                 }
-                $('#waterEvent').html(map);
+                jq_waterEvent.html(map);
 
             } else {
                 toastr.error(data.Message, data.Title);

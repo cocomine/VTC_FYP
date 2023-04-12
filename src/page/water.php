@@ -96,7 +96,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -107,7 +107,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -125,7 +124,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -136,7 +135,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -154,7 +152,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -165,7 +163,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -183,7 +180,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -194,7 +191,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comments'],
                 );
             }
@@ -212,7 +208,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -223,7 +219,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comment'],
                 );
             }
@@ -241,7 +236,7 @@ body;
             }
             $rs = $stmt->get_result();
             while ($row = $rs->fetch_assoc()) {
-                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
                 $stmt->bind_param("i", $row['ID']);
                 $stmt->execute();
                 $rate = $stmt->get_result()->fetch_assoc();
@@ -252,7 +247,6 @@ body;
                     'link' => $row['thumbnail'],
                     'summary' => $row['summary'],
                     'rate' => $rate['rate'],
-                    'total' => $rate['rate'],
                     'comments' => $rate['comment'],
                 );
             }
