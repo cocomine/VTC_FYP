@@ -82,7 +82,7 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
 
                         return `<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                             <div class="card card-block overflow-hidden">
-                                <div class="ratio ratio-4x3 position-relative">
+                                <div class="ratio ratio-4x3 card-img-top">
                                     <img src="/panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                                 </div>
                                 <div class="card-body">

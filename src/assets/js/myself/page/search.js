@@ -30,6 +30,7 @@ define([ 'jquery', 'toastr' ], function (jq, toastr){
             jq_getResult.empty();
 
             if (data.data.length <= 0){
+                // No data
                 map =
                     `<div class="col-12">
                         <div class="card">
@@ -46,7 +47,6 @@ define([ 'jquery', 'toastr' ], function (jq, toastr){
                     </div>`;
             }else{
                 map = data.data.map((value) => {
-
                     let rate;
 
                     if (value.rate != null){
@@ -60,8 +60,8 @@ define([ 'jquery', 'toastr' ], function (jq, toastr){
                     }
 
                     return `<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-                        <div class="card card-block">
-                            <div class="ratio ratio-4x3 position-relative overflow-hidden">
+                        <div class="card card-block overflow-hidden">
+                            <div class="ratio ratio-4x3 card-img-top">
                                 <img src="/panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                             </div>
                             <div class="card-body">
