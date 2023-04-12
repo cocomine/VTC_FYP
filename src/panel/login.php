@@ -359,9 +359,10 @@ require([
     "scripts",
     "forge"], () => {
         $('#preloader').fadeOut('slow', function() { $(this).remove(); });
+        $(document).trigger('load');
     })
 </script>
-<script src="/panel/assets/js/sw-register.min.js"></script>
+<script src="/panel/assets/js/sw-register.js"></script>
 </body>
 </html>
 Foot;
