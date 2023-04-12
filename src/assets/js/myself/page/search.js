@@ -1,4 +1,4 @@
-define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
+define([ 'jquery', 'toastr' ], function (jq, toastr){
     "use strict";
     const jq_getResult = $('#getResult');
     const searchInput = $('#getSearchInput').val();
@@ -60,8 +60,8 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
                     }
 
                     return `<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-                        <div class="card card-block mx-2">
-                            <div class="ratio ratio-4x3 position-relative">
+                        <div class="card card-block">
+                            <div class="ratio ratio-4x3 position-relative overflow-hidden">
                                 <img src="/panel/api/media/${value.link}" class="owl-lazy" alt="${value.link}">
                             </div>
                             <div class="card-body">
@@ -79,7 +79,7 @@ define([ 'jquery', 'toastr', 'owl.carousel.min' ], function (jq, toastr){
             jq_getResult.html(map);
 
         }else{
-            toastr.error(data.code);
+            toastr.error(data.Message, data.Title);
         }
 
     }).catch((error) => {

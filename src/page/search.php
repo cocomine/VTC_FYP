@@ -39,7 +39,7 @@ class search implements IPage {
 </div>
 body . <<<body
 <script>
-loadModules(['myself/datepicker', 'myself/page/search'])
+loadModules(['myself/page/search'])
 </script>
 body;
 
@@ -54,7 +54,7 @@ body;
         $searchInput = "%".$data['searchInput']."%";
         //$searchInput = "%"; //debug
 
-        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE tag LIKE ? OR name LIKE ? OR summary LIKE ? ORDER BY create_time DESC");
+        $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND tag LIKE ? OR name LIKE ? OR summary LIKE ? ORDER BY create_time DESC");
         $stmt->bind_param("sss", $searchInput, $searchInput, $searchInput);
         if (!$stmt->execute()) {
             return array(
@@ -66,7 +66,7 @@ body;
 
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
-            $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'total', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+            $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
             $stmt->bind_param("i", $row['ID']);
             if (!$stmt->execute()) {
                 return array(
@@ -83,7 +83,6 @@ body;
                 'link' => $row['thumbnail'],
                 'summary' => $row['summary'],
                 'rate' => $rate['rate'],
-                'total' => $rate['rate'],
                 'comments' => $rate['comments'],
             );
         }
