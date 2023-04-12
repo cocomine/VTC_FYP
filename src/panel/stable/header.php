@@ -37,7 +37,7 @@ header('Content-Type:text/html; charset=utf-8');
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title><?php echo showText(title); ?></title>
+        <title><?php echo Cfg_site_title; ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ff7112"/>
         <meta name="robots" content="noindex">

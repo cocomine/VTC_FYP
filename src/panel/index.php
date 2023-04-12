@@ -17,7 +17,6 @@ use cocomine\MyAuthException;
 use panel\page\home;
 
 /* header */
-const title = "index.title";
 require_once('./stable/header.php');
 
 //start auth

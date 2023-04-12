@@ -36,9 +36,16 @@ ob_clean();
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title><?php echo showText(title); ?></title>
+        <title><?php echo showText('header.title'); ?></title>
+        <meta name="og:site_name" content="<?php echo Cfg_site_title; ?>">
+        <meta name="description" content="<?php echo showText('header.description'); ?>">
+        <meta name="og:image" content="https://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/icon/seo-logo.png">
+        <meta name="og:image:type" content="image/png" />
+        <meta name="og:image:width" content="1200" />
+        <meta name="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ff7112"/>
+        <meta name="theme-color" content="#12a0ff"/>
         <meta name="robots" content="noindex">
         <meta http-equiv="Content-Security-Policy"
               content="default-src 'self';
