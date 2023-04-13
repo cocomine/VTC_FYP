@@ -55,7 +55,7 @@ class land implements IPage {
         <div class="col-auto">
             <h5>探索大地 感受自然</h5>
             <nav class="navbar navbar-expand bg-body-tertiary">
-              <div class="container-fluid">
+              <div class="container">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">

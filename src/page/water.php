@@ -54,7 +54,7 @@ class water implements IPage {
         <div class="col-auto">
             <h5>清爽玩樂 水之王國</h5>
             <nav class="navbar navbar-expand bg-body-tertiary">
-              <div class="container-fluid">
+              <div class="container">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
