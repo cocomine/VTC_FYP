@@ -106,7 +106,7 @@ class home implements IPage {
         <div class="col-auto">
             <h5>體驗刺激，享受不一樣的生活點滴</h5>
             
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand bg-body-tertiary">
               <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
