@@ -4,10 +4,10 @@
  */
 
 // This is the "Offline page" service worker
-const CACHE = "v2";
+const CACHE = "v2-1";
 
 const offlineFallbackPage = "/panel/offline.html";
-const loading_lottie = "/panel/assets/images/logo_lottie.json";
+const loading_lottie = "/assets/images/logo_lottie.json";
 
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener("install", function (event) {
@@ -26,10 +26,10 @@ self.addEventListener("fetch", function (event) {
   if (event.request.method !== "GET") return;
 
     // 如果logo_lottie.json優先從快取中加載
-    if (/^.+\/panel\/assets\/images\/logo_lottie.json$/.test(event.request.url)){
+    if (/^.+\/assets\/images\/logo_lottie.json$/.test(event.request.url)){
         event.respondWith(
             caches.open(CACHE).then(function (cache){
-                console.error("Serving lottie page " + error);
+                console.debug("Serving lottie page from cache");
                 return cache.match(loading_lottie).then((response) => response || fetch(event.request));
             })
         )
