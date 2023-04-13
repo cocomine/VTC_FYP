@@ -145,13 +145,20 @@ class reservedetail implements IPage {
             }
             $result = $stmt->get_result();
             $review_img_html = "";
-            while ($row = $result->fetch_assoc()) {
-                $review_img_html .=
-                    "<div class='col-6 col-sm-4 col-md-3 col-lg-2'>
+
+            if($result->num_rows > 0) {
+                // 有圖片
+                while ($row = $result->fetch_assoc()) {
+                    $review_img_html .=
+                        "<div class='col-6 col-sm-4 col-md-3 col-lg-2'>
                         <div class='ratio ratio-1x1'>
                             <img src='/panel/api/media/{$row['media_ID']}' alt='{$row['media_ID']}' class='rounded' draggable='false'>
                         </div>
                     </div>";
+                }
+            }else{
+                // 沒有圖片
+                $review_img_html = "<div class='col-auto status-p bg-secondary'>沒有圖片</div>";
             }
 
             $review_html = <<<HTML
@@ -362,8 +369,8 @@ body;
         }
 
         //新增圖片
-        $stmt->prepare("INSERT INTO Book_review_img VALUES (?, ?)");
         if(!empty($data['review-img'])) {
+            $stmt->prepare("INSERT INTO Book_review_img VALUES (?, ?)");
             $img = explode(',', $data['review-img']);
             foreach($img as $i) {
                 $stmt->bind_param("is", $this->upPath[0], $i);
