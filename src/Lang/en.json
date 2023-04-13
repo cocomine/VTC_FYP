@@ -10,7 +10,7 @@
       "title": "X-Sport | Experience excitement and enjoy a different life! Looking for interesting sports!"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council <br> <a href=\"/privacy\">Privacy Policy</a>"
     },
     "index": {
       "title": "Home | X-Sport",
@@ -85,6 +85,14 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/en-GB.json"
+    },
+    "privacy": {
+      "title": "Privacy Policy | X-Sport",
+      "Head": "Privacy Policy",
+      "description": "Our Website Privacy Policy",
+      "content": {
+        "content": "<div class=\"pb-4\">\n <h3>Who we are</h3>\n <p>We are X-Sport. Our website is: https://xsport .cocomine.cc/</p>\n</div>\n<div class=\"pb-4\">\n <h3>What personal data we collect and why we collect it</h3> \n <p>We will collect personal information to confirm the booking.\n When you book an event, your information will be sent to the event owner for confirmation.\n When you pay for you, the payment information will be given to a third party processing.</p>\n <p><b>The mobile app does not collect any data.</b></p>\n</div>\n<div class=\"pb-4\">\ n <h3>Who we share your data with</h3>\n <p>Your data may be shared with the following service providers:</p>\n <ul>\n <li>Google <a href =\"https://policies.google.com/privacy\">https://policies.google.com/privacy</a> </li>\n <li>Mapbox <a href=\"https: //www.mapbox.com/legal/privacy\">https://www.mapbox.com/legal/privacy</a> </li>\n <li>Stripe <a href=\"https:/ /stripe.com/en-hk/privacy\">https://stripe.com/en-hk/privacy</a> </li>\n </ul>\n</div>\n<div class=\"pb-4\">\n <h3>How long do we keep your data</h3>\n <p>When the user requests to delete the account, we will delete all user information within three months .</p>\n</div>\n<div class=\"pb-4\">\n <h3>What rights do you have regarding your data</h3>\n <p>You can always Modify your personal information and other information in the account settings interface. When you request to delete your account, all personal information will be deleted.</p>\n <p><b>You have full control over your mobile application data. </b></p>\n</div>\n<div class=\"pb-4\">\n <h3>Where do we send your data</h3>\n <p> When you book an event, your information will be sent to the event owner for confirmation. </p>\n <p><b>The mobile application does not send any data. </b></p>\n</div>\n<div>\n <h3>Contact</h3>\n <p>Our contact email<a href=\"mailto:support@cocopixelmc .com\">support@cocopixelmc.com</a></p>\n</div>\n<hr>\n<div>\n <h3>Which third parties do we receive data from</h3> \n <p>When you log in with your Google Account, we will receive your Google Account email address and username</p>\n <p>The mobile app and Mapbox will receive your GPS location for searching . This targeting data is not stored on the website. </p>\n</div>"
+      }
     }
   }
 }

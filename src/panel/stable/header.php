@@ -28,8 +28,11 @@ require_once('./Lang/Lang.php');
 
 header('Content-Type:text/html; charset=utf-8');
 
-global $path;
-$og = run_og($path); //取得og
+/* 取得og */
+try {
+    global $path;
+    $og = @call_user_func('run_og', $path);
+} catch (Exception $e) {}
 
 /* IP Block */
 //IP_Block();

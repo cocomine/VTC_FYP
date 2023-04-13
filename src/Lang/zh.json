@@ -10,7 +10,7 @@
       "title": "X-Sport | 體驗刺激，享受不一樣的生活點滴! 尋找有興趣的運動!"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻譯。 <br> Licensed to the Vocational Training Council <br> <a href=\"/privacy\">私隱權政策</a>"
     },
     "index": {
       "title": "首頁 | X-Sport",
@@ -84,6 +84,14 @@
     },
     "datatables_js": {
       "url": "//cdn.datatables.net/plug-ins/1.13.2/i18n/zh-HANT.json"
+    },
+    "privacy": {
+      "title": "私隱權政策 | X-Sport",
+      "Head": "私隱權政策",
+      "description": "我們的網站隱私政策",
+      "content": {
+        "content": "<div class=\"pb-4\">\n    <h3>我們是誰</h3>\n    <p>我們是 X-Sport。 我們的網址是：https://xsport.cocomine.cc/</p>\n</div>\n<div class=\"pb-4\">\n    <h3>我們收集哪些個人數據以及我們收集這些數據的原因</h3>\n    <p>我們將收集個人信息以確認預訂。\n        當您預訂活動時，您的信息將發送給活動所有者進行確認。\n        當您為您付款時，付款信息將交給第三方處理。</p>\n    <p><b>移動應用不收集任何數據。</b></p>\n</div>\n<div class=\"pb-4\">\n    <h3>我們與誰共享您的數據</h3>\n    <p>您的數據可能會與以下服務提供商共享:</p>\n    <ul>\n        <li>Google <a href=\"https://policies.google.com/privacy\">https://policies.google.com/privacy</a> </li>\n        <li>Mapbox <a href=\"https://www.mapbox.com/legal/privacy\">https://www.mapbox.com/legal/privacy</a> </li>\n        <li>Stripe <a href=\"https://stripe.com/en-hk/privacy\">https://stripe.com/en-hk/privacy</a> </li>\n    </ul>\n</div>\n<div class=\"pb-4\">\n    <h3>我們保留您的數據多長時間</h3>\n    <p>當用戶要求刪除賬號後，我們將在三個月內刪除所有用戶信息。</p>\n</div>\n<div class=\"pb-4\">\n    <h3>您對您的數據擁有哪些權利</h3>\n    <p>您可以隨時在賬戶設置界面修改您的個人信息及其他信息。 當您要求刪除賬戶時，所有個人信息將被刪除。</p>\n    <p><b>您可以完全控制自己在移動應用程序上的數據。</b></p>\n</div>\n<div class=\"pb-4\">\n    <h3>我們將您的數據發送到哪裡</h3>\n    <p>當您預訂活動時，您的信息將發送給活動所有者進行確認。</p>\n    <p><b>移動應用不發送任何數據。</b></p>\n</div>\n<div>\n    <h3>聯繫方式</h3>\n    <p>我們的聯繫郵箱 <a href=\"mailto:support@cocopixelmc.com\">support@cocopixelmc.com</a></p>\n</div>\n<hr>\n<div>\n    <h3>我們從哪些第三方接收數據</h3>\n    <p>當您使用 Google 帳戶登錄時，我們將收到您的 Google 帳戶電子郵件地址和用戶名</p>\n    <p>移動應用程序和 Mapbox 將接收您的 GPS 位置以進行搜索。 此定位數據未存儲在網站上。</p>\n</div>"
+      }
     }
   }
 }
