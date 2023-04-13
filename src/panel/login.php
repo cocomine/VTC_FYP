@@ -379,7 +379,7 @@ function load_google_client(): Google_Client {
     $gclient->setAuthConfig('../../secret/credentials.json');
     $gclient->setAccessType('offline'); // offline access
     $gclient->addScope([Google_Service_Oauth2::USERINFO_EMAIL, Google_Service_Oauth2::USERINFO_PROFILE]);
-    $gclient->setRedirectUri('https://fyp.cocomine.cc/panel/login?login=google');
+    $gclient->setRedirectUri('https://'.$_SERVER['HTTP_HOST'].'/panel/login?login=google');
 
     return $gclient;
 }
