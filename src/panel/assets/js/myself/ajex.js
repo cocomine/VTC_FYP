@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * v1-1.0.5
+ * v1-1.0.6
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
-    console.log("ajex.js v1-1.0.5 loaded");
+    console.log("ajex.js v1-1.0.6 loaded");
 
     /* 語言載入 */
     let Lang = $('#globalLang').text();
@@ -38,6 +38,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* 上一頁事件監聽 */
     $(window).on("popstate", function (e){
+        if(e.originalEvent.state.url === undefined) return;
         e.preventDefault();
         e.stopPropagation();
         console.log("User jump page to '"+e.originalEvent.state.url+"'. AJAX Load.");
