@@ -19,3 +19,5 @@ $stmt->execute();
 //$stmt->execute();
 $stmt->prepare('DELETE FROM notify WHERE YEAR(CURRENT_DATE)-YEAR(Time) >= 1');
 $stmt->execute();
+$stmt->prepare('UPDATE Event SET state = 1, isPost = 1 WHERE post_time < CURRENT_DATE() AND state = 0');
+$stmt->execute();
