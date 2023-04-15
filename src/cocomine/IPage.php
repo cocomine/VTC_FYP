@@ -65,4 +65,16 @@ interface IPage {
      * @link https://github.com/cocomine/VTC_FYP/blob/master/src/cocomine/doc/php/IPage.php.md#get_head
      */
     public function get_Head(): string;
+
+    /**
+     * 取得頁面描述
+     * @return string 頁面描述
+     */
+    public function get_description(): ?string;
+
+    /**
+     * 取得頁面圖片
+     * @return string 頁面圖片
+     */
+    public function get_image(): ?string;
 }

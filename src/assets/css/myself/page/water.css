@@ -1,5 +1,9 @@
+.card-img-top > img{
+    object-fit: cover;
+}
+
 #waterActivitiesBackground {
-    height: 100vh;
+    height: 50vh;
     overflow: hidden;
 }
 
@@ -45,22 +49,16 @@
     color: white;
 }
 
-.media-list-center{
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translate(50%,50%);
-}
-.media-list-center > img{
-    width: auto!important;
-    transform: translate(-50%,-50%);
-    height: 100%;
-    max-width: none;
-}
-
 .card{
     min-height: 25rem;
+}
+
+#waterRatingScore {
+    color: #31ff2a;
+    font-weight: bold;
+}
+
+#waterRatingScoreOverEqual4 {
+    color: #ffb82a;
+    font-weight: bold;
 }

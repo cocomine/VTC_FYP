@@ -44,6 +44,14 @@ class post implements IPage {
         return 200;
     }
 
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
+    }
+
     public function showPage(): string {
         $Text = showText('Media.Content');
         $Text2 = showText('Media-upload.Content');
@@ -791,7 +799,7 @@ body;
     }
 
     public function get_Title(): string {
-        return sizeof($this->upPath) > 0 ? $this->event_name . " 修改活動 | X-Travel" : "增加活動 | X-Travel";
+        return sizeof($this->upPath) > 0 ? $this->event_name . " 修改活動 | X-Sport" : "增加活動 | X-Sport";
     }
 
     public function get_Head(): string {

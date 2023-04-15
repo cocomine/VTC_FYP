@@ -1,17 +1,19 @@
 {
   "Lang": "en",
-  "Last_Update": "12/3/2023",
+  "Last_Update": "13/4/2023",
   "Translate": {
     "Error": "An unknown error occurred!!",
     "header": {
       "browserupgrade": "I know you have a special <b>loyalty</b> to <b>IE</b>, but he's a little too old... you should at least <a href=\"http://browsehappy.com/\">Upgrade to IE 11</a>!",
-      "noscript": "You've blocked <b>javascript</b>! We won't be able to deliver packages to you if you do!</p>"
+      "noscript": "You've blocked <b>javascript</b>! We won't be able to deliver packages to you if you do!</p>",
+      "description": "Experience the excitement and enjoy a different life! Looking for interesting sports!",
+      "title": "X-Sport | Experience excitement and enjoy a different life! Looking for interesting sports!"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing. <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a> provides translation. <br> Licensed to the Vocational Training Council <br> <a href=\"/privacy\">Privacy Policy</a>"
     },
     "index": {
-      "title": "Home | X-Travel",
+      "title": "Home | X-Sport",
       "Console": "Console",
       "home": "Home",
       "Logout": "Logout",
@@ -20,7 +22,7 @@
       "Content": {}
     },
     "ChangeSetting": {
-      "title": "Settings | X-Travel",
+      "title": "Settings | X-Sport",
       "setting": "Account Settings",
       "ChangeData": "Profile",
       "Gravatar": "Go to Gravatar to modify",
@@ -164,7 +166,7 @@
       ]
     },
     "Login": {
-      "title": "Login | X-Travel",
+      "title": "Login | X-Sport",
       "Login": "Login",
       "welcome": "<b>Hello!</b> Just sign in",
       "email": "Email address",
@@ -206,7 +208,7 @@
       }
     },
     "Register": {
-      "title": "Registration | X-Travel",
+      "title": "Registration | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> I can't send emails! Check for typos~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> The passwords entered twice are not the same!",
       "PASS_NOT_STRONG": "<b>Umm..</b> the password is not too strong!",
@@ -250,7 +252,7 @@
       ]
     },
     "ForgotPass": {
-      "title": "Forgot password | X-Travel",
+      "title": "Forgot password | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> I can't send emails! Check for typos~~",
       "LASTSTEP": "<b>The last two steps!</b> Hurry up and check your mailbox!",
       "CODE_WRONG": "<b>Hey!</b> is invalid!",
@@ -293,11 +295,11 @@
       ]
     },
     "Error_Page": {
-      "403_title": "Stop! Stop! | X-Travel",
+      "403_title": "Stop! Stop! | X-Sport",
       "Dont_Come": "Hey hey hey! You shouldn't be here!",
-      "404_title": "Where have you been! | X-Travel",
+      "404_title": "Where have you been! | X-Sport",
       "Where_you_go": "Wait! Where did you go!",
-      "500_title": "Dead fire! | X-Travel",
+      "500_title": "Dead fire! | X-Sport",
       "something_happened": "Ouch! Dead fire! Something happened!",
       "GoBack": "Go back",
       "400_title": "There was a problem with the request!",
@@ -355,7 +357,7 @@
       }
     },
     "Account": {
-      "Title": "Account Management | X-Travel",
+      "Title": "Account Management | X-Sport",
       "Head": "Account Management",
       "Content": {
         "Name": {
@@ -401,7 +403,7 @@
       "Head": "Admin Control"
     },
     "notify": {
-      "Title": "Notification Management | X-Travel",
+      "Title": "Notification Management | X-Sport",
       "Head": "Notification Management",
       "Content": {
         "Notify": "Notify",
@@ -450,7 +452,7 @@
       }
     },
     "Media": {
-      "Title": "Media | X-Travel",
+      "Title": "Media | X-Sport",
       "Head": "Media",
       "Content": {
         "Select_on": "Select Mode",
@@ -494,7 +496,7 @@
       }
     },
     "Media-upload": {
-      "Title": "Upload media | X-Travel",
+      "Title": "Upload media | X-Sport",
       "Head": "Upload media",
       "Content": {
         "upload": "Upload",

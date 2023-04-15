@@ -34,155 +34,163 @@ class home implements IPage {
     /* 輸出頁面 */
     function showPage(): string {
 
-        $Text = showText('index.Content');
-
-        /* json 語言 */
-        $jsonLang = json_encode(array());
-
         $hkActivities = '';
-
         $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'HK' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
-            return 'Database Error!';
+            echo_error(500);
+            exit();
         }
 
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $hkActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
-            $hkActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $hkActivities .= "<img class='owl-lazy' data-src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $hkActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $hkActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $hkActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+
+
+            $hkActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $cnActivities = '';
-
         $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'CN' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
-            return 'Database Error!';
+            echo_error(500);
+            exit();
         }
 
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $cnActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
-            $cnActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $cnActivities .= "<img class='owl-lazy' data-src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $cnActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $cnActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $cnActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $cnActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $moActivities = '';
-
         $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'MO' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
-            return 'Database Error!';
+            echo_error(500);
+            exit();
         }
 
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $moActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
-            $moActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $moActivities .= "<img class='owl-lazy' data-src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $moActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $moActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $moActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $moActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
 
         $twActivities = '';
-
         $stmt->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'TW' ORDER BY create_time DESC LIMIT 5");
         if (!$stmt->execute()) {
-            return 'Database Error!';
+            echo_error(500);
+            exit();
         }
 
         $rs = $stmt->get_result();
         while($row = $rs->fetch_assoc()) {
             $twActivities .= "<div class='item'><div class='card card-block mx-2' style='min-width: 300px;'><div class='ratio ratio-4x3 card-img-top overflow-hidden'>";
-            $twActivities .= "<img class='owl-lazy' data-src='panel/api/media/".$row['thumbnail']."' alt=''></div><div class='card-body'>";
+            $twActivities .= "<img class='owl-lazy' data-src='/panel/api/media/".$row['thumbnail']."' alt='".$row['thumbnail']."'></div><div class='card-body'>";
             $twActivities .= "<h5 class='card-title'>".$row['name']."</h5>";
             $twActivities .= "<p class='card-text'>".$row['summary']."</p>";
-            $twActivities .= "<a href='https://".$_SERVER['SERVER_NAME']."/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
+            $twActivities .= "<a href='/details/".$row['ID']."' class='btn btn-primary stretched-link btn-rounded'>了解更多</a></div></div></div>";
         }
         return <<<body
 <link rel="stylesheet" href="/assets/css/myself/page/home.css">
-<pre id='langJson' style='display: none'>$jsonLang</pre>
 <div id='homeBackground' class="position-relative">
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
             <h5>體驗刺激，享受不一樣的生活點滴</h5>
-            <div class="dropdown">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-              選擇地區或活動
-              </button>
-              <form class="dropdown-menu p-4">
-                  <div class="mb-3">
-                      <div class="search-box">
-                          <input type="text" name="search" placeholder="搜尋地點或活動" required>
-                          <i class="ti-search"></i>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              香港地區
+            
+            <nav class="navbar navbar-expand bg-body-tertiary">
+              <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <div class="btn-group dropend">
+                        <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="allNew">
+                          <i class="fa-solid fa-down-left-and-up-right-to-center">&nbsp所有最新</i>
+                        </button>
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle btn-lg btn-rounded me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-fire">&nbsp香港熱門</i>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                                <div class="hstack gap-3">
+                                  <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotHkCanoeing">獨木舟</button>
+                                  <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotHkClimbing">攀岩</button>
+                                  <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotHkDiving">潛水</button>
+                                  <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotHkParagliding">滑翔傘</button>
+                                  <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotHkHiking">遠足</button>
+                                </div>
                             </ul>
                         </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              中國地區
+                    </li>
+                    <li class="nav-item">
+                      <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle btn-lg btn-rounded me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-fire">&nbsp中國大陸熱門</i>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">熱氣球</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑雪</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                              <div class="hstack gap-3">
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnCanoeing">獨木舟</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnClimbing">攀岩</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnHotAirBalloon">熱氣球</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnMountaineering">登山</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnParagliding">滑翔傘</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnSkiing">滑雪</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotCnHiking">遠足</button>
+                              </div>
                             </ul>
                         </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              澳門地區
+                    </li>
+                    <li class="nav-item">
+                      <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle btn-lg btn-rounded me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-fire">&nbsp澳門熱門</i>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">笨豬跳</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
+                              <div class="hstack gap-3">
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotMoBungy">笨豬跳</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotMoClimbing">攀岩</button>
+                              </div>
                             </ul>
                         </div>
-                        
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              台灣地區
+                    </li>
+                    <li class="nav-item">
+                      <div class="btn-group dropend">
+                            <button type="button" class="btn btn-light dropdown-toggle btn-lg btn-rounded me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-fire">&nbsp台灣熱門</i>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">獨木舟</a></li>
-                              <li><a class="dropdown-item" href="#">攀岩</a></li>
-                              <li><a class="dropdown-item" href="#">潛水</a></li>
-                              <li><a class="dropdown-item" href="#">登山</a></li>
-                              <li><a class="dropdown-item" href="#">跳傘</a></li>
-                              <li><a class="dropdown-item" href="#">滑翔傘</a></li>
-                              <li><a class="dropdown-item" href="#">遠足</a></li>
+                              <div class="hstack gap-3">
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwCanoeing">獨木舟</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwClimbing">攀岩</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwDiving">潛水</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwMountaineering">登山</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwParachute">跳傘</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwParagliding">滑翔傘</button>
+                                <button type="button" class="btn btn-light btn-lg btn-rounded me-2" id="hotTwHiking">遠足</button>   
+                              </div>
                             </ul>
-                        </div>
-                    </div>
-                  </div>
-              </form>
-            </div>      
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
         </div>
     </div>
 </div>
 body . <<<body
-<div class="container mt-4">
+<div class="container mt-4" id="activitiesResult">
     <div class="row gy-4">
     
       <div class="col-12">
@@ -193,7 +201,7 @@ body . <<<body
       </div>
 
       <div class="col-12">
-        <h3><b>中國地區最新活動</b></h3></br>
+        <h3><b>中國大陸地區最新活動</b></h3></br>
         <div class="owl-carousel owl-theme">
           $cnActivities
         </div>
@@ -216,7 +224,7 @@ body . <<<body
 </div>
 body . <<<body
 <script>
-loadModules(['myself/datepicker', 'myself/page/home'])
+loadModules(['myself/page/home'])
 </script>
 body;
     }
@@ -224,8 +232,769 @@ body;
     /* POST請求 */
     function post(array $data): array {
         global $auth;
+        $activitiesSelection = $data['activitiesSelection'];
 
-        return array();
+
+        if($activitiesSelection != 'allNew') {
+            $output = [];
+            $activityCountry = '';
+            $activityType = '';
+
+            /* 提供香港熱門 */
+            /* 獨木舟 */
+            if ($activitiesSelection == 'hotHkCanoeing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'HK' AND tag LIKE '%獨木%' AND tag LIKE '%舟%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+                $activityCountry = '香港';
+                $activityType = '獨木舟';
+            }
+
+            /* 攀岩 */
+            if ($activitiesSelection == 'hotHkClimbing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'HK' AND tag LIKE '%岩%' AND tag LIKE '%攀岩%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '香港';
+                $activityType = '攀岩';
+            }
+
+            /* 潛水 */
+            if ($activitiesSelection == 'hotHkDiving') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'HK' AND tag LIKE '%潛%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '香港';
+                $activityType = '潛水';
+            }
+
+            /* 滑翔傘 */
+            if ($activitiesSelection == 'hotHkParagliding') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'HK' AND tag LIKE '%滑翔%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '香港';
+                $activityType = '滑翔傘';
+
+            }
+
+            /* 遠足 */
+            if ($activitiesSelection == 'hotHkHiking') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'HK' AND tag LIKE '%遠足%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '香港';
+                $activityType = '遠足';
+            }
+
+            /* 提供中國熱門 */
+            /* 獨木舟 */
+            if ($activitiesSelection == 'hotCnCanoeing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'CN' AND tag LIKE '%獨木%' AND tag LIKE '%舟%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '獨木舟';
+            }
+
+            /* 攀岩 */
+            if ($activitiesSelection == 'hotCnClimbing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'CN' AND tag LIKE '%岩%' AND tag LIKE '%攀岩%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '攀岩';
+            }
+
+            /* 熱氣球 */
+            if ($activitiesSelection == 'hotCnHotAirBalloon') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'CN' AND tag LIKE '%熱氣%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '熱氣球';
+            }
+
+            /* 登山 */
+            if ($activitiesSelection == 'hotCnMountaineering') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'CN' AND tag LIKE '%登山%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '登山';
+            }
+
+            /* 滑翔傘 */
+            if ($activitiesSelection == 'hotCnParagliding') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'CN' AND tag LIKE '%滑翔%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '滑翔傘';
+            }
+
+            /* 滑雪 */
+            if ($activitiesSelection == 'hotCnSkiing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'CN' AND tag LIKE '%滑雪%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '滑雪';
+            }
+
+            /* 遠足 */
+            if ($activitiesSelection == 'hotCnHiking') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'CN' AND tag LIKE '%遠足%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '中國大陸';
+                $activityType = '遠足';
+            }
+
+            /* 提供澳門熱門 */
+            /* 笨豬跳 */
+            if ($activitiesSelection == 'hotMoBungy') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'MO' AND tag LIKE '%笨豬跳%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '澳門';
+                $activityType = '笨豬跳';
+            }
+
+            /* 攀岩 */
+            if ($activitiesSelection == 'hotMoClimbing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'MO' AND tag LIKE '%岩%' AND tag LIKE '%攀岩%' ");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '澳門';
+                $activityType = '攀岩';
+            }
+
+            /* 提供台灣熱門 */
+            /* 獨木舟 */
+            if ($activitiesSelection == 'hotTwCanoeing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'TW' AND tag LIKE '%獨木%' AND tag LIKE '%舟%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '獨木舟';
+            }
+
+            /* 攀岩 */
+            if ($activitiesSelection == 'hotTwClimbing') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'TW' AND tag LIKE '%岩%' AND tag LIKE '%攀岩%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '攀岩';
+            }
+
+            /* 潛水 */
+            if ($activitiesSelection == 'hotTwDiving') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 0 AND country = 'TW' AND tag LIKE '%潛%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '潛水';
+            }
+
+            /* 登山 */
+            if ($activitiesSelection == 'hotTwMountaineering') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'TW' AND tag LIKE '%登山%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '登山';
+            }
+
+            /* 跳傘 */
+            if ($activitiesSelection == 'hotTwParachute') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'TW' AND tag LIKE '跳傘'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '跳傘';
+            }
+
+            /* 滑翔傘 */
+            if ($activitiesSelection == 'hotTwParagliding') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 2 AND country = 'TW' AND tag LIKE '%滑翔%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '滑翔傘';
+            }
+
+            /* 遠足 */
+            if ($activitiesSelection == 'hotTwHiking') {
+                $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, country, summary, thumbnail, create_time, type FROM Event WHERE review = 1 AND state = 1 AND type = 1 AND country = 'TW' AND tag LIKE '%遠足%'");
+                if (!$stmt->execute()) {
+                    return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+                }
+                $rs = $stmt->get_result();
+                while ($row = $rs->fetch_assoc()) {
+                    $stmt->prepare("SELECT ROUND(SUM(r.rate)/COUNT(*), 1) AS 'rate', COUNT(*) AS 'comments' FROM Book_review r, Book_event b WHERE r.Book_ID = b.ID AND event_ID = ?");
+                    $stmt->bind_param("i", $row['ID']);
+                    $stmt->execute();
+                    $rate = $stmt->get_result()->fetch_assoc();
+
+                    $output[] = array(
+                        'id' => $row['ID'],
+                        'title' => $row['name'],
+                        'link' => $row['thumbnail'],
+                        'summary' => $row['summary'],
+                        'rate' => $rate['rate'],
+                        'comments' => $rate['comments'],
+                    );
+                }
+
+                $activityCountry = '台灣';
+                $activityType = '遠足';
+            }
+
+            return array(
+                'code' => 200,
+                'data' => $output,
+                'country' => $activityCountry,
+                'type' => $activityType,
+            );
+        } else {
+
+            $hkOutput = [];
+            $cnOutput = [];
+            $moOutput = [];
+            $twOutput = [];
+            $country = ['香港', '中國大陸', '澳門', '台灣'];
+
+            /* 香港最新 */
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'HK' ORDER BY create_time DESC LIMIT 5");
+            if (!$stmt->execute()) {
+                return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $hkOutput[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                );
+            }
+
+            /* 中國最新 */
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'CN' ORDER BY create_time DESC LIMIT 5");
+            if (!$stmt->execute()) {
+                return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $cnOutput[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                );
+            }
+
+            /* 澳門最新 */
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'MO' ORDER BY create_time DESC LIMIT 5");
+            if (!$stmt->execute()) {
+                return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $moOutput[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                );
+            }
+
+            /* 台灣最新 */
+            $stmt = $this->sqlcon->prepare("SELECT ID, review, state, name, summary, country, thumbnail, create_time FROM Event WHERE review = 1 AND state = 1 AND country = 'TW' ORDER BY create_time DESC LIMIT 5");
+            if (!$stmt->execute()) {
+                return array(
+                        'code' => 500,
+                        'Title' => showText('Error_Page.something_happened'),
+                        'Message' => $stmt->error,
+                    );
+            }
+            $rs = $stmt->get_result();
+            while($row = $rs->fetch_assoc()) {
+                $twOutput[] = array(
+                    'id' => $row['ID'],
+                    'title' => $row['name'],
+                    'link' => $row['thumbnail'],
+                    'summary' => $row['summary'],
+                );
+            }
+
+            $output = array($hkOutput, $cnOutput, $moOutput, $twOutput);
+
+
+            return array(
+                'code' => 200,
+                'data' => $output,
+                'country' => $country,
+            );
+        }
     }
 
     /* path輸出 */
@@ -243,4 +1012,17 @@ body;
         return showText("index.home");
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
 }

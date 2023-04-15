@@ -25,6 +25,14 @@ class _ReviewPost implements IPage {
         return 200;
     }
 
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
+    }
+
     public function showPage(): string {
         return <<<body
 <link rel="stylesheet" href="/panel/assets/css/easymde.min.css">
@@ -408,7 +416,7 @@ body;
     }
 
     public function get_Title(): string {
-        return "審核活動 | X-Travel";
+        return "審核活動 | X-Sport";
     }
 
     public function get_Head(): string {

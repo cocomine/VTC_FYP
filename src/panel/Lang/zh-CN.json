@@ -1,17 +1,19 @@
 {
   "Lang": "zh-CN",
-  "Last_Update": "12/3/2023",
+  "Last_Update": "13/4/2023",
   "Translate": {
     "Error": "发生未知错误!!",
     "header": {
       "browserupgrade": "我知道你对<b>IE</b>有一份特别的<b>忠诚</b>, 但是他实在有点太旧... 你至少也要把它<a href=\"http://browsehappy.com/\">升级成IE 11</a>吧!",
-      "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>"
+      "noscript": "你封锁了<b>javascript</b>! 这样做的话我们就无法将包裹送给你了!</p>",
+      "description": "体验刺激，享受不一样的生活点滴! 寻找有兴趣的运动!",
+      "title": "X-Sport | 体验刺激，享受不一样的生活点滴! 寻找有兴趣的运动!"
     },
     "footer": {
-      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council"
+      "privacy": "© Chu Ho Ching & Yeung Cheuk Lam & Leung Ka Tung & Tam Hiu Wing。 <a href=\"https://www.facebook.com/profile.php?id=100006297815529\">Cocomine</a>提供翻译。 <br> Licensed to the Vocational Training Council <br> <a href=\"/privacy\">隐私政策</a>"
     },
     "index": {
-      "title": "首页 | IVE airline",
+      "title": "首页 | X-Sport",
       "Console": "控制台",
       "home": "首页",
       "Logout": "登出",
@@ -20,7 +22,7 @@
       "Content": {}
     },
     "ChangeSetting": {
-      "title": "设定 | IVE airline",
+      "title": "设定 | X-Sport",
       "setting": "帐号设定",
       "ChangeData": "个人档案",
       "Gravatar": "前往Gravatar修改",
@@ -164,7 +166,7 @@
       ]
     },
     "Login": {
-      "title": "登入 | IVE airline",
+      "title": "登入 | X-Sport",
       "Login": "登入",
       "welcome": "<b>Hello!</b> 登入就可以了",
       "email": "电邮地址",
@@ -206,7 +208,7 @@
       }
     },
     "Register": {
-      "title": "注册 | IVE airline",
+      "title": "注册 | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 电邮寄不出去! 检查有没有打错吧~~",
       "PASS_NOT_MATCH": "<b>Ah Oh!</b> 两次输入的密码不是一样的哦!",
       "PASS_NOT_STRONG": "<b>Umm..</b> 密码不太强哦!",
@@ -250,7 +252,7 @@
       ]
     },
     "ForgotPass": {
-      "title": "忘记密码 | IVE airline",
+      "title": "忘记密码 | X-Sport",
       "EMAIL_FAIL": "<b>Ah Oh!</b> 电邮寄不出去! 检查有没有打错吧~~",
       "LASTSTEP": "<b>最后两步!</b> 快点到你的邮箱查看吧!",
       "CODE_WRONG": "<b>Hey!</b> 失效啦!",
@@ -293,11 +295,11 @@
       ]
     },
     "Error_Page": {
-      "403_title": "停!停! | IVE airline",
+      "403_title": "停!停! | X-Sport",
       "Dont_Come": "喂喂喂! 你不应该来这里!",
-      "404_title": "你去哪里了! | IVE airline",
+      "404_title": "你去哪里了! | X-Sport",
       "Where_you_go": "等等! 你去哪里了!",
-      "500_title": "死火啦! | IVE airline",
+      "500_title": "死火啦! | X-Sport",
       "something_happened": "哎吔! 死火啦! 出事喇!",
       "GoBack": "回去吧",
       "400_title": "请求出现问题!"
@@ -353,7 +355,7 @@
       }
     },
     "Account": {
-      "Title": "帐户管理 | X-Travel",
+      "Title": "帐户管理 | X-Sport",
       "Head": "帐户管理",
       "Content": {
         "Name": {
@@ -399,7 +401,7 @@
       "Head": "管理员控制"
     },
     "notify": {
-      "Title": "通知管理 | X-Travel",
+      "Title": "通知管理 | X-Sport",
       "Head": "通知管理",
       "Content": {
         "Notify": "通知",
@@ -448,7 +450,7 @@
       }
     },
     "Media": {
-      "Title": "媒体 | X-Travel",
+      "Title": "媒体 | X-Sport",
       "Head": "媒体",
       "Content": {
         "Select_on": "选择模式",
@@ -492,7 +494,7 @@
       }
     },
     "Media-upload": {
-      "Title": "上传媒体 | X-Travel",
+      "Title": "上传媒体 | X-Sport",
       "Head": "上传媒体",
       "Content": {
         "upload": "上传",

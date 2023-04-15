@@ -156,7 +156,7 @@ review;
 
         # 計算評論總數及平均評分
         $event_data['review_total'] = count($book_reviews); //取得評論總數
-        if($event_data['avg_rate'] > 0){
+        if($event_data['review_total'] > 0){
             $event_data['avg_rate'] = round(array_sum(array_column($book_reviews, 'rate')) / $event_data['review_total'], 1); //取得平均評分
             $event_data['rate_start'] = join("", array_fill(0, floor($event_data['avg_rate']), "<i class='fa-solid fa-star text-warning'></i>")); //將平均評分轉換為星星html
             if ($event_data['avg_rate'] - floor($event_data['avg_rate']) != 0)
@@ -397,7 +397,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return $this->activity_name . ' | X-Travel';
+        return $this->activity_name . ' | X-Sport';
     }
 
     /**
@@ -406,4 +406,28 @@ body;
     public function get_Head(): string {
         return $this->activity_name;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        $stmt = $this->sqlcon->prepare("SELECT summary FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if (!$stmt->execute()) return null;
+
+        return $stmt->get_result()->fetch_assoc()['summary'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        $stmt  = $this->sqlcon->prepare("SELECT thumbnail FROM Event WHERE ID = ?");
+        $stmt->bind_param("s", $this->UpPath[0]);
+        if (!$stmt->execute()) return null;
+
+        return '/panel/api/media/'.$stmt->get_result()->fetch_assoc()['thumbnail'];
+    }
+
+
 }

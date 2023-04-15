@@ -16,6 +16,7 @@ class event implements IPage {
     public function __construct(mysqli $conn, array $upPath) {
         $this->sqlcon = $conn;
     }
+
     /**
      * @inheritDoc
      */
@@ -23,6 +24,14 @@ class event implements IPage {
         if (!$isAuth) return 401;
         if ($role < 2) return 403;
         return 200;
+    }
+
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
     }
 
     /**
@@ -110,7 +119,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "活動 | X-Travel";
+        return "活動 | X-Sport";
     }
 
     /**

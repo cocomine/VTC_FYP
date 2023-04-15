@@ -27,6 +27,20 @@ class xmap implements IPage {
     /**
      * @inheritDoc
      */
+    public function get_description(): ?string {
+        return "查看一下你附近都有什麼活動可以參與! (*≧︶≦))(￣▽￣* )ゞ ".showText('header.description');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function showPage(): string {
         return <<<HTML
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
@@ -47,6 +61,25 @@ class xmap implements IPage {
                 <div class="position-absolute start-0 end-0" style="bottom: 2.5rem">
                     <div class="w-100" id="carousel-list">
                         <div class="owl-carousel owl-theme"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">手機版 X-Map APP</h4>
+                    <div class="card-text">
+                        <p>X-map 已推出了手機版本! 讓您隨時隨地, 身在各地, 也可以即時掌握附近的活動!</p>
+                        <p>目前已經上架 Google Play! 不要猶豫了<b>立即安裝</b>!</p>
+                        <div class="row justify-content-center align-items-center">
+                            <a href="https://play.google.com/store/apps/details?id=cc.cocomine.xtravel" target="_blank" class="col-auto">
+                                <img src="/assets/images/googleplay.webp" alt="Get it on Google Play" style="height: 80px">
+                            </a>
+                            <div class="col-auto">
+                                <img src="/assets/images/qrcode_play.google.com.png" alt="QR Code" style="height: 150px">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,7 +124,7 @@ HTML;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return 'X-Map | X-Travel';
+        return 'X-Map | X-Sport';
     }
 
     /**

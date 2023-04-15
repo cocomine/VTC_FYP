@@ -14,22 +14,22 @@ if(!empty($_COOKIE['Lang'])){
 
 $local = locale_accept_from_http($Http_header); //取其次語言
 
-$LangJson = @file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/".$first_local[0].".json");//讀優先檔案
+$LangJson = @file_get_contents($_SERVER['DOCUMENT_ROOT']."/Lang/".$first_local[0].".json");//讀優先檔案
 if($LangJson){
     $Lang = json_decode($LangJson, true);
     $localCode = $first_local[0];
 }else{
-    $LangJson = @file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/".$local.".json");//讀其次檔案
+    $LangJson = @file_get_contents($_SERVER['DOCUMENT_ROOT']."/Lang/".$local.".json");//讀其次檔案
     if($LangJson){
         $Lang = json_decode($LangJson, true);
         $localCode = $local;
     }else{
-        $Lang = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/en.json"), true); //讀預設語言
+        $Lang = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/Lang/en.json"), true); //讀預設語言
         $localCode = 'en';
     }
 }
 
-$default = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/panel/Lang/en.json"), true); //讀預設語言
+$default = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/Lang/en.json"), true); //讀預設語言
 
 /**
  * 取得語言文字

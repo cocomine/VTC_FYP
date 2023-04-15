@@ -37,6 +37,14 @@ class reserve implements IPage {
         return 200;
     }
 
+    public function get_description(): ?string {
+        return null;
+    }
+
+    public function get_image(): ?string {
+        return null;
+    }
+
     /**
      * @inheritDoc
      */
@@ -179,7 +187,7 @@ body;
             return $this->reservePost->get_Title();
         }
 
-        return "預約管理 | X-Travel";
+        return "預約管理 | X-Sport";
     }
 
     /**

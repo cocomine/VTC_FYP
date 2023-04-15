@@ -1,11 +1,11 @@
 {
-  "name" : "X-Travel Control Panel",
+  "name" : "X-Sport Control Panel",
   "display" : "minimal-ui",
   "start_url" : "/panel/",
   "id": "/panel/",
-  "short_name" : "X-Travel Panel",
+  "short_name" : "X-Sport Panel",
   "theme_color" : "#ff7112",
-  "description" : "X-Travel Control Panel",
+  "description" : "X-Sport Control Panel",
   "background_color" : "#ff9e5b",
   "icons" : [
     {

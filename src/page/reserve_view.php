@@ -22,7 +22,23 @@ class reserve_view implements IPage
 
     /* 是否有權進入 */
     function access(bool $isAuth, int $role, bool $isPost): int {
+        if(!$isAuth) return 401;
+        if($role < 1) return 403;
         return 200;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
     }
 
     /* 輸出頁面 */
@@ -79,7 +95,6 @@ class reserve_view implements IPage
         $uuid = $auth->userdata['UUID'];
 
         /* 取得該用戶建立的活動給參與人數 */
-        /* */
         $stmt = $this->sqlcon->prepare("SELECT b.ID AS 'BookID', e.ID AS 'EventID', e.thumbnail, e.summary, e.name, b.pay_price, b.book_date
             FROM Book_event b, Event e WHERE e.ID = b.event_ID AND b.User = ?");
         $stmt->bind_param('s', $uuid);
@@ -123,47 +138,6 @@ class reserve_view implements IPage
                 );
             }
 
-            /*$stmt->prepare("SELECT Event_ID, plan_name FROM Event_plan WHERE Event_ID = ?");
-            $stmt->bind_param('i', $row['ID']);
-            if (!$stmt->execute()) {
-                return array(
-                    'code' => 500,
-                    'Title' => 'Database Error!',
-                    'Message' => $stmt->error,
-                );
-            }
-
-            /* get pay_price Book_eventID
-            $schedule_result = $stmt->get_result();
-            while ($row = $schedule_result->fetch_assoc()){
-                $stmt->prepare("SELECT event_ID, pay_price, Book_event.ID AS 'Book_eventID', order_datetime, Book_event_plan.plan_people AS `total` 
-                    FROM Book_event, Book_event_plan 
-                    WHERE event_ID = ? AND User = ? AND Book_event.ID = Book_event_plan.Book_ID");
-                $stmt->bind_param('ii', $row['ID'],$uuid);
-                if (!$stmt->execute()) {
-                    return array(
-                        'code' => 500,
-                        'Title' => 'Database Error!',
-                        'Message' => $stmt->error,
-                    );
-                }
-
-                /* get result
-                $schedule_row = $stmt->get_result()->fetch_assoc();
-                $temp['plan'][] = array(
-                    'plan_name' => $row['plan_name'],
-                    'Book_eventID' => $schedule_row['Book_eventID'],
-                    'order_datetime' => $schedule_row['order_datetime'],
-                    'total' => $schedule_row['total']
-                );
-
-
-            }*/
-
-            /*TEST*/
-
-            /*END TEST*/
-
             $output[] = $temp;
         }
         return array('data' => $output);
@@ -171,17 +145,17 @@ class reserve_view implements IPage
 
     /* path輸出 */
     function path(): string {
-        return '<li class="breadcrumb-item active"><a href="/home">' . showText("index.home") . '</a></li>'.
-            "<li class='breadcrumb-item active'><span>查看預約</span></li>";
+        return '<li class="breadcrumb-item active"><a href="/">' . showText("index.home") . '</a></li>'.
+            "<li class='breadcrumb-item active'><span>預約管理</span></li>";
     }
 
     /* 取得頁面標題 */
     public function get_Title(): string {
-        return showText('查看預約');
+        return '預約管理 | X-Sport';
     }
 
     /* 取得頁首標題 */
     public function get_Head(): string {
-        return showText("查看預約");
+        return "預約管理";
     }
 }

@@ -2,12 +2,12 @@
  * Copyright (c) 2022.
  * Create by cocomine
  * for Horizontal Menu
- * v2-1.0.4
+ * v2-1.0.5
  */
 
 define(['jquery', 'toastr'], function (jq, toastr) {
     "use strict";
-    console.log("ajex.js v2-1.0.4 loaded");
+    console.log("ajex.js v2-1.0.5 loaded");
 
     /* 語言載入 */
     let Lang = $('#globalLang').text();
@@ -71,7 +71,7 @@ define(['jquery', 'toastr'], function (jq, toastr) {
 
     /* 載入頁面 */
     const ajexLoad = (link, putState = true) => {
-        if (!/^.*\/$/.test(link)) link = link + '/';
+        //if (!/^.*\/$/.test(link)) link = link + '/';
         $('#content').html(loadingPlaceholder)
 
         /* send */

@@ -6,9 +6,6 @@
 
 namespace page;
 
-use mysqli;
-use Stripe\StripeClient;
-
 class success implements \cocomine\IPage {
 
     /**
@@ -17,6 +14,20 @@ class success implements \cocomine\IPage {
     public function access(bool $isAuth, int $role, bool $isPost): int {
         if($isPost) return 403;
         return 200;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): ?string {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): ?string {
+        return null;
     }
 
     /**
@@ -65,7 +76,7 @@ body;
      * @inheritDoc
      */
     public function get_Title(): string {
-        return "預訂成功 | X-Travel";
+        return "預訂成功 | X-Sport";
     }
 
     /**

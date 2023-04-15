@@ -1,11 +1,11 @@
 {
-  "name" : "X-Travel",
+  "name" : "X-Sport",
   "display" : "minimal-ui",
   "start_url" : "/",
   "id": "/",
-  "short_name" : "X-Travel",
+  "short_name" : "X-Sport",
   "theme_color" : "#12a0ff",
-  "description" : "X-Travel",
+  "description" : "X-Sport",
   "background_color" : "#ff9e5b",
   "icons" : [
     {
