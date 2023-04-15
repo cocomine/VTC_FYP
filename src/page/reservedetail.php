@@ -66,7 +66,7 @@ class reservedetail implements IPage {
         if (!$isAuth) return 401;
 
         if (sizeof($this->upPath) > 0 && preg_match("/[0-9]+/", $this->upPath[0])) {
-            $stmt = $this->sqlcon->prepare("SELECT b.event_ID AS event_ID, e.name , b.book_date AS 'count' FROM Book_event b,Event e  WHERE b.ID = ? AND b.User = ?");
+            $stmt = $this->sqlcon->prepare("SELECT e.name FROM Book_event b, Event e  WHERE b.event_ID = e.ID AND b.ID = ? AND b.User = ?");
             $stmt->bind_param('ss', $this->bookID, $auth->userdata['UUID']); //測試用：
             if (!$stmt->execute()) return 500;
 
