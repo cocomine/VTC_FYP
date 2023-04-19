@@ -28,8 +28,8 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
     };
 
     //沒有任何圖片
-    const empty = `<div class="col-auto"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
-                    <div class="col-auto h-auto"><h3 class="align-middle">${Lang.No_media}</h3></div>`;
+    const empty = `<div class="col-auto empty"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_IIxb9U.json" background="transparent" speed="1" style="width: 120px; height: 120px;" autoplay></lottie-player></div>
+                    <div class="col-auto h-auto empty"><h3 class="align-middle">${Lang.No_media}</h3></div>`;
     //modal html
     const html = `
         <div id='Media-select-modal' class='modal fade' tabindex='-1'>

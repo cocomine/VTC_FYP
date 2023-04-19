@@ -123,11 +123,12 @@ body;
                 'thumbnail' => $row['thumbnail'],
                 'summary' => $row['summary'],
                 'name' => $row['name'],
-                'plan' => null
+                'plan' => null,
+                'total' => 0
             );
 
             /* get plan */
-            $stmt->prepare("SELECT Event_ID, plan, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
+            $stmt->prepare("SELECT Event_ID, plan, Schedule_ID, (SELECT plan_name FROM Event_plan WHERE plan_ID = Event_schedule.plan) AS `plan_name` FROM Event_schedule WHERE Event_ID = ? ORDER BY LENGTH(plan_name)");
             $stmt->bind_param('i', $row['ID']);
             if (!$stmt->execute()) {
                 return array(
@@ -155,12 +156,14 @@ body;
                 /* get result */
                 $schedule_row = $stmt->get_result()->fetch_assoc();
                 $temp['plan'][] = array(
+                    'id' => $row['Schedule_ID'],
                     'plan_name' => $row['plan_name'],
                     'total' => $schedule_row['total']
                 );
+                $temp['total'] += $schedule_row['total'];
             }
 
-            $output[] = $temp;
+            if($temp['total'] > 0) $output[] = $temp;
         }
         return array('data' => $output);
     }

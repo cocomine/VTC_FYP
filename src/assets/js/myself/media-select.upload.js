@@ -124,6 +124,7 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
                             </div>
                         </div>
                     </div>`);
+            drop_area.find('.empty').remove();
             drop_area.find('.media-list').prepend(tmp);
             const progressBar = tmp.find('.progress-bar');
 
