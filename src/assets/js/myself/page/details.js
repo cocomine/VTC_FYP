@@ -152,7 +152,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
             const json = await response.json();
             if (response.ok && json.code === 200){
                 _plan = json.data;
-                _select_plan = [];
+                _select_plan.splice(0, _select_plan.length);;
                 $('#total').text("$ 0");
                 if(_plan.length <= 0){
                     jq_plan.html(`<div class="rounded px-3 py-2 bg-light col-12 text-center">
@@ -176,7 +176,7 @@ define([ 'jquery', 'mapbox-gl', 'toastr', 'moment', 'bootstrap', 'datepicker'], 
                                 <div class="col-auto">
                                     <div class="row align-items-center">
                                         <h6 class="col-auto">$ ${formatPrice(item.price)}</h6>
-                                        <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-plan="add" style="--bs-btn-disabled-opacity: 0.3"><i class="fa-solid fa-plus"></i></button></div>
+                                        <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-plan="add" ${item.max_people <= 0 ? 'disabled' : ''} style="--bs-btn-disabled-opacity: 0.3"><i class="fa-solid fa-plus"></i></button></div>
                                         <h6 class="col-auto" data-plan="count">0</h6>
                                         <div class="col-auto"><button type="button" class="btn btn-primary btn-rounded" data-plan="sub" disabled style="--bs-btn-disabled-opacity: 0.3"><i class="fa-solid fa-minus"></i></button></div>
                                     </div>
