@@ -334,21 +334,20 @@ function run_apis(array $path, MyAuth $auth) {
                         <ul class="metismenu" id="menu">
 
                             <!-- sidebar content -->
-                            <?php if ($auth->userdata['Role'] > 2) { ?>
-                            <li>
-                                <a href="/panel/">
-                                    <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a>
-                                <ul>
-                                    <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a></li>
-                                    <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span><?php echo showText("Media-upload.Head") ?></span></a></li>
-                                </ul>
-                            </li>
-                            <?php }
+                            <?php
                             if ($auth->userdata['Role'] > 1) { ?>
+                                <li>
+                                    <a href="/panel/">
+                                        <i class="fa fa-home"></i><span><?php echo showText("index.home") ?></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" aria-expanded="false" class="has-arrow"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a>
+                                    <ul>
+                                        <li><a href="/panel/media/"><i class="fa-solid fa-photo-film"></i><span><?php echo showText("Media.Head") ?></span></a></li>
+                                        <li><a href="/panel/media/upload/"><i class="fa-solid fa-upload"></i><span><?php echo showText("Media-upload.Head") ?></span></a></li>
+                                    </ul>
+                                </li>
                                 <hr class="text-light">
                                 <li><a href="/panel/reserve/"><i class="fa-solid fa-people-roof"></i><span>預約管理</span></a></li>
                                 <li>

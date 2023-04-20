@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022. 
  * Create by cocomine
- * 1.7.0
+ * 1.7.1
  */
 
 /*
@@ -43,7 +43,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
                         <div class="tab-content">
                             <div class="tab-pane fade show active" role="tabpanel" id="Media-select-pane">
                                 <div class="row gy-4 align-items-center media-list select-mode">
-                                    <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+                                    <lottie-player src="/assets/images/logo_lottie.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@ define([ 'jquery', 'bootstrap' ], function (jq, bootstrap){
 
     /* 當關閉彈出視窗 */
     jq_modal.on('hidden.bs.modal', () => {
-        jq_modal.find('.media-list').html(`<lottie-player src="https://assets7.lottiefiles.com/packages/lf20_j3ndxy3v.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>`);
+        jq_modal.find('.media-list').html(`<lottie-player src="/assets/images/logo_lottie.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>`);
         jq_modal.find('.btn-primary > span').text('0');
         jq_modal.find('.btn-primary').attr('disabled', 'disabled');
         selected_list = [];

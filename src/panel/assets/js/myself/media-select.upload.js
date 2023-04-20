@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2022.
  * Create by cocomine
- * 1.5.5
+ * 1.5.6
  */
 
 /*
@@ -115,7 +115,7 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
         for (let file of files) {
             /* 顯示進度 */
             const tmp = $(`
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xxl-1">
                         <div class="ratio ratio-1x1 media-list-focus">
                             <div class="overflow-hidden">
                                 <div class='progress h-100'>
@@ -161,7 +161,6 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
             }
 
             upload_queue.push({progressBar, file});
-
         }
 
         /* 限制同時上載檔案數量 */
@@ -218,6 +217,7 @@ define(['media-select', 'bootstrap'], function (media_select, bootstrap) {
                         </div>`);
                 }
 
+                jq_modal.find('.btn-primary').removeAttr('disabled');
             },
             xhr: function () {
                 /* 更新進度 */

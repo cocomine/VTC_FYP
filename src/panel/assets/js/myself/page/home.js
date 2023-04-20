@@ -6,7 +6,17 @@
 define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, moment){
     "use strict";
     $('.today-order-list').scrollbar();
-    const country = { HK: "香港", TW: "台灣", MO: "澳門", CN: "中國大陸" };
+    let country;
+    $.getJSON('/panel/assets/data.json', function (data) {
+        country = data;
+    });
+
+    function getCountryName(code){
+        const tmp = country.find((item) => {
+            return item.countryShortCode === code;
+        });
+        return tmp ? tmp.countryName : code;
+    }
 
     /* 數據統計 */
     fetch('/panel/?type=count', {
@@ -341,20 +351,8 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
                 type: 'doughnut',
                 // The data for our dataset
                 data: {
-                    labels: data.map((item) => country[item.country]),
+                    labels: data.map((item) => getCountryName(item.country)),
                     datasets: [{
-                        hoverBackgroundColor: [
-                            "#8919FE",
-                            "#12C498",
-                            "#F8CB3F",
-                            "#e34444"
-                        ],
-                        backgroundColor: [
-                            "rgba(137,25,254,0.8)",
-                            "rgba(18,196,152,0.8)",
-                            "rgba(248,203,63,0.8)",
-                            "rgba(227,68,68,0.8)"
-                        ],
                         borderColor: "#fff",
                         hoverBorderColor: "#fff",
                         hoverOffset: 8,
@@ -367,6 +365,9 @@ define([ 'jquery', 'toastr', 'chartjs', 'moment'], function (jq, toastr, Chart, 
                         legend: {
                             position: 'bottom',
                         },
+                        colors: {
+                            forceOverride: true
+                        }
                     },
                     animation: {
                         easing: "easeInOutBack"

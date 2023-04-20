@@ -92,8 +92,8 @@ class details implements IPage {
         $book_reviews = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
         # 取得評論圖片
-        $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
         $book_reviews = array_map(function ($review) use ($stmt) {
+            $stmt->prepare("SELECT media_ID FROM Book_review_img WHERE Book_review_ID = ?");
             $stmt->bind_param("s", $review['Book_ID']);
             if (!$stmt->execute()) {
                 echo_error(500);

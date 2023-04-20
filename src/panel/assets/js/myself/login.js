@@ -41,7 +41,7 @@ define(['forge', 'jquery'], function (forge) {
                     const ResultMsg = $('#ResultMsg');
 
                     if(json.code === 107) {
-                        location.replace('.')
+                        location.reload();
                     }else if(json.code === 100){
                         ResultMsg.html('<div class="alert alert-warning" role="alert">' + json.Message +'</div>')
                     }else if(json.code === 108){
