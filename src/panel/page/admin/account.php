@@ -105,7 +105,7 @@ tmp;
                     $role = $Text['Role']['Normal'];
                     break;
                 case 2:
-                    $role = $Text['Role']['Operator'];
+                    $role = $Text['Role']['collaborator'];
                     break;
                 case 3:
                     $role = $Text['Role']['Administrator'];
@@ -127,8 +127,8 @@ tmp;
                 <td><a href='#' data-id='{$row['UUID']}' class='stretched-link'>{$row['Name']}</a></td>
                 <td>{$row['Email']}</td
                 ><td>$time</td>
-                <td>$role</td
-                ><td>$active</td>
+                <td>$role</td>
+                <td>$active</td>
             </tr>";
         }
 

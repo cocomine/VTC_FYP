@@ -15,5 +15,5 @@ if(false !== strpos($_SERVER['REQUEST_URI'], '.php')){
 
 header("Content-type: image/webp");
 header("Cache-Control: no-cache");
-$imgurl = rand(1,5) .".webp";
+$imgurl = rand(1,4) .".webp";
 readfile("bg/".$imgurl);

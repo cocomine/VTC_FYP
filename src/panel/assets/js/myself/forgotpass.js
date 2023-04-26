@@ -121,7 +121,7 @@ define(['forge', 'zxcvbn', 'grecaptcha', 'jquery'], function (forge, zxcvbn){
         const val = $('#Password').val();
         const result = zxcvbn(val).score;
         const pass = $('#passStrength');
-        const list = $('#passStrength-list li');
+        const list = $('#passStrength-list li > span');
 
         /* 指示器 */
         pass.css({width: (100 / 4) * result + "%"})
