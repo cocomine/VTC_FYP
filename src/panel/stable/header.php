@@ -21,7 +21,7 @@ ob_start();
 session_start();
 require_once('./../vendor/autoload.php');
 require_once('./function/Functions.php');
-require_once('./../../secret/config.inc.php');
+require_once('./function/config.inc.php');
 require_once('./Lang/Lang.php');
 # require_once('../cocomine/MyAuth.php'); //is auto load
 # require_once ('../cocomine/IPage.php');
@@ -100,9 +100,13 @@ try {
             <lottie-player src="/panel/assets/images/logo_lottie.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
         </div>
     </div>
-<!-- preloader area end -->
-<!--google one tap -->
+    <!-- preloader area end -->
+    <div class="alert alert-warning text-center m-0">
+        <p>網站處於<b>唯讀模式</b>, 所有更改將不會起作用.</p>
+        <p>The site is in <b>read-only mode</b>, all changes will not take effect.</p>
+    </div>
 <?php
+/* google one tap start */
 if(empty($_COOKIE['_ID'])){
     echo '<div id="g_id_onload"
      data-client_id="415107965516-cv5638cgsp5hcau4i5ts1ub9otktu3sp.apps.googleusercontent.com"
@@ -110,6 +114,7 @@ if(empty($_COOKIE['_ID'])){
      data-login="google">
      </div>';
 }
+/* google one tap end */
 
 function IP_Block($dbServer = Cfg_Sql_Host, $dbName = Cfg_Sql_dbName, $dbUser = Cfg_Sql_dbUser, $dbPass = Cfg_Sql_dbPass) {
     $ip = $_SERVER['REMOTE_ADDR'];
