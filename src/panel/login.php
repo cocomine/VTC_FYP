@@ -214,6 +214,13 @@ function login_form(bool $isGoogleError = false, int $activatedStatus = null) {
                     <h4>{$Text['Login']}</h4>
                     <p>{$Text['welcome']}</p>
                 </div>
+                <div class="alert alert-info">
+                    <p>Demo account: 示範帳號:</p>
+                    <ul style="list-style-type: disc">
+                        <li>Email: <code>demo@mail.com</code></li>
+                        <li>Password: <code>A12345678a!</code></li>
+                    </ul>
+                </div>
                 <div id="ResultMsg">
                 $msg
                 </div>
@@ -376,7 +383,7 @@ function load_google_client(): Google_Client {
     //require_once('vendor/autoload.php');
 
     $gclient = new Google_Client();
-    $gclient->setAuthConfig('../../secret/credentials.json');
+    $gclient->setAuthConfig('function/credentials.json');
     $gclient->setAccessType('offline'); // offline access
     $gclient->addScope([Google_Service_Oauth2::USERINFO_EMAIL, Google_Service_Oauth2::USERINFO_PROFILE]);
     $gclient->setRedirectUri('https://'.$_SERVER['HTTP_HOST'].'/panel/login?login=google');
