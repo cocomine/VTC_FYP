@@ -36,7 +36,7 @@ try {
 }
 
 /* API互動介面 (即係唔係俾人睇) */
-if ($path[0] == "api") {
+if (isset($path[0]) && $path[0] == "api") {
     run_apis($path, $auth);
     exit();
 }
@@ -121,19 +121,19 @@ function fetch_path(): array {
     $path = explode("/", $path);
 
     //清除多餘數組
-    if ($path[count($path) - 1] === "") {
+    if (isset($path[count($path) - 1]) && $path[count($path) - 1] === "") {
         $path = array_slice($path, 0, -1);
     }
-    if (preg_match("/^\?.*$/", $path[count($path) - 1])) {
+    if (isset($path[count($path) - 1]) && preg_match("/^\?.*$/", $path[count($path) - 1])) {
         $path = array_slice($path, 0, -1);
     }
-    if ($path[0] === "") {
+    if (isset($path[0]) && $path[0] === "") {
         $path = array_slice($path, 1);
     }
-    if ($path[0] === "panel") {
+    if (isset($path[0]) && $path[0] === "panel") {
         $path = array_slice($path, 1);
     }
-    if (preg_match("/^(.+)(\?.*)$/", $path[count($path) - 1], $matches)) {
+    if (isset($path[count($path) - 1]) && preg_match("/^(.+)(\?.*)$/", $path[count($path) - 1], $matches)) {
         $path[count($path) - 1] = $matches[1];
     }
 

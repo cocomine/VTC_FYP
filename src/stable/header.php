@@ -30,8 +30,11 @@ header('Content-Type:text/html; charset=utf-8');
 /* 取得og */
 try {
     global $path;
-    $og = @call_user_func('run_og', $path);
-} catch (Exception $e) {}
+    $og = call_user_func('run_og', $path);
+    if($og === false){
+        $og = [];
+    }
+} catch (ErrorException|Exception|TypeError) {}
 
 /* IP Block */
 //IP_Block();
