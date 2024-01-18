@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
       "phpmailer/phpmailer": "^6.1",
       "psr/log": "^1.1",
       "google/apiclient": "^2.4",
